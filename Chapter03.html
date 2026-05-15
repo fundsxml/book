@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 3 — FundsXML — The Standard at a Glance</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter02.html">&lsaquo; Chapter 2</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter04.html">Chapter 4 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<div class="chapter-meta">Part I — Foundations · Chapter 3</div>
+<h1>FundsXML — The Standard at a Glance<span class="subtitle">History, organisation, and architecture</span></h1>
+
+<hr>
+
+<h2>3.1 Setting the Scene: From Syntax to Substance</h2>
+
+<p>Chapter 1 made the case for a shared standard. Chapter 2 introduced XML and XSD as the technologies on which such a standard can be built. We now bring those two threads together and ask the obvious next question: <em>what exactly is FundsXML?</em></p>
+
+<p>Return once more to the Europa Growth Fund. After the month-end episode that opened this book, and after a thirty-page crash course in XML, the operations team gathers around a whiteboard for what the head of operations calls a "ten-minute orientation". The team has, by this point, read a number of FundsXML deliveries with a text editor and even run one or two against a schema validator. They can see that the files are well-formed and, mostly, that they are valid. What they still cannot see is the <em>shape of the thing as a whole</em>. Where did this schema come from? Who decides what belongs in it and what does not? How are the pieces arranged, and why in that particular way? Unless these questions are answered first, every later chapter of this book will feel like a tour through rooms whose floor plan the reader has never seen.</p>
+
+<p>This chapter is that floor plan. It closes Part I of the book with a deliberately high-altitude view of FundsXML. We tell the story of how the standard came into being and who maintains it today; we distil the design principles that shape every FundsXML message; and we draw a mental map of the five main areas of the schema. No field-level detail appears here — that begins in Chapter 4. The aim is orientation, not completeness: by the end of the chapter the reader should be able to look at any FundsXML document, identify the five main areas, and know which later chapter of this book covers each of them.</p>
+
+<p>By the end of this chapter, you should be able to:</p>
+<ul>
+  <li>tell the story of FundsXML from its German origins in 2001 through to the current 4.2.x release of 2026;</li>
+  <li>name the bodies and working groups that maintain the standard and explain how a change gets into the schema;</li>
+  <li>state the five core design principles that shape every FundsXML delivery;</li>
+  <li>draw, from memory, a mental map of the five main schema areas — <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank"><em>ControlData</em></a>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds" target="_blank"><em>Funds</em></a>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank"><em>AssetMasterData</em></a>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Documents" target="_blank"><em>Documents</em></a>, and <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank"><em>RegulatoryReportings</em></a> — and recognise how they fit together;</li>
+  <li>read a short FundsXML document skeleton on sight and point at the area each part belongs to.</li>
+</ul>
+
+<p>The chapter is built around three questions — <em>where does FundsXML come from?</em>, <em>who runs it?</em>, and <em>what does it look like?</em> — in that order. Readers in a hurry may skim §3.2 and §3.3 and concentrate on §3.4 to §3.6, which are the structural core of the chapter and the foundation for Part II.</p>
+
+<hr>
+
+<h2>3.2 A Brief History of FundsXML</h2>
+
+<p>Standards never arrive out of nowhere. They are always the answer to a concrete industrial problem, and the character of the answer is shaped by the people who formulated the question. FundsXML is no exception. Its story falls naturally into three waves: a German origin phase, a European expansion that crossed national borders, and a regulatory era driven by the wave of EU fund-related legislation of the last decade.</p>
+
+<h3>3.2.1 Origins: Germany, 2001–2005</h3>
+
+<p>FundsXML was created in 2001 by a group of major German-speaking fund-management houses seeking a common format for the fund-data they all had to exchange with one another. The founding participants were <strong>Allianz Global Investment</strong>, <strong>COMINVEST</strong> (later absorbed into Allianz Global Investment), <strong>Credit Suisse Asset Management</strong>, <strong>DEKA</strong>, <strong>DWS</strong>, and <strong>Union Investment</strong>, with early technical support from <strong>Vontobel</strong>, the Swiss software vendor <strong>K&amp;W Software AG</strong>, and <strong>FERI TRUST</strong>. The immediate trigger was neither regulatory nor ideological; it was operational. Each of these houses managed thousands of fund records, and each bilateral channel to a distributor, a depositary, a data vendor, or the financial press used a different CSV layout, a different Excel template, or a different proprietary format. Every new distribution contract added a new mapping, and every mapping had to be maintained forever.</p>
+
+<p>The initial response was pragmatic. A small working group drafted a lightweight XML vocabulary that described the master data and daily price data of a fund, agreed on it informally, and began to use it in production. There was no standards body at first, no formal certification, and no public repository — only a shared schema file, a shared understanding of what the elements meant, and a willingness to keep the format stable for long enough that the investment in implementation would pay off. This informal start left two enduring marks on the standard's character: a preference for practical problem-solving over theoretical elegance, and an instinct for backwards compatibility that has survived every subsequent revision.</p>
+
+<p>The informal phase did not last long. By late 2003, the <strong>BVI</strong> (<em>Bundesverband Investment und Asset Management e.V.</em>), the German fund-industry association, had recognised that its members needed a single supported standard for fund-data exchange and formally adopted the effort. <strong>Version 1.0 of FundsXML was published on 8 December 2003</strong> under BVI stewardship. That publication is the moment at which FundsXML ceased to be a private inter-company schema and became a named, versioned industry standard.</p>
+
+<h3>3.2.2 European Expansion: 2006–2013</h3>
+
+<p>The German origin did not stay German for long. Beginning in 2006, the Austrian investment-fund community joined the initiative: <strong>VÖIG</strong> (<em>Vereinigung Österreichischer Investmentgesellschaften</em>), the <strong>Oesterreichische Kontrollbank</strong> (OeKB), and <strong>ERSTE-SPARINVEST KAG</strong> brought FundsXML into Austria and established the German-Austrian co-stewardship that still defines the standard's governance today. The chair of the FundsXML Standards Committee is to this day held by BVI, with VÖIG serving as deputy — an arrangement that reflects the order in which the two national communities joined rather than any weighting of their importance.</p>
+
+<p>The pace of European adoption accelerated from there. In <strong>2007</strong>, <strong>Robeco</strong> carried FundsXML into the Netherlands. In <strong>2008</strong>, two further national communities joined simultaneously: <strong>DIAMS</strong> (<em>FundsXML France</em>) brought the standard into France, and the <strong>Danish Investment Association IFR</strong> adopted it under the <em>FundConnect</em> project for Denmark. The same year, <strong>version 3.0 was published on 30 October 2008</strong>, consolidating several rounds of extensions into a single release. In <strong>2009</strong>, <strong>La Banque Postale Asset Management</strong> of Paris became the first major French adopter. In <strong>2010</strong>, the <strong>AFG</strong> (<em>Association Française de la Gestion Financière</em>, the French fund-industry association) endorsed the standard, and <strong>Fundsquare</strong> brought it into Luxembourg. <strong>KNEIP</strong>, also of Luxembourg, followed in <strong>2011</strong>, and <strong>AXA France Investment Managers</strong> in <strong>2012</strong>.</p>
+
+<p>The decisive European moment came in <strong>2013</strong>, when <strong>EFAMA</strong> — the <em>European Fund and Asset Management Association</em> — recommended FundsXML as the standard format for the <strong>Fund Processing Passport</strong> (FPP), the pan-European framework for communicating the essential operational data of a fund to its distributors. EFAMA's endorsement moved FundsXML from "a widely-used industry schema" to "the European Fund Association's recommended format", and it placed the standard at the centre of cross-border fund distribution from that point onwards.</p>
+
+<h3>3.2.3 Regulatory Era and Version 4.x: 2014–2026</h3>
+
+<p>The third phase of FundsXML's history is the one most readers of this book will have lived through. Between 2014 and the present, the European fund industry was reshaped by a cascade of regulatory initiatives — MiFID II, PRIIPs, the SFDR and the broader sustainable-finance package, IDD, Solvency II — each of which demanded structured data of a kind that no legacy interface could provide. The FinDatEx consortium, supported by the major European industry associations, responded by publishing a series of templates: the <em>European MiFID Template</em> (EMT), the <em>European PRIIPs Template</em> (EPT), the <em>European ESG Template</em> (EET), the <em>European Feedback Template</em> (EFT), and the <em>Tripartite Template</em> (TPT) for Solvency II. These templates solved the semantic problem — <em>which fields must be exchanged and with what meaning</em> — but they said little about how the fields should travel between systems.</p>
+
+<p>FundsXML became the natural carrier. The major architectural opportunity to make it so was the <strong>4.0.0 release in 2017</strong> — the first release since the original drafting that was deliberately <em>not</em> backward-compatible with earlier versions. Version 4.0 re-thought the top-level structure, introduced the separation of static and dynamic fund data that the standard still uses today, and cleaned up a number of historical compromises that had accumulated through the 3.x line. Subsequent 4.x releases then absorbed the FinDatEx templates one after another into the <em><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank">RegulatoryReportings</a></em> area of the schema, so that a single FundsXML delivery could transport the classical master data, the portfolio, the transactions, and the regulatory templates in one envelope. This simple architectural decision — <em>same envelope, different freights</em> — is the reason FundsXML has become, in practice, the de-facto European interchange format for structured fund data.</p>
+
+<p>The 4.2 line, first released in May 2022 as version 4.2.0, consolidated this approach and added the connections to the European Single Access Point (ESAP) that Chapter 8 will discuss in detail. Eleven minor releases (4.2.0 through 4.2.10) have followed between 2022 and early 2026, each adding fields, tightening constraints, or tracking new FinDatEx template versions — without breaking the instance documents that earlier releases produced. The book you are holding describes the 4.2.x line and is accurate as of version 4.2.10.</p>
+
+<p><strong>Table 3.1 — Key Milestones in the History of FundsXML</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Year</th><th>Event</th><th>Significance</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>2001</td><td>FundsXML created by Allianz Global Investment, COMINVEST, Credit Suisse Asset Management, DEKA, DWS, and Union Investment; early support from Vontobel, K&amp;W Software AG, and FERI TRUST</td><td>Birth of the standard as a private inter-company schema among major German-speaking fund houses</td></tr>
+    <tr><td>2003</td><td>BVI adopts the standard; Version 1.0 published on 8 December 2003</td><td>Transition from a private schema to a named industry standard under German fund-association stewardship</td></tr>
+    <tr><td>2006</td><td>VÖIG, OeKB, and ERSTE-SPARINVEST bring FundsXML into Austria</td><td>Establishment of the German-Austrian co-stewardship that still defines governance today</td></tr>
+    <tr><td>2007</td><td>Robeco adopts FundsXML in the Netherlands</td><td>First expansion beyond German-speaking Europe</td></tr>
+    <tr><td>2008</td><td>DIAMS (<em>FundsXML France</em>) and the Danish Investment Association IFR (<em>FundConnect</em>) adopt the standard; Version 3.0 released on 30 October 2008</td><td>Simultaneous entry into France and Denmark; first major consolidating release</td></tr>
+    <tr><td>2009</td><td>La Banque Postale Asset Management adopts the standard</td><td>First major French asset-management adopter</td></tr>
+    <tr><td>2010</td><td>AFG endorses FundsXML; Fundsquare adopts it in Luxembourg</td><td>Endorsement by the French fund-industry association; entry into Luxembourg</td></tr>
+    <tr><td>2011</td><td>KNEIP adopts the standard in Luxembourg</td><td>Expansion within the Luxembourg fund-services ecosystem</td></tr>
+    <tr><td>2012</td><td>AXA France Investment Managers adopts the standard</td><td>Further French adoption</td></tr>
+    <tr><td>2013</td><td>EFAMA recommends FundsXML as the standard format for the Fund Processing Passport (FPP)</td><td>Recognition as the European Fund Association's recommended fund-data format</td></tr>
+    <tr><td>2017</td><td>FundsXML 4.0.0 released</td><td>First major architectural reset; deliberately not backward-compatible; introduces the static/dynamic separation</td></tr>
+    <tr><td>2022</td><td>FundsXML 4.2.0 released (4 May 2022)</td><td>Current major line; consolidated FinDatEx template integration and ESAP preparation</td></tr>
+    <tr><td>2026</td><td>Current 4.2.10 line</td><td>The version this book describes</td></tr>
+  </tbody>
+</table>
+
+<p>Two final observations on the history are worth keeping in mind. First, FundsXML did <em>not</em> originate in Brussels. It was not imposed on the industry by a regulator, nor designed in a policy vacuum by a standards body with no operational stake. It grew out of the day-to-day practice of fund operations teams in six of Germany's largest asset-management houses in 2001, was picked up and formalised by their industry association (BVI) in 2003, and was extended into Austria, the Netherlands, France, Denmark, and Luxembourg over the following decade. This bottom-up genealogy explains a great deal about the standard's character: it is pragmatic, it is extensible, and it is, sometimes, a little idiosyncratic in places where a top-down design would have been tidier.</p>
+
+<p>Second, the standard's evolution has been strictly additive for most of its recent history. Since the 4.0 reset, no subsequent release has broken existing instance documents in a way that required users to rewrite their producers or consumers; new modules have been added, old modules have been extended, and deprecated constructs have been retained alongside their replacements for several release cycles before removal. This conservative release discipline is another reason FundsXML has survived while less patient projects have not.</p>
+
+<hr>
+
+<h2>3.3 The Organisation Behind the Standard</h2>
+
+<p>A living standard needs a living organisation. The question every new FundsXML user eventually asks is <em>who decides?</em> — who decides what goes into the next release, who decides when that release is cut, and who the reader should contact if something in the schema is wrong. This section answers those questions in four short subsections.</p>
+
+<h3>3.3.1 The FundsXML Association</h3>
+
+<p>FundsXML is maintained by a registered, not-for-profit industry association whose members are drawn from every role in the European fund value chain: asset managers, fund administrators, depositary banks, data vendors, software houses, and a small number of consultancies. Membership is open, contributions are voluntary, and decisions are taken transparently within the working groups and formalised by the FundsXML Standards Committee (FSC). No single vendor or jurisdiction owns the standard, and no commercial license is required to implement it — both the schema and its documentation are freely available.</p>
+
+<p>This governance model matters in practice. It means that a fund house in Warsaw or Helsinki can join a working group on equal terms with a depositary bank in Frankfurt; it means that a software vendor building a FundsXML parser does not need to negotiate redistribution rights; and it means that the standard's future direction is determined by the people who use it in production, rather than by a committee detached from the operational reality.</p>
+
+<h3>3.3.2 Working Groups and the Release Cycle</h3>
+
+<p>Strategic direction and maintenance of the standard are the responsibility of the <strong>FundsXML Standards Committee (FSC)</strong>, whose members are drawn from thirteen leading fund-industry organisations across Austria, Denmark, France, Germany, Luxembourg, the Netherlands, and Switzerland. The FSC decides on new memberships, creates and dissolves working groups, and — critically — decides on the release and realisation of working-group results. Day-to-day standardisation work is delegated to three dedicated working groups, summarised in Table 3.2.</p>
+
+<p><strong>Table 3.2 — FundsXML Working Groups</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Working group</th><th>Scope</th><th>Typical outputs</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Content &amp; Technique</td><td>Manages the XML schema, defines data structures, ensures robustness and consistency of the standard</td><td>Schema releases, data-structure definitions</td></tr>
+    <tr><td>Promotion</td><td>Visibility and adoption of FundsXML across Europe through marketing, public relations, and member engagement</td><td>Conferences, outreach material, adoption campaigns</td></tr>
+    <tr><td>Documentation</td><td>Implementation guides, code examples, and schema references</td><td>Published guides, sample files, reference documentation</td></tr>
+  </tbody>
+</table>
+
+<p>The release cycle follows the familiar semantic pattern. <em>Patch</em> releases within a 4.2.x line contain clarifications, documentation fixes, and strictly non-breaking adjustments — existing instance documents continue to validate unchanged. <em>Minor</em> releases (4.2, 4.3, and so on) add new elements or new modules but preserve backwards compatibility for anything that was already present. <em>Major</em> releases (the next of which would be 5.0) are reserved for architectural changes that cannot be made compatibly, and the association's policy is to avoid them unless no alternative exists — the 4.x line is now more than fifteen years old, which is a deliberate commitment rather than an accident.</p>
+
+<p>The path a change takes from proposal to release is straightforward. Any member may raise a change request in the relevant working group. The Content &amp; Technique working group discusses it, refines it, and — if the change is substantive — produces a draft schema update together with test files and a short rationale. The draft is then circulated to all members for review, adjusted in response to comments, and, if accepted by the FSC, scheduled into a release window. A release window is announced in advance so that implementers can plan their own update cycles; the release itself ships the new schema, a changelog, updated sample files, and any new or updated validation rules together as a single coordinated package.</p>
+
+<h3>3.3.3 Where the Standard Lives</h3>
+
+<p>FundsXML is, from a technical point of view, a small number of files: the XSD schemas, a collection of sample documents, a changelog, and supporting documentation. All of these are published openly. The authoritative home of the standard is the official website and the associated public source-code repository, where each release is tagged, signed, and accompanied by release notes. The issue tracker on the same repository is the canonical place to report bugs, request clarifications, or propose changes that are not yet mature enough for a working-group agenda.</p>
+
+<p>This book deliberately does not print URLs in the running text; software and infrastructure change faster than books do. Appendix E collects the current set of official links, and the reader is encouraged to treat that appendix as the authoritative pointer whenever the present chapter says "the official site" or "the public repository".</p>
+
+<h3>3.3.4 Community and Events</h3>
+
+<p>Beyond the formal machinery of working groups and releases, FundsXML has a small but active community of practitioners who exchange knowledge at workshops, industry conferences, and informal meet-ups. Training material, webinars, and hands-on sessions are organised by the association itself and occasionally by member firms. For most readers of this book, the relevant point is simply that help exists and is reachable: a question asked in the right place usually receives a reasoned answer from someone who has already solved the same problem in production.</p>
+
+<p>Taken together, the association, the working groups, the public repository, and the community form a lightweight but functional ecosystem. FundsXML is not a finished document to be consumed; it is a living project to which any serious implementer can, and occasionally should, contribute.</p>
+
+<hr>
+
+<h2>3.4 Design Principles</h2>
+
+<p>Before we turn to the schema itself, we pause to name the five principles that shape it. None of them is unique to FundsXML — every mature data standard wrestles with the same trade-offs — but the particular combination is characteristic, and recognising the principles in advance makes the structure of the schema considerably easier to read. These five principles reappear, explicitly or implicitly, in every chapter of Part II.</p>
+
+<ol>
+  <li><strong>Separation of static and dynamic data.</strong> FundsXML distinguishes the information about a fund that rarely changes — its name, its ISIN, its domicile, its investment policy — from the information that changes every valuation day — its NAV, its portfolio composition, its transaction flow. The two are carried in different substructures of the same Fund element, which allows a producer to ship a lean daily delta without re-transmitting the entire static record and allows a consumer to cache the static part between deliveries. This principle is visible in the schema as the pairing of <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank"><em>FundStaticData</em></a> and <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank"><em>FundDynamicData</em></a>, which Chapter 5 explores in detail.</li>
+
+  <li><strong>Linkage by UniqueID, not by nesting.</strong> A fund's portfolio may reference hundreds of distinct instruments, and a single instrument — say, a blue-chip European equity — may appear in the portfolios of many funds within the same delivery. Rather than repeat the full description of that instrument at every position where it occurs, FundsXML places each instrument once in a central <em><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank">AssetMasterData</a></em> section and refers to it from every portfolio position by a <em>UniqueID</em>. The effect is to normalise the document, much as a relational database normalises a schema: the same information lives in one place and is referenced from wherever it is needed.</li>
+
+  <li><strong>Extensibility through CustomAttributes.</strong> No standard can enumerate every field that every member firm, in every jurisdiction, will ever need. FundsXML acknowledges this openly by providing a schema-sanctioned extension mechanism — the <code>CustomAttributes</code> element — that allows a producer to attach named key–value data to most structural elements without breaking the schema. National specialties, proprietary risk metrics, internal reference codes, and early experiments with new fields all live here without forcing a fork of the schema. Chapter 9 treats <code>CustomAttributes</code> in depth and explains how to use it responsibly.</li>
+
+  <li><strong>Multi-language by design.</strong> European fund distribution is inherently multilingual: the same fund may be sold in eleven countries under the same ISIN with eleven different marketing names and eleven versions of the same investment-policy description. FundsXML treats language as a first-class attribute of textual fields, so that a single delivery can carry names, classifications, and descriptions in several languages in parallel. There is no need to produce a separate file per language or to pick a canonical translation at the producer and hope the consumer accepts it.</li>
+
+  <li><strong>Modular regulatory carriers.</strong> EMT, EPT, EET, EFT, and TPT each have their own semantics, their own release cadence, and their own community. FundsXML does not attempt to rewrite them; it embeds them as self-contained modules within a <em>RegulatoryReportings</em> area, so that each can evolve on its own schedule while travelling in the same envelope as the core fund data. The envelope is stable; the freights are allowed to change independently.</li>
+</ol>
+
+<p>These five principles are the mental scaffolding on which the rest of the book rests. When, in a later chapter, a piece of the schema looks surprising, ask which of the principles it serves: nine times out of ten, the answer explains the design.</p>
+
+<hr>
+
+<h2>3.5 Schema Architecture at a Glance</h2>
+
+<p>We are now ready to look at the shape of FundsXML itself. This section is deliberately a <em>map</em>, not a tutorial. For each main area we give the purpose, the kind of content that lives inside it, the single most important idea to carry forward, and a forward pointer to the chapter of this book in which the area is treated in detail. No field listings, no code samples, no XPath expressions — those start in Chapter 4.</p>
+
+<p>A FundsXML document has a single root element, conventionally named <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4" target="_blank"><em>FundsXML4</em></a>, and beneath that root live five main areas. These areas are the subject of Chapters 4 to 9. Figure 3.1 shows them schematically.</p>
+
+<p><strong>Figure 3.1 — The Five Main Areas of a FundsXML Document</strong></p>
+
+<pre><code>                             ┌─────────────────┐
+                             │    FundsXML4    │  (root)
+                             └────────┬────────┘
+                                      │
+       ┌─────────────┬────────────────┼─────────────────┬───────────────────┐
+       │             │                │                 │                   │
+┌──────┴──────┐ ┌────┴─────┐ ┌────────┴────────┐ ┌──────┴──────┐ ┌──────────┴───────────┐
+│ ControlData │ │  Funds   │ │ AssetMasterData │ │  Documents  │ │ RegulatoryReportings │
+│ (envelope)  │ │ (subject │ │  (reference     │ │ (factsheets │ │  (EMT/EPT/EET/…)     │
+│             │ │  of msg) │ │   library)      │ │  &amp; signed   │ │                      │
+│             │ │          │ │                 │ │  attach.)   │ │                      │
+└─────────────┘ └────┬─────┘ └────────▲────────┘ └─────────────┘ └──────────────────────┘
+                     │                │
+                     │ Portfolio      │ UniqueID
+                     │ positions ─────┘ reference
+                     │
+                     └── Transactions (inside FundDynamicData)
+</code></pre>
+
+<p>The diagram makes two points worth stating in words. First, <em>Portfolios</em> and <em>Transactions</em> are not siblings of the five main areas; they live <em>inside</em> the Funds area, more precisely inside each Fund's <em>FundDynamicData</em>. Newcomers often expect Portfolio and Transactions as top-level root children and are briefly disoriented when they are not — remembering their position inside Funds saves a surprising amount of confusion later. Second, the arrow from Portfolio positions up into AssetMasterData is the graphical form of design principle 2: a position does not carry its own asset description; it references one, by UniqueID, in the central library.</p>
+
+<p>We now walk through each of the five areas in the order a reader encounters them in a real delivery.</p>
+
+<h3>3.5.1 ControlData — The Envelope</h3>
+
+<p><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank"><em>ControlData</em></a> is the envelope of every FundsXML delivery. It carries the metadata <em>about</em> the message rather than the substance <em>within</em> it: a unique document identifier, the reporting date to which the delivery refers, the creation timestamp, the identity of the data sender and the intended receiver, the language of the delivery, and — crucially — the <em>DataOperation</em> flag that tells the consumer whether the file represents an initial load, an update to a previous delivery, or a deletion. Every FundsXML document contains exactly one ControlData element, and every downstream system reads it first.</p>
+
+<p>The importance of ControlData is disproportionate to its size. It is the piece that allows a consumer to recognise, route, de-duplicate, and sequence a delivery; without it, the same file arriving twice would be indistinguishable from a genuine update, and a delivery arriving out of order would be impossible to reconcile against earlier ones. Chapter 4 walks through ControlData field by field and builds a complete, schema-valid example for the Europa Growth Fund.</p>
+
+<h3>3.5.2 Funds — The Subject of the Message</h3>
+
+<p><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds" target="_blank"><em>Funds</em></a> is the area that most readers think of as "the FundsXML content proper". It contains one or more <em>Fund</em> elements, each representing a single legal fund or sub-fund, and within each Fund the structure splits — following design principle 1 — into <em>FundStaticData</em> and <em>FundDynamicData</em>. The static part describes the fund's identity: names in multiple languages, identifiers (ISIN, WKN, LEI, Valor), domicile, legal form, share-class structure, investment policy, benchmark, fees. The dynamic part describes the fund on a given valuation date: NAVs per share class, total net assets, performance figures, portfolio composition, and the day's transactions.</p>
+
+<p>Share classes deserve a word here because they often cause the most friction for newcomers. A single fund in FundsXML may carry several share classes, each with its own ISIN, its own currency, its own distribution policy, and its own NAV; the fund's portfolio is typically shared across all share classes, while some of the dynamic figures are per-share-class. Chapter 5 is devoted entirely to the Funds area and uses the Europa Growth Fund, its three share classes, and their daily updates as a continuous example.</p>
+
+<h3>3.5.3 AssetMasterData — The Reference Library</h3>
+
+<p><em>AssetMasterData</em> is the central reference library of a FundsXML delivery. It contains one entry per distinct instrument referenced anywhere in the delivery's portfolios, independent of how many times that instrument appears and in how many funds. Each entry gives the full static description of the instrument — asset class, identifiers, issuer, maturity where applicable, classification — and exposes a <em>UniqueID</em> by which portfolio positions can refer to it.</p>
+
+<p>The value of AssetMasterData is exactly the value of normalisation in any database: the same information lives in one place, not many, and changes to an instrument's description need to be made once per delivery rather than hundreds of times per portfolio. The principle is important enough that Chapter 6 begins with a section on normalised referencing before it addresses individual asset classes.</p>
+
+<h3>3.5.4 Documents — Factsheets and Attachments</h3>
+
+<p><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Documents" target="_blank"><em>Documents</em></a> is the area of the schema that most practitioners meet last, if at all, and yet it fills a surprisingly important role. It carries references to — or, in some deployments, the actual binary content of — fund-related documents that travel alongside the structured data: factsheets, prospectuses, key information documents (KIDs and KIIDs), sustainability-related disclosures, and audit reports. A <em>Document</em> entry names the document, classifies it, identifies the language and the effective date, and provides either a URL or an embedded representation.</p>
+
+<p>The Documents area is also where FundsXML's support for XML digital signatures (XMLDSig) is rooted: a signed Document entry allows the producer to attest to the integrity and origin of an attached PDF in a way that survives transport through intermediate systems. Chapter 9 covers the Documents area together with signatures and country-specific additions.</p>
+
+<h3>3.5.5 RegulatoryReportings — The Regulatory Carriers</h3>
+
+<p><em>RegulatoryReportings</em> is the area into which FundsXML absorbs the FinDatEx templates and related regulatory deliverables. It is organised as a container of self-contained modules, one per template: an <em>EMT</em> module for the European MiFID Template, an <em>EPT</em> for the PRIIPs template, an <em>EET</em> for the ESG template, an <em>EFT</em> for the Feedback template, and a <em>TPT</em> for the Solvency II Tripartite Template. Each module carries the fields that its template defines, with the same field names and the same data types, so that a FundsXML-aware consumer and a native template-aware consumer see the same data.</p>
+
+<p>The architectural trick — and design principle 5 at work — is that FundsXML does not attempt to <em>replace</em> the templates. It carries them. When a template is revised by FinDatEx, the corresponding FundsXML module is updated in the next minor release without disturbing anything else in the delivery. Chapter 8 is the longest chapter in this book precisely because the regulatory carriers are where most of the day-to-day implementation effort goes.</p>
+
+<h3>A Summary Table</h3>
+
+<p><strong>Table 3.3 — The Five Main Areas of FundsXML at a Glance</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Area</th><th>Purpose in one sentence</th><th>Treated in</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ControlData</td><td>Metadata of the delivery: who, when, for whom, which operation</td><td>Chapter 4</td></tr>
+    <tr><td>Funds</td><td>Static and dynamic fund data, share classes, portfolios, transactions</td><td>Chapters 5, 6, 7</td></tr>
+    <tr><td>AssetMasterData</td><td>Central reference library of instruments, addressed by UniqueID</td><td>Chapter 6</td></tr>
+    <tr><td>Documents</td><td>Factsheets, prospectuses, signed attachments</td><td>Chapter 9</td></tr>
+    <tr><td>RegulatoryReportings</td><td>EMT, EPT, EET, EFT, TPT as self-contained modules</td><td>Chapter 8</td></tr>
+  </tbody>
+</table>
+
+<p>Table 3.3 is the single most important piece of Chapter 3 to keep within reach while reading the rest of the book. Whenever a later chapter refers to a "section" or a "module" of FundsXML, the table tells the reader where it sits in the overall picture.</p>
+
+<hr>
+
+<h2>3.6 A First FundsXML Skeleton</h2>
+
+<p>We close the architectural tour with the first real FundsXML fragment of the book. The listing below is a <em>skeleton</em>: it contains the element names and the hierarchy, but no values, no attributes beyond the namespace declaration, and no data beyond what is needed to show how the pieces fit together. No FundsXML validator would accept it, and no system would consume it. Its purpose is orientation, not execution.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+
+  &lt;ControlData&gt;
+    &lt;!-- document id, reporting date, sender, receiver, operation --&gt;
+  &lt;/ControlData&gt;
+
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;FundStaticData&gt;
+        &lt;!-- names, identifiers, domicile, share classes (static) --&gt;
+      &lt;/FundStaticData&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;!-- NAVs and total net assets per share class --&gt;
+        &lt;/TotalAssetValues&gt;
+        &lt;Portfolios&gt;
+          &lt;Portfolio&gt;
+            &lt;Positions&gt;
+              &lt;Position&gt;
+                &lt;!-- references AssetMasterData by UniqueID --&gt;
+              &lt;/Position&gt;
+            &lt;/Positions&gt;
+          &lt;/Portfolio&gt;
+        &lt;/Portfolios&gt;
+        &lt;SingleFundFlows&gt;
+          &lt;!-- transactions: subscriptions, redemptions, distributions --&gt;
+        &lt;/SingleFundFlows&gt;
+      &lt;/FundDynamicData&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+
+  &lt;AssetMasterData&gt;
+    &lt;Asset&gt;
+      &lt;!-- one entry per distinct instrument, addressed by UniqueID --&gt;
+    &lt;/Asset&gt;
+  &lt;/AssetMasterData&gt;
+
+  &lt;Documents&gt;
+    &lt;!-- factsheets, prospectuses, KIDs, signed attachments --&gt;
+  &lt;/Documents&gt;
+
+  &lt;RegulatoryReportings&gt;
+    &lt;!-- EMT / EPT / EET / EFT / TPT modules --&gt;
+  &lt;/RegulatoryReportings&gt;
+
+&lt;/FundsXML4&gt;
+</code></pre>
+
+<p>Even though the listing carries no real data, every design principle from §3.4 is visible in it. Principle 1 — the separation of static and dynamic data — appears as the pairing of <em>FundStaticData</em> and <em>FundDynamicData</em> inside the Fund element. Principle 2 — linkage by UniqueID — is the reason <em>Positions</em> holds only references and not instrument details, while the full instrument descriptions live once, in <em>AssetMasterData</em>, at the root level. Principle 3 — extensibility — is not printed above (we have left <code>CustomAttributes</code> out of the skeleton deliberately), but every major structural element in the real schema admits it. Principle 4 — multi-language support — is invisible in a skeleton without values, but the name and description fields inside <em>FundStaticData</em> will accept per-language variants when we fill them in. And principle 5 — modular regulatory carriers — is the reason <em>RegulatoryReportings</em> sits as its own top-level area alongside, rather than inside, the fund data it complements.</p>
+
+<p>This is the last time in the book that a FundsXML sample will be this abstract. Beginning in Chapter 4, every listing carries real data for the Europa Growth Fund. Readers should note that the code listings in Chapters 4 through 8 are <strong>illustrative</strong>: element names, attribute values, and the precise field ordering are written for pedagogical clarity and do not always match the production schema down to the last character. Chapter 9 changes the rule and shows fully <strong>schema-validated</strong> examples against the current FundsXML 4.2.8 XSD, together with the <code>xmllint</code> commands that verify them. The complete, end-to-end example for the Europa Growth Fund is printed in Appendix D.</p>
+
+<hr>
+
+<h2>3.7 Key Takeaways</h2>
+
+<ul>
+  <li>FundsXML is not a regulatory imposition but a bottom-up industry standard. It was created in 2001 by six major German-speaking fund-management houses, adopted by BVI in 2003 (version 1.0 published on 8 December 2003), extended into Austria in 2006 under VÖIG, and expanded across Europe over the following decade. Today it is the de-facto European interchange format for structured fund data.</li>
+  <li>The standard is maintained by an open, not-for-profit association whose working groups make decisions transparently and whose release discipline has kept the 4.x line backwards-compatible for more than fifteen years.</li>
+  <li>Five design principles shape every FundsXML message: the separation of static and dynamic data, linkage by UniqueID rather than nesting, extensibility through <code>CustomAttributes</code>, multi-language support as a first-class feature, and modular regulatory carriers inside a stable envelope.</li>
+  <li>A FundsXML document has one root and five main areas: <em>ControlData</em> (the envelope), <em>Funds</em> (the subject of the message), <em>AssetMasterData</em> (the reference library), <em>Documents</em> (factsheets and signed attachments), and <em>RegulatoryReportings</em> (EMT, EPT, EET, EFT, and TPT).</li>
+  <li><em>Portfolios</em> and <em>Transactions</em> are not top-level areas in their own right; they live inside each Fund's <em>FundDynamicData</em>. Positions reference AssetMasterData entries by UniqueID rather than repeating instrument details in place.</li>
+  <li>Table 3.3 maps each of the five main areas to the chapter of this book that treats it in depth, and the reader may usefully keep it within reach while reading Part II.</li>
+</ul>
+
+<p>With the map of the standard now in hand, we can zoom in on the first of the five areas — the envelope that every FundsXML delivery begins with. Chapter 4 turns to <em>ControlData</em> and walks through every field that identifies, dates, and routes a delivery in production.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter02.html">&lsaquo; Chapter 2</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter04.html">Chapter 4 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

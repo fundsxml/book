@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 5 — Funds, Sub-Funds, and Share Classes</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter04.html">&lsaquo; Chapter 4</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter06.html">Chapter 6 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<h1>Funds, Sub-Funds, and Share Classes<span class="subtitle">Static and dynamic fund information</span></h1>
+<hr>
+<h2>5.1 Setting the Scene: Inside the Envelope</h2>
+<p>At the end of Chapter 4 we had a ControlData block for the Europa Growth Fund's month-end delivery on 31 March 2026. We knew who had sent it, whom it was meant for, which day it referred to, and that it was the first delivery of its stream. What we did not know was anything about the fund itself. This chapter fills that gap. It is the longest chapter in the book — forty pages — because the <code>Fund</code> element is the element about which everything else in a FundsXML delivery eventually revolves, and because it is also the element where newcomers most often get lost.</p>
+<p>Before we begin, one pedagogical decision deserves to be stated up front. The Europa Growth Fund, as we learned in Chapter 1, is a European UCITS equity fund distributed across eleven countries. In reality it has three distinct share classes: a retail euro-denominated accumulating class, a retail Swiss-franc-denominated currency-hedged accumulating class, and an institutional euro-denominated distributing class. Every field we discuss in this chapter exists at one of two levels: either at the level of the fund as a whole, or at the level of an individual share class. The two levels are easy to mix up, and a reader who has to track both at once while also learning about identifiers, classification, and fees is going to struggle.</p>
+<p>We therefore take the chapter in four parts. <strong>Part I</strong> (§5.2 to §5.7) pretends the Europa Growth Fund has exactly one share class and treats every topic as though it lived cleanly on the fund element. <strong>Part II</strong> (§5.8 to §5.11) relaxes the pretence, puts the three share classes back, and walks through the topics on which the fund-level picture branches. <strong>Part III</strong> (§5.12 and §5.13) treats the dynamic data — NAVs, total net assets, performance figures — in the light of the share-class structure we have just built. <strong>Part IV</strong> (§5.14 to §5.17) covers umbrella funds, assembles the complete <code>Fund</code> element, lists the common pitfalls, and summarises the chapter. By the end of Part I the reader should feel comfortable reading a fund's identity; by the end of Part II the reader should be able to talk fluently about share classes; by the end of the chapter the reader should be able to read a complete <code>Fund</code> element on sight and know which of the remaining chapters of Part II of the book each fragment of it belongs to.</p>
+<p>By the end of this chapter, you should be able to:</p>
+<ul>
+<li>identify which information in FundsXML belongs to a fund and which belongs to a share class;</li>
+<li>produce and populate every mandatory field of the <code>Fund</code> element for a realistic European UCITS;</li>
+<li>choose the right identifier for every jurisdiction in which a fund is distributed;</li>
+<li>model multilingual fund data without duplicating documents per language;</li>
+<li>distinguish fund-level, share-class-level, and regulatory-level representations of fees and risk indicators;</li>
+<li>read a complete <code>Fund</code> element with multiple share classes on sight and point at the pieces each later chapter of the book treats in depth.</li>
+</ul>
+<hr>
+<h2>5.2 The Fund Element in Context</h2>
+<p>Inside every FundsXML delivery, immediately after the ControlData envelope, sits a <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds" target="_blank"><code>&lt;Funds&gt;</code></a> container. The container is a simple list: it contains one or more <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund" target="_blank"><code>&lt;Fund&gt;</code></a> elements, each representing a single fund. The list is the schema's way of saying that one delivery may describe more than one fund at a time.</p>
+<p>Two production patterns dominate in practice. The first pattern, <strong>one fund per file</strong>, is the one we have been assuming so far: the Europa Growth Fund is delivered in its own FundsXML file, the <code>&lt;Funds&gt;</code> container holds exactly one <code>&lt;Fund&gt;</code>, and the distributor's dispatcher routes the file by looking at the DataSupplier and the fund's ISIN. This pattern is common when the producer wants fine-grained control over who receives which fund — particularly where distribution agreements vary by country or share class. The second pattern, <strong>several funds per file</strong>, is more common in fund-administrator batches: a single file carries every fund the administrator serves for a given asset-management client, often several dozen at a time. The container form of <code>&lt;Funds&gt;</code> exists precisely so that the second pattern does not require a wrapper document of its own. Both patterns are valid FundsXML; the choice between them is a pipeline design decision, not a schema decision, and Chapter 12 will come back to it when it discusses integration into system landscapes.</p>
+<p>Whichever pattern is used, each <code>&lt;Fund&gt;</code> element has the same shape. Four elements are mandatory and appear at the very top of every <code>&lt;Fund&gt;</code>; the rest follow the separation of static and dynamic data that we named in Chapter 3 as design principle 1, and are wrapped into an optional <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund" target="_blank"><code>&lt;SingleFund&gt;</code></a> container (for non-umbrella funds) or a <code>&lt;Subfunds&gt;</code> container (for umbrella structures, §5.14):</p>
+<pre><code>&lt;Fund&gt;
+  &lt;Identifiers&gt;
+    &lt;!-- LEI of the fund and any other fund-level identifier --&gt;
+  &lt;/Identifiers&gt;
+  &lt;Names&gt;
+    &lt;!-- OfficialName, optionally MarketingName, ShortName, LanguageNames --&gt;
+  &lt;/Names&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+  &lt;FundStaticData&gt;
+    &lt;!-- domicile, legal structure, classifications, benchmarks, ongoing costs, ... --&gt;
+  &lt;/FundStaticData&gt;
+  &lt;FundDynamicData&gt;
+    &lt;!-- fund-level total net assets, portfolio, fund-level benchmark values, ... --&gt;
+  &lt;/FundDynamicData&gt;
+  &lt;SingleFund&gt;
+    &lt;!-- SingleFundStaticData and the list of ShareClasses --&gt;
+  &lt;/SingleFund&gt;
+&lt;/Fund&gt;
+</code></pre>
+<p>The shape deserves two observations. First, <code>Identifiers</code>, <code>Names</code>, <code>Currency</code>, and <code>SingleFundFlag</code> are <strong>mandatory</strong> and appear before the static/dynamic split. They establish the fund's identity before anything else; a <code>&lt;Fund&gt;</code> element that omits them is not schema-valid. Second, the static/dynamic split is not cosmetic. Many real pipelines ship <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank"><code>FundStaticData</code></a> only when something has changed — perhaps once a month, perhaps only when a new share class is launched or a fee is revised — while shipping a fresh <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank"><code>FundDynamicData</code></a> block every valuation day. Doing so is entirely legal: both <code>FundStaticData</code> and <code>FundDynamicData</code> are optional, a delivery may contain one, the other, or both, and consumers are expected to maintain the last-known state of each half independently. The DataOperation semantics of Chapter 4 apply to whichever half is present.</p>
+<p>The <code>&lt;SingleFund&gt;</code> wrapper is where the share-class structure lives. Newcomers often expect <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses" target="_blank"><code>&lt;ShareClasses&gt;</code></a> to hang off <code>FundStaticData</code>, but the schema puts them one level higher: <code>Fund/SingleFund/ShareClasses</code>, as a sibling of the static/dynamic blocks rather than a child of the static one. The reason is that <code>&lt;SingleFund&gt;</code> is one of two alternatives — the other being <code>&lt;Subfunds&gt;</code> for umbrella structures — and making the choice a first-class sibling keeps the two cases symmetric. We take <code>&lt;SingleFund&gt;</code> as the running case for the whole chapter and return to <code>&lt;Subfunds&gt;</code> in §5.14.</p>
+<p><strong>Figure 5.1 — <code>Funds</code> as a list</strong></p>
+<pre><code>                 &lt;Funds&gt;
+                    │
+     ┌──────────────┼──────────────┬──────────────┐
+     │              │              │              │
+  &lt;Fund&gt;         &lt;Fund&gt;         &lt;Fund&gt;         &lt;Fund&gt;
+     │              │              │              │
+  Static         Static         Static         Static
+  Dynamic        Dynamic        Dynamic        Dynamic
+</code></pre>
+<p>Each of the <code>&lt;Fund&gt;</code> boxes is structurally independent of the others: a consumer that cares only about one fund can read that fund and stop without loss of correctness. The AssetMasterData library (Chapter 6) lives outside the <code>&lt;Funds&gt;</code> container, as we saw in Chapter 3, so that instruments shared between several funds in the same delivery can be described once and referenced many times. That cross-fund sharing is the subject of Chapter 6, not this one; Chapter 5 treats each <code>&lt;Fund&gt;</code> as though it were the only fund in the file.</p>
+<hr>
+<h2>5.3 FundStaticData vs FundDynamicData Revisited</h2>
+<p>Chapter 3 introduced the static/dynamic split as design principle 1. Now that we are about to populate each half, it is worth pausing to ask a more operational question: <em>which field goes where?</em> The principle is intuitive in the limit — a fund's legal name is static, its NAV is dynamic — but the middle is less obvious. Is the <em>launch date</em> of the fund static or dynamic? It never changes, so it sounds static, but many reference systems store it alongside performance data for historical calculations, which makes it feel dynamic. Is the fund's <em>ongoing charges</em> figure static? It is published once a year and does not move between publications, so it is static by default, but a producer that recomputes it on demand at every delivery could reasonably place it in the dynamic half. FundsXML takes a position on each of these questions, and the position is worth understanding because it is the organising principle of every <code>Fund</code> element in the book.</p>
+<p>The rule of thumb is straightforward. A field belongs in <code>FundStaticData</code> if, in the ordinary course of operating a fund, it would <em>not</em> need to be re-transmitted to downstream consumers on every valuation day. A field belongs in <code>FundDynamicData</code> if, in the ordinary course of operating a fund, it <em>would</em>. Table 5.1 summarises where the commoner fields land.</p>
+<p><strong>Table 5.1 — Where the commoner fields of a fund live</strong></p>
+<table>
+<thead>
+<tr>
+<th>Mandatory header</th>
+<th><code>FundStaticData</code></th>
+<th><code>FundDynamicData</code></th>
+<th><code>SingleFund</code> / <code>&lt;ShareClass&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Identifiers/LEI</code> (fund-level)</td>
+<td><code>DomicileCountry</code></td>
+<td>Fund-level <code>TotalAssetValues</code></td>
+<td>Per-class <code>Identifiers</code> (ISIN, GermanWKN, SwissValorenCode)</td>
+</tr>
+<tr>
+<td><code>Names</code></td>
+<td><code>ListedLegalStructure</code></td>
+<td>Fund-level benchmark values</td>
+<td>Per-class <code>Names</code>, <code>Currency</code>, <code>ShareClassType</code></td>
+</tr>
+<tr>
+<td><code>Currency</code></td>
+<td><code>InceptionDate</code> (fund)</td>
+<td>Portfolio composition <em>(→ Chapter 6)</em></td>
+<td><code>SubscriptionRestrictions</code>, <code>CurrencyHedgedFlag</code></td>
+</tr>
+<tr>
+<td><code>SingleFundFlag</code></td>
+<td><code>FundTexts</code> (strategy, risk, …)</td>
+<td></td>
+<td><code>Prices</code> and per-class <code>TotalAssetValues</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>Classifications</code></td>
+<td></td>
+<td><code>Fees</code>, <code>Distributions</code>, <code>Flows</code> <em>(→ Chapter 7)</em></td>
+</tr>
+<tr>
+<td></td>
+<td><code>Benchmarks</code> (static)</td>
+<td></td>
+<td><code>PerformanceFigures</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>OngoingCosts</code></td>
+<td></td>
+<td><code>HighWatermark</code>, <code>InceptionDate</code> (per class)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>SFDRProductType</code></td>
+<td></td>
+<td><code>RegistrationCountries</code></td>
+</tr>
+</tbody>
+</table>
+<p>Three lines of the table need commentary. <strong>Portfolio composition</strong> lives inside <code>FundDynamicData/Portfolios</code> — that is the reason the table lists it in the third column — but it is a large enough topic to deserve its own chapter, and this chapter does not treat it. Chapter 6 walks through every asset class and every position-level field. <strong>Transactions</strong> (subscriptions, redemptions, distributions, corporate actions) live at the share-class level: subscriptions and redemptions under <code>ShareClass/Flows</code>, dividend events under <code>ShareClass/Distributions</code>. They are the subject of Chapter 7. Sections §5.12 and §5.13 of this chapter will cover per-class NAVs, fund-level totals, and performance figures, and will elide portfolio and flow detail when we get there.</p>
+<p>A fourth observation is worth stating while the table is in view. <strong>Per-class dynamic data lives on each class, not in <code>FundDynamicData</code>.</strong> NAV per unit, shares outstanding, per-class total net assets, per-class performance, per-class cash flows and distributions, and per-class portfolios all live inside the individual <code>&lt;ShareClass&gt;</code> element under <code>SingleFund/ShareClasses</code>. <code>FundDynamicData/TotalAssetValues</code> carries a single aggregate figure for the whole fund, and <code>FundDynamicData/Portfolios</code> carries a shared fund-level portfolio where classes are backed by a common asset pool. The split is not always intuitive at first reading; §5.12 returns to it with concrete examples.</p>
+<p>The operational consequence of the split is worth stating plainly. In a pipeline designed with static/dynamic separation in mind, the producer's batch job runs in two phases. The first phase, triggered only when something in the fund's identity changes, emits a <code>FundStaticData</code> update — a new share class was launched, a fee was revised, a benchmark was switched. The second phase, triggered on every valuation day, emits a <code>FundDynamicData</code> update — today's NAVs, today's shares outstanding, today's portfolio, today's transactions. The two streams flow through the same FundsXML documents, are sequenced by the same DataOperation mechanics from Chapter 4, and are reconciled by the consumer into a single current-state picture. It is perfectly legal under the schema to ship both halves in every delivery — and many producers do, because the redundancy is cheap and the operational simplification is real. But the ability to split them is available when it matters.</p>
+<hr>
+<h2>5.4 Fund Identifiers — ISIN, WKN, LEI, Valor, and Friends</h2>
+<p>The first substantive field group of the chapter is the one most likely to trip up a first-time implementer. FundsXML carries <em>several</em> identifiers for each fund, and the reason is that no single identifier universe covers all of the jurisdictions and all of the consumers that European fund data touches. A German investor needs a WKN. A Swiss investor needs a Valor. A regulator needs an LEI. A cross-border distribution agreement is written around ISINs. A legacy Bloomberg terminal may only accept its own proprietary ticker. All of these identifiers coexist, none of them is individually sufficient, and the schema supports all of them at once.</p>
+<h3>5.4.1 The Hierarchy of Identifiers</h3>
+<p>Identifiers in FundsXML live at two levels, and both levels use exactly the same container: a <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/Identifiers" target="_blank"><code>&lt;Identifiers&gt;</code></a> element (of schema type <code>IdentifiersType</code>) that carries a fixed set of named children — <code>ISIN</code>, <code>Bloomberg</code>, <code>CUSIP</code>, <code>GermanWKN</code>, <code>LEI</code>, <code>MexID</code>, <code>ReutersRIC</code>, <code>SEDOL</code>, <code>SwissValorenCode</code>, <code>SwiftBIC</code> — plus a repeatable <code>OtherID</code> escape hatch for everything the schema does not name. One <code>&lt;Identifiers&gt;</code> block sits at the top of the <code>&lt;Fund&gt;</code> element and carries the fund-level identifiers; a separate <code>&lt;Identifiers&gt;</code> block sits at the top of each <code>&lt;ShareClass&gt;</code> element and carries the share-class-level identifiers. The two use the same vocabulary but populate different fields.</p>
+<p>Some identifiers — principally the <strong>LEI</strong>, together with any regulator-issued fund number — identify the fund as a legal entity. These are <em>fund-level</em> identifiers; they exist once per fund and do not care how many share classes the fund has, and they sit inside the fund's own <code>&lt;Identifiers&gt;</code> container. Others — <strong>ISIN</strong>, <strong>GermanWKN</strong>, <strong>SwissValorenCode</strong>, <strong>CUSIP</strong>, <strong>Bloomberg ticker</strong> — identify a separately investable unit, which in practice means a single share class. These are <em>share-class-level</em> identifiers; a fund with three share classes has three <code>&lt;Identifiers&gt;</code> blocks, one per class, each populated with the instrument codes of its own class.</p>
+<p>For the remainder of Part I we are pretending that the Europa Growth Fund has exactly one share class, so the distinction does not yet matter for narrative purposes: whenever we talk about <em>the fund's ISIN</em> in this part, what we really mean is <em>the ISIN of its only share class</em>. Part II (§5.9) will put the share-class-level identifiers in their proper place inside each <code>&lt;ShareClass&gt;</code>. The only identifier that actually <em>belongs</em> at the fund level is the LEI, and it will remain there throughout. Note that <strong>FundsXML uses the name <code>GermanWKN</code> for what German market participants usually call a WKN</strong>, and <strong><code>SwissValorenCode</code> for what the Swiss call a Valor</strong>. The rest of this chapter uses the short names <em>WKN</em> and <em>Valor</em> in prose and the schema names in XML fragments; readers writing code against the schema should prefer the long forms.</p>
+<p>One point deserves to be made now, even before we look at any single identifier in detail: the <strong>LEI of the fund is not the LEI of its asset manager</strong>. Chapter 4 introduced the LEI of <em>Europa Asset Management S.A.</em> (<code>529900T8BM49AURSDO55</code>) as part of the <code>DataSupplier</code> block. The Europa Growth Fund itself, as a separate legal entity, has its own LEI — <code>549300ABCDEFGHIJKL34</code> — and it is this second identifier that appears in <code>Fund/Identifiers/LEI</code>, not the first. Confusing the two is a surprisingly common mistake among producers who have built their pipelines around a single "company LEI" and forgotten that a fund is a legal entity in its own right.</p>
+<h3>5.4.2 The Core Identifiers in Detail</h3>
+<p>We take the five most important identifier families in turn. Each entry below gives the structure of the identifier, its issuing body, the level at which FundsXML carries it, and the single most important operational rule associated with it.</p>
+<p><strong>ISIN</strong> (International Securities Identification Number) is a twelve-character alphanumeric code defined by ISO 6166. The first two characters are the country of issue, the next nine are a national identifier, and the twelfth is a check digit computed by the Luhn-like algorithm of the standard. ISINs are issued by national numbering agencies — in Luxembourg, the <em>Clearstream Banking</em> numbering agency — and are the primary key of cross-border fund distribution in Europe. Every separately investable share class has its own ISIN; a fund with three share classes has three ISINs. At the fund level, strictly speaking, there is no single ISIN — only the collection of its share classes' ISINs — but many producers expose the principal class's ISIN at <code>FundStaticData</code> level as a shortcut for display purposes. The schema tolerates this as long as the same ISIN also appears on its owning share class.</p>
+<p><strong>WKN</strong> (Wertpapierkennnummer) is a six-character alphanumeric code assigned by the German central numbering agency. It predates the ISIN by several decades and remains mandatory in German fact sheets, German regulator filings, and the displays of German retail broker systems. Every German-distributed share class has a WKN in addition to its ISIN; the two coexist and the same share class carries both. Producers who serve German consumers at any volume populate WKN for every distributed share class automatically.</p>
+<p><strong>Valor</strong> is a five- to nine-digit numeric code issued by SIX Financial Information in Switzerland. It is the Swiss counterpart to WKN: mandatory for distribution into Switzerland, mandatory for Swiss stock-exchange listings, and expected by every Swiss consumer of fund data. The Europa Growth Fund, which is distributed into Switzerland, carries Valor numbers on its CHF-hedged share class (and often on its EUR classes as well, since Valor can identify any security that a Swiss intermediary may hold on behalf of a client).</p>
+<p><strong>LEI</strong> (Legal Entity Identifier) is a twenty-character alphanumeric code defined by ISO 17442, issued by local operating units of the Global Legal Entity Identifier Foundation (GLEIF). Unlike ISIN, WKN, and Valor, the LEI identifies a <em>legal entity</em>, not a financial instrument. At the fund level, the LEI uniquely identifies the fund itself; at the umbrella level (which we will come to in §5.14), each sub-fund under the umbrella carries its own LEI and the umbrella carries another. LEIs are required for regulatory reporting under MiFID II, EMIR, AIFMD Annex IV, and SFDR, and producers who forget to populate them will find their deliveries rejected by regulator-facing consumers. Unlike the instrument identifiers, the LEI is also stable across corporate events — a rebranding, a merger, a translation of a legal name — which is why Chapter 4 recommended matching allowlists on LEI rather than on name.</p>
+<p><strong>CUSIP</strong> (nine-character, North-American) and <strong>SEDOL</strong> (seven-character, British) appear occasionally on European funds that are marketed to international investors or listed outside Europe. They are less common than the first four, and FundsXML carries them as optional fields when they apply.</p>
+<p><strong>Table 5.2 — Fund identifier families</strong></p>
+<table>
+<thead>
+<tr>
+<th>Schema element</th>
+<th>Issuer</th>
+<th>Level</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ISIN</code></td>
+<td>National numbering agencies (ISO 6166)</td>
+<td>Share class</td>
+<td>Cross-border distribution, trading, reference data</td>
+</tr>
+<tr>
+<td><code>GermanWKN</code></td>
+<td>German WM-Datenservice</td>
+<td>Share class</td>
+<td>German factsheets, retail broker systems, BaFin filings</td>
+</tr>
+<tr>
+<td><code>SwissValorenCode</code></td>
+<td>SIX Financial Information (Switzerland)</td>
+<td>Share class</td>
+<td>Swiss distribution, SIX Swiss Exchange listings</td>
+</tr>
+<tr>
+<td><code>LEI</code></td>
+<td>GLEIF local operating units</td>
+<td>Fund / sub-fund</td>
+<td>Regulatory reporting under MiFID II, EMIR, AIFMD, SFDR</td>
+</tr>
+<tr>
+<td><code>CUSIP</code></td>
+<td>CUSIP Global Services (US/Canada)</td>
+<td>Share class</td>
+<td>Funds marketed to North-American investors</td>
+</tr>
+<tr>
+<td><code>SEDOL</code></td>
+<td>London Stock Exchange (UK)</td>
+<td>Share class</td>
+<td>British listings and broker systems</td>
+</tr>
+</tbody>
+</table>
+<h3>5.4.3 OtherID — the Escape Hatch</h3>
+<p>No schema can enumerate every identifier that every consumer in every jurisdiction will ever need, and FundsXML does not try. For everything that the schema does not define explicitly — internal fund-administrator reference codes, national regulator codes, proprietary distributor identifiers, Morningstar fund IDs — there is the <strong><code>OtherID</code></strong> mechanism. An <code>OtherID</code> element sits inside <code>&lt;Identifiers&gt;</code> alongside the named children, carries a text value, and takes one of two attributes: <code>ListedType</code>, whose value is drawn from a long enumeration of recognised schemes (among them <code>INTERNAL FUND CODE</code>, <code>CSSF FUND CODE</code>, <code>BAFIN ID</code>, <code>AUSTRIAN FUND CODE</code>, <code>CNMV CODE</code>, <code>INAV BLOOMBERG LISTING CODE</code>, <code>REUTERS LISTING CODE</code>, and many others), or <code>FreeType</code>, an open string for schemes the enumeration does not cover. Consumers read the attribute to decide whether they recognise the scheme and, if so, how to interpret the value.</p>
+<p>The escape hatch is valuable precisely because it is structured: unlike a generic "extra fields" blob, <code>OtherID</code> forces the producer to declare the scheme of every extra identifier, so that a consumer can decide field by field whether it knows what to do with each one. A typical production <code>&lt;Identifiers&gt;</code> block at the fund level carries the LEI and one or two <code>OtherID</code> entries — the producer's internal fund code under <code>ListedType="INTERNAL FUND CODE"</code>, perhaps the national regulator's fund code under <code>ListedType="CSSF FUND CODE"</code> for a Luxembourg fund. For producer-internal reference codes, <code>OtherID ListedType="INTERNAL FUND CODE"</code> is the idiomatic way to transport what some producers historically called a <em>DataSupplierFundID</em>; there is no dedicated element with that name in the schema.</p>
+<p>The rule of discipline that matters is that an <code>OtherID</code> must <strong>never</strong> be used for an identifier that has a dedicated field. Writing the ISIN into an <code>&lt;OtherID ListedType="..."&gt;ISIN&lt;/OtherID&gt;</code> element instead of into the proper <code>&lt;ISIN&gt;</code> element is a recurring mistake — often the result of a mechanical generator that was configured before the producer learned about the dedicated element — and it breaks downstream consumers who look for ISIN at its expected location. The symptom is a consumer that "cannot find" the ISIN of a fund even though it is right there in the document; the fix is to move the identifier into its proper place and, often, to audit the producer for the same mistake on other fields.</p>
+<hr>
+<h2>5.5 Multilingual Names and Descriptions</h2>
+<p>Design principle 4 from Chapter 3 — <em>multi-language by design</em> — meets the practicalities of European fund distribution in this section. A single UCITS may be sold in eleven countries under the same ISIN with the same portfolio and the same investment policy, but with eleven different marketing names, eleven translations of its investment objective, and eleven versions of its risk-and-reward narrative. Producing eleven separate FundsXML documents, one per language, would defeat the point of a standard; FundsXML therefore allows every textual field to carry several language variants side by side, so that a single delivery can serve every distribution country at once.</p>
+<h3>5.5.1 The <code>Names</code> Container and the Language Attribute</h3>
+<p>FundsXML models fund names through a single <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/Names" target="_blank"><code>&lt;Names&gt;</code></a> container (schema type <code>NamesType</code>) whose children are <strong>named</strong> rather than polymorphic. A producer that wants several language variants does <em>not</em> repeat a generic <code>&lt;Name&gt;</code> element with different <code>language</code> attributes at the top of <code>&lt;Names&gt;</code>. Instead, <code>&lt;Names&gt;</code> holds a sequence of specifically named children — <code>OfficialName</code>, <code>FullName</code>, <code>MarketingName</code>, <code>ShortName</code>, <code>PreviousName</code>, <code>DynLenNames</code>, <code>LanguageNames</code> — and only the last of these, <code>LanguageNames</code>, is a repeatable container in which individual <code>&lt;Name&gt;</code> elements each carry a <code>language</code> attribute. The design keeps the single-language fast path simple (one <code>&lt;OfficialName&gt;</code> and done) and concentrates the multilingual machinery in one place.</p>
+<p>A complete Europa Growth Fund <code>&lt;Names&gt;</code> block therefore looks like this:</p>
+<pre><code>&lt;Names&gt;
+  &lt;OfficialName&gt;Europa Asset Management Investments — Europa Growth Sub-Fund&lt;/OfficialName&gt;
+  &lt;MarketingName&gt;Europa Growth Fund&lt;/MarketingName&gt;
+  &lt;ShortName&gt;EGF&lt;/ShortName&gt;
+  &lt;LanguageNames&gt;
+    &lt;Name language=&quot;de&quot;&gt;Europa Wachstumsfonds&lt;/Name&gt;
+    &lt;Name language=&quot;fr&quot;&gt;Europa Fonds de Croissance&lt;/Name&gt;
+    &lt;Name language=&quot;it&quot;&gt;Europa Fondo di Crescita&lt;/Name&gt;
+  &lt;/LanguageNames&gt;
+&lt;/Names&gt;
+</code></pre>
+<p>Three things about this block are worth stating explicitly. First, the <code>&lt;OfficialName&gt;</code> is <strong>mandatory</strong> — every <code>&lt;Names&gt;</code> container must have exactly one, and it is the only element inside <code>&lt;Names&gt;</code> that is required. It carries the fund's primary canonical name in the producer's canonical language, typically the language of the governing jurisdiction. Second, <code>&lt;MarketingName&gt;</code> and <code>&lt;ShortName&gt;</code> are optional fields for the public-facing name and its compact abbreviation; when they are present they apply <em>across languages</em>, because a single marketing name and a single short code are what distributors and broker systems actually display. Third, the <code>language</code> attribute inside <code>&lt;LanguageNames&gt;</code> takes an ISO 639-1 code — <em>en</em>, <em>de</em>, <em>fr</em>, <em>it</em>, <em>es</em>, <em>nl</em>, and so on — and each <code>&lt;Name language="xx"&gt;</code> element carries exactly one translation.</p>
+<p>A consumer that needs a localised variant picks the matching <code>LanguageNames/Name</code>; if no variant matches its preferred locale, it falls back to the <code>&lt;MarketingName&gt;</code> (for display purposes), to the <code>&lt;OfficialName&gt;</code> (for legal purposes), or to a configured default language. The fallback discipline is a consumer-side concern; the producer's job is simply to populate as many language variants as the fund's distribution agreements require, and to populate them consistently. Producers should populate <em>all</em> relevant languages in every delivery, not only the language of the intended recipient. A single FundsXML file routed to a French distributor should still carry the German and Italian names alongside the French one, because downstream the distributor may feed the same file into a factsheet engine that renders in any of those languages. Filtering to a single language on the producer side is tempting and wrong.</p>
+<h3>5.5.2 Types of Names</h3>
+<p>The children of <code>&lt;Names&gt;</code> come in several shades, and they mean subtly different things. Confusing them is a routine cause of factsheets that display the wrong text.</p>
+<p><strong><code>OfficialName</code></strong> is the fund's full legal name as it appears in the prospectus and in any court or regulatory filing. It is mandatory, and it is the only name that the producer is obliged to populate. For the Europa Growth Fund the official name is <em>Europa Asset Management Investments — Europa Growth Sub-Fund</em>, reflecting the sub-fund relationship even in the standalone-looking listings of this chapter. The official name is typically held in a single canonical language matching the governing jurisdiction; when a jurisdiction requires translations of the legal name, the translations go into <code>LanguageNames</code> alongside the marketing translations.</p>
+<p><strong><code>FullName</code></strong> is an optional longer form that is used in umbrella structures to disambiguate a sub-fund from its umbrella. When a producer prefers to keep <code>OfficialName</code> as just the sub-fund's own name — <em>Europa Growth Sub-Fund</em> — the fully qualified <em>Umbrella SICAV — Europa Growth Sub-Fund</em> form goes into <code>FullName</code>. The two coexist and serve different display contexts.</p>
+<p><strong><code>MarketingName</code></strong> is the marketing or commercial name of the fund — the name that appears on fact sheets, client portals, and advertising. For the Europa Growth Fund this is simply <em>Europa Growth Fund</em>. It is the name the producer wants end-users to see; it is typically shorter and friendlier than the legal name and may differ from it substantially.</p>
+<p><strong><code>ShortName</code></strong> is an abbreviation or short code, used in compact displays such as tables and trading screens. For the Europa Growth Fund it is <em>EGF</em>. The short name is <em>not</em> intended to be multilingual: short codes are typically culturally neutral, and a single string serves all languages.</p>
+<p><strong><code>PreviousName</code></strong> carries the most recent previous name of the fund after a rebranding, along with an <code>@until</code> attribute that names the date on which the previous name ceased to apply. Consumers that maintain historical reference-data joins read the previous name alongside the current one so that older data with the old name can still be matched to the fund.</p>
+<p><strong><code>DynLenNames</code></strong> carries several length-constrained variants of the current name for display systems that truncate at fixed widths — a 16-character short form, a 32-character medium form, a 64-character long form. Producers use it when their consumers include legacy terminals that would otherwise butcher the marketing name. It is optional and rarely populated in modern deliveries.</p>
+<p><strong><code>LanguageNames</code></strong> is the container for translated variants, as we saw in §5.5.1. Each <code>&lt;Name&gt;</code> child inside it carries a two-letter ISO 639-1 <code>language</code> attribute and one translation.</p>
+<p>Producer-internal reference codes — what some producers historically called a <em>DataSupplierFundID</em> — do <strong>not</strong> live inside <code>&lt;Names&gt;</code>. They live inside <code>&lt;Identifiers&gt;</code> as an <code>OtherID</code> entry with <code>ListedType="INTERNAL FUND CODE"</code>, as §5.4.3 described. This is worth saying twice because the historical name of the field misled an entire generation of integrators into looking for it in the wrong place.</p>
+<h3>5.5.3 <code>FundTexts</code> — Investment Objectives, Policies, and Narratives</h3>
+<p>Longer textual fields — <em>investment objective</em>, <em>investment policy</em>, <em>risk profile narrative</em>, <em>investor profile description</em> — do not live inside <code>&lt;Names&gt;</code>. They live in a separate container, <code>FundStaticData/FundTexts</code>, whose <code>&lt;FundText&gt;</code> children each carry one piece of free-form text alongside its metadata. These are the fields that feed factsheet generators and client-portal descriptions, and their quality determines whether a fund reads like a carefully prepared product or like a machine translation.</p>
+<p>Each <code>&lt;FundText&gt;</code> element has the following shape. A <code>&lt;Language&gt;</code> child (mandatory) names the language of the content using an ISO 639 code. A <code>&lt;Date&gt;</code> child (mandatory) names the date on which the text is valid — important because investment-policy wording is revised periodically and consumers need to know which version they are reading. One of <code>&lt;ListedType&gt;</code> or <code>&lt;UnlistedType&gt;</code> (a mandatory choice) names the kind of text: the listed enumeration covers the most common regulated categories — <code>INVESTMENT STRATEGY</code>, <code>INVESTOR PROFILE</code>, <code>RISK DESCRIPTION</code>, <code>RISK MANAGEMENT</code>, <code>FEES</code>, <code>BENCHMARK</code>, <code>SUBS REDS</code>, <code>LEGAL INFORMATION</code>, <code>TAX INFORMATION</code>, <code>ANNUAL REPORT</code>, <code>SEMI ANNUAL REPORT</code> — and <code>&lt;UnlistedType&gt;</code> takes a short free-form label for text categories that the enumeration does not cover. An optional <code>&lt;Title&gt;</code> supplies a display title in the chosen language. A <code>&lt;Content&gt;</code> element (mandatory) carries the text itself. An optional <code>&lt;CountriesWhereApplicable&gt;</code> lists the distribution countries in which this text variant is permitted, for producers that ship jurisdiction-specific wording.</p>
+<p>A fund that carries an investment objective in English and German therefore emits two <code>&lt;FundText&gt;</code> elements as siblings inside <code>&lt;FundTexts&gt;</code>, one per language, each with the same <code>&lt;ListedType&gt;INVESTMENT STRATEGY&lt;/ListedType&gt;</code> and the same <code>&lt;Date&gt;</code>. A fund that additionally carries a risk description emits further <code>&lt;FundText&gt;</code> elements with <code>&lt;ListedType&gt;RISK DESCRIPTION&lt;/ListedType&gt;</code>. A single <code>&lt;FundTexts&gt;</code> block in a realistic delivery typically contains between six and twenty entries, covering the main text categories in the main distribution languages.</p>
+<p>Two rules of practice are worth following.</p>
+<p>First, <strong>the first sentence of <code>&lt;Content&gt;</code> must stand alone</strong>. Many downstream consumers — compact fact-sheet templates, distributor search results, one-line product cards — truncate longer descriptions after a fixed number of characters, typically one hundred and fifty to two hundred. A description whose first sentence only makes sense in the context of the second will look mangled in every such consumer. Producers should write the first sentence as a self-contained summary and use the remaining sentences for elaboration.</p>
+<p>Second, <strong>do not embed HTML or other markup</strong> in <code>&lt;Content&gt;</code>. Some consumers escape the markup, some pass it through, and some strip it entirely, and the resulting inconsistency is a well-known source of visible bugs. If a description needs formatting, handle the formatting on the consumer side, or use the root-level <code>&lt;Documents&gt;</code> section (Chapter 9) to deliver a separate rich-text version as a PDF or as structured <code>&lt;BinaryData&gt;</code>.</p>
+<p>One interaction is worth noting here for later reference. Chapter 8 treats the FinDatEx regulatory templates (EMT, EPT, EET), and these templates define their own normalised text fields for certain regulated disclosures — the PRIIPs risk narrative, the SFDR sustainability statement, the MiFID target-market description. Where a regulated text field exists, its regulatory version <em>overrides</em> the informal <code>&lt;FundText&gt;</code> entries for the purpose of regulatory consumers, but the informal version continues to serve unregulated consumers such as marketing factsheets. Producers should populate both consistently; consumers should read whichever is appropriate to their use case.</p>
+<hr>
+<h2>5.6 Fund Classification</h2>
+<p>Every fund in FundsXML carries a set of classification fields that describe what the fund <em>is</em> — in legal, geographic, and investment terms. The classification fields are not the same as the regulatory templates of Chapter 8; they are the fund's own self-description, used by factsheet engines, by distributor search and filter tools, and by internal reference systems. We treat them in three groups: legal form and origin, investment characteristics, and risk-and-benchmark indicators. Almost everything in this section lives inside <code>FundStaticData</code>, at the fund level; registration countries are the one exception and belong to each individual share class (§5.10).</p>
+<h3>5.6.1 Legal Form, Domicile, and Inception</h3>
+<p>The first group answers the question <em>where does this fund come from, and under what legal form?</em></p>
+<p><strong><code>DomicileCountry</code></strong> is the ISO 3166-1 alpha-2 code of the jurisdiction in which the fund is legally domiciled, carried as the very first child of <code>FundStaticData</code>. For the Europa Growth Fund this is <code>LU</code> — Luxembourg, the European fund domicile of choice for cross-border UCITS. The domicile determines which supervisor regulates the fund, which legal form it can take, and which tax regime applies at the fund level.</p>
+<p><strong>Registration countries are not a fund-level field.</strong> A fund may be domiciled in one country and <em>registered for distribution</em> in several others; in fact, cross-border distribution is the whole point of the UCITS regime. The Europa Growth Fund is domiciled in Luxembourg and registered for distribution in eleven countries: Luxembourg itself, France, Germany, Italy, Spain, the Netherlands, Austria, Belgium, Portugal, Switzerland, and Sweden. A natural first instinct is to model this as a list of <code>CountryOfRegistration</code> children on the fund, but the schema puts the list one level lower: <code>ShareClass/RegistrationCountries/RegistrationCountry</code>, with each entry naming a country code and an operational status (<code>Registered</code> or <code>De-registered</code>). The reason is that two share classes of the same fund may be registered in different countries — the institutional class may be authorised in fewer jurisdictions than the retail class — and a single fund-level list cannot express that. §5.10 returns to this.</p>
+<p><strong>Legal structure</strong> is expressed through a choice between <code>ListedLegalStructure</code> (an enumerated field covering the common European vehicle types) and <code>UnlistedLegalStructure</code> (a free-text fallback). Both alternatives are declared with <code>minOccurs="0"</code>, which means the schema accepts a <code>FundStaticData</code> block that omits the legal structure entirely — producers may do so for funds whose legal nature is carried in country-specific extensions instead. In practice every realistic European fund populates one of the two, and for the Europa Growth Fund we always pick <code>ListedLegalStructure</code>. The enumeration is specific and combines the regulatory regime with the corporate form in single values: <code>UCITS</code>, <code>UCITS - SICAV</code>, <code>UCITS - SICAF</code>, <code>UCITS - CONTRACTUAL TYPE</code>, <code>AIF</code>, <code>AIF - HEDGE FUND</code>, <code>AIF - PRIVATE EQUITY FUND</code>, <code>AIF - VENTURE CAPITAL FUND</code>, <code>AIF - REAL ESTATE FUND</code>, <code>AIF - REIT</code>, <code>AIF - INFRASTRUCTURE FUND</code>, <code>AIF - COMMODITY FUND</code>, <code>AIF - SOVEREIGN WEALTH FUND</code>, <code>AIF - ELTIF</code>, <code>AIF - EUVECA</code>, <code>AIF - EUSEF</code>, and <code>SPV</code>. Because the values already combine regime and corporate form, a producer does <strong>not</strong> emit two separate entries for <em>UCITS</em> and <em>SICAV</em>: the Europa Growth Fund, which is a UCITS operating as a SICAV, is represented by a single <code>&lt;ListedLegalStructure&gt;UCITS - SICAV&lt;/ListedLegalStructure&gt;</code>. The enumeration is the tricky part of this field — producers that try to model the regulatory regime and the corporate form as two independent fields invariably drift away from the schema, and consumers that try to parse the enumerated value into its two halves regret the effort.</p>
+<p><strong><code>InceptionDate</code></strong>, a direct child of <code>FundStaticData</code>, is the date on which the fund first opened for subscription. It is a single <code>xs:date</code> value, and it never changes once the fund is live. The inception date is the anchor for every <em>since-launch</em> performance figure, and consumers that compute annualised returns rely on it. One subtlety deserves an early mention: the fund-level inception date may be earlier than the inception dates of some of the fund's <em>share classes</em>, because share classes can be added to an existing fund long after the fund itself was launched. Every <code>&lt;ShareClass&gt;</code> element therefore also carries its own <code>&lt;InceptionDate&gt;</code>, and Part II (§5.10.3) will treat share-class-level inception in detail.</p>
+<p>The schema also carries a handful of adjacent date and status fields that a full <code>FundStaticData</code> block is likely to populate: <code>StartOfFiscalYear</code> and <code>EndOfFiscalYear</code> (as a <code>DayMonthType</code> pair), <code>OpenClosedEnded</code> (<code>OPEN</code> or <code>CLOSED</code>), <code>ClosedType</code> (<code>HARD</code> or <code>SOFT</code>) for funds that have stopped accepting new subscriptions, and <code>MaturityDate</code>/<code>LiquidationDate</code>/<code>LiquidationReason</code> for funds with a planned end. These are all optional, and we do not populate them for the Europa Growth Fund, which is an open-ended UCITS with no fixed maturity and no liquidation date in sight.</p>
+<h3>5.6.2 Investment Classification via <code>Classifications</code></h3>
+<p>The second group of classification fields describes <em>what</em> the fund invests in. Here the schema takes a deliberately indirect approach: instead of defining a single closed vocabulary for asset class, geography, sector, and management style — which would drift out of date every time an industry body published a new taxonomy — FundsXML lets producers declare their classifications in terms of <strong>external classification systems</strong>. The container is <code>FundStaticData/Classifications</code>, and each child <code>&lt;Classification&gt;</code> carries the source of the classification, its internal type, a language, and one or more values, optionally tagged with a level attribute for hierarchical taxonomies.</p>
+<p>The structure of each <code>&lt;Classification&gt;</code> is:</p>
+<ul>
+<li>a choice between <code>&lt;ListedGroup&gt;</code> (a known classification provider, drawn from an enumeration that includes <code>EFAMA</code>, <code>MORNINGSTAR</code>, <code>LIPPER</code>, <code>BLOOMBERG</code>, <code>MIFID</code>, <code>BVI</code>, <code>VOEIG</code>, <code>ESMA</code>, <code>AMF</code>, <code>WM</code>, <code>GERMAN CBCL</code>, <code>CIC</code>, and <code>CFI</code>) and <code>&lt;UnlistedGroup&gt;</code> (a free-text fallback for classifications from bodies the enumeration does not cover);</li>
+<li>an optional <code>&lt;Type&gt;</code> giving the specific taxonomy within the provider (for EFAMA, for example, <em>EFC</em> for the European Fund Classification; for Morningstar, <em>Global Category</em>);</li>
+<li>an optional <code>&lt;Language&gt;</code> attributing the language of the value strings;</li>
+<li>one or more <code>&lt;Value&gt;</code> elements, each with the classification label and an optional <code>level</code> attribute for hierarchies.</li>
+</ul>
+<p>The Europa Growth Fund carries two classifications in parallel — one from EFAMA and one from Morningstar:</p>
+<pre><code>&lt;Classifications&gt;
+  &lt;Classification&gt;
+    &lt;ListedGroup&gt;EFAMA&lt;/ListedGroup&gt;
+    &lt;Type&gt;EFC&lt;/Type&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+    &lt;Value level=&quot;1&quot;&gt;Equity&lt;/Value&gt;
+    &lt;Value level=&quot;2&quot;&gt;Equity Europe&lt;/Value&gt;
+  &lt;/Classification&gt;
+  &lt;Classification&gt;
+    &lt;ListedGroup&gt;MORNINGSTAR&lt;/ListedGroup&gt;
+    &lt;Type&gt;Global Category&lt;/Type&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+    &lt;Value&gt;Europe Large-Cap Growth Equity&lt;/Value&gt;
+  &lt;/Classification&gt;
+&lt;/Classifications&gt;
+</code></pre>
+<p>The advantage of this approach is that it lets each consumer read the classification it recognises. A European distributor that drives its product universe from EFAMA categories reads the <code>EFAMA</code> entry and ignores the Morningstar one; a research analyst whose watchlists are organised by Morningstar category reads the Morningstar entry and ignores the EFAMA one. A consumer that recognises neither can fall back to inspecting <code>OfficialName</code> or <code>Fund/Currency</code> as a last resort, but the <code>Classifications</code> block is what exists for the purpose. The cost is that a reader cannot simply ask <em>"is this an equity fund?"</em> with a single schema-level field: the answer depends on which classification system they read. That trade-off is deliberate, and it reflects the reality of European fund distribution, where no single classification taxonomy has ever achieved the status of the canonical one.</p>
+<p>A handful of related flags live one level deeper, under <code>SingleFund/SingleFundStaticData</code>, because they describe the fund as a <em>single</em> (non-umbrella) vehicle: <code>ExchangeTradedFlag</code>, <code>FundOfFundFlag</code>, <code>SocialResponsibleFlag</code>, and — most importantly for classification purposes — <code>ManagementType</code>, which takes the two values <code>ACTIVE</code> and <code>PASSIVE</code>. The Europa Growth Fund is <code>ACTIVE</code>. Producers that want to express finer distinctions such as <code>EnhancedIndex</code> or <code>IndexTracking</code> do so through the <code>Classifications</code> block with an appropriate <code>&lt;ListedGroup&gt;</code> entry.</p>
+<h3>5.6.3 Risk Indicators and Benchmarks</h3>
+<p>The third group of classification fields quantifies risk and names the benchmark against which the fund measures itself.</p>
+<p><strong><code>SFDRProductType</code></strong> is a fund-level field inside <code>FundStaticData</code> that names the SFDR (Sustainable Finance Disclosure Regulation) regime under which the fund is classified. It takes integer values <code>0</code>, <code>6</code>, <code>8</code>, or <code>9</code>: <em>6</em> for a fund that qualifies under Article 6 (no sustainability characteristics), <em>8</em> for an Article 8 fund (promotes environmental or social characteristics), <em>9</em> for an Article 9 fund (has sustainable investment as its objective), and <em>0</em> for funds that do not fall under SFDR at all. The Europa Growth Fund is a conventional Article 6 product and therefore carries <code>&lt;SFDRProductType&gt;6&lt;/SFDRProductType&gt;</code>. The SFDR classification is the single most consequential ESG-related field in modern European fund disclosure, and consumers that drive ESG product filters read it directly.</p>
+<p>The PRIIPs <strong>Summary Risk Indicator</strong> — the 1-to-7 scale familiar from KIDs and factsheets — does <em>not</em> live at the fund level as a dedicated element in the main schema. The reason is that the SRI is properly a share-class-level figure (different share classes of the same fund can sit at different SRI values, because hedging changes risk characteristics), and the regulated version of the SRI is expressed through the FinDatEx regulatory templates that Chapter 8 treats. Where producers want to carry the SRI alongside <code>FundStaticData</code> for legacy reasons, they do so through <code>CustomAttributes</code> with a name such as <em>SRI</em> and a numeric value. Consumers that need the authoritative SRI read the EMT or the PRIIPs-KID from the <code>&lt;Documents&gt;</code> section.</p>
+<p><strong>Benchmark identification</strong> lives in <code>FundStaticData/Benchmarks/Benchmark</code>, as a repeatable element whose content follows <code>BenchmarkStaticDataType</code>. Each benchmark entry carries a <code>&lt;BenchmarkID&gt;</code> (an internal key used to link the static description to the dynamic values in <code>FundDynamicData/Benchmarks</code>), a mandatory <code>&lt;Name&gt;</code> and <code>&lt;Currency&gt;</code>, an optional <code>&lt;Provider&gt;</code> (a <code>CompanyType</code> subclass with its own <code>&lt;Identifiers&gt;</code> and <code>&lt;Name&gt;</code>), an optional <code>&lt;BenchmarkType&gt;</code> drawn from an enumeration (<code>Market Index</code>, <code>Blended Benchmark</code>, <code>Custom</code>, <code>Peer Groups and Universes</code>, and others), and an optional <code>&lt;BenchmarkComponents&gt;</code> block for composite benchmarks. The Europa Growth Fund carries a single benchmark entry:</p>
+<pre><code>&lt;Benchmarks&gt;
+  &lt;Benchmark&gt;
+    &lt;BenchmarkID&gt;MSCI-EUR-NR&lt;/BenchmarkID&gt;
+    &lt;Name&gt;MSCI Europe Net Total Return EUR&lt;/Name&gt;
+    &lt;Currency&gt;EUR&lt;/Currency&gt;
+    &lt;Provider&gt;
+      &lt;Identifiers&gt;
+        &lt;LEI&gt;549300YZUBM5UFHQKY25&lt;/LEI&gt;
+      &lt;/Identifiers&gt;
+      &lt;Name&gt;MSCI Limited&lt;/Name&gt;
+    &lt;/Provider&gt;
+    &lt;BenchmarkType&gt;Market Index&lt;/BenchmarkType&gt;
+  &lt;/Benchmark&gt;
+&lt;/Benchmarks&gt;
+</code></pre>
+<p>The <code>&lt;BenchmarkID&gt;</code> is not itself a public identifier — it is a producer-chosen string that a later <code>FundDynamicData/Benchmarks/Benchmark</code> entry will reuse to tie dynamic level data to the static description. The schema enforces this relationship as a <code>key</code>/<code>keyref</code> pair: a dynamic benchmark block whose <code>BenchmarkID</code> does not match a static one is a schema violation, which is the schema's way of preventing a category of reference errors.</p>
+<p>A consumer that computes relative performance — alpha, tracking error, information ratio — reads the benchmark's name and currency from the static block and joins against its own market-data source. §5.13 will pick up the dynamic side, where the actual benchmark level on 31 March 2026 is transported inside <code>FundDynamicData/Benchmarks</code> as a <code>&lt;Value&gt;</code> per date.</p>
+<p>One forward pointer is worth placing here. Chapter 8 treats the regulatory templates that the fund embeds in the <code>&lt;RegulatoryReportings&gt;</code> root element, and EMT/EPT contain their own versions of the risk indicators, the cost aggregates, and the benchmark references that we are discussing now. Where both layers exist in the same delivery, the regulatory-template version takes precedence for regulatory consumers and the fund-level version serves everyone else. Producers populate both consistently. Consumers read whichever is appropriate to their use case and never try to reconcile one against the other at the millisecond level.</p>
+<h3>5.6.4 Country-Specific Extensions</h3>
+<p>A final word on classification: FundsXML is a pan-European standard, but European fund distribution is full of national idiosyncrasies that no single taxonomy can cover gracefully. The schema handles this through <strong><code>CountrySpecificData</code></strong>, an extension container that appears at two levels of a delivery. Inside <code>FundStaticData</code>, a <code>&lt;CountrySpecificData&gt;</code> element carries national reporting extensions that apply to the fund as a whole — Austrian OeNB reporting codes, French AMF sub-classifications, German BVI internal categories, and so on. The national schemas are maintained in separate files (<code>FundsXML4_CountrySpecificData_xx.xsd</code>) that follow the main schema's release cycle. A similar mechanism exists on each individual share class for class-level national extensions. The companion root-level <code>&lt;CountrySpecificData&gt;</code> element, which is a sibling of <code>&lt;Funds&gt;</code> rather than a child, carries country-specific content that is not structurally tied to a single fund. We do not populate <code>CountrySpecificData</code> for the Europa Growth Fund in this chapter — the running example deliberately stays inside the core schema — but producers that serve regulated pipelines in any one European country will almost always end up populating the relevant national extension, and the reader who meets such a block in a real delivery should recognise it as an extension point rather than as data the core schema has somehow mis-named.</p>
+<hr>
+<h2>5.7 Fund-Level Costs and Key Figures</h2>
+<p>The last section of Part I treats the costs that a fund charges its investors, to the extent that they apply at the fund level rather than at the share-class level. FundsXML splits the cost story into two places. <strong>Fund-level aggregate figures</strong> — the retrospective per-annum ongoing charges and transaction costs that regulators require on KIDs and factsheets — live in <code>FundStaticData/OngoingCosts</code>. <strong>Per-class detailed fees</strong> — management fees and other charges that differ between share classes — live inside each <code>&lt;ShareClass&gt;</code> element under <code>Fees/Fee</code>. We introduce the fund-level side here; §5.10 will pick up the per-class side once the share-class structure is in place.</p>
+<h3>5.7.1 Types of Costs</h3>
+<p>European fund costs come in several flavours, and the vocabulary has accumulated enough layers over the years that it is worth naming them precisely before we model them.</p>
+<p><strong>Management fee</strong> is the annual percentage charged by the asset manager for managing the portfolio. It is expressed as a fraction of the fund's net assets and is typically deducted daily in arrears. For a European equity UCITS aimed at retail investors the management fee might be 1.50% per annum; for an institutional class of the same fund it might be 0.75%. Management fees almost always differ between share classes and therefore live on the class.</p>
+<p><strong>Administration fee</strong> and <strong>depositary fee</strong> are the charges levied by the fund's administrator and by its custodian bank, respectively. They are often bundled under a single "administration" line in marketing material but are structurally distinct in the fund's cost ledger. They are typically uniform across share classes, and producers can either absorb them into the fund-level ongoing charges figure or carry them as separate fee entries on each class, depending on whether the underlying contracts actually differ between classes.</p>
+<p><strong>Performance fee</strong>, where it applies, is the share of the fund's out-performance that the asset manager retains as an incentive payment. A typical structure is <em>"20% of out-performance above benchmark, subject to a high watermark, crystallised annually"</em>. The three main parameters — rate, hurdle, and the high watermark — together define a complete performance-fee model. FundsXML handles the high watermark explicitly through <code>ShareClass/HighWatermark</code>, and the rate and basis through a fee entry whose <code>Type</code> names the performance fee structure. Producers that omit either the watermark or the fee entry leave consumers unable to reconstruct the actual charge.</p>
+<p><strong>TER</strong> (Total Expense Ratio) and <strong>Ongoing Charges</strong> are the retrospective aggregate figures that sum the annual cost of running the fund — management fee, administration, depositary, audit, legal, and every other charge that the fund's investors collectively pay. The two terms are often used interchangeably; strictly speaking, <em>Ongoing Charges</em> (under UCITS KIID and PRIIPs) is slightly narrower than <em>TER</em> (the older EFAMA definition) in that it excludes performance fees, but the numeric values are usually similar. FundsXML carries the value through the <code>OngoingCosts/OngoingCost</code> structure described below, whose <code>&lt;CostType&gt;</code> field names which of the two variants the value represents.</p>
+<p><strong>Entry load</strong> and <strong>exit load</strong>, when they apply, are one-time charges levied when an investor buys into or sells out of the fund. They are almost always set at the share-class level — one class of the same fund may charge a 3% entry load while another charges none — and we will return to them in §5.10.</p>
+<h3>5.7.2 How Fund-Level Costs Are Modelled</h3>
+<p>The fund-level cost block lives at <code>FundStaticData/OngoingCosts</code> and contains one or more <code>&lt;OngoingCost&gt;</code> children. Each child has a fixed shape: a mandatory <code>&lt;CostType&gt;</code> drawn from a short enumeration (<code>Ongoing Costs</code>, <code>Ongoing Charges</code>, <code>Performance Fee</code>, <code>Transaction Costs</code>), a mandatory <code>&lt;PublicationDate&gt;</code> (the date the figure was computed and published), optional <code>&lt;ValidFrom&gt;</code> and <code>&lt;ValidTo&gt;</code> dates for the period to which the value applies, a mandatory <code>&lt;Percentage&gt;</code> (the value itself, expressed as a decimal percentage — <code>1.85</code> means 1.85%, <em>not</em> 0.0185), and an optional <code>&lt;YearlyAmount&gt;</code> for the absolute amount per 10,000 units of investment in the fund's currency. A typical block for a fund whose annual ongoing charges have just been refreshed at the start of the new fiscal year looks like this:</p>
+<pre><code>&lt;OngoingCosts&gt;
+  &lt;OngoingCost&gt;
+    &lt;CostType&gt;Ongoing Charges&lt;/CostType&gt;
+    &lt;PublicationDate&gt;2025-06-30&lt;/PublicationDate&gt;
+    &lt;ValidFrom&gt;2025-07-01&lt;/ValidFrom&gt;
+    &lt;ValidTo&gt;2026-06-30&lt;/ValidTo&gt;
+    &lt;Percentage&gt;1.85&lt;/Percentage&gt;
+  &lt;/OngoingCost&gt;
+&lt;/OngoingCosts&gt;
+</code></pre>
+<p>A fund that also discloses a separate transaction-costs figure (common for PRIIPs-KID purposes) would add a second <code>&lt;OngoingCost&gt;</code> entry with <code>&lt;CostType&gt;Transaction Costs&lt;/CostType&gt;</code> and its own percentage. The structure is deliberately flat: there is no place for hurdle rates or fee-waiver schedules at this layer, because the layer is designed to carry headline figures that feed factsheets and KIDs, not the full computational machinery behind a fee.</p>
+<p>One observation about <code>OngoingCost</code> is worth making explicitly. The <code>Percentage</code> value is given in <strong>human-readable percent notation</strong>: <code>1.85</code> means 1.85 per cent per annum. This matches every other percentage in the schema (type <code>PercentageType</code>), and consumers that treat the value as a fraction (0.0185) will be off by a factor of a hundred — a spectacular error and, unfortunately, a recurring one. The rule of thumb is: if the number in <code>&lt;Percentage&gt;</code> looks like a reasonable management fee when you read it as a percent, it probably is; if it looks like a reasonable management fee after you divide by 100, you are about to make a mistake.</p>
+<p>The fund-level block we have just assembled is the producer's own representation of its headline costs — the representation that feeds factsheet engines and distributor search tools. Chapter 8 treats the EMT (European MiFID Template), which defines a <em>different</em> and more detailed representation of the same charges, designed specifically for cost disclosure to retail investors under MiFID II. The EMT version is the definitive one for regulatory purposes; <code>OngoingCosts</code> in <code>FundStaticData</code> is the fund's operational view. Both exist in the same delivery, are populated consistently, and serve different consumers. The per-share-class detailed fee structure — <code>ShareClass/Fees/Fee</code> with its <code>ShareClassFeeType</code> — is the third layer, covered in §5.10, and it is where management fees and any class-specific surcharges actually live.</p>
+<hr>
+<h2>5.8 From One Share Class to Many</h2>
+<p>So far we have pretended that the Europa Growth Fund has exactly one share class. It does not. It has three, and they are different enough from each other that treating them as one would hide most of what makes real European fund distribution interesting. Part II relaxes the pretence and walks through the topics on which the fund-level picture branches.</p>
+<p>The three share classes of the Europa Growth Fund are worth introducing by name, because we will use all three for the rest of the chapter and again in every subsequent chapter of Part II:</p>
+<ul>
+<li><strong>R-EUR-ACC</strong> — the retail euro-denominated accumulating share class. Sold to individual investors across the eleven distribution countries, priced in EUR, and thesaurising all income into the NAV rather than paying dividends.</li>
+<li><strong>R-CHF-ACC-HEDGED</strong> — the retail Swiss-franc-denominated currency-hedged accumulating share class. Aimed at Swiss retail investors who want exposure to European equities but do not want the EUR/CHF currency risk that would come with holding the ordinary euro class. The portfolio is the same as the R-EUR-ACC class; the difference is a currency overlay that hedges the EUR exposure into CHF.</li>
+<li><strong>I-EUR-DIST</strong> — the institutional euro-denominated distributing share class. Aimed at pension funds, insurance companies, and other institutional investors who want predictable income distributions and who qualify for a lower fee schedule because of their minimum investment size.</li>
+</ul>
+<p>All three of these share classes belong to the same fund, hold the same portfolio, follow the same investment policy, are managed by the same team, and share the same benchmark. In everything we covered in Part I — legal form, domicile, investment classification, benchmark — they are identical. What differs between them is a specific set of fields that we now need to place inside individual <code>&lt;ShareClass&gt;</code> elements rather than on the fund itself.</p>
+<p>The rule that organises the placement is straightforward: <strong>anything that differs between share classes lives on the <code>&lt;ShareClass&gt;</code> element; anything that is common to all classes stays on <code>&lt;Fund&gt;</code> and <code>&lt;FundStaticData&gt;</code></strong>. Table 5.3 shows where the main topics land when the rule is applied, using the schema names that actually appear in the XSD.</p>
+<p><strong>Table 5.3 — Where the main fields live once share classes are in play</strong></p>
+<table>
+<thead>
+<tr>
+<th>Stays on <code>&lt;Fund&gt;</code> / <code>FundStaticData</code></th>
+<th>Lives inside each <code>&lt;ShareClass&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Fund/Identifiers/LEI</code> (fund LEI)</td>
+<td><code>ShareClass/Identifiers/ISIN</code>, <code>GermanWKN</code>, <code>SwissValorenCode</code></td>
+</tr>
+<tr>
+<td><code>Fund/Currency</code> (fund base currency)</td>
+<td><code>ShareClass/Currency</code> (class currency)</td>
+</tr>
+<tr>
+<td><code>FundStaticData/DomicileCountry</code>, <code>ListedLegalStructure</code></td>
+<td><code>ShareClass/RegistrationCountries/RegistrationCountry</code></td>
+</tr>
+<tr>
+<td><code>FundStaticData/InceptionDate</code> (fund inception)</td>
+<td><code>ShareClass/InceptionDate</code> (class inception)</td>
+</tr>
+<tr>
+<td><code>FundStaticData/FundTexts</code> (investment strategy, risk)</td>
+<td><code>ShareClass/ShareClassType</code> (<code>Code</code>, <code>EarningUse</code>)</td>
+</tr>
+<tr>
+<td><code>FundStaticData/Classifications</code>, <code>Benchmarks</code></td>
+<td><code>ShareClass/SubscriptionRestrictions/MinSubscriptionAmount</code></td>
+</tr>
+<tr>
+<td><code>FundStaticData/OngoingCosts</code> (headline costs)</td>
+<td><code>ShareClass/Fees/Fee</code> (per-class management fees, …)</td>
+</tr>
+<tr>
+<td><code>FundStaticData/SFDRProductType</code></td>
+<td><code>ShareClass/CurrencyHedgedFlag</code></td>
+</tr>
+<tr>
+<td><code>FundDynamicData/TotalAssetValues</code> (fund aggregate)</td>
+<td><code>ShareClass/Prices/Price</code> (NAV per unit)</td>
+</tr>
+<tr>
+<td><code>FundDynamicData/Portfolios</code> <em>(→ Chapter 6)</em></td>
+<td><code>ShareClass/TotalAssetValues</code> (class-level TNAV, shares outstanding)</td>
+</tr>
+<tr>
+<td><code>FundDynamicData/Benchmarks</code> (dynamic benchmark values)</td>
+<td><code>ShareClass/PerformanceFigures</code> (per-class returns)</td>
+</tr>
+<tr>
+<td><code>SingleFund/SingleFundStaticData</code> (<code>ManagementType</code>, flags)</td>
+<td><code>ShareClass/Flows</code>, <code>ShareClass/Distributions</code> <em>(→ Chapter 7)</em></td>
+</tr>
+</tbody>
+</table>
+<p>Two consequences of the table deserve to be named explicitly. First, <strong>everything from Part I still applies</strong>. Share classes do not replace the fund-level fields; they add a new layer of per-class variation. A reader who has understood Part I does not need to unlearn anything in Part II; they just need to learn which of their understood fields now reappear, under schema-correct names, inside <code>&lt;ShareClass&gt;</code>. Second, <strong>the portfolio is shared across all share classes</strong>. Regardless of how many share classes a fund has, they all ultimately own shares of the same portfolio; the portfolio is a property of the fund, not of its share classes. Chapter 6 walks through the portfolio in detail, and the reader will notice that <code>FundDynamicData/Portfolios</code> hangs off the <code>Fund</code> level rather than off <code>ShareClass</code>. The share classes differ on how <em>claims</em> against the portfolio are structured — what currency the claims are denominated in, what fees they bear, whether they pay out income — but the portfolio itself is singular. (A share class <em>can</em> carry its own <code>ShareClass/Portfolios</code> if the producer reports the portfolio at share-class level, but this is an advanced pattern that the book does not pursue.)</p>
+<p><strong>Figure 5.2 — Fund with three share classes</strong></p>
+<pre><code>                       &lt;Fund&gt;
+        ┌───────┬────────┼─────────┬──────────┐
+        │       │        │         │          │
+ Identifiers  Names  Currency SingleFundFlag  │
+                                              │
+          ┌───────────────┬──────────────────┬┘
+          │               │                  │
+  FundStaticData  FundDynamicData     SingleFund
+          │               │                  │
+  DomicileCountry  TotalAssetValues    SingleFundStaticData
+  LegalStructure   Portfolios (Ch. 6)        │
+  InceptionDate    Benchmarks             ShareClasses
+  FundTexts                                  │
+  Classifications           ┌────────────────┼───────────────────┐
+  Benchmarks                │                │                   │
+  OngoingCosts       &lt;ShareClass&gt;       &lt;ShareClass&gt;         &lt;ShareClass&gt;
+  SFDRProductType     R-EUR-ACC        R-CHF-ACC-HEDGED        I-EUR-DIST
+                        ISIN                ISIN                  ISIN
+                        EUR, EarningUse=R   CHF, EarningUse=R     EUR, EarningUse=D
+                        Min €100            Min CHF 100           Min €1,000,000
+                        Mgmt 1.50%          Mgmt 1.50%            Mgmt 0.75%
+                        CurrencyHedgedFlag  CurrencyHedgedFlag    CurrencyHedgedFlag
+                        =false              =true                 =false
+                        Prices, NAVs        Prices, NAVs          Prices, NAVs
+</code></pre>
+<p>The remainder of Part II walks through the topics that the table and the figure put on the share-class side, in an order that mirrors the order of Part I. We begin with identity and currency (§5.9), because those are the topics that differ most visibly. We then treat the behavioural properties that distinguish share classes — earning use, hedging, minimum investment, inception, registration (§5.10). Finally, we look at the patterns that recur across funds and across asset managers when share classes multiply (§5.11), so that the reader leaves Part II with a catalogue of the commoner multi-share-class configurations and can recognise them in the wild.</p>
+<hr>
+<h2>5.9 ShareClass Identity and Currency</h2>
+<h3>5.9.1 Identifiers at the Share Class Level</h3>
+<p>Each <code>&lt;ShareClass&gt;</code> element begins, just like <code>&lt;Fund&gt;</code>, with an <code>&lt;Identifiers&gt;</code> container. The container is the same schema type (<code>IdentifiersType</code>) as the one at fund level; it accepts the same children; and it is populated with whichever instrument-level codes name the class. ISIN, GermanWKN, SwissValorenCode, CUSIP, SEDOL, and the optional proprietary <code>OtherID</code> entries all live here.</p>
+<p>The three share classes of the Europa Growth Fund carry three distinct ISINs:</p>
+<ul>
+<li><em>R-EUR-ACC</em> — <code>LU2100000011</code></li>
+<li><em>R-CHF-ACC-HEDGED</em> — <code>LU2100000029</code></li>
+<li><em>I-EUR-DIST</em> — <code>LU2100000037</code></li>
+</ul>
+<p>Each of the three is a twelve-character ISO 6166 identifier; each is issued by the Luxembourg numbering agency (<code>LU</code> prefix); and each refers to exactly one share class. An investor subscribing to the retail euro class buys units whose ISIN is <code>LU2100000011</code>; that investor cannot, by owning units against that ISIN, gain exposure to the CHF-hedged variant without explicitly switching classes. The three ISINs are functionally three different products even though they are backed by the same portfolio.</p>
+<p>GermanWKN, SwissValorenCode, CUSIP, and every other share-class-level identifier from §5.4.2 follow the same pattern: one entry per class inside the class's own <code>&lt;Identifiers&gt;</code> block. A German investor who receives a factsheet for the Europa Growth Fund sees three WKNs — one per class — and picks the one that matches the class they want to buy. A Swiss investor sees three Valors. A producer that gets this wrong, and writes a single WKN at the fund level when it should have been three at the class level, will find that German consumers cannot tell the classes apart and routinely route orders to the wrong class.</p>
+<p>A rare but real edge case deserves a mention. A share class may, over its lifetime, carry <em>more than one</em> ISIN — for example when two funds merge, and the surviving class inherits the historical ISIN of the disappearing one alongside its own. FundsXML allows this: the class's <code>&lt;Identifiers&gt;</code> can hold a primary <code>&lt;ISIN&gt;</code> together with one or more historical ISINs represented as <code>&lt;OtherID&gt;</code> entries with a descriptive <code>FreeType</code> attribute. Consumers that need historical continuity look at the full set; consumers that need the current identity look only at the <code>&lt;ISIN&gt;</code> field.</p>
+<p>Listed share classes — exchange-traded UCITS with public order books — carry additional identification that does not fit neatly into the standard identifier fields. The ticker symbol and the market identifier code (MIC) of the exchange on which the class is listed are carried via <code>ShareClass/MarketPlaces/MarketPlace</code>, which holds a four-character <code>&lt;MarketIdentifierCode&gt;</code>, a <code>&lt;NAVCurrency&gt;</code>, a <code>&lt;TradingCurrency&gt;</code>, and optionally a <code>&lt;MarketMaker&gt;</code> block. Exchange-traded UCITS are described through this block rather than through <code>OtherID</code>, and Chapter 13 returns to the full convention for listed-class metadata.</p>
+<h3>5.9.2 Currency of the Share Class</h3>
+<p>Currency is the second field that lives on the class as well as on the fund, and the distinction between <em>class currency</em> and <em>fund base currency</em> is one of the most important conceptual points of this chapter.</p>
+<p>The <strong>fund base currency</strong> is the currency in which the fund's portfolio is primarily denominated and in which the fund's own books are kept. For the Europa Growth Fund this is EUR: the portfolio consists almost entirely of European equities priced in euros, the custody accounts are maintained in euros, and the fund-level total net assets figure is computed in euros. The base currency is a property of the fund, carried in <code>Fund/Currency</code> as a direct child of <code>&lt;Fund&gt;</code> (<em>not</em> inside <code>FundStaticData</code>), and it is one of the four mandatory fund-level elements we saw in §5.2.</p>
+<p>The <strong>share-class currency</strong> is the currency in which the NAV of an individual share class is expressed and in which investors subscribe and redeem against that class. It lives in <code>ShareClass/Currency</code>, the direct counterpart of <code>Fund/Currency</code>, and it may or may not coincide with the base currency. For the Europa Growth Fund's R-EUR-ACC and I-EUR-DIST classes, the class currency is EUR, the same as the base currency; for the R-CHF-ACC-HEDGED class, the class currency is CHF, different from the base currency. All three classes ultimately hold claims against the same EUR-denominated portfolio, but the claims are denominated in different currencies and the claim-holders see different NAV numbers.</p>
+<p>The mechanism that makes a CHF class possible when the underlying assets are in EUR is <strong>currency hedging</strong>. The fund enters into a rolling programme of currency forwards (or another hedging instrument) that converts the EUR exposure into CHF exposure for the purposes of the hedged class. The hedge costs money — interest-rate differentials, forward points, rolling frictions — and the cost is borne by the hedged class alone, which is why its NAV evolves differently from the ordinary euro class even though both classes hold the same underlying portfolio. §5.10 treats hedging as a behavioural property of the class in more detail.</p>
+<p>A point of frequent confusion is worth stating plainly: <strong>the base currency and the class currency are not interchangeable</strong>. A consumer that reads a CHF NAV from an R-CHF-ACC-HEDGED class and treats it as a EUR number will get an answer that is wrong by the EUR/CHF exchange rate — several percent — and that error will propagate through every downstream calculation. The class element always names its own currency explicitly in <code>ShareClass/Currency</code>, and every <code>&lt;Amount&gt;</code> carrying a value in the class's currency has a mandatory <code>ccy</code> attribute that a consumer is expected to read and respect.</p>
+<hr>
+<h2>5.10 Earning Use, Hedging, Subscription, Inception, Registration, Fees</h2>
+<h3>5.10.1 Earning Use: Accumulating and Distributing</h3>
+<p>The first of the behavioural properties that distinguish share classes is what happens to the income the fund's portfolio generates — dividends on equities, coupons on bonds, interest on cash. The choice is binary: the class either retains the income and reflects it in a higher NAV, or it pays the income out to investors at regular intervals.</p>
+<p><strong>Accumulating</strong> classes retain income. Every dividend received on the portfolio is added to the fund's net assets; since the share-class's NAV is computed as net assets divided by shares outstanding, and since the number of shares does not change when income is received, the NAV of an accumulating class rises by an amount reflecting the retained income. The investor benefits through capital appreciation of their units rather than through cash in hand. The R-EUR-ACC and R-CHF-ACC-HEDGED classes of the Europa Growth Fund are both accumulating.</p>
+<p><strong>Distributing</strong> classes pay income out. On a schedule defined in the prospectus — annually, semi-annually, quarterly, or in some cases monthly — the fund declares a dividend, the investors of the distributing class receive a cash payment equal to their pro-rata share of the accumulated income, and the NAV of the class drops on the ex-dividend date by the amount of the distribution. A consumer that renders the NAV of a distributing class over time sees a sawtooth pattern: smooth growth between distributions, a discrete drop on each ex-date. Both the growth and the drop are exactly as they should be — they reflect the same economic reality as the accumulating class's smoother curve, just expressed differently. The I-EUR-DIST class of the Europa Growth Fund is distributing, with an annual ex-date in mid-May each year.</p>
+<p>FundsXML models the choice inside <code>ShareClass/ShareClassType</code>, a small structured element (schema type <code>ShareClassTypeType</code>) whose mandatory first child is <code>&lt;Code&gt;</code> — the producer's own class code (e.g. <code>R</code>, <code>I</code>, <code>X</code>, <code>Z</code>) — followed by three optional children: an <code>&lt;EarningUse&gt;</code> enumeration taking one of three single-character values (<strong><code>D</code></strong> for <em>Distributing</em>, <strong><code>P</code></strong> for <em>Partly distributing</em> — the rare hybrid case where some income streams are paid out and others reinvested — and <strong><code>R</code></strong> for <em>Reinvesting</em>, the schema's word for <em>Accumulating</em>), a short <code>&lt;Name&gt;</code> giving a human-readable label, and a longer <code>&lt;Description&gt;</code> text. The Europa Growth Fund's accumulating classes therefore carry <code>&lt;EarningUse&gt;R&lt;/EarningUse&gt;</code>, and the distributing institutional class carries <code>&lt;EarningUse&gt;D&lt;/EarningUse&gt;</code>. <code>&lt;EarningUse&gt;</code> is schema-optional, so a class whose accumulating-versus-distributing nature is communicated through other fields (e.g. a custom attribute, or implicit from the class code) can omit it; consumers should therefore treat a missing <code>&lt;EarningUse&gt;</code> as "unspecified" rather than as a default. Note the slight terminological mismatch: what the industry calls <em>accumulating</em> is what the schema calls <em>reinvesting</em> (<code>R</code>), because the income is reinvested into the fund rather than paid out. Producers that get the two letters the wrong way round create the single most damaging classification error in the chapter.</p>
+<p>The actual dividend events for distributing classes are emitted as <code>Distribution</code> entries inside <code>ShareClass/Distributions</code>. Each <code>&lt;Distribution&gt;</code> has a mandatory <code>&lt;ActionCode&gt;</code> (<code>C</code>/<code>M</code>/<code>D</code> for create/modify/delete), <code>&lt;DividendStatus&gt;</code> (<code>OFFICIAL</code> or <code>ESTIMATED</code>), optional <code>&lt;AnnouncementDate&gt;</code> and <code>&lt;RecordDate&gt;</code>, mandatory <code>&lt;ExDate&gt;</code>, <code>&lt;PaymentDate&gt;</code>, and <code>&lt;PaymentCurrency&gt;</code>, and mandatory <code>&lt;GrossDividendAmount&gt;</code> and <code>&lt;NetDividendAmount&gt;</code> blocks each containing a per-share amount. Chapter 7 treats the flow side in full; the point here is simply that the dividend is <em>not</em> encoded on <code>ShareClassType</code> — the class is flagged <em>D</em>, but the actual events live in a separate time-series.</p>
+<p>The consequence for performance comparison is worth naming because it is a routine source of confusion. Two share classes of the same fund, one accumulating and one distributing, have different NAV curves but the same <em>total return</em> — the cumulative performance including reinvested distributions. A consumer that compares raw NAV series between an accumulating and a distributing class will see a divergence that is purely an artefact of distribution treatment; a consumer that compares total returns will see, correctly, that the two classes are economically similar. Chapter 10 treats this as one of the validation rules that a performance-reporting pipeline should enforce.</p>
+<h3>5.10.2 Currency Hedging</h3>
+<p>Hedging is the second behavioural property that distinguishes share classes. We described the mechanism briefly in §5.9.2; here we look at how it is represented.</p>
+<p>The primary hedging flag is <strong><code>CurrencyHedgedFlag</code></strong>, a Boolean that sits directly inside <code>&lt;ShareClass&gt;</code>. It is <em>true</em> if the class is currency-hedged, <em>false</em> otherwise. The Europa Growth Fund's R-CHF-ACC-HEDGED class has <code>&lt;CurrencyHedgedFlag&gt;true&lt;/CurrencyHedgedFlag&gt;</code>, and the other two classes have <code>&lt;CurrencyHedgedFlag&gt;false&lt;/CurrencyHedgedFlag&gt;</code> (or simply omit the element). There is no separate <code>HedgedCurrency</code> element: the currency into which the class is hedged <strong>is</strong> the class currency itself, carried in <code>ShareClass/Currency</code>, so a hedged CHF class naturally has <code>&lt;Currency&gt;CHF&lt;/Currency&gt;</code>.</p>
+<p>A producer that wants to describe the hedging approach in more detail carries a <code>&lt;FundHedgingStrategy&gt;</code> element either at the fund level (as a child of <code>FundStaticData</code>) or on the individual share class. The element wraps a single <code>&lt;HedgingStrategy&gt;</code> enumeration whose values are <code>No hedge</code>, <code>Full NAV hedge</code>, <code>Full Portfolio hedge</code>, and <code>Partial hedge</code>. A typical retail CHF-hedged share class carries <code>&lt;HedgingStrategy&gt;Full NAV hedge&lt;/HedgingStrategy&gt;</code>, meaning that the hedge is calibrated against the class's total net asset value rather than looking through to each underlying currency exposure separately. Full Portfolio hedges are rarer and appear mainly in institutional classes that want their hedge accurate at the instrument level.</p>
+<p>One point that routinely surprises newcomers is that the hedge P&amp;L — the profit or loss the class realises from its currency forwards — does not appear as a separate field in FundsXML. It is absorbed silently into the NAV of the hedged class, which is exactly where a disciplined investor expects it to show up: the whole purpose of the hedge is to modify the return pattern of the class, and the NAV is what captures that return. A consumer that wants to decompose the NAV into "portfolio return" and "hedge P&amp;L" separately cannot do so from the FundsXML file alone; the decomposition is a producer-side analytic that is out of scope for the standard.</p>
+<h3>5.10.3 Subscription Restrictions, Inception, and Registration</h3>
+<p>The remaining behavioural fields concern the terms under which an investor can buy into the class, the history of the class itself, and the jurisdictions in which the class is authorised for distribution.</p>
+<p><strong>Subscription restrictions</strong> live in a dedicated <code>&lt;SubscriptionRestrictions&gt;</code> container inside each <code>&lt;ShareClass&gt;</code>. Its main children are:</p>
+<ul>
+<li><code>MinSubscriptionAmount</code> — the smallest amount a new investor can subscribe to the class in their first transaction, carried as an <code>&lt;Amount ccy="EUR"&gt;100&lt;/Amount&gt;</code> (or the class's own currency). Retail classes typically set this at a small number — 100 EUR or 1,000 EUR — so that any individual investor can participate. Institutional classes set it much higher — 500,000 EUR, 1,000,000 EUR, 10,000,000 EUR — so that the class is effectively closed to retail participation and can justify its lower fee schedule.</li>
+<li><code>MinSubscriptionShares</code> — the same restriction expressed in units of the class rather than in currency, for producers that prefer share-count thresholds.</li>
+<li><code>MinSubscriptionAmountSubsequent</code> and <code>MinSubscriptionSharesSubsequent</code> — the equivalent thresholds for existing investors topping up their positions. They are typically smaller than the initial ones and are rarely zero.</li>
+<li><code>MinRegularInvestmentAmount</code> and <code>MinRegularInvestmentShares</code> — the thresholds for savings-plan contributions, where a monthly direct-debit subscription has its own minimum.</li>
+<li><code>OtherSubscriptionRestrictions</code> — a free-text fallback for anything the structured fields do not cover.</li>
+</ul>
+<p>For the three share classes of the Europa Growth Fund the thresholds are:</p>
+<ul>
+<li><em>R-EUR-ACC</em>: <code>MinSubscriptionAmount</code> 100 EUR, <code>MinSubscriptionAmountSubsequent</code> 50 EUR</li>
+<li><em>R-CHF-ACC-HEDGED</em>: <code>MinSubscriptionAmount</code> 100 CHF (no subsequent minimum declared)</li>
+<li><em>I-EUR-DIST</em>: <code>MinSubscriptionAmount</code> 1,000,000 EUR (no subsequent minimum declared)</li>
+</ul>
+<p>A symmetric <code>&lt;RedemptionRestrictions&gt;</code> container carries the same kind of structure for the sell side — <code>MaxRedemptionAmount</code>, <code>MaxRedemptionShares</code>, <code>MinHoldingPeriod</code> (in months), and <code>OtherRedemptionRestrictions</code> — for classes that apply lock-ups or exit caps.</p>
+<p>Investor-type restrictions are not a single flag. The schema carries them through two Booleans on <code>&lt;ShareClass&gt;</code> — <code>&lt;RetailInvestorsOnly&gt;</code> (true for classes that may not be sold to institutional investors, a rarity) and <code>&lt;UK_RDR_Flag&gt;</code> (true for classes that comply with the UK Retail Distribution Review, which bans trailing commissions on retail sales) — and, indirectly, through the minimum-subscription thresholds above. The <em>institutional</em> nature of the Europa Growth Fund's I-EUR-DIST class is communicated through its minimum subscription of 1,000,000 EUR rather than through a dedicated <code>IsInstitutional</code> flag — there is no such field in the schema. Producers that want to make the institutional character explicit can do so by populating <code>ShareClassType/Code</code> with a suggestive value (<code>I</code>) and <code>ShareClassType/Name</code> with a descriptive label (<em>Institutional Distributing</em>). Consumers should never infer investor eligibility purely from a class code — that would re-introduce the name-parsing mistake that §5.11 warns against.</p>
+<p><strong>Inception date</strong> at the class level lives in <code>ShareClass/InceptionDate</code> and is the date on which the class itself first opened for subscription. It may or may not coincide with the fund-level inception date from §5.6.1. The Europa Growth Fund was launched in 2012; the R-EUR-ACC class has been live since launch and carries <code>&lt;InceptionDate&gt;2012-01-15&lt;/InceptionDate&gt;</code>, identical to the fund. The R-CHF-ACC-HEDGED class was added in 2018 to capture Swiss retail demand and carries <code>&lt;InceptionDate&gt;2018-06-01&lt;/InceptionDate&gt;</code>. The I-EUR-DIST class was added in 2020 after an institutional anchor investor was secured and carries <code>&lt;InceptionDate&gt;2020-09-15&lt;/InceptionDate&gt;</code>.</p>
+<p>The distinction between fund inception and class inception matters for performance reporting. The fund's <em>since-launch</em> performance refers to the inception date of the fund and makes sense only for classes that have been live since then. For classes added later, performance from dates prior to class inception does not exist and should not be shown: a <em>since-launch</em> figure for the R-CHF-ACC-HEDGED class starts in June 2018, not in 2012. Consumers that render historical performance are expected to read the class inception date and honour it; producers that emit pre-inception performance are in error, and Chapter 10 will list this among the business-validation rules.</p>
+<p><strong>Registration countries</strong> at the class level live inside <code>ShareClass/RegistrationCountries/RegistrationCountry</code>. Each entry carries a mandatory <code>&lt;CountryCode&gt;</code> (an ISO 3166-1 alpha-2 code), an optional <code>&lt;Status&gt;</code> (<code>Registered</code> or <code>De-registered</code>), an optional <code>&lt;StatusDate&gt;</code>, an optional <code>&lt;SubStatus&gt;</code> for investor restrictions specific to that jurisdiction (e.g. <em>Institutional Investors only</em>), and an optional <code>&lt;MarketingDistributionStatus&gt;</code> that tracks whether active marketing is currently under way in the country. The retail R-EUR-ACC class of the Europa Growth Fund is registered in all eleven distribution countries; the I-EUR-DIST institutional class is registered in a smaller subset, because institutional distribution is often limited to the jurisdictions in which the producer has an institutional sales team on the ground. Modelling registration per share class rather than per fund is what allows two classes of the same fund to be available in different sets of countries.</p>
+<h3>5.10.4 Per-Class Fees</h3>
+<p>The last behavioural topic is the class-specific fee schedule. We introduced the general cost vocabulary in §5.7; here we see how the per-class variant is structured.</p>
+<p>Fees that differ between classes live in <code>ShareClass/Fees/Fee</code>, with each <code>&lt;Fee&gt;</code> following the schema type <code>ShareClassFeeType</code>. The mandatory children of a <code>&lt;Fee&gt;</code> are:</p>
+<ul>
+<li><code>&lt;Type&gt;</code> — a free-text label for the fee, such as <em>Management Fee</em>, <em>Distribution Fee</em>, <em>Entry Load</em>, <em>Performance Fee</em>;</li>
+<li><code>&lt;PayReceive&gt;</code> — a single character, <code>P</code> for <em>paid by the fund</em> (the usual case) or <code>R</code> for <em>received by the fund</em> (rare);</li>
+</ul>
+<p>optionally followed by <code>&lt;Minimum&gt;</code> and <code>&lt;Maximum&gt;</code> as percentages of total net assets, a <code>&lt;CalculationMethod&gt;</code> free-text description, and a <code>&lt;DataByPeriods&gt;</code> container that carries the numeric values per reporting period. Each <code>&lt;DataByPeriod&gt;</code> inside <code>&lt;DataByPeriods&gt;</code> names the period with a <code>&lt;BeginDate&gt;</code> and <code>&lt;EndDate&gt;</code>, optionally a <code>&lt;CurrentDate&gt;</code> for ongoing periods, and a mandatory <code>&lt;Values&gt;</code> block whose key field is <code>&lt;FeeAsPercentageOfTNA&gt;</code> — the percentage of total net assets that the fee represents over the named period. The result is a fee structure that can carry not only the headline rate but also the actual realised rate for every period the producer wants to publish.</p>
+<p>A typical management-fee entry on the R-EUR-ACC class of the Europa Growth Fund looks like this:</p>
+<pre><code>&lt;Fees&gt;
+  &lt;Fee&gt;
+    &lt;Type&gt;Management Fee&lt;/Type&gt;
+    &lt;PayReceive&gt;P&lt;/PayReceive&gt;
+    &lt;Maximum&gt;1.50&lt;/Maximum&gt;
+    &lt;CalculationMethod&gt;Per annum of average net assets, accrued daily&lt;/CalculationMethod&gt;
+    &lt;DataByPeriods&gt;
+      &lt;DataByPeriod&gt;
+        &lt;BeginDate&gt;2025-07-01&lt;/BeginDate&gt;
+        &lt;EndDate&gt;2026-06-30&lt;/EndDate&gt;
+        &lt;CurrentDate&gt;2026-03-31&lt;/CurrentDate&gt;
+        &lt;Values&gt;
+          &lt;FeeAsPercentageOfTNA&gt;1.50&lt;/FeeAsPercentageOfTNA&gt;
+        &lt;/Values&gt;
+      &lt;/DataByPeriod&gt;
+    &lt;/DataByPeriods&gt;
+  &lt;/Fee&gt;
+&lt;/Fees&gt;
+</code></pre>
+<p>The same structure applies to every per-class fee: a distribution fee, an entry load (where <code>&lt;CalculationMethod&gt;</code> names it as a one-off rather than an annual rate), a performance fee (where <code>&lt;CalculationMethod&gt;</code> would describe the outperformance formula and the crystallisation schedule). For performance fees, the <strong>high watermark</strong> is carried separately in <code>ShareClass/HighWatermark</code>, whose fields are <code>&lt;ExistingFlag&gt;</code> (Boolean, true if the class has a watermark), <code>&lt;Percentage&gt;</code>, <code>&lt;Amount&gt;</code> (the reference NAV), <code>&lt;Description&gt;</code> (free text), <code>&lt;PeriodicalResetFlag&gt;</code>, and <code>&lt;ResetFrequency&gt;</code>. A full performance-fee specification therefore spans a <code>&lt;Fee&gt;</code> entry and a <code>&lt;HighWatermark&gt;</code> entry, each carrying the part of the story that belongs to it.</p>
+<p>One point of confusion that often catches newcomers is the number format of <code>&lt;FeeAsPercentageOfTNA&gt;</code> and <code>&lt;Maximum&gt;</code>. Both use <code>PercentageType</code>, which is human-readable per-cent: <code>1.50</code> means 1.50%, not 0.0150. The same rule applies as for <code>OngoingCost/Percentage</code> in §5.7.2: if the number looks like a reasonable fee when read as a percent, it is; if it looks reasonable only after division by a hundred, the producer has emitted the value in the wrong format.</p>
+<hr>
+<h2>5.11 Multi-Share-Class Patterns in Practice</h2>
+<p>We close Part II with a short catalogue of the patterns that recur in real European fund structures when share classes multiply. The patterns are not defined by FundsXML; they are industry conventions that producers follow and that consumers should recognise. Knowing the patterns makes reading an unfamiliar fund's share-class structure much faster.</p>
+<h3>5.11.1 Share Class Families and Naming Conventions</h3>
+<p>The fund industry has evolved a rough alphabet of single-letter codes that mark families of share classes. The conventions vary slightly between asset managers but the common letters are stable enough to be a useful first filter.</p>
+<ul>
+<li><strong>A</strong> — retail, often with an entry load of 3–5%</li>
+<li><strong>B</strong> — retail, often distributing, and typically carrying the same fee structure as A</li>
+<li><strong>C</strong> — retail, with no entry load but a higher management or ongoing-charges figure to compensate</li>
+<li><strong>D</strong> — retail, specialised variants (distributing, hedged, clean-priced)</li>
+<li><strong>I</strong> — institutional, lower fees, higher minimum investment</li>
+<li><strong>X</strong> — super-institutional or omnibus, fees negotiated on a segregated mandate basis</li>
+<li><strong>Z</strong> — zero-retrocession, for fee-based advisers who bill their clients directly</li>
+<li><strong>R</strong> — retail, modern replacement for <strong>A</strong> in some post-MiFID-II structures with no entry loads</li>
+</ul>
+<p>These letters appear in the fund's marketing material, in factsheets, and in the <code>OfficialName</code> or <code>ShortName</code> fields of the <code>&lt;ShareClass&gt;/Names</code> block, often combined with currency, earning use, and hedging flags: <em>"R-EUR-ACC"</em>, <em>"I-USD-DIST-HEDGED"</em>, <em>"A-CHF-ACC"</em>. The Europa Growth Fund's three classes fit the pattern: <em>R</em> for retail, <em>I</em> for institutional, currencies and earning-use policies spelled out.</p>
+<p>One rule is worth stating loudly: <strong>the letters are not schema-enforced enumerations, and consumers must not parse them</strong>. A class called <em>R-EUR-ACC</em> is retail, euro-denominated, and accumulating not because of its name but because of its <code>Currency</code>, its <code>ShareClassType/EarningUse</code>, its <code>CurrencyHedgedFlag</code>, and its <code>SubscriptionRestrictions/MinSubscriptionAmount</code> fields. A consumer that tries to extract those properties from the name — by string-matching on "R", "EUR", and "ACC" — will eventually meet an asset manager whose naming convention uses different letters, or who combines letters in an order the consumer did not expect, or who simply does not follow a pattern at all. The schema fields exist precisely so that consumers can read the properties authoritatively. Producers populate the names for human eyes; producers populate the fields for machines.</p>
+<h3>5.11.2 Currency-Hedged Variants</h3>
+<p>The most common multi-class pattern in cross-border European distribution is a base class paired with one or more currency-hedged variants. The base class holds the fund's native currency (typically EUR for a European fund, USD for a global fund); the hedged variants cover the other major currencies in which the fund is distributed (CHF, GBP, JPY, occasionally SEK or NOK).</p>
+<p>Structurally, the base class and its hedged siblings share everything that is a property of the fund — portfolio, investment policy, benchmark, fee schedule, team — and differ only on:</p>
+<ul>
+<li><code>Identifiers</code> (ISIN, GermanWKN, SwissValorenCode: each variant has its own)</li>
+<li><code>Currency</code> (EUR on the base, CHF/GBP/JPY/… on each hedged variant)</li>
+<li><code>CurrencyHedgedFlag</code> (<code>false</code> on the base, <code>true</code> on each hedged variant)</li>
+<li><code>FundHedgingStrategy</code> (typically <code>No hedge</code> on the base, <code>Full NAV hedge</code> on each hedged variant)</li>
+<li><code>InceptionDate</code>, if the hedged variants were added later than the base</li>
+<li>NAV and per-class <code>TotalAssetValues</code>, which diverge from the base immediately after inception because of the hedge P&amp;L</li>
+</ul>
+<p>Note what does <em>not</em> differ: the per-class fee schedule is typically identical between the base class and its hedged variants, because the hedge cost is absorbed into the NAV rather than charged as a fee. A consumer that wants to identify the hedged siblings of a given class has no direct schema-level mechanism to do so — FundsXML does not define an <code>IsHedgedVariantOf</code> pointer — and has to rely on naming conventions or on producer-supplied metadata in <code>CustomAttributes</code>. Chapter 13 recommends a project-level convention for producers that have several hedged siblings per base class.</p>
+<h3>5.11.3 Accumulating and Distributing Twins</h3>
+<p>The second common pattern is a pair of twin classes that share everything except distribution policy: one accumulates income, the other distributes. The pattern is driven by tax treatment — in many jurisdictions, accumulation is more tax-efficient for long-term savers while distribution is preferred by retirees and institutions that need regular cash flow — and by the typical size of the two investor bases.</p>
+<p>The twins share portfolio, fee schedule, and currency. They differ on:</p>
+<ul>
+<li><code>Identifiers</code> (each has its own ISIN, GermanWKN, and so on)</li>
+<li><code>ShareClassType/EarningUse</code> (<code>R</code> on the accumulating twin, <code>D</code> on the distributing twin)</li>
+<li><code>Distributions</code> — populated on the distributing twin with the actual dividend events, empty on the accumulating one</li>
+<li>Often <code>InceptionDate</code> (one twin is typically added later than the other)</li>
+<li>NAV and per-class <code>TotalAssetValues</code>, which diverge on the first ex-dividend date and remain divergent thereafter even though total returns are the same</li>
+</ul>
+<p>A common trap is to compare the NAVs of twin classes directly over time and conclude that one is outperforming the other. This is almost always an artefact of distribution treatment, not of actual economic divergence. The correct comparison is total return with reinvested distributions, and Chapter 13 will treat this as one of the validation rules that a performance-reporting pipeline should enforce.</p>
+<h3>5.11.4 When Share Classes Diverge More Deeply</h3>
+<p>The patterns we have discussed so far — currency variants, accumulating/distributing twins, retail/institutional splits — account for the great majority of real share-class structures. A minority of funds carry classes that differ more deeply: different fee structures, substantially different minimum investments, occasionally even different fee-distribution mechanisms (for example, an adviser class whose distribution commission is built into the NAV versus a clean class whose distribution commission is billed separately to clients). These configurations are all legal and all representable in FundsXML.</p>
+<p>What is <em>not</em> legal, and not representable, is a configuration in which two share classes ultimately own different portfolios. The moment two claim groups diverge at the portfolio level, they are no longer two share classes of the same fund — they are two funds, each with its own portfolio. In legal terms this is a sub-fund structure, and it belongs under the umbrella construct that §5.14 treats. Producers occasionally try to model sub-funds as share classes for operational reasons; the result is a FundsXML document that appears internally inconsistent (two share classes, but reconciliation with the shared portfolio impossible) and that fails business validation at the consumer. The rule is straightforward: if the classes share a portfolio, they are share classes; if they do not, they are separate funds or separate sub-funds.</p>
+<p>A forward pointer is worth placing here. Chapter 8 treats the EMT regulatory template, and EMT flattens the share-class structure further than FundsXML does: for MiFID cost disclosure purposes, each share class is represented as a separate "product" with its own cost structure, and the underlying fund-level relationships are mostly implicit. The two representations — FundsXML's hierarchical view and EMT's flattened view — serve different consumers and should be populated consistently. Chapter 8 explains how.</p>
+<hr>
+<h2>5.12 Dynamic Data — NAVs, Prices, and Total Net Assets</h2>
+<p>We now turn to the dynamic half of the <code>&lt;Fund&gt;</code> element. Up to this point we have treated it as "the fields that change every valuation day", which is a correct first approximation, and we have listed the topics it contains. With the share-class structure now in place, we can populate it with meaningful numbers — and, more importantly, we can say clearly where in the XML each figure lives, because the naive expectation that <em>everything dynamic lives inside <code>FundDynamicData</code></em> is not quite right.</p>
+<h3>5.12.1 Where Dynamic Data Lives, and What Goes Where</h3>
+<p>Dynamic fund data is split between <strong>three</strong> places in the schema.</p>
+<ul>
+<li><strong><code>FundDynamicData</code></strong> (sibling of <code>FundStaticData</code> under <code>&lt;Fund&gt;</code>) carries only three substructures: <code>TotalAssetValues</code> for <strong>fund-level aggregate</strong> totals, <code>Portfolios</code> for the shared portfolio composition, and <code>Benchmarks</code> for dynamic benchmark level values. It is deliberately small.</li>
+<li><strong><code>ShareClass</code></strong> (each class inside <code>SingleFund/ShareClasses</code>) carries almost everything that varies per class: <code>Prices</code> (NAV per unit), <code>TotalAssetValues</code> (per-class aggregate), <code>Distributions</code> (dividend events), <code>Flows</code> (subscriptions and redemptions), <code>PerformanceFigures</code> (returns), and <code>Portfolios</code> if the producer reports the portfolio at share-class rather than fund level.</li>
+<li><strong><code>SingleFund/SingleFundStaticData</code></strong> carries a handful of flags and classifications that are technically static but describe the single-fund identity (management type, exchange-traded flag, price-published flag).</li>
+</ul>
+<p>This chapter treats the dynamic values that matter most to end-users: per-class NAVs (§5.12.2), fund-level totals (§5.12.3), and performance (§5.13). The two substructures we leave alone, <em>Portfolios</em> and <em>Flows / Distributions</em>, are big enough topics to justify chapters of their own: Chapter 6 for portfolio, Chapter 7 for flows and distributions.</p>
+<h3>5.12.2 NAV and Total Net Assets per Share Class</h3>
+<p>The net asset value per unit — the NAV that an investor sees in their statement — is the central dynamic figure of any fund. For a fund with multiple share classes, there is no single NAV: there is one NAV per class, and the schema therefore places it on the individual class rather than on the fund as a whole. Each <code>&lt;ShareClass&gt;</code> carries two related substructures.</p>
+<p><code>ShareClass/Prices/Price</code> holds one or more <code>&lt;Price&gt;</code> entries, each of type <code>ShareClassPriceType</code>, carrying the NAV per unit and adjacent price quantities. The mandatory children are <code>&lt;ActionCode&gt;</code> (<code>C</code>/<code>M</code>/<code>D</code>), <code>&lt;NavDate&gt;</code>, <code>&lt;PriceCurrency&gt;</code> (the ISO 4217 code for the class currency), <code>&lt;PriceNature&gt;</code> (<code>OFFICIAL</code>, <code>ESTIMATED</code>, or <code>TECHNICAL</code>), and <code>&lt;NavPrice&gt;</code> (the net asset value per unit, as a decimal with up to 15 total digits and 8 fractional digits). Optional children include <code>&lt;SubscriptionPrice&gt;</code> and <code>&lt;RedemptionPrice&gt;</code> — used when subscription and redemption happen at prices that differ from the mid-NAV, for example because of an entry load or a swing-pricing factor — and <code>&lt;OtherPrices&gt;</code> and <code>&lt;SplitFactor&gt;</code> for less common cases.</p>
+<p><code>ShareClass/TotalAssetValues/TotalAssetValue</code> holds the per-class aggregate: the class's total net asset value and its shares outstanding. The mandatory children are <code>&lt;NavDate&gt;</code> (the valuation date) and <code>&lt;TotalAssetNature&gt;</code> (again <code>OFFICIAL</code>/<code>ESTIMATED</code>/<code>TECHNICAL</code>). The optional but routinely populated children are <code>&lt;TotalNetAssetValue&gt;</code> (a <code>FundAmountType</code>, i.e. a currency-tagged decimal), <code>&lt;TotalGrossAssetValue&gt;</code> (for funds that distinguish the two), <code>&lt;SharesOutstanding&gt;</code> (the number of units of the class outstanding), and <code>&lt;Ratio&gt;</code> (the share of the fund's total net assets that this class represents, as a percentage). A producer that wants to carry alternative valuations — a swing-priced figure, a market-priced figure, a hold-to-maturity figure — adds them in <code>&lt;OtherTotalAssetValues&gt;</code>.</p>
+<p><strong>Precision and rounding</strong> follow industry convention. NAVs are typically reported to four decimal places (occasionally to eight, as the schema allows); shares outstanding are reported as integers (occasionally to three decimal places for funds that issue fractional shares); total values are reported to two decimal places. A consumer that re-computes <code>NavPrice × SharesOutstanding</code> to verify the producer's total will often find a discrepancy of a cent or two, which is a rounding artefact rather than an error. Chapter 10 treats the tolerance rules that validation pipelines should apply.</p>
+<p>The three share classes of the Europa Growth Fund, at the close of 31 March 2026, have the following values:</p>
+<ul>
+<li><strong>R-EUR-ACC</strong>: NAV 124.5078 EUR, 1,234,567 shares outstanding, TNAV 153,712,654.83 EUR (ratio 33.09%)</li>
+<li><strong>R-CHF-ACC-HEDGED</strong>: NAV 119.2011 CHF, 456,789 shares outstanding, TNAV 54,438,456.22 CHF (ratio 12.21%)</li>
+<li><strong>I-EUR-DIST</strong>: NAV 108.3344 EUR, 2,345,678 shares outstanding, TNAV 254,115,322.56 EUR (ratio 54.70%)</li>
+</ul>
+<p>In XML form, the NAV and total-asset-value blocks for the R-EUR-ACC class look like this (the other two classes are structurally identical, with their own currencies and amounts):</p>
+<pre><code>&lt;ShareClass&gt;
+  &lt;!-- Identifiers, Names, Currency, ShareClassType, InceptionDate, … --&gt;
+  &lt;Prices&gt;
+    &lt;Price&gt;
+      &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+      &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+      &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+      &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+      &lt;NavPrice&gt;124.50780000&lt;/NavPrice&gt;
+    &lt;/Price&gt;
+  &lt;/Prices&gt;
+  &lt;TotalAssetValues&gt;
+    &lt;TotalAssetValue&gt;
+      &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+      &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+      &lt;TotalNetAssetValue&gt;
+        &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;153712654.83&lt;/Amount&gt;
+      &lt;/TotalNetAssetValue&gt;
+      &lt;SharesOutstanding&gt;1234567&lt;/SharesOutstanding&gt;
+      &lt;Ratio&gt;33.09&lt;/Ratio&gt;
+    &lt;/TotalAssetValue&gt;
+  &lt;/TotalAssetValues&gt;
+  &lt;!-- Fees, Distributions, Flows, PerformanceFigures, … --&gt;
+&lt;/ShareClass&gt;
+</code></pre>
+<p>Three observations deserve to be made about the block. First, <strong>the link to the share class is structural, not nominal</strong>. The NAV and the total-asset-value entry are inside the share class's own element; there is no <code>&lt;ShareClassISIN&gt;</code> link of the kind a newcomer might expect, because the ISIN is already the class's own identifier at the top of the class, and a consumer reading the file walks the tree rather than matching by string.</p>
+<p>Second, <strong>every <code>&lt;Amount&gt;</code> element carries a mandatory <code>ccy</code> attribute</strong> that names the currency of the value. The R-CHF-ACC-HEDGED class's NAV is in CHF, not EUR, and the attribute makes this unambiguous — any consumer that ignores it will produce wrong numbers, and Chapter 10 will treat the discipline of always checking currencies as a core validation rule. The <code>isShareClassCcy</code> attribute, a Boolean, is optional but useful: a producer that marks the class-currency amounts with <code>isShareClassCcy="true"</code> tells the consumer explicitly that this value is in the class's own currency, which removes any ambiguity when the same structure is reused in mixed-currency contexts.</p>
+<p>Third, <strong>the block is self-contained per class</strong>. Given only the NAV, the shares outstanding, and the class currency, a consumer can compute every investor-facing value a factsheet needs for that class. The fund-level figures that come next in §5.12.3 are aggregates, not substitutes.</p>
+<h4>Delivering a daily price history</h4>
+<p>The examples so far have shown a single <code>&lt;Price&gt;</code> entry for a single valuation date, which is the normal case for a monthly delivery. But the <code>&lt;Prices&gt;</code> container can hold <em>multiple</em> <code>&lt;Price&gt;</code> children, each with its own <code>&lt;NavDate&gt;</code> — and this is exactly what happens when a producer delivers daily NAV history. A transfer agent that sends the complete March 2026 price series for the R-EUR-ACC class, for instance, would populate the container with one entry per business day. The following excerpt shows the first five trading days of the month:</p>
+<pre><code class="language-xml">&lt;Prices&gt;
+  &lt;Price&gt;
+    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+    &lt;NavDate&gt;2026-03-02&lt;/NavDate&gt;
+    &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+    &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+    &lt;NavPrice&gt;123.84210000&lt;/NavPrice&gt;
+  &lt;/Price&gt;
+  &lt;Price&gt;
+    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+    &lt;NavDate&gt;2026-03-03&lt;/NavDate&gt;
+    &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+    &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+    &lt;NavPrice&gt;123.96550000&lt;/NavPrice&gt;
+  &lt;/Price&gt;
+  &lt;Price&gt;
+    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+    &lt;NavDate&gt;2026-03-04&lt;/NavDate&gt;
+    &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+    &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+    &lt;NavPrice&gt;124.11030000&lt;/NavPrice&gt;
+  &lt;/Price&gt;
+  &lt;Price&gt;
+    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+    &lt;NavDate&gt;2026-03-05&lt;/NavDate&gt;
+    &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+    &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+    &lt;NavPrice&gt;123.72480000&lt;/NavPrice&gt;
+  &lt;/Price&gt;
+  &lt;Price&gt;
+    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+    &lt;NavDate&gt;2026-03-06&lt;/NavDate&gt;
+    &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+    &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+    &lt;NavPrice&gt;124.00170000&lt;/NavPrice&gt;
+  &lt;/Price&gt;
+  &lt;!-- … 17 further business days through 2026-03-31 … --&gt;
+&lt;/Prices&gt;
+</code></pre>
+<p>Two points are worth noting. First, the order of the <code>&lt;Price&gt;</code> entries within the container is not prescribed by the schema — a consumer must use <code>&lt;NavDate&gt;</code> to sort the series, not the document order. In practice most producers emit entries in chronological order, but a robust consumer does not rely on this. Second, the <code>&lt;PriceCurrency&gt;</code> and <code>&lt;PriceNature&gt;</code> are repeated in every entry, even though they are the same for all days; this is deliberate, because the schema allows a single <code>&lt;Prices&gt;</code> container to carry both an official and an estimated price for the same date, and the currency could in theory change after a redenomination. The repetition keeps each <code>&lt;Price&gt;</code> element self-describing.</p>
+<h3>5.12.3 Total Net Assets at the Fund Level</h3>
+<p>Beyond the per-class totals, the <strong>fund-level</strong> aggregate — the sum of all share-class net assets, expressed in the fund's base currency — lives at <code>FundDynamicData/TotalAssetValues/TotalAssetValue</code>, which reuses the same <code>TotalAssetValueType</code> we just saw but at the enclosing fund level. The per-class figures for the Europa Growth Fund on 31 March 2026 aggregate as follows:</p>
+<ul>
+<li>R-EUR-ACC: 153,712,654.83 EUR</li>
+<li>R-CHF-ACC-HEDGED: 54,438,456.22 CHF, converted at 1 CHF = 1.0420 EUR (the reference rate used by the fund administrator at the valuation point): 56,724,871.39 EUR</li>
+<li>I-EUR-DIST: 254,115,322.56 EUR</li>
+<li><strong>Total</strong>: 464,552,848.78 EUR</li>
+</ul>
+<p>In XML form, the fund-level aggregate block looks like this:</p>
+<pre><code>&lt;FundDynamicData&gt;
+  &lt;TotalAssetValues&gt;
+    &lt;TotalAssetValue&gt;
+      &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+      &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+      &lt;TotalNetAssetValue&gt;
+        &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;464552848.78&lt;/Amount&gt;
+      &lt;/TotalNetAssetValue&gt;
+    &lt;/TotalAssetValue&gt;
+  &lt;/TotalAssetValues&gt;
+  &lt;!-- Portfolios (→ Chapter 6), Benchmarks (dynamic values) --&gt;
+&lt;/FundDynamicData&gt;
+</code></pre>
+<p>The structure is the same one we met at share-class level: the mandatory <code>&lt;NavDate&gt;</code> comes first, then the mandatory <code>&lt;TotalAssetNature&gt;</code>, then the optional <code>&lt;TotalNetAssetValue&gt;</code> with its currency-tagged amount. At fund level the amount carries the <code>isFundCcy="true"</code> attribute to declare it as being in the fund's base currency, which is <code>Fund/Currency</code> (EUR, in our case).</p>
+<p>Two points need to be stated clearly. First, <strong>the aggregate must respect currency</strong>. The CHF total from the R-CHF-ACC-HEDGED class cannot be added directly to the EUR totals from the other two classes; it must first be converted at a reference rate, and the rate used must be consistent with whatever the fund administrator uses internally for the same purpose. A consumer that adds the raw numbers without conversion gets a result that is wrong by several percent and meaningless. Producers should never emit an aggregate that required an implicit currency conversion without being prepared to defend the rate used; consumers should, when reconciling, compute the aggregate from the per-class values themselves to verify.</p>
+<p>Second, <strong>the fund-level total is the figure that regulatory thresholds hang on</strong>. AIFMD size limits, MiFID II cost-disclosure thresholds, national marketing thresholds, and internal concentration limits all use the fund-level <code>TotalNetAssetValue</code> rather than the per-class values. A consumer that implements threshold logic reads the aggregate directly and does not try to re-derive it; if the producer's aggregate disagrees with a reconciliation computation, the discrepancy is a data-quality issue to be raised with the producer, not a licence to pick one figure over the other silently.</p>
+<hr>
+<h2>5.13 Performance and Other Dynamic Figures</h2>
+<h3>5.13.1 Performance Figures per Share Class</h3>
+<p>Performance — the total return that an investor in a share class has earned over a given period — is the most frequently consulted field in fund data and the one most prone to being reported in inconsistent ways. FundsXML carries performance at the <strong>share-class level</strong>, inside each <code>&lt;ShareClass&gt;</code> element under <code>ShareClass/PerformanceFigures</code>, with one entry per period per class. The container begins with a mandatory <code>&lt;ActionCode&gt;</code> (<code>C</code>/<code>M</code>/<code>D</code>), then carries three optional sibling lists — <code>&lt;TotalReturns&gt;</code>, <code>&lt;Performances&gt;</code>, and <code>&lt;Ratings&gt;</code> — each of which carries its own flavour of figure. Producers populate whichever combination their downstream consumers expect; none of the three is mandatory, but in practice every monthly delivery populates at least one. We walk through the first two here.</p>
+<p><strong><code>TotalReturns</code></strong> carries one or more <code>&lt;TotalReturn&gt;</code> entries (type <code>TotalReturnType</code>), each describing a total-return value over a specific calculation period, including the effect of reinvested distributions. All four of its core children are mandatory: <code>&lt;Currency&gt;</code>, <code>&lt;Value&gt;</code> (a nested element containing either an <code>&lt;AbsoluteValue&gt;</code> in the currency or a <code>&lt;PercentageValue&gt;</code> — the common case is a percentage), <code>&lt;ValidityDate&gt;</code> (the date at which the return is measured), and <code>&lt;CalculationPeriod&gt;</code> (an enumeration that names the period length). An optional <code>&lt;AnnualizedFlag&gt;</code> marks figures that have been annualised — as a rule, any period of a year or more is reported in annualised form so that three-year and five-year figures are directly comparable. Optional <code>&lt;CalculationMethod&gt;</code>, <code>&lt;Investment&gt;</code>, <code>&lt;StartCalculationDate&gt;</code>, <code>&lt;CorrectionCoefficient&gt;</code>, and <code>&lt;ReinvestmentCoefficient&gt;</code> fields let the producer carry computation provenance alongside the value itself.</p>
+<p>The <code>&lt;CalculationPeriod&gt;</code> enumeration names the periods for which total returns are customarily reported:</p>
+<ul>
+<li><strong><code>1 Day</code></strong> — one business day (yesterday's return)</li>
+<li><strong><code>1 Week</code></strong> — one week</li>
+<li><strong><code>1 Month</code></strong>, <strong><code>3 Months</code></strong>, <strong><code>6 Months</code></strong>, <strong><code>YTD</code></strong> — one month, three months, six months, year-to-date</li>
+<li><strong><code>1 Year</code></strong>, <strong><code>3 Years</code></strong>, <strong><code>5 Years</code></strong>, <strong><code>10 Years</code></strong> — one year, three years, five years, ten years</li>
+<li><strong><code>Since launch</code></strong> — from the share class's inception date to the current valuation date</li>
+<li><strong><code>Specific</code></strong> — a custom period whose exact bounds are declared through <code>&lt;StartCalculationDate&gt;</code> and <code>&lt;ValidityDate&gt;</code></li>
+</ul>
+<p>A single entry for the R-EUR-ACC class's one-year return might therefore look like this:</p>
+<pre><code>&lt;PerformanceFigures&gt;
+  &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+  &lt;TotalReturns&gt;
+    &lt;TotalReturn&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Value&gt;
+        &lt;PercentageValue&gt;9.4&lt;/PercentageValue&gt;
+      &lt;/Value&gt;
+      &lt;ValidityDate&gt;2026-03-31&lt;/ValidityDate&gt;
+      &lt;CalculationPeriod&gt;1 Year&lt;/CalculationPeriod&gt;
+    &lt;/TotalReturn&gt;
+    &lt;TotalReturn&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Value&gt;
+        &lt;PercentageValue&gt;6.8&lt;/PercentageValue&gt;
+      &lt;/Value&gt;
+      &lt;ValidityDate&gt;2026-03-31&lt;/ValidityDate&gt;
+      &lt;CalculationPeriod&gt;3 Years&lt;/CalculationPeriod&gt;
+      &lt;AnnualizedFlag&gt;true&lt;/AnnualizedFlag&gt;
+    &lt;/TotalReturn&gt;
+  &lt;/TotalReturns&gt;
+&lt;/PerformanceFigures&gt;
+</code></pre>
+<p>Two structural points about this listing. First, the <code>&lt;PercentageValue&gt;</code> is in <strong>human-readable per-cent</strong>: 9.4 means 9.4%, not 0.094. The convention is the same as for every other percentage in the schema and differs from the fractional form that some numerical libraries default to. Second, the three-year entry carries <code>&lt;AnnualizedFlag&gt;true&lt;/AnnualizedFlag&gt;</code>, making explicit that the 6.8% figure is a compound annual growth rate rather than a cumulative three-year return. A consumer that ignores the flag and treats the figure as a cumulative will understate the class's three-year performance by a factor of roughly three.</p>
+<p>The <strong><code>Performances</code></strong> container is a near-twin of <code>TotalReturns</code> whose children (type <code>PerformanceType</code>) carry the same kind of information with slightly different shape. Its three mandatory children are <code>&lt;ValidityDate&gt;</code>, <code>&lt;CalculationPeriod&gt;</code>, and <code>&lt;PercentageValue&gt;</code>; optional children include <code>&lt;AnnualizedFlag&gt;</code>, <code>&lt;CalculationMethod&gt;</code>, <code>&lt;StartCalculationDate&gt;</code>, <code>&lt;Investment&gt;</code>, <code>&lt;DateInterval&gt;</code>, and a <code>&lt;DataSeries&gt;</code> block for producers that want to ship the underlying point series alongside the summary figure. In practice producers pick one of the two containers as their primary performance vehicle and use the other rarely; most pipelines we have seen populate <code>TotalReturns</code>.</p>
+<p>The <strong>net-versus-gross distinction</strong> — is this return reported after fees or before them? — is <em>not</em> carried through a dedicated enumerated field in the schema. There is no <code>CalculationBasis</code> enum. Producers who need to transport the distinction do so through the free-text <code>&lt;CalculationMethod&gt;</code> child, using a short convention such as <code>Net of fees, includes reinvested distributions</code>. Consumers should read the <code>&lt;CalculationMethod&gt;</code> on every entry whose interpretation matters to them, and projects whose producers and consumers talk to each other should agree a project-level convention for the calculation-method text. Chapter 10 treats the validation rules that a performance-reporting pipeline should enforce, and Chapter 13 returns to the project-level convention question.</p>
+<p>The three share classes of the Europa Growth Fund each carry their own <code>PerformanceFigures</code> block. At the close of 31 March 2026, a representative subset of the values (net of all fees, annualised where applicable) looks like this:</p>
+<ul>
+<li><strong>R-EUR-ACC</strong>: 1 Year +9.4%, 3 Years +6.8% annualised, 5 Years +7.1% annualised, Since launch +6.3% annualised</li>
+<li><strong>R-CHF-ACC-HEDGED</strong>: 1 Year +8.1%, 3 Years +5.2% annualised, 5 Years +6.0% annualised, Since launch +5.1% annualised</li>
+<li><strong>I-EUR-DIST</strong>: 1 Year +10.2%, 3 Years +7.5% annualised, 5 Years +7.8% annualised, Since launch +6.9% annualised</li>
+</ul>
+<p>Two patterns are visible in the numbers. First, the R-CHF-ACC-HEDGED class underperforms its base class by roughly one to one and a half percentage points per year, which is the typical order of magnitude for EUR/CHF hedging cost over a multi-year period. Second, the institutional class outperforms the retail class by roughly three-quarters of a percentage point per year, which is approximately the difference in management fees (0.75% for institutional versus 1.50% for retail). Neither pattern is accidental; both are expected consequences of the fee and hedging structure we described in Part II.</p>
+<h3>5.13.2 Ratings, Watermarks, Listed Prices</h3>
+<p>Beyond total returns, a handful of smaller dynamic figures deserve mention.</p>
+<p><strong>Ratings</strong> live in <code>PerformanceFigures/Ratings</code>, where each <code>&lt;Rating&gt;</code> carries a <code>&lt;Note&gt;</code> (the rating value as given by the agency — "5 stars", "AA+", "Silver"), optionally a <code>&lt;NumericalValue&gt;</code>, a <code>&lt;ValidityStartDate&gt;</code> and optional <code>&lt;ValidityEndDate&gt;</code>, and a choice between <code>&lt;ListedAgency&gt;</code> (drawn from an enumeration: <code>FERI</code>, <code>FITCH</code>, <code>MOODYS</code>, <code>MORNINGSTAR</code>, <code>STANDARD-POORS</code>) and <code>&lt;UnlistedAgency&gt;</code> (a <code>CompanyType</code> for other providers). A Morningstar five-star rating for the Europa Growth Fund's R-EUR-ACC class would be carried as <code>&lt;Note&gt;5&lt;/Note&gt;</code> with <code>&lt;ListedAgency&gt;MORNINGSTAR&lt;/ListedAgency&gt;</code>.</p>
+<p><strong>Dividend events</strong> for distributing share classes live in <code>ShareClass/Distributions</code>, as we mentioned in §5.10.1. Between ex-dates the class's portfolio continues to generate income; consumers that render client statements on arbitrary dates between distributions compute the accrual themselves from the portfolio income rather than reading a dedicated field, because the schema does not define one. The dividend <em>events</em> are the time-series in <code>Distributions</code>; the current accrual is derived from the portfolio (Chapter 6) and the most recent event.</p>
+<p><strong>Bid and ask prices</strong> apply to exchange-traded share classes — UCITS that are listed on a public market in addition to, or instead of, being traded through the fund's primary subscription/redemption process. They live inside <code>ShareClass/Prices/Price/OtherPrices</code>, alongside the mid-NAV, and are populated only for listed classes. The <code>ShareClass/MarketPlaces</code> block (§5.9.1) identifies the exchanges on which the class trades; the bid/ask, when needed, sits alongside the NAV in the price block.</p>
+<p><strong>High watermarks</strong> for share classes that charge a performance fee live in <code>ShareClass/HighWatermark</code>, which we already introduced in §5.10.4. The watermark is the reference NAV above which new performance fees accrue, and is typically reset annually on the fee crystallisation date or, in some structures, only when a drawdown is fully recovered. Consumers that show investors the performance-fee regime display the watermark alongside the current NAV so that the investor can see how close the class is to the next fee accrual.</p>
+<p>Every one of these fields is optional. Producers that do not use performance fees omit the high watermark; producers whose classes are not listed omit the bid/ask; producers whose classes carry no external ratings omit the ratings block. The schema is permissive about which fields are populated, and consumers are expected to cope with partial blocks.</p>
+<hr>
+<h2>5.14 Umbrella Funds and Sub-Funds</h2>
+<p>We close Part IV of the chapter with a variation that we have, until now, deliberately avoided: the umbrella fund structure under which most real European UCITS actually live. Everything we have said about the Europa Growth Fund so far has treated it as a standalone fund — a single legal entity with a single portfolio, a single investment policy, and a set of share classes. In reality, a Luxembourg UCITS of its size would almost always be organised as a <em>sub-fund</em> within an <em>umbrella</em>: a single legal entity called <em>"Europa Asset Management Investments SICAV"</em> (the umbrella), inside which the Europa Growth Fund is one of several sub-funds, each with its own portfolio and each with its own share classes. The umbrella structure is legally efficient — one set of constitutional documents, one board of directors, one regulator — while giving each sub-fund its own investment mandate and its own economic identity.</p>
+<p>FundsXML models this structure through the <code>&lt;Subfunds&gt;</code> alternative inside <code>&lt;Fund&gt;</code> that we deferred in §5.2. An umbrella is represented as a single <code>&lt;Fund&gt;</code> element whose <code>&lt;SingleFundFlag&gt;</code> is <code>false</code> and whose <code>&lt;Subfunds&gt;</code> container (instead of <code>&lt;SingleFund&gt;</code>) holds one <code>&lt;Subfund&gt;</code> element per sub-fund. Each <code>&lt;Subfund&gt;</code> is itself a fully-fledged unit — schema type <code>SubfundType</code> — with its own <code>Identifiers</code>, <code>Names</code>, <code>Currency</code>, <code>SubfundStaticData</code>, <code>SubfundDynamicData</code>, and its own <code>ShareClasses</code> list. The umbrella's fund-level <code>&lt;Identifiers&gt;/&lt;LEI&gt;</code> identifies the umbrella SICAV as a legal entity; each <code>&lt;Subfund&gt;/&lt;Identifiers&gt;/&lt;LEI&gt;</code> identifies the individual sub-fund. A consumer that walks the tree can therefore distinguish umbrella and sub-fund at the LEI level without ambiguity.</p>
+<p>Two structural consequences deserve to be named. First, the <strong>LEI hierarchy doubles</strong>: the umbrella has its own LEI on the outer <code>&lt;Fund&gt;</code>, and each sub-fund has its own LEI on its <code>&lt;Subfund&gt;</code>. Regulators that report at the umbrella level read the umbrella LEI; regulators that report at the sub-fund level read the sub-fund LEI. The asset manager, meanwhile, has its own separate LEI from Chapter 4, and the three should never be confused. Second, the <strong>share classes operationally attach to the sub-fund</strong>: the <code>&lt;ShareClass&gt;</code> elements live inside <code>&lt;Subfund&gt;/&lt;ShareClasses&gt;</code> rather than inside <code>&lt;SingleFund&gt;/&lt;ShareClasses&gt;</code>, but they use the same <code>ShareClassType</code> and the same vocabulary we built up in Part II. For a consumer that already understands the standalone-fund case, the step up to an umbrella is therefore small: read <code>&lt;Subfunds&gt;/&lt;Subfund&gt;</code> instead of <code>&lt;SingleFund&gt;</code> as the container for share classes, and everything below that level is unchanged. This chapter does not build out a complete umbrella example; Chapter 13 returns to the umbrella form in production context when it discusses the operational implications of running a pipeline over a multi-sub-fund SICAV.</p>
+<p>For the running example of this chapter we continue to show the Europa Growth Fund as a standalone fund — a <code>&lt;Fund&gt;</code> with <code>&lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;</code> and a <code>&lt;SingleFund&gt;</code> child rather than a <code>&lt;Subfunds&gt;</code> child. This is a pedagogical simplification, not a representation of its real legal form. The simplification lets us focus on the share-class structure without also having to explain umbrella mechanics; the complete example in §5.15 is in the standalone form.</p>
+<hr>
+<h2>5.15 The Complete Fund Element for the Europa Growth Fund</h2>
+<p>We are now ready to assemble the first complete <code>&lt;Fund&gt;</code> element of the book. The listing below combines everything we have treated in Parts I, II, and III of this chapter: the mandatory identity header, the full <code>FundStaticData</code> block with classifications and benchmarks, the <code>FundDynamicData</code> fund-level aggregates, the <code>SingleFund</code> container, and three <code>&lt;ShareClass&gt;</code> entries. To keep the listing readable we show the R-EUR-ACC class in full and collapse the other two classes to their distinguishing fields; portfolio and flow sub-blocks are elided with comments because they belong to Chapters 6 and 7. The complete listing in its fully-populated form appears in Appendix D, and the fragment below has been validated against <code>FundsXML4.xsd</code> end-to-end when embedded in the standard <code>&lt;FundsXML4&gt;/&lt;Funds&gt;</code> envelope.</p>
+<pre><code>&lt;Fund&gt;
+  &lt;Identifiers&gt;
+    &lt;LEI&gt;549300ABCDEFGHIJKL34&lt;/LEI&gt;
+    &lt;OtherID ListedType=&quot;INTERNAL FUND CODE&quot;&gt;EAM-EGF-001&lt;/OtherID&gt;
+  &lt;/Identifiers&gt;
+  &lt;Names&gt;
+    &lt;OfficialName&gt;Europa Asset Management Investments — Europa Growth Sub-Fund&lt;/OfficialName&gt;
+    &lt;MarketingName&gt;Europa Growth Fund&lt;/MarketingName&gt;
+    &lt;ShortName&gt;EGF&lt;/ShortName&gt;
+    &lt;LanguageNames&gt;
+      &lt;Name language=&quot;de&quot;&gt;Europa Wachstumsfonds&lt;/Name&gt;
+      &lt;Name language=&quot;fr&quot;&gt;Europa Fonds de Croissance&lt;/Name&gt;
+    &lt;/LanguageNames&gt;
+  &lt;/Names&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+
+  &lt;FundStaticData&gt;
+    &lt;DomicileCountry&gt;LU&lt;/DomicileCountry&gt;
+    &lt;ListedLegalStructure&gt;UCITS - SICAV&lt;/ListedLegalStructure&gt;
+    &lt;InceptionDate&gt;2012-01-15&lt;/InceptionDate&gt;
+    &lt;FundTexts&gt;
+      &lt;FundText&gt;
+        &lt;Language&gt;en&lt;/Language&gt;
+        &lt;Date&gt;2025-12-31&lt;/Date&gt;
+        &lt;ListedType&gt;INVESTMENT STRATEGY&lt;/ListedType&gt;
+        &lt;Title&gt;Investment Objective&lt;/Title&gt;
+        &lt;Content&gt;The Europa Growth Fund seeks long-term capital appreciation through investment in a diversified portfolio of European equities selected for their growth potential.&lt;/Content&gt;
+      &lt;/FundText&gt;
+      &lt;!-- additional FundText entries in de, fr, it ... --&gt;
+    &lt;/FundTexts&gt;
+    &lt;Classifications&gt;
+      &lt;Classification&gt;
+        &lt;ListedGroup&gt;EFAMA&lt;/ListedGroup&gt;
+        &lt;Type&gt;EFC&lt;/Type&gt;
+        &lt;Language&gt;en&lt;/Language&gt;
+        &lt;Value level=&quot;1&quot;&gt;Equity&lt;/Value&gt;
+        &lt;Value level=&quot;2&quot;&gt;Equity Europe&lt;/Value&gt;
+      &lt;/Classification&gt;
+      &lt;Classification&gt;
+        &lt;ListedGroup&gt;MORNINGSTAR&lt;/ListedGroup&gt;
+        &lt;Type&gt;Global Category&lt;/Type&gt;
+        &lt;Language&gt;en&lt;/Language&gt;
+        &lt;Value&gt;Europe Large-Cap Growth Equity&lt;/Value&gt;
+      &lt;/Classification&gt;
+    &lt;/Classifications&gt;
+    &lt;Benchmarks&gt;
+      &lt;Benchmark&gt;
+        &lt;BenchmarkID&gt;MSCI-EUR-NR&lt;/BenchmarkID&gt;
+        &lt;Name&gt;MSCI Europe Net Total Return EUR&lt;/Name&gt;
+        &lt;Currency&gt;EUR&lt;/Currency&gt;
+        &lt;Provider&gt;
+          &lt;Identifiers&gt;&lt;LEI&gt;549300YZUBM5UFHQKY25&lt;/LEI&gt;&lt;/Identifiers&gt;
+          &lt;Name&gt;MSCI Limited&lt;/Name&gt;
+        &lt;/Provider&gt;
+        &lt;BenchmarkType&gt;Market Index&lt;/BenchmarkType&gt;
+      &lt;/Benchmark&gt;
+    &lt;/Benchmarks&gt;
+    &lt;FundHedgingStrategy&gt;
+      &lt;HedgingStrategy&gt;Full NAV hedge&lt;/HedgingStrategy&gt;
+    &lt;/FundHedgingStrategy&gt;
+    &lt;OngoingCosts&gt;
+      &lt;OngoingCost&gt;
+        &lt;CostType&gt;Ongoing Charges&lt;/CostType&gt;
+        &lt;PublicationDate&gt;2025-06-30&lt;/PublicationDate&gt;
+        &lt;ValidFrom&gt;2025-07-01&lt;/ValidFrom&gt;
+        &lt;ValidTo&gt;2026-06-30&lt;/ValidTo&gt;
+        &lt;Percentage&gt;1.85&lt;/Percentage&gt;
+      &lt;/OngoingCost&gt;
+    &lt;/OngoingCosts&gt;
+    &lt;SFDRProductType&gt;6&lt;/SFDRProductType&gt;
+  &lt;/FundStaticData&gt;
+
+  &lt;FundDynamicData&gt;
+    &lt;TotalAssetValues&gt;
+      &lt;TotalAssetValue&gt;
+        &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+        &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+        &lt;TotalNetAssetValue&gt;
+          &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;464552848.78&lt;/Amount&gt;
+        &lt;/TotalNetAssetValue&gt;
+      &lt;/TotalAssetValue&gt;
+    &lt;/TotalAssetValues&gt;
+    &lt;!-- Portfolios: see Chapter 6. Benchmarks: dynamic level values, elided. --&gt;
+  &lt;/FundDynamicData&gt;
+
+  &lt;SingleFund&gt;
+    &lt;SingleFundStaticData&gt;
+      &lt;ExchangeTradedFlag&gt;false&lt;/ExchangeTradedFlag&gt;
+      &lt;FundOfFundFlag&gt;false&lt;/FundOfFundFlag&gt;
+      &lt;SocialResponsibleFlag&gt;false&lt;/SocialResponsibleFlag&gt;
+      &lt;ManagementType&gt;ACTIVE&lt;/ManagementType&gt;
+      &lt;PricePublishedFlag&gt;true&lt;/PricePublishedFlag&gt;
+      &lt;SalesCategory&gt;PUBLIC&lt;/SalesCategory&gt;
+    &lt;/SingleFundStaticData&gt;
+    &lt;ShareClasses&gt;
+      &lt;ShareClass&gt;
+        &lt;Identifiers&gt;
+          &lt;ISIN&gt;LU2100000011&lt;/ISIN&gt;
+          &lt;GermanWKN&gt;A2GROW&lt;/GermanWKN&gt;
+          &lt;SwissValorenCode&gt;54321001&lt;/SwissValorenCode&gt;
+        &lt;/Identifiers&gt;
+        &lt;Names&gt;
+          &lt;OfficialName&gt;Europa Growth Fund — R EUR ACC&lt;/OfficialName&gt;
+          &lt;ShortName&gt;EGF R EUR ACC&lt;/ShortName&gt;
+        &lt;/Names&gt;
+        &lt;Currency&gt;EUR&lt;/Currency&gt;
+        &lt;ShareClassType&gt;
+          &lt;Code&gt;R&lt;/Code&gt;
+          &lt;EarningUse&gt;R&lt;/EarningUse&gt;
+          &lt;Name&gt;Retail Accumulating&lt;/Name&gt;
+        &lt;/ShareClassType&gt;
+        &lt;InceptionDate&gt;2012-01-15&lt;/InceptionDate&gt;
+        &lt;RegistrationCountries&gt;
+          &lt;RegistrationCountry&gt;&lt;CountryCode&gt;LU&lt;/CountryCode&gt;&lt;Status&gt;Registered&lt;/Status&gt;&lt;/RegistrationCountry&gt;
+          &lt;RegistrationCountry&gt;&lt;CountryCode&gt;DE&lt;/CountryCode&gt;&lt;Status&gt;Registered&lt;/Status&gt;&lt;/RegistrationCountry&gt;
+          &lt;RegistrationCountry&gt;&lt;CountryCode&gt;FR&lt;/CountryCode&gt;&lt;Status&gt;Registered&lt;/Status&gt;&lt;/RegistrationCountry&gt;
+          &lt;!-- IT, ES, NL, AT, BE, PT, CH, SE elided --&gt;
+        &lt;/RegistrationCountries&gt;
+        &lt;SubscriptionRestrictions&gt;
+          &lt;MinSubscriptionAmount&gt;
+            &lt;Amount ccy=&quot;EUR&quot;&gt;100&lt;/Amount&gt;
+          &lt;/MinSubscriptionAmount&gt;
+          &lt;MinSubscriptionAmountSubsequent&gt;
+            &lt;Amount ccy=&quot;EUR&quot;&gt;50&lt;/Amount&gt;
+          &lt;/MinSubscriptionAmountSubsequent&gt;
+        &lt;/SubscriptionRestrictions&gt;
+        &lt;OpenToNewInvestorsFlag&gt;true&lt;/OpenToNewInvestorsFlag&gt;
+        &lt;CurrencyHedgedFlag&gt;false&lt;/CurrencyHedgedFlag&gt;
+        &lt;IsReferenceShareClass&gt;true&lt;/IsReferenceShareClass&gt;
+        &lt;IsPublicFlag&gt;true&lt;/IsPublicFlag&gt;
+        &lt;Prices&gt;
+          &lt;Price&gt;
+            &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+            &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+            &lt;NavPrice&gt;124.50780000&lt;/NavPrice&gt;
+          &lt;/Price&gt;
+        &lt;/Prices&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;153712654.83&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+            &lt;SharesOutstanding&gt;1234567&lt;/SharesOutstanding&gt;
+            &lt;Ratio&gt;33.09&lt;/Ratio&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+        &lt;Fees&gt;
+          &lt;Fee&gt;
+            &lt;Type&gt;Management Fee&lt;/Type&gt;
+            &lt;PayReceive&gt;P&lt;/PayReceive&gt;
+            &lt;Maximum&gt;1.50&lt;/Maximum&gt;
+            &lt;CalculationMethod&gt;Per annum of average net assets, accrued daily&lt;/CalculationMethod&gt;
+            &lt;DataByPeriods&gt;
+              &lt;DataByPeriod&gt;
+                &lt;BeginDate&gt;2025-07-01&lt;/BeginDate&gt;
+                &lt;EndDate&gt;2026-06-30&lt;/EndDate&gt;
+                &lt;CurrentDate&gt;2026-03-31&lt;/CurrentDate&gt;
+                &lt;Values&gt;&lt;FeeAsPercentageOfTNA&gt;1.50&lt;/FeeAsPercentageOfTNA&gt;&lt;/Values&gt;
+              &lt;/DataByPeriod&gt;
+            &lt;/DataByPeriods&gt;
+          &lt;/Fee&gt;
+        &lt;/Fees&gt;
+        &lt;PerformanceFigures&gt;
+          &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+          &lt;TotalReturns&gt;
+            &lt;TotalReturn&gt;
+              &lt;Currency&gt;EUR&lt;/Currency&gt;
+              &lt;Value&gt;&lt;PercentageValue&gt;9.4&lt;/PercentageValue&gt;&lt;/Value&gt;
+              &lt;ValidityDate&gt;2026-03-31&lt;/ValidityDate&gt;
+              &lt;CalculationPeriod&gt;1 Year&lt;/CalculationPeriod&gt;
+            &lt;/TotalReturn&gt;
+            &lt;TotalReturn&gt;
+              &lt;Currency&gt;EUR&lt;/Currency&gt;
+              &lt;Value&gt;&lt;PercentageValue&gt;6.8&lt;/PercentageValue&gt;&lt;/Value&gt;
+              &lt;ValidityDate&gt;2026-03-31&lt;/ValidityDate&gt;
+              &lt;CalculationPeriod&gt;3 Years&lt;/CalculationPeriod&gt;
+              &lt;AnnualizedFlag&gt;true&lt;/AnnualizedFlag&gt;
+            &lt;/TotalReturn&gt;
+          &lt;/TotalReturns&gt;
+        &lt;/PerformanceFigures&gt;
+      &lt;/ShareClass&gt;
+
+      &lt;ShareClass&gt;
+        &lt;Identifiers&gt;
+          &lt;ISIN&gt;LU2100000029&lt;/ISIN&gt;
+          &lt;GermanWKN&gt;A2GRCH&lt;/GermanWKN&gt;
+          &lt;SwissValorenCode&gt;54321002&lt;/SwissValorenCode&gt;
+        &lt;/Identifiers&gt;
+        &lt;Names&gt;
+          &lt;OfficialName&gt;Europa Growth Fund — R CHF ACC Hedged&lt;/OfficialName&gt;
+          &lt;ShortName&gt;EGF R CHF ACC H&lt;/ShortName&gt;
+        &lt;/Names&gt;
+        &lt;Currency&gt;CHF&lt;/Currency&gt;
+        &lt;ShareClassType&gt;
+          &lt;Code&gt;R&lt;/Code&gt;&lt;EarningUse&gt;R&lt;/EarningUse&gt;
+          &lt;Name&gt;Retail Accumulating, Hedged&lt;/Name&gt;
+        &lt;/ShareClassType&gt;
+        &lt;InceptionDate&gt;2018-06-01&lt;/InceptionDate&gt;
+        &lt;SubscriptionRestrictions&gt;
+          &lt;MinSubscriptionAmount&gt;&lt;Amount ccy=&quot;CHF&quot;&gt;100&lt;/Amount&gt;&lt;/MinSubscriptionAmount&gt;
+        &lt;/SubscriptionRestrictions&gt;
+        &lt;CurrencyHedgedFlag&gt;true&lt;/CurrencyHedgedFlag&gt;
+        &lt;FundHedgingStrategy&gt;
+          &lt;HedgingStrategy&gt;Full NAV hedge&lt;/HedgingStrategy&gt;
+        &lt;/FundHedgingStrategy&gt;
+        &lt;IsPublicFlag&gt;true&lt;/IsPublicFlag&gt;
+        &lt;Prices&gt;
+          &lt;Price&gt;
+            &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;PriceCurrency&gt;CHF&lt;/PriceCurrency&gt;
+            &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+            &lt;NavPrice&gt;119.20110000&lt;/NavPrice&gt;
+          &lt;/Price&gt;
+        &lt;/Prices&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;54438456.22&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+            &lt;SharesOutstanding&gt;456789&lt;/SharesOutstanding&gt;
+            &lt;Ratio&gt;12.21&lt;/Ratio&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+        &lt;!-- Fees identical in structure to R-EUR-ACC, elided.
+             PerformanceFigures: own series, elided. --&gt;
+      &lt;/ShareClass&gt;
+
+      &lt;ShareClass&gt;
+        &lt;Identifiers&gt;
+          &lt;ISIN&gt;LU2100000037&lt;/ISIN&gt;
+          &lt;GermanWKN&gt;A2GRIN&lt;/GermanWKN&gt;
+        &lt;/Identifiers&gt;
+        &lt;Names&gt;
+          &lt;OfficialName&gt;Europa Growth Fund — I EUR DIST&lt;/OfficialName&gt;
+          &lt;ShortName&gt;EGF I EUR DIST&lt;/ShortName&gt;
+        &lt;/Names&gt;
+        &lt;Currency&gt;EUR&lt;/Currency&gt;
+        &lt;ShareClassType&gt;
+          &lt;Code&gt;I&lt;/Code&gt;&lt;EarningUse&gt;D&lt;/EarningUse&gt;
+          &lt;Name&gt;Institutional Distributing&lt;/Name&gt;
+        &lt;/ShareClassType&gt;
+        &lt;InceptionDate&gt;2020-09-15&lt;/InceptionDate&gt;
+        &lt;SubscriptionRestrictions&gt;
+          &lt;MinSubscriptionAmount&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;1000000&lt;/Amount&gt;&lt;/MinSubscriptionAmount&gt;
+        &lt;/SubscriptionRestrictions&gt;
+        &lt;CurrencyHedgedFlag&gt;false&lt;/CurrencyHedgedFlag&gt;
+        &lt;IsPublicFlag&gt;true&lt;/IsPublicFlag&gt;
+        &lt;Prices&gt;
+          &lt;Price&gt;
+            &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;PriceCurrency&gt;EUR&lt;/PriceCurrency&gt;
+            &lt;PriceNature&gt;OFFICIAL&lt;/PriceNature&gt;
+            &lt;NavPrice&gt;108.33440000&lt;/NavPrice&gt;
+          &lt;/Price&gt;
+        &lt;/Prices&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;254115322.56&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+            &lt;SharesOutstanding&gt;2345678&lt;/SharesOutstanding&gt;
+            &lt;Ratio&gt;54.70&lt;/Ratio&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+        &lt;Distributions&gt;
+          &lt;Distribution&gt;
+            &lt;ActionCode&gt;C&lt;/ActionCode&gt;
+            &lt;DividendStatus&gt;OFFICIAL&lt;/DividendStatus&gt;
+            &lt;AnnouncementDate&gt;2025-05-02&lt;/AnnouncementDate&gt;
+            &lt;RecordDate&gt;2025-05-14&lt;/RecordDate&gt;
+            &lt;ExDate&gt;2025-05-15&lt;/ExDate&gt;
+            &lt;PaymentDate&gt;2025-05-22&lt;/PaymentDate&gt;
+            &lt;PaymentCurrency&gt;EUR&lt;/PaymentCurrency&gt;
+            &lt;GrossDividendAmount&gt;
+              &lt;PerShare&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;2.1450&lt;/Amount&gt;&lt;/PerShare&gt;
+            &lt;/GrossDividendAmount&gt;
+            &lt;NetDividendAmount&gt;
+              &lt;PerShare&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;1.8450&lt;/Amount&gt;&lt;/PerShare&gt;
+            &lt;/NetDividendAmount&gt;
+          &lt;/Distribution&gt;
+        &lt;/Distributions&gt;
+        &lt;!-- Fees: Management Fee 0.75%, same structure as R-EUR-ACC, elided. --&gt;
+      &lt;/ShareClass&gt;
+    &lt;/ShareClasses&gt;
+  &lt;/SingleFund&gt;
+&lt;/Fund&gt;
+</code></pre>
+<p>Reading the block is best done in three passes, matching the three parts of this chapter.</p>
+<p>The <strong>first pass</strong> looks at the fund's mandatory header and its static data. The <code>&lt;Identifiers&gt;</code> block carries the fund's LEI (<code>549300ABCDEFGHIJKL34</code>), identifying the Europa Growth Fund as a legal entity distinct from the LEI of its asset manager (Chapter 4), together with a producer-internal reference code in an <code>OtherID</code> entry. The <code>&lt;Names&gt;</code> block carries the fund's full official name, its marketing name, a short code, and translations into German and French. The fund's base currency is EUR and the <code>&lt;SingleFundFlag&gt;</code> is <em>true</em>. Inside <code>&lt;FundStaticData&gt;</code> the domicile is Luxembourg; the legal structure is <em>UCITS - SICAV</em>; the fund was launched in 2012; investment-strategy text is carried under <code>&lt;FundTexts&gt;</code>; two parallel <code>&lt;Classifications&gt;</code> entries — EFAMA and Morningstar — describe the fund as a European equity product; a single <code>&lt;Benchmark&gt;</code> names the MSCI Europe Net Total Return EUR index; a single <code>&lt;OngoingCost&gt;</code> entry carries the fund-level headline ongoing charges figure of 1.85% for the current fiscal year; and the <code>&lt;SFDRProductType&gt;</code> is 6, marking the fund as an Article 6 product.</p>
+<p>The <strong>second pass</strong> looks at the share-class structure, carried inside <code>&lt;SingleFund&gt;</code>. The <code>&lt;SingleFundStaticData&gt;</code> block labels the fund as actively managed, not exchange-traded, not a fund of funds, and classified as PUBLIC sales. The three share classes themselves are R-EUR-ACC, R-CHF-ACC-HEDGED, and I-EUR-DIST, each inside its own <code>&lt;ShareClass&gt;</code> element. Each carries its own <code>&lt;Identifiers&gt;</code> block with ISIN and adjacent codes, its own <code>&lt;Names&gt;</code> block, its own <code>&lt;Currency&gt;</code> (EUR or CHF), its own <code>&lt;ShareClassType&gt;</code> with <code>&lt;Code&gt;</code> and <code>&lt;EarningUse&gt;</code> (<code>R</code> for reinvesting, <code>D</code> for distributing), its own <code>&lt;InceptionDate&gt;</code>, and its own subscription minimum. The R-CHF-ACC-HEDGED class is the only one with <code>&lt;CurrencyHedgedFlag&gt;true&lt;/CurrencyHedgedFlag&gt;</code>, and it carries a <code>&lt;FundHedgingStrategy&gt;Full NAV hedge&lt;/FundHedgingStrategy&gt;</code> at class level in addition. The I-EUR-DIST class is the only one with <code>&lt;EarningUse&gt;D&lt;/EarningUse&gt;</code> and is therefore the only one with a populated <code>&lt;Distributions&gt;</code> block — showing the 15 May 2025 dividend event in both its gross and net form.</p>
+<p>The <strong>third pass</strong> looks at the dynamic figures. Each <code>&lt;ShareClass&gt;</code> carries its own <code>&lt;Prices&gt;/&lt;Price&gt;</code> entry — the NAV per unit at 31 March 2026 in the class's own currency — and its own <code>&lt;TotalAssetValues&gt;/&lt;TotalAssetValue&gt;</code> with the mandatory <code>&lt;NavDate&gt;</code> and <code>&lt;TotalAssetNature&gt;</code>, the class's total net asset value (EUR or CHF, marked with <code>isShareClassCcy="true"</code>), the shares outstanding, and a <code>&lt;Ratio&gt;</code> giving the class's share of the fund's total net assets. Alongside the per-class figures, <code>&lt;FundDynamicData&gt;/&lt;TotalAssetValues&gt;</code> carries a single fund-level aggregate entry: 464,552,848.78 EUR, marked with <code>isFundCcy="true"</code> to make clear that the currency is the fund's base currency after conversion of the CHF-denominated class. The <code>&lt;PerformanceFigures&gt;</code> block on R-EUR-ACC shows two total-return entries (one-year and three-year) to illustrate the shape; a fully populated class would carry six to eight entries covering the full set of standard periods.</p>
+<p>This <code>&lt;Fund&gt;</code> element is the centrepiece of the Europa Growth Fund's month-end delivery for 31 March 2026, and it will appear — in its complete form, with the portfolio and flows fully populated — in Appendix D. Every subsequent chapter of Part II will take one fragment of the same element for detailed treatment, so that by the time we reach the end of Chapter 9 the reader has seen every part of it explained at least once.</p>
+<hr>
+<h2>5.16 Common Pitfalls</h2>
+<p>The following short list captures the mistakes that, in our experience, cause the greatest share of fund-element-related production incidents.</p>
+<ul>
+<li><strong>The ISIN is placed on the fund's <code>&lt;Identifiers&gt;</code> instead of on each share class's <code>&lt;Identifiers&gt;</code>.</strong> Distributors consuming the delivery fail to distinguish the classes and route subscription orders to whichever class they find first. The fix is to move the ISIN into the <code>&lt;Identifiers&gt;</code> block of each <code>&lt;ShareClass&gt;</code> where it belongs.</li>
+<li><strong>The share-class currency is confused with the fund base currency.</strong> A consumer reads 119.2011 from the R-CHF-ACC-HEDGED class and treats it as a EUR number, producing NAV values that are wrong by the EUR/CHF rate. The fix is to respect the <code>ccy</code> attribute on every <code>&lt;Amount&gt;</code> element, and to use the optional <code>isFundCcy</code> / <code>isShareClassCcy</code> attributes as additional self-description.</li>
+<li><strong>A share class is omitted from a delivery.</strong> The consumer's current-state engine interprets the absence as a discontinuation and marks the class as closed, leading to factsheet errors and failed order routing. The rule is that every share class must appear in every full delivery even if its data has not changed since the last one.</li>
+<li><strong>The <code>EarningUse</code> code is the wrong letter.</strong> The schema uses <code>R</code> for <em>reinvesting</em> (accumulating) and <code>D</code> for <em>distributing</em>; producers occasionally get them the wrong way round because <em>R</em> intuitively looks like <em>retail</em> or <em>return</em>. A class labelled <code>&lt;EarningUse&gt;R&lt;/EarningUse&gt;</code> when it should be <code>D</code> causes every distributing-class consumer to misclassify the fund. The fix is to verify the letter on every class against the class's prospectus behaviour.</li>
+<li><strong>Performance figures are emitted without a calculation-method annotation.</strong> The schema does not carry a net/gross flag as a structured field; the distinction rides in the free-text <code>&lt;CalculationMethod&gt;</code> child of <code>&lt;TotalReturn&gt;</code>. One downstream consumer treats the figures as net, another as gross, and the two disagree about how the fund is performing. The fix is to populate a short, project-stable calculation-method string on every entry and to document the convention at project level.</li>
+<li><strong>The inception date is inherited from the fund rather than set per share class.</strong> A <em>since-launch</em> performance figure for the R-CHF-ACC-HEDGED class starts in 2012 (fund inception) rather than 2018 (class inception), showing six years of performance that the class did not experience. The fix is to populate <code>&lt;InceptionDate&gt;</code> inside each <code>&lt;ShareClass&gt;</code> and compute performance from there.</li>
+<li><strong>A consumer parses the share-class name to infer currency and earning use.</strong> The consumer's logic breaks when it meets an asset manager whose naming convention differs. The fix is to read <code>ShareClass/Currency</code>, <code>ShareClass/ShareClassType/EarningUse</code>, <code>ShareClass/CurrencyHedgedFlag</code>, and <code>ShareClass/SubscriptionRestrictions/MinSubscriptionAmount</code> as structured fields and never depend on the name.</li>
+<li><strong>The fund-level <code>&lt;Classifications&gt;</code> block is used to transport ad-hoc strings rather than recognised classification systems.</strong> A producer writes <code>&lt;ListedGroup&gt;EFAMA&lt;/ListedGroup&gt;</code> but populates <code>&lt;Value&gt;</code> with a home-grown label that the EFAMA taxonomy does not use. Consumers that recognise EFAMA then mismatch. The fix is to populate each <code>&lt;Classification&gt;</code> with values from the taxonomy its <code>&lt;ListedGroup&gt;</code> names, and to use <code>&lt;UnlistedGroup&gt;</code> when the classification is proprietary.</li>
+</ul>
+<hr>
+<h2>5.17 Key Takeaways</h2>
+<ul>
+<li>A FundsXML document may contain one or several <code>&lt;Fund&gt;</code> elements. Each <code>&lt;Fund&gt;</code> begins with four mandatory children — <code>Identifiers</code>, <code>Names</code>, <code>Currency</code>, <code>SingleFundFlag</code> — and then optionally carries <code>FundStaticData</code>, <code>FundDynamicData</code>, and a choice of <code>SingleFund</code> (for non-umbrella funds) or <code>Subfunds</code> (for umbrella structures). Share classes live inside <code>SingleFund/ShareClasses</code>, not inside <code>FundStaticData</code>.</li>
+<li>Fund identifiers live at two levels, both using the same <code>IdentifiersType</code> container. <code>Fund/Identifiers</code> carries fund-level codes (principally <code>LEI</code>); each <code>ShareClass/Identifiers</code> carries share-class-level codes (<code>ISIN</code>, <code>GermanWKN</code>, <code>SwissValorenCode</code>, <code>CUSIP</code>, <code>SEDOL</code>, and proprietary <code>OtherID</code> entries). Confusing the levels is the commonest structural mistake in the fund element.</li>
+<li>Names are modelled through the <code>NamesType</code> container with a mandatory <code>&lt;OfficialName&gt;</code>, optional <code>&lt;MarketingName&gt;</code>, <code>&lt;ShortName&gt;</code>, <code>&lt;FullName&gt;</code>, <code>&lt;PreviousName&gt;</code>, and a <code>&lt;LanguageNames&gt;</code> child that holds the multilingual translations as <code>&lt;Name language="xx"&gt;</code> entries. Longer narrative text lives in <code>FundStaticData/FundTexts</code>, with a <code>&lt;ListedType&gt;</code> that names the kind of text and a free-form <code>&lt;Content&gt;</code>.</li>
+<li>Fund classification — domicile, legal structure, inception date, investment classification, benchmark, SFDR product type — lives in <code>FundStaticData</code>. Investment classification is expressed through <code>Classifications/Classification</code> entries that reference external taxonomies (EFAMA, Morningstar, MiFID, and others) rather than a single closed vocabulary. The regulatory templates in Chapter 8 provide richer versions of the same information for regulated use cases.</li>
+<li>Share classes are the structural branch of the fund element. Fields that differ between classes — identifiers, <code>Currency</code>, <code>ShareClassType/EarningUse</code>, <code>CurrencyHedgedFlag</code>, <code>SubscriptionRestrictions</code>, per-class <code>Fees</code>, <code>InceptionDate</code>, <code>Prices</code>, <code>TotalAssetValues</code>, <code>PerformanceFigures</code>, <code>RegistrationCountries</code> — live on the individual <code>&lt;ShareClass&gt;</code> element. Everything common to all classes stays on <code>&lt;Fund&gt;</code> or in <code>FundStaticData</code>.</li>
+<li>Fees are modelled at three layers. <code>FundStaticData/OngoingCosts</code> carries headline fund-level aggregate figures (TER, ongoing charges, transaction costs, performance fees) with <code>&lt;Percentage&gt;</code> in human-readable per-cent. <code>ShareClass/Fees/Fee</code> carries per-class management and distribution fees with mandatory <code>Type</code> and <code>PayReceive</code>, optional <code>Minimum</code>/<code>Maximum</code>/<code>CalculationMethod</code>, and <code>DataByPeriods/DataByPeriod/Values/FeeAsPercentageOfTNA</code> for the period values. <code>ShareClass/HighWatermark</code> carries the high-watermark reference for performance-fee classes.</li>
+<li>Per-class dynamic data lives inside each <code>&lt;ShareClass&gt;</code>: <code>Prices</code> for the NAV per unit, <code>TotalAssetValues</code> for the class aggregate with shares outstanding and ratio, <code>Distributions</code> for dividend events, <code>Flows</code> for subscriptions and redemptions, <code>PerformanceFigures</code> for total returns and ratings. <code>FundDynamicData/TotalAssetValues</code> carries only the single fund-level aggregate; consumers that need per-class dynamic figures read them from the classes themselves.</li>
+<li>Performance is carried in <code>ShareClass/PerformanceFigures</code> with <code>&lt;TotalReturn&gt;</code> entries that name their calculation period through a <code>&lt;CalculationPeriod&gt;</code> enumeration (<code>1 Day</code>, <code>1 Month</code>, <code>YTD</code>, <code>1 Year</code>, <code>3 Years</code>, <code>Since launch</code>, <code>Specific</code>) and carry their value as either <code>&lt;AbsoluteValue&gt;</code> or <code>&lt;PercentageValue&gt;</code>. The net-versus-gross distinction rides in free-text <code>&lt;CalculationMethod&gt;</code>; there is no dedicated enum for it in the schema.</li>
+<li>Umbrella funds are modelled through the <code>&lt;Subfunds&gt;/&lt;Subfund&gt;</code> alternative inside <code>&lt;Fund&gt;</code>, with each sub-fund carrying its own <code>Identifiers</code>, <code>Names</code>, <code>Currency</code>, <code>SubfundStaticData</code>, <code>SubfundDynamicData</code>, and <code>ShareClasses</code>. The running example in §5.15 is shown in the standalone <code>&lt;SingleFund&gt;</code> form for pedagogical clarity; Chapter 13 treats the umbrella form in production context.</li>
+</ul>
+<p>We have now described the Europa Growth Fund: what it is, how its share classes differ, and what its NAVs look like on 31 March 2026. What we have not yet seen is what the fund actually holds. Chapter 6 opens the <code>Portfolios</code> substructure of <code>FundDynamicData</code> and walks, asset class by asset class, through the instruments that make up the roughly two hundred positions on the fund's books.</p>
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter04.html">&lsaquo; Chapter 4</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter06.html">Chapter 6 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

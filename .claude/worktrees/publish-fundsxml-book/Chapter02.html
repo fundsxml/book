@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 2 — XML and XSD — The Technological Basis</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter01.html">&lsaquo; Chapter 1</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter03.html">Chapter 3 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<div class="chapter-meta">Part I — Foundations · Chapter 2</div>
+<h1>XML and XSD — The Technological Basis<span class="subtitle">Foundational knowledge for working with FundsXML</span></h1>
+
+<hr>
+
+<h2>2.1 From "Why" to "How": A Short Hop</h2>
+
+<p>Chapter 1 built the case for a single, shared standard for fund data. It did so deliberately without a single line of XML: the argument there was economic and operational, not technical. This chapter begins the technical half of the journey. It introduces XML and XSD — the two technologies on which FundsXML rests — and it does so from the perspective of a fund professional who needs to <em>read</em>, <em>validate</em>, <em>query</em>, and <em>transform</em> fund-data documents, not from the perspective of a software engineer building an XML parser from scratch.</p>
+
+<p>Return, for a moment, to the Europa Growth Fund. At the end of Chapter 1, the operations team had decided — at least in principle — to adopt FundsXML as the canonical representation of its fund-product data. The next question on the team's mind is very practical: <em>what does such a FundsXML file actually look like?</em> When a colleague drops a 2-megabyte document on the desk and says "this is the monthly delivery", what should we expect to see? How do we confirm that the file is correct before we send it out? How do we extract the twenty fields that the fact-sheet engine needs? How do we turn the same file into the CSV that a Swiss distributor still insists on?</p>
+
+<p>Those are the questions this chapter answers in general terms. Chapter 3 will then apply the answers to the specific shape of the FundsXML schema; Chapters 4 to 9 will walk through the schema module by module; Chapter 10 will explain the two-stage validation discipline that keeps production deliveries healthy. Everything from here on depends on the vocabulary of XML and XSD being second nature, and so the investment of thirty pages at this point is repaid many times over in the chapters that follow.</p>
+
+<p>The chapter is deliberately practical. XML is a large specification with many corners that FundsXML does not use, and this book does not visit them. Where a topic is genuinely optional for a fund practitioner, we say so and move on. Where a topic matters every day — element-versus-attribute design, schema validation, namespaces, the basic XPath idiom — we spend the time.</p>
+
+<p>By the end of this chapter, you should be able to:</p>
+<ul>
+  <li>read and write well-formed XML documents and recognise the most common syntactic mistakes;</li>
+  <li>explain the purpose of XML namespaces and interpret a namespaced document;</li>
+  <li>read an XSD schema and map its declarations to the instance documents they constrain;</li>
+  <li>describe the difference between well-formedness and schema validity, and between schema validation and business-rule validation;</li>
+  <li>navigate an XML document with elementary XPath expressions;</li>
+  <li>understand what an XSLT transformation does and follow a simple stylesheet end to end;</li>
+  <li>name the tools a fund-industry practitioner typically uses for day-to-day XML work and know which later chapter treats each of them in depth.</li>
+</ul>
+
+<p>No prior XML experience is assumed. Readers who already write XSLT 3.0 in their sleep may skim the first half of the chapter and rejoin us at §2.10.</p>
+
+<hr>
+
+<h2>2.2 XML in One Page</h2>
+
+<p>At its heart, XML is a notation for writing down trees of data as plain text. A document is a single tree with a single root. Every branch of the tree is an <em>element</em>. Each element has a name, may carry <em>attributes</em>, may contain other elements, and may contain text. That is essentially the whole data model; everything else in this chapter is either syntax that expresses this model or a schema language that constrains it.</p>
+
+<p>The Europa Growth Fund, stripped to its bare essentials, looks like this in real FundsXML:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+  &lt;ControlData&gt;
+    &lt;UniqueDocumentID&gt;EGF-20260331-001&lt;/UniqueDocumentID&gt;
+    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
+    &lt;Version&gt;4.2.8&lt;/Version&gt;
+    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+    &lt;DataSupplier&gt;
+      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
+      &lt;Short&gt;EAM&lt;/Short&gt;
+      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+      &lt;Type&gt;IC&lt;/Type&gt;
+    &lt;/DataSupplier&gt;
+    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+  &lt;/ControlData&gt;
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;Identifiers&gt;
+        &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+      &lt;/Identifiers&gt;
+      &lt;Names&gt;
+        &lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;
+      &lt;/Names&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy="EUR"&gt;464552848.78&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+      &lt;/FundDynamicData&gt;
+      &lt;SingleFund&gt;
+        &lt;ShareClasses&gt;
+          &lt;ShareClass&gt;
+            &lt;Identifiers&gt;
+              &lt;ISIN&gt;LU1234567890&lt;/ISIN&gt;
+            &lt;/Identifiers&gt;
+            &lt;Names&gt;
+              &lt;OfficialName&gt;Europa Growth Fund I EUR Acc&lt;/OfficialName&gt;
+            &lt;/Names&gt;
+            &lt;Currency&gt;EUR&lt;/Currency&gt;
+          &lt;/ShareClass&gt;
+          &lt;ShareClass&gt;
+            &lt;Identifiers&gt;
+              &lt;ISIN&gt;LU1234567892&lt;/ISIN&gt;
+            &lt;/Identifiers&gt;
+            &lt;Names&gt;
+              &lt;OfficialName&gt;Europa Growth Fund R CHF Acc Hedged&lt;/OfficialName&gt;
+            &lt;/Names&gt;
+            &lt;Currency&gt;CHF&lt;/Currency&gt;
+          &lt;/ShareClass&gt;
+        &lt;/ShareClasses&gt;
+      &lt;/SingleFund&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+&lt;/FundsXML4&gt;
+</code></pre>
+
+<p>Three observations are worth making before going further. First, this is a minimal but <strong>schema-valid</strong> FundsXML document — it validates against the real <code>FundsXML4.xsd</code> without errors (Appendix D contains the full set of progressively richer examples). The document carries a <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank"><code>ControlData</code></a> envelope that identifies the delivery, followed by a <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds" target="_blank"><code>Funds</code></a> block with a single fund and its two share classes. Chapters 4 and 5 explain every element in this document in depth; for now, read it as a map of the territory ahead.</p>
+
+<p>Second, the document is entirely human-readable. A fund operations analyst can inspect it with any text editor and, after a minute of orientation, understand it without tooling. The element names — <code>ControlData</code>, <code>Fund</code>, <code>Names</code>, <code>OfficialName</code>, <code>Currency</code>, <code>ShareClass</code>, <code>ISIN</code> — read almost like a structured form. This readability is one of XML's enduring strengths and is a large part of why regulators and industry bodies have chosen XML-based formats for durable disclosures.</p>
+
+<p>Third, the tree structure is visible in the indentation but does not depend on it. XML ignores most whitespace between elements; the indentation is a convenience for humans. Parsers see the same tree regardless of how the file is formatted.</p>
+
+<p>A note on the examples in this chapter. The document above and the share-class examples later in this chapter are real FundsXML validated against the 4.2.8 schema. A small number of examples in the XML-syntax and namespace sections (§2.3–§2.5) use simplified, hand-rolled elements to illustrate general XML concepts in isolation; where this is the case, the text says so. Every example that claims to be FundsXML is schema-valid.</p>
+
+<p>With this much in hand, we can now be precise about the syntactic rules that make a document well-formed.</p>
+
+<hr>
+
+<h2>2.3 XML Syntax — Elements, Attributes, Text</h2>
+
+<h3>2.3.1 Well-formedness</h3>
+
+<p>An XML document is <em>well-formed</em> if it obeys a small number of strict rules. A well-formed document can be parsed by any conforming XML processor, regardless of whether it matches any schema. The rules are:</p>
+
+<ul>
+  <li><strong>Exactly one root element.</strong> The outermost pair of tags encloses everything. In the Europa Growth Fund example above, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4" target="_blank"><code>&lt;FundsXML4&gt;</code></a> is the root.</li>
+  <li><strong>Every start tag has a matching end tag.</strong> <code>&lt;Name&gt;Europa Growth Fund&lt;/Name&gt;</code> is well-formed; <code>&lt;Name&gt;Europa Growth Fund</code> is not.</li>
+  <li><strong>Elements nest properly.</strong> <code>&lt;a&gt;&lt;b&gt;&lt;/b&gt;&lt;/a&gt;</code> is well-formed; <code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;</code> is not.</li>
+  <li><strong>Element and attribute names are case-sensitive.</strong> <code>&lt;Fund&gt;</code> and <code>&lt;fund&gt;</code> are different elements.</li>
+  <li><strong>Attribute values are always quoted.</strong> Single or double quotes are both allowed: <code>id="EGF-001"</code> and <code>id='EGF-001'</code> are equivalent.</li>
+  <li><strong>Five characters are reserved and must be escaped</strong> when they appear as text: <code>&lt;</code> becomes <code>&amp;lt;</code>, <code>&gt;</code> becomes <code>&amp;gt;</code>, <code>&amp;</code> becomes <code>&amp;amp;</code>, <code>"</code> becomes <code>&amp;quot;</code>, and <code>'</code> becomes <code>&amp;apos;</code>.</li>
+</ul>
+
+<p>An element with no content can be written as <code>&lt;ShareClass&gt;&lt;/ShareClass&gt;</code> or, equivalently, as the empty-element form <code>&lt;ShareClass/&gt;</code>. Parsers treat the two forms as identical.</p>
+
+<p>A well-formed document is not necessarily a <em>useful</em> document: it may still violate a schema, contain the wrong fields, or carry impossible values. Well-formedness is the bottom rung of the validation ladder, not the top.</p>
+
+<h3>2.3.2 Elements versus attributes</h3>
+
+<p>One of the oldest debates in XML design is the choice between expressing a piece of information as a child element or as an attribute. Consider two hypothetical ways of writing a fund's base currency (these are general XML illustrations, not FundsXML elements):</p>
+
+<pre><code>&lt;!-- As a child element --&gt;
+&lt;Fund&gt;
+  &lt;BaseCurrency&gt;EUR&lt;/BaseCurrency&gt;
+&lt;/Fund&gt;
+
+&lt;!-- As an attribute --&gt;
+&lt;Fund baseCurrency="EUR"/&gt;
+</code></pre>
+
+<p>Both carry the same information. The working rules of thumb, applied consistently throughout FundsXML and throughout the examples in this book, are:</p>
+
+<ul>
+  <li><strong>Use elements for data, attributes for metadata.</strong> The currency of a fund is data; the version of a schema or the identifier of a document is metadata about the document itself.</li>
+  <li><strong>Use elements when the value may later need sub-structure.</strong> A fund name today is a string; tomorrow it might need a language tag or a sort form. Elements can grow children; attributes cannot.</li>
+  <li><strong>Use attributes for values that qualify the enclosing element without being part of its content.</strong> The <code>id</code> on a record, the unit of a measurement, the version of a format.</li>
+  <li><strong>Prefer elements when in doubt.</strong> FundsXML leans heavily towards elements, and the habit of reaching for an element first is the safer default for a practitioner.</li>
+</ul>
+
+<p>Illustrated on a hypothetical share-class element (not the actual FundsXML element, which uses <code>Identifiers/ISIN</code> and <code>Names/OfficialName</code> instead):</p>
+
+<pre><code>&lt;ShareClass id="EGF-001-ACC-EUR" currency="EUR"&gt;
+  &lt;ISIN&gt;LU0000000001&lt;/ISIN&gt;
+  &lt;Name xml:lang="en"&gt;Europa Growth Fund, Accumulating, EUR&lt;/Name&gt;
+  &lt;Name xml:lang="de"&gt;Europa Growth Fund, Thesaurierend, EUR&lt;/Name&gt;
+&lt;/ShareClass&gt;
+</code></pre>
+
+<p>Here <code>id</code> and <code>currency</code> are qualifiers — they tell us <em>which</em> share class and in <em>what unit</em> — while the <code>ISIN</code> and the two <code>Name</code> elements carry the share class's own data. Note how the element form of <code>Name</code> naturally accommodates two languages; an attribute form could not. The real FundsXML schema resolves this design question consistently in favour of elements: the currency is always a child element <code>&lt;Currency&gt;EUR&lt;/Currency&gt;</code>, not an attribute.</p>
+
+<h3>2.3.3 Text, mixed content, CDATA, and comments</h3>
+
+<p>Element content falls into three categories. An element may contain only other elements (<em>element-only content</em>, the usual case for structured data such as a portfolio), only text (<em>text-only content</em>, typical for leaf fields such as <code>&lt;ISIN&gt;</code>), or a mixture (<em>mixed content</em>, in which text and child elements are interleaved). Mixed content is common in fact-sheet prose and regulatory narrative text, but rare in portfolio and transaction structures.</p>
+
+<p>A short fact-sheet paragraph might look like this:</p>
+
+<pre><code>&lt;InvestmentPolicy xml:lang="en"&gt;
+  The fund invests primarily in large-capitalisation European equities
+  and uses a &lt;Benchmark&gt;MSCI Europe NR&lt;/Benchmark&gt; as its reference.
+&lt;/InvestmentPolicy&gt;
+</code></pre>
+
+<p>When text must contain characters that XML would otherwise interpret — for example, a literal <code>&lt;</code> or <code>&amp;</code> — two escape mechanisms are available. The first is the entity-reference mechanism already mentioned (<code>&amp;lt;</code>, <code>&amp;amp;</code>). The second is a <code>CDATA</code> section, which tells the parser "everything inside here is raw text, don't try to interpret it":</p>
+
+<pre><code>&lt;LegalText&gt;&lt;![CDATA[
+  The management fee is 1.25% per annum of the NAV
+  &amp; is accrued daily.
+]]&gt;&lt;/LegalText&gt;
+</code></pre>
+
+<p><code>CDATA</code> is most useful when embedding pre-formatted text, such as an HTML fragment or a legal notice, that contains many XML-special characters.</p>
+
+<p>Comments are written <code>&lt;!-- like this --&gt;</code> and are ignored by parsers. They are invaluable in schemas and in hand-edited sample files, but should not be relied upon to carry information that downstream consumers need, because many XML tool chains discard them silently. Processing instructions of the form <code>&lt;?target data?&gt;</code> also exist; FundsXML does not use them beyond the XML declaration itself, and a practitioner need only recognise them.</p>
+
+<hr>
+
+<h2>2.4 Character Encoding and the XML Declaration</h2>
+
+<p>The first line of almost every XML file is the <em>XML declaration</em>:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</code></pre>
+
+<p>Three things are worth knowing about it.</p>
+
+<p>First, the declaration is strictly optional under XML 1.0 when the encoding is UTF-8 or UTF-16, but in practice every serious tool chain emits it. Always include it.</p>
+
+<p>Second, the <code>encoding</code> attribute tells the parser how the bytes in the file map onto characters. UTF-8 is the default in practice and should be the default in your own production of FundsXML files. The alternatives — ISO-8859-1, Windows-1252, UTF-16 — are legacy choices that cause avoidable pain, most commonly when a German umlaut, a French accent, or a non-breaking space survives a round trip through a tool chain that guesses the encoding wrongly.</p>
+
+<p>Third, UTF-8 files may be preceded by a three-byte <em>byte-order mark</em> (the BOM, <code>EF BB BF</code>). Some Windows tools write the BOM by default; some Unix tools refuse to parse a file that begins with it. Neither behaviour is strictly wrong, but the combination is a reliable source of production incidents. The safe rule for FundsXML work is: <strong>emit UTF-8 without a BOM</strong>, and treat the appearance of a BOM in an incoming file as a yellow flag worth investigating.</p>
+
+<p>Encoding is not an academic concern for the fund industry. Multi-lingual fund names, legal disclaimers with em-dashes and typographic quotes, and regulatory text with accented characters all pass through the same pipeline as the numbers. A single mis-configured character set turns <em>Société Générale</em> into <em>SociÃ©tÃ© GÃ©nÃ©rale</em>, and a downstream regulator is unlikely to laugh.</p>
+
+<hr>
+
+<h2>2.5 Namespaces</h2>
+
+<h3>2.5.1 Why namespaces exist</h3>
+
+<p>As soon as XML documents began to combine data from multiple sources, a practical problem emerged. Two independently designed vocabularies might both use an element called <code>Name</code>, or <code>Address</code>, or <code>Type</code>. Without some way of telling them apart, a document that mixed them would be ambiguous.</p>
+
+<p>XML namespaces solve this by giving every element and attribute a two-part name: a namespace URI (which acts as a globally unique identifier) and a local name (the short name used in the document). Two elements share a name only if both parts match.</p>
+
+<h3>2.5.2 Declaring and using namespaces</h3>
+
+<p>A namespace is bound to a prefix (or to the default) by an <code>xmlns</code> attribute:</p>
+
+<pre><code>&lt;Fund xmlns="http://example.org/illustrative/fund"
+      xmlns:sig="http://www.w3.org/2000/09/xmldsig#"&gt;
+  &lt;Name&gt;Europa Growth Fund&lt;/Name&gt;
+  &lt;sig:Signature&gt;
+    &lt;!-- digital signature content, treated in Chapter 9 --&gt;
+  &lt;/sig:Signature&gt;
+&lt;/Fund&gt;
+</code></pre>
+
+<p>Two namespaces are in play here. The default namespace, declared by <code>xmlns="..."</code> without a prefix, applies to <code>&lt;Fund&gt;</code> and <code>&lt;Name&gt;</code>. The second namespace is bound to the prefix <code>sig:</code> and applies to <code>&lt;sig:Signature&gt;</code>. A consumer that understands both vocabularies can process each subtree independently.</p>
+
+<p>Three points deserve emphasis because they are the source of most namespace-related confusion:</p>
+
+<ul>
+  <li><strong>The URI is an identifier, not an address.</strong> Nothing lives at <code>http://example.org/illustrative/fund</code>. The URI is chosen for uniqueness, not for retrieval. FundsXML's own namespace URIs follow the same convention.</li>
+  <li><strong>Prefixes are local aliases, not part of the name.</strong> The same document could write <code>xmlns:f="http://example.org/illustrative/fund"</code> and then use <code>&lt;f:Fund&gt;</code> instead of <code>&lt;Fund&gt;</code>; both forms identify the same element. Tools that compare XML must compare the expanded names, not the prefixed ones.</li>
+  <li><strong>Default namespaces propagate to descendants.</strong> Once a default namespace is declared on an element, every unprefixed descendant element is in that namespace — until an inner element redeclares it. Attributes are not covered by the default namespace; an unprefixed attribute is in no namespace at all. This asymmetry surprises newcomers and is worth remembering.</li>
+</ul>
+
+<h3>2.5.3 Namespace-aware tooling</h3>
+
+<p>A recurring field-failure pattern around FundsXML is the use of a tool that is not namespace-aware. Such tools treat <code>&lt;f:Fund&gt;</code> and <code>&lt;Fund&gt;</code> as different elements purely on the basis of the textual prefix, and produce XPath queries that silently return empty results against files whose authors happen to have chosen a different prefix. Every tool shown in this book — xmllint, oXygen, IntelliJ, VS Code, and the FreeXmlToolkit treated in Chapter 11 — is namespace-aware. If you ever find yourself writing an XPath expression against a FundsXML document that matches nothing despite an obvious element being present, the first diagnosis should always be: <em>am I missing a namespace binding?</em></p>
+
+<hr>
+
+<h2>2.6 From Well-Formed to Valid: Enter XSD</h2>
+
+<p>Well-formedness asks whether a document obeys XML's syntactic rules. <em>Validity</em> asks a stronger question: does the document obey the rules of some particular vocabulary? Those rules — which elements may appear, in what order, how often, with what types of content, and with what attributes — are written in a <em>schema</em>, and the act of checking a document against that schema is <em>schema validation</em>.</p>
+
+<p>XML has more than one schema language. Three are worth knowing by name:</p>
+
+<ul>
+  <li><strong>DTD (Document Type Definition)</strong> is the original schema language, inherited from SGML. It is expressive but crude: it has no notion of data types beyond "string", no namespace support worth using, and a syntax that is not itself XML. DTDs survive in legacy corners of publishing and HTML but are a historical curiosity for FundsXML purposes.</li>
+  <li><strong>Relax NG</strong> is an elegant, pattern-based schema language that is technically superior to XSD in several ways and is used, for example, by OpenDocument. Its weaker tooling support in enterprise environments has limited its adoption in financial standards.</li>
+  <li><strong>XSD (XML Schema Definition)</strong>, governed by the W3C, is the schema language FundsXML uses. It is itself an XML vocabulary — meaning schemas can be parsed by the same tools that parse instance documents — and it supports a rich type system, namespaces, inheritance, and modularisation.</li>
+</ul>
+
+<p>FundsXML chose XSD for pragmatic reasons. XSD is supported by every serious XML tool, every major programming language, and every enterprise integration platform. Its type system is expressive enough to enforce formats such as ISIN, date, and decimal precision, and its modularisation features scale to the dozens of schema files that make up a modern FundsXML release. No other schema language would have been as durable a choice in 2001, and none has meaningfully displaced it in the two decades since.</p>
+
+<p>The rest of this chapter therefore teaches XSD, and only XSD. When the book speaks of "the schema" from Chapter 3 onwards, it means an XSD schema.</p>
+
+<hr>
+
+<h2>2.7 XSD Simple Types</h2>
+
+<p>XSD divides types into two categories. A <em>simple type</em> is a type that constrains a single leaf value — the text content of an element or the value of an attribute. A <em>complex type</em> describes the structure of an element with child elements and attributes. This section treats simple types; §2.8 treats complex types.</p>
+
+<h3>2.7.1 Built-in simple types</h3>
+
+<p>XSD provides several dozen built-in simple types. A fund-industry practitioner needs to recognise the following core set on sight:</p>
+
+<p><strong>Table 2.1 — Core XSD built-in types for fund data</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Type</th><th>Purpose</th><th>Example value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>xs:string</code></td><td>Arbitrary text</td><td>Europa Growth Fund</td></tr>
+    <tr><td><code>xs:normalizedString</code></td><td>Text with whitespace normalised</td><td>Europa Growth Fund</td></tr>
+    <tr><td><code>xs:token</code></td><td>Text with leading, trailing, and multiple internal whitespace collapsed</td><td>EUR</td></tr>
+    <tr><td><code>xs:boolean</code></td><td><code>true</code> / <code>false</code> (or <code>1</code> / <code>0</code>)</td><td>true</td></tr>
+    <tr><td><code>xs:decimal</code></td><td>Arbitrary-precision decimal number</td><td>123.456789</td></tr>
+    <tr><td><code>xs:integer</code></td><td>Whole number</td><td>42</td></tr>
+    <tr><td><code>xs:double</code></td><td>64-bit floating point</td><td>1.2345E3</td></tr>
+    <tr><td><code>xs:date</code></td><td>ISO-8601 date</td><td>2026-04-30</td></tr>
+    <tr><td><code>xs:dateTime</code></td><td>ISO-8601 date with time and optional timezone</td><td>2026-04-30T17:30:00+02:00</td></tr>
+    <tr><td><code>xs:gYear</code></td><td>A four-digit year</td><td>2026</td></tr>
+    <tr><td><code>xs:anyURI</code></td><td>A URI (used for namespace references and links)</td><td>http://example.org/f</td></tr>
+    <tr><td><code>xs:ID</code> / <code>xs:IDREF</code></td><td>A unique identifier / a reference to one</td><td>EGF-001</td></tr>
+  </tbody>
+</table>
+
+<p>A few observations matter for fund data. <code>xs:decimal</code> is the correct type for monetary values and NAVs: it is arbitrary-precision and does not suffer from the rounding surprises of <code>xs:double</code>. <code>xs:date</code> and <code>xs:dateTime</code> require ISO-8601 format — year-month-day, not the assorted national variants; a pipeline that accepts <code>30/04/2026</code> is accepting something that is not a valid <code>xs:date</code>. <code>xs:boolean</code> accepts <code>true</code>, <code>false</code>, <code>1</code>, and <code>0</code>, and nothing else; values like <code>Y</code> or <code>Yes</code> are invalid.</p>
+
+<h3>2.7.2 Restricting built-in types</h3>
+
+<p>The real power of XSD simple types comes from <em>restrictions</em> (formally called <em>constraining facets</em>): building a new simple type by constraining an existing one. XSD defines twelve constraining facets, and each facet is applicable only to certain families of types. Table 2.2 gives the complete picture.</p>
+
+<p><strong>Table 2.2 — XSD constraining facets at a glance</strong></p>
+
+<table>
+<thead>
+<tr><th>Facet</th><th>Applies to</th><th>Effect</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enumeration</code></td><td>all types</td><td>Value must be one of a listed set</td></tr>
+<tr><td><code>pattern</code></td><td>all types</td><td>Value must match a regular expression</td></tr>
+<tr><td><code>whiteSpace</code></td><td>string types</td><td>Controls whitespace handling: <code>preserve</code>, <code>replace</code>, or <code>collapse</code></td></tr>
+<tr><td><code>length</code></td><td>string, binary, list types</td><td>Value must have exactly this length</td></tr>
+<tr><td><code>minLength</code></td><td>string, binary, list types</td><td>Value must have at least this length</td></tr>
+<tr><td><code>maxLength</code></td><td>string, binary, list types</td><td>Value must have at most this length</td></tr>
+<tr><td><code>minInclusive</code></td><td>numeric, date/time types</td><td>Value must be &ge; this bound</td></tr>
+<tr><td><code>minExclusive</code></td><td>numeric, date/time types</td><td>Value must be &gt; this bound</td></tr>
+<tr><td><code>maxInclusive</code></td><td>numeric, date/time types</td><td>Value must be &le; this bound</td></tr>
+<tr><td><code>maxExclusive</code></td><td>numeric, date/time types</td><td>Value must be &lt; this bound</td></tr>
+<tr><td><code>totalDigits</code></td><td><code>xs:decimal</code> and derived</td><td>Maximum total number of digits</td></tr>
+<tr><td><code>fractionDigits</code></td><td><code>xs:decimal</code> and derived</td><td>Maximum number of fractional digits</td></tr>
+</tbody>
+</table>
+
+<p>Several facets can be combined in a single restriction — for example, a <code>pattern</code> and a <code>maxLength</code> on the same type. The XSD processor checks every facet; the value must satisfy all of them.</p>
+
+<p>The following worked examples, drawn from Europa Growth Fund data, illustrate each family of facets.</p>
+
+<h4>String restrictions: <code>pattern</code>, <code>length</code>, <code>minLength</code>, <code>maxLength</code></h4>
+
+<p><strong>An ISIN pattern.</strong> An ISIN is exactly twelve characters: two letters (the country code), followed by nine alphanumeric characters, followed by one decimal digit (the check digit). The XSD that expresses this is:</p>
+
+<pre><code>&lt;xs:simpleType name="ISINType"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:pattern value="[A-Z]{2}[A-Z0-9]{9}[0-9]"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>A value of <code>LU0000000001</code> validates; a value of <code>LU000000000</code> (eleven characters) does not, and neither does <code>lu0000000001</code> (lowercase country code). The <code>pattern</code> facet uses the regular-expression syntax defined by XSD, which is similar to — but not identical with — the Perl-style regular expressions most programmers know. The most important differences are that XSD patterns always match the <em>entire</em> value (no need for <code>^</code> and <code>$</code> anchors) and that some shorthand character classes differ.</p>
+
+<p><strong>A bounded text field.</strong> Many FundsXML text fields carry a maximum-length constraint to prevent absurdly long values from reaching the consumer. A typical text field limited to 256 characters:</p>
+
+<pre><code>&lt;xs:simpleType name="Text256Type"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:maxLength value="256"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>For an exact-length field — a two-letter ISO country code, for example — the <code>length</code> facet is more appropriate than the combination of <code>minLength</code> and <code>maxLength</code>:</p>
+
+<pre><code>&lt;xs:simpleType name="ISOCountryCodeType"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:length value="2"/&gt;
+    &lt;xs:pattern value="[A-Z]{2}"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>Here <code>length</code> and <code>pattern</code> work together: the value must be exactly two characters <em>and</em> must consist of two uppercase letters. Either facet alone would be insufficient — <code>length</code> alone would accept <code>12</code>, and <code>pattern</code> alone would accept <code>ABC</code> if the expression were written carelessly.</p>
+
+<h4>Enumeration: <code>enumeration</code></h4>
+
+<p><strong>A currency enumeration.</strong> ISO 4217 defines the three-letter alphabetic currency codes. A minimal enumeration covering the currencies in which the Europa Growth Fund issues share classes might be:</p>
+
+<pre><code>&lt;xs:simpleType name="CurrencyType"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:enumeration value="EUR"/&gt;
+    &lt;xs:enumeration value="USD"/&gt;
+    &lt;xs:enumeration value="CHF"/&gt;
+    &lt;xs:enumeration value="GBP"/&gt;
+    &lt;xs:enumeration value="JPY"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>In production, the enumeration would cover the complete ISO 4217 list. The principle is the same: an enumeration is the correct way to pin a field to a closed set of values, and it costs nothing at runtime. Enumerations are not limited to strings — they work on any type. An enumeration of <code>xs:integer</code> values, for example, can restrict a field to a fixed set of numeric codes.</p>
+
+<h4>Numeric restrictions: <code>minInclusive</code>, <code>maxInclusive</code>, <code>minExclusive</code>, <code>maxExclusive</code>, <code>totalDigits</code>, <code>fractionDigits</code></h4>
+
+<p><strong>A NAV decimal constraint.</strong> A NAV per share must be non-negative, and a practitioner may reasonably insist on no more than eight fractional digits:</p>
+
+<pre><code>&lt;xs:simpleType name="NavType"&gt;
+  &lt;xs:restriction base="xs:decimal"&gt;
+    &lt;xs:minInclusive value="0"/&gt;
+    &lt;xs:fractionDigits value="8"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>The schema rejects <code>-1.0</code> and <code>123.123456789</code> (nine fractional digits); it accepts <code>123.45</code> and <code>0</code>.</p>
+
+<p>The difference between <em>inclusive</em> and <em>exclusive</em> bounds is exactly what the names suggest. <code>minInclusive value="0"</code> accepts zero; <code>minExclusive value="0"</code> does not. A percentage field that must be strictly between 0 and 100 would use:</p>
+
+<pre><code>&lt;xs:simpleType name="PercentageType"&gt;
+  &lt;xs:restriction base="xs:decimal"&gt;
+    &lt;xs:minExclusive value="0"/&gt;
+    &lt;xs:maxExclusive value="100"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>The <code>totalDigits</code> facet limits the total number of significant digits (before <em>and</em> after the decimal point), which is useful for monetary amounts where the database column has a fixed precision:</p>
+
+<pre><code>&lt;xs:simpleType name="MonetaryAmountType"&gt;
+  &lt;xs:restriction base="xs:decimal"&gt;
+    &lt;xs:totalDigits value="18"/&gt;
+    &lt;xs:fractionDigits value="2"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>This type accepts up to sixteen digits before the decimal point and exactly two after — sufficient for any fund-industry amount.</p>
+
+<h4>Date and time restrictions: range bounds on <code>xs:date</code> and <code>xs:dateTime</code></h4>
+
+<p>The same <code>minInclusive</code>, <code>maxInclusive</code>, <code>minExclusive</code>, and <code>maxExclusive</code> facets that constrain numbers also constrain dates and date-times. A type for a ContentDate that must lie within the twenty-first century:</p>
+
+<pre><code>&lt;xs:simpleType name="ReportingDateType"&gt;
+  &lt;xs:restriction base="xs:date"&gt;
+    &lt;xs:minInclusive value="2000-01-01"/&gt;
+    &lt;xs:maxExclusive value="2100-01-01"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>This catches the occasional data-entry error that produces a date in 1026 instead of 2026 — a surprisingly common incident in production.</p>
+
+<h4>Whitespace handling: <code>whiteSpace</code></h4>
+
+<p>The <code>whiteSpace</code> facet controls how the XSD processor normalises whitespace before checking other constraints. Three values are available:</p>
+
+<ul>
+<li><code>preserve</code> — whitespace is left untouched (the default for <code>xs:string</code>).</li>
+<li><code>replace</code> — every tab, carriage return, and newline is replaced with a single space.</li>
+<li><code>collapse</code> — like <code>replace</code>, but leading and trailing spaces are also stripped and sequences of multiple spaces are collapsed to one.</li>
+</ul>
+
+<p>In practice, <code>collapse</code> is the most useful for fund data, because it prevents invisible whitespace from causing downstream mismatches:</p>
+
+<pre><code>&lt;xs:simpleType name="CleanTokenType"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:whiteSpace value="collapse"/&gt;
+    &lt;xs:maxLength value="64"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>Note that the built-in type <code>xs:token</code> already applies <code>collapse</code> semantics, so a <code>whiteSpace</code> facet is typically needed only when restricting <code>xs:string</code> directly.</p>
+
+<h4>Combining facets</h4>
+
+<p>Facets compose freely within the limits of applicability. A real-world FundsXML type might combine several:</p>
+
+<pre><code>&lt;xs:simpleType name="LEIType"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:length value="20"/&gt;
+    &lt;xs:pattern value="[A-Z0-9]{18}[0-9]{2}"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</code></pre>
+
+<p>A Legal Entity Identifier is exactly twenty characters: eighteen alphanumeric characters followed by two check digits. Both the length and the pattern are enforced; a value that satisfies one but not the other is rejected.</p>
+
+<h3>2.7.3 Lists and unions</h3>
+
+<p>Two further simple-type constructions are occasionally useful. An <code>xs:list</code> type describes a whitespace-separated list of values of another simple type — a natural fit for, say, a list of ISINs on a single line. An <code>xs:union</code> type describes a value that may belong to any of several simple types — a natural fit for a field that is either a known enumerated code or a free-form override. Both are used sparingly in FundsXML; you will encounter them rarely and should simply recognise the construction when you do.</p>
+
+<hr>
+
+<h2>2.8 XSD Complex Types and Structuring</h2>
+
+<p>A complex type describes an element that has structure: child elements, attributes, or both. It is where the shape of the document is defined. For fund data, almost every element beyond the leaves is a complex type.</p>
+
+<h3>2.8.1 The basic form</h3>
+
+<p>The workhorse complex type declaration uses <code>xs:sequence</code> to say "these children, in this order":</p>
+
+<pre><code>&lt;xs:complexType name="FundType"&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:element name="Name"          type="xs:string"/&gt;
+    &lt;xs:element name="Domicile"      type="xs:string"/&gt;
+    &lt;xs:element name="BaseCurrency"  type="CurrencyType"/&gt;
+    &lt;xs:element name="ShareClasses"  type="ShareClassesType"/&gt;
+  &lt;/xs:sequence&gt;
+  &lt;xs:attribute name="id" type="xs:ID" use="required"/&gt;
+&lt;/xs:complexType&gt;
+</code></pre>
+
+<p>This type, together with the earlier <code>CurrencyType</code> and a <code>ShareClassesType</code> we will define in a moment, fully describes the <code>&lt;Fund&gt;</code> element from §2.2. The <code>use="required"</code> on the attribute says that the <code>id</code> attribute must be present.</p>
+
+<p>Note the strong reminder: this <code>FundType</code> is an illustrative hand-rolled type for teaching XSD complex-type syntax. The real FundsXML <code>FundType</code>, with its <code>Identifiers</code>, <code>Names</code>, <code>Currency</code>, <code>SingleFundFlag</code>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank"><code>FundStaticData</code></a>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank"><code>FundDynamicData</code></a>, and <code>SingleFund</code>/<code>Subfunds</code> choice, is the subject of Chapter 5 and is documented precisely in Appendix C.</p>
+
+<h3>2.8.2 Occurrence constraints</h3>
+
+<p>Every element declaration can specify how many times it may appear by using <code>minOccurs</code> and <code>maxOccurs</code>. The defaults are <code>1</code> and <code>1</code> — exactly once, mandatory. Common variations are:</p>
+
+<ul>
+  <li><code>minOccurs="0"</code> — optional element;</li>
+  <li><code>minOccurs="0" maxOccurs="unbounded"</code> — zero or more, the typical shape for a repeated child such as a list of share classes;</li>
+  <li><code>minOccurs="1" maxOccurs="unbounded"</code> — one or more;</li>
+  <li>explicit numbers — for example, a type that insists on exactly twelve monthly returns would use <code>minOccurs="12" maxOccurs="12"</code>.</li>
+</ul>
+
+<p>A <code>ShareClassesType</code> that contains one or more <code>&lt;ShareClass&gt;</code> children is therefore:</p>
+
+<pre><code>&lt;xs:complexType name="ShareClassesType"&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:element name="ShareClass"
+                type="ShareClassType"
+                minOccurs="1" maxOccurs="unbounded"/&gt;
+  &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+</code></pre>
+
+<h3>2.8.3 Sequence, choice, and all</h3>
+
+<p><code>xs:sequence</code> is the most common compositor, but it is not the only one.</p>
+
+<ul>
+  <li><code>xs:sequence</code> specifies children in a fixed order.</li>
+  <li><code>xs:choice</code> specifies that exactly one of several alternatives must appear — used, for example, when a position can be described <em>either</em> by its ISIN <em>or</em> by a bundle of descriptive fields, but not both.</li>
+  <li><code>xs:all</code> specifies that a fixed set of children must each appear exactly once, in any order. It is less often useful than <code>xs:sequence</code> and has some restrictions in XSD 1.0 that have limited its adoption.</li>
+</ul>
+
+<p>Compositors can nest: an <code>xs:sequence</code> can contain an <code>xs:choice</code> that contains another <code>xs:sequence</code>, and so on. FundsXML makes extensive use of this nesting to express "either a simple reference to an asset, or a full inline description".</p>
+
+<h3>2.8.4 Derivation: extension and restriction</h3>
+
+<p>XSD supports two forms of type derivation. <em>Extension</em> adds children or attributes to an existing type — the XSD equivalent of subclassing with additional fields. <em>Restriction</em> narrows an existing type — the equivalent of tightening a contract.</p>
+
+<p>Extension is the more common of the two in fund data. For example, a hypothetical <code>EquityPositionType</code> might extend a generic <code>PositionType</code> by adding equity-specific fields:</p>
+
+<pre><code>&lt;xs:complexType name="EquityPositionType"&gt;
+  &lt;xs:complexContent&gt;
+    &lt;xs:extension base="PositionType"&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:element name="Sector" type="xs:string"/&gt;
+        &lt;xs:element name="DividendYield" type="xs:decimal" minOccurs="0"/&gt;
+      &lt;/xs:sequence&gt;
+    &lt;/xs:extension&gt;
+  &lt;/xs:complexContent&gt;
+&lt;/xs:complexType&gt;
+</code></pre>
+
+<p>Derivation supports substitution groups and abstract types, which are the mechanism by which FundsXML models "many kinds of position" inside a single portfolio container. Chapter 6 returns to this pattern when it covers the portfolio section in detail.</p>
+
+<h3>2.8.5 Global, local, and anonymous</h3>
+
+<p>A simple or complex type can be declared <em>globally</em>, at the top level of the schema, with a <code>name</code> attribute, and then referenced by its name from wherever it is needed. It can also be declared <em>locally</em>, anonymously, inside the element declaration it describes. Global types are reusable and make a schema easier to read; anonymous inline types are briefer but cannot be referred to from elsewhere.</p>
+
+<p>FundsXML leans towards global types for anything more than a one-off leaf, and this book follows the same convention in its examples.</p>
+
+<hr>
+
+<h2>2.9 Structuring Larger Schemas</h2>
+
+<p>A production schema for a complex domain is never a single file. FundsXML distributes its definitions across several dozen files grouped by concern — control data, funds, portfolios, regulatory modules, and so on. Two mechanisms allow XSD files to refer to one another.</p>
+
+<p><code>xs:include</code> merges another schema file into the current one, under the same namespace. It is the natural choice for splitting a single logical schema into multiple physical files for readability. If <code>Fund.xsd</code> defines the fund-level types and <code>ShareClass.xsd</code> defines share-class types, and both live in the same namespace, then <code>Fund.xsd</code> includes <code>ShareClass.xsd</code>:</p>
+
+<pre><code>&lt;xs:include schemaLocation="ShareClass.xsd"/&gt;
+</code></pre>
+
+<p><code>xs:import</code> is used when the imported schema lives in a <em>different</em> namespace. This is the mechanism by which FundsXML references third-party vocabularies such as XMLDSig for digital signatures or the FinDatEx regulatory templates, each of which has its own namespace. An <code>import</code> must mention the foreign namespace explicitly:</p>
+
+<pre><code>&lt;xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+           schemaLocation="xmldsig-core-schema.xsd"/&gt;
+</code></pre>
+
+<p>A third, more obscure mechanism — the <em>chameleon schema</em> — lets a schema without its own target namespace be included into another and take on the including schema's namespace. It is rare in modern practice and is mentioned here only so that you recognise the name if you encounter it.</p>
+
+<p>Chapter 3 will walk through FundsXML's actual file layout and explain which files import which. For the present chapter, the takeaway is simpler: when you open a schema and see <code>xs:include</code> or <code>xs:import</code> at the top, you are looking at a composition of several files, and a complete picture of any element's definition may require following the links.</p>
+
+<hr>
+
+<h2>2.10 XML Validation in Practice</h2>
+
+<p><em>Schema validation</em> is the act of checking that an instance document matches a schema. Every mainstream XML tool chain — every IDE plugin, every command-line utility, every library in every programming language — supports it. Performing validation early and often is the single most effective discipline a FundsXML practitioner can adopt.</p>
+
+<h3>2.10.1 Two error classes</h3>
+
+<p>Validation produces errors of two very different kinds, and learning to distinguish them is half the battle.</p>
+
+<p><em>Well-formedness errors</em> are syntactic: the file is not even XML. Typical messages are "mismatched tag", "attribute value not quoted", "premature end of data", or "encoding error". A well-formedness error means no further validation is possible — the parser cannot build a tree.</p>
+
+<p><em>Schema validity errors</em> are structural: the file is valid XML but does not match the schema. Typical messages are "element X not expected here", "attribute Y is required but missing", "value Z does not match pattern", or "element W has invalid child element V".</p>
+
+<p>The distinction matters because the two classes of error are fixed differently. A well-formedness error is almost always the result of a tool that was not designed to emit XML — a template-based generator, a hand edit, a buggy library. A schema validity error is almost always a semantic mismatch: the producer's understanding of the vocabulary diverged from the schema's.</p>
+
+<h3>2.10.2 Validating from the command line</h3>
+
+<p>The simplest production-grade validator is <code>xmllint</code>, part of the libxml2 library that ships with every modern Linux and macOS system and is readily installed on Windows. A one-line validation against a schema looks like this:</p>
+
+<pre><code>xmllint --noout --schema Fund.xsd Fund.xml
+</code></pre>
+
+<p>The <code>--noout</code> flag suppresses the default behaviour of reprinting the document on success; without it, a successful validation floods the terminal with the document's content. On success, <code>xmllint</code> prints <code>Fund.xml validates</code>; on failure, it prints a line-numbered description of each error and exits with a non-zero status.</p>
+
+<p>For continuous-integration pipelines, this is all that is needed. A shell script that loops over the outbound FundsXML files and runs <code>xmllint</code> against the schema catches the vast majority of problems at the cheapest possible point — before the files leave the building.</p>
+
+<h3>2.10.3 Reading a validation error</h3>
+
+<p>Consider a deliberately broken share class, in which the ISIN has been corrupted:</p>
+
+<pre><code>&lt;ShareClass&gt;
+  &lt;ISIN&gt;LU000000000X&lt;/ISIN&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+&lt;/ShareClass&gt;
+</code></pre>
+
+<p>Validated against the <code>ISINType</code> defined in §2.7.2, this produces an error along the following lines:</p>
+
+<pre><code>Fund.xml:7: element ISIN: Schemas validity error :
+  Element 'ISIN': [facet 'pattern'] The value 'LU000000000X'
+  is not accepted by the pattern '[A-Z]{2}[A-Z0-9]{9}[0-9]'.
+</code></pre>
+
+<p>Three pieces of information matter in this message. The file-and-line prefix (<code>Fund.xml:7</code>) points at the offending element. The bracketed facet name (<code>[facet 'pattern']</code>) says which restriction rejected the value — here, the regular expression pattern. The value itself (<code>LU000000000X</code>) is quoted back so you can compare it to your expectation. Together, these three are enough to diagnose most schema-level errors without reading the schema at all.</p>
+
+<h3>2.10.4 What schema validation does not catch</h3>
+
+<p>Schema validation is powerful but limited. It answers the question <em>is this document structurally correct?</em> — not the question <em>is this document semantically reasonable?</em> A well-formed, schema-valid FundsXML document may still:</p>
+
+<ul>
+  <li>have a NAV that is positive but implausibly large;</li>
+  <li>describe a share class whose currency does not match the base currency of the fund and whose hedged flag is <code>false</code>;</li>
+  <li>reference an asset by UniqueID that does not appear elsewhere in the document;</li>
+  <li>declare a fund-total that does not equal the sum of its position values.</li>
+</ul>
+
+<p>Catching these requires a second layer of checking — <em>business-rule validation</em> — which FundsXML implementations typically perform using Schematron or hand-written code. Chapter 10 develops the two-stage validation model in full. For now, it is enough to note that schema validation is necessary but not sufficient, and that no FundsXML production pipeline should ever rely on schema validation alone.</p>
+
+<hr>
+
+<h2>2.11 XPath</h2>
+
+<p>Once you have a FundsXML document, you will want to pull specific values out of it. The tool for that job is <strong>XPath</strong>, a compact expression language for navigating the XML tree. XPath is the query language behind almost every XML technology: XSLT, XQuery, Schematron, and the XML facilities of every mainstream programming language. A solid understanding of XPath makes every later chapter of this book easier to follow.</p>
+
+<h3>2.11.1 The tree model</h3>
+
+<p>XPath sees an XML document as a tree. Every piece of the document is a <em>node</em>, and nodes come in seven kinds:</p>
+
+<table>
+  <thead>
+    <tr><th>Node type</th><th>Example</th><th>Notation in XPath</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Document (root)</td><td>the document itself</td><td><code>/</code></td></tr>
+    <tr><td>Element</td><td><code>&lt;Fund&gt;</code></td><td><code>Fund</code></td></tr>
+    <tr><td>Attribute</td><td><code>ccy="EUR"</code></td><td><code>@ccy</code></td></tr>
+    <tr><td>Text</td><td>the characters between tags</td><td><code>text()</code></td></tr>
+    <tr><td>Comment</td><td><code>&lt;!-- … --&gt;</code></td><td><code>comment()</code></td></tr>
+    <tr><td>Processing instruction</td><td><code>&lt;?xml-stylesheet …?&gt;</code></td><td><code>processing-instruction()</code></td></tr>
+    <tr><td>Namespace</td><td><code>xmlns:xsi="…"</code></td><td><code>namespace::xsi</code></td></tr>
+  </tbody>
+</table>
+
+<p>For fund-data work, element, attribute, and text nodes account for 99 per cent of all queries. An XPath expression starts at a <em>context node</em> and walks the tree from there, producing a <em>node set</em> — a collection of zero or more nodes.</p>
+
+<h3>2.11.2 Navigation: paths, steps, and shortcuts</h3>
+
+<p><strong>Absolute paths</strong> start with a single <code>/</code> at the document root and walk downward by element name:</p>
+
+<ul>
+  <li><code>/FundsXML4</code> — the root element.</li>
+  <li><code>/FundsXML4/ControlData/ContentDate</code> — the content date of the delivery.</li>
+  <li><code>/FundsXML4/Funds/Fund</code> — every <code>Fund</code> element under the root.</li>
+</ul>
+
+<p><strong>Relative paths</strong> start from the current context node. In most command-line tools, the context node is the document root, so the effect is the same as an absolute path; inside XSLT templates and predicates, the context node is whatever node the template is currently processing.</p>
+
+<p><strong>The double-slash</strong> <code>//</code> is the most-used shortcut in practice. It means "anywhere below", at any depth:</p>
+
+<ul>
+  <li><code>//ShareClass</code> — every <code>ShareClass</code> element, regardless of where it sits in the tree.</li>
+  <li><code>//ISIN</code> — every <code>ISIN</code>, however deeply nested.</li>
+</ul>
+
+<p><strong>The dot <code>.</code></strong> refers to the current context node; <strong>the double dot <code>..</code></strong> refers to the parent node. Both are used constantly inside predicates and XSLT:</p>
+
+<ul>
+  <li><code>.</code> — the current node.</li>
+  <li><code>..</code> — the parent of the current node.</li>
+  <li><code>../Currency</code> — the <code>Currency</code> sibling of the current node's parent.</li>
+</ul>
+
+<p><strong>Attribute access</strong> uses the <code>@</code> prefix:</p>
+
+<ul>
+  <li><code>//Amount/@ccy</code> — the <code>ccy</code> attribute of every <code>Amount</code> element.</li>
+  <li><code>//@ccy</code> — every <code>ccy</code> attribute anywhere in the document.</li>
+</ul>
+
+<p><strong>Wildcards</strong> select nodes regardless of name:</p>
+
+<ul>
+  <li><code>//Fund/*</code> — every direct child element of every <code>Fund</code>, whatever the element name.</li>
+  <li><code>//@*</code> — every attribute in the document.</li>
+  <li><code>//Fund/node()</code> — every child node (elements, text, comments) of every <code>Fund</code>.</li>
+</ul>
+
+<p><strong>Text access</strong> uses <code>text()</code>:</p>
+
+<ul>
+  <li><code>//ISIN/text()</code> — the string value of every ISIN element.</li>
+</ul>
+
+<h3>2.11.3 Predicates and filtering</h3>
+
+<p>Predicates, in square brackets, filter node sets by arbitrary conditions. They are the <code>WHERE</code> clause of XPath.</p>
+
+<p><strong>Value comparisons:</strong></p>
+
+<ul>
+  <li><code>//ShareClass[Currency='EUR']</code> — share classes whose <code>Currency</code> child has text content <code>EUR</code>.</li>
+  <li><code>//Fund[Identifiers/LEI='549300ABCDEFGHIJ1234']</code> — the fund whose LEI matches.</li>
+  <li><code>//Position[MarketValue &gt; 1000000]</code> — positions with a market value above one million.</li>
+</ul>
+
+<p><strong>Positional predicates:</strong></p>
+
+<ul>
+  <li><code>//ShareClass[1]</code> — the first share class (XPath positions start at 1, not 0).</li>
+  <li><code>//ShareClass[last()]</code> — the last.</li>
+  <li><code>//ShareClass[position() &lt;= 3]</code> — the first three.</li>
+</ul>
+
+<p><strong>Existence tests</strong> — a predicate that names a path is true if the path selects at least one node:</p>
+
+<ul>
+  <li><code>//ShareClass[Identifiers/ISIN]</code> — share classes that have an ISIN.</li>
+  <li><code>//Fund[not(FundDynamicData)]</code> — funds that have no dynamic data.</li>
+</ul>
+
+<p><strong>Compound predicates</strong> combine conditions with <code>and</code>, <code>or</code>, and <code>not()</code>:</p>
+
+<ul>
+  <li><code>//Position[MarketValue &gt; 1000000 and Currency='EUR']</code> — EUR positions above one million.</li>
+  <li><code>//ShareClass[Currency='EUR' or Currency='CHF']</code> — EUR or CHF share classes.</li>
+</ul>
+
+<p><strong>Chained predicates</strong> apply successive filters:</p>
+
+<ul>
+  <li><code>//ShareClass[Currency='EUR'][1]</code> — the first EUR share class.</li>
+</ul>
+
+<h3>2.11.4 Axes: navigating in every direction</h3>
+
+<p>Each step in an XPath expression uses an <em>axis</em> that determines the direction of travel through the tree. Most of the time the axis is implicit — <code>Fund/Currency</code> is shorthand for <code>Fund/child::Currency</code> — but the full axis syntax is needed when you must navigate sideways or upward.</p>
+
+<p><strong>Table 2.4 — XPath axes</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Axis</th><th>Direction</th><th>Shorthand</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>child::</code></td><td>direct children</td><td><em>(default)</em></td><td><code>child::Fund</code> = <code>Fund</code></td></tr>
+    <tr><td><code>attribute::</code></td><td>attributes</td><td><code>@</code></td><td><code>attribute::ccy</code> = <code>@ccy</code></td></tr>
+    <tr><td><code>parent::</code></td><td>parent node</td><td><code>..</code></td><td><code>parent::Fund</code></td></tr>
+    <tr><td><code>self::</code></td><td>current node</td><td><code>.</code></td><td><code>self::Fund</code></td></tr>
+    <tr><td><code>descendant::</code></td><td>all descendants</td><td>—</td><td><code>descendant::ISIN</code></td></tr>
+    <tr><td><code>descendant-or-self::</code></td><td>self + descendants</td><td><code>//</code></td><td><code>descendant-or-self::node()</code></td></tr>
+    <tr><td><code>ancestor::</code></td><td>all ancestors</td><td>—</td><td><code>ancestor::Fund</code></td></tr>
+    <tr><td><code>ancestor-or-self::</code></td><td>self + ancestors</td><td>—</td><td><code>ancestor-or-self::Funds</code></td></tr>
+    <tr><td><code>following-sibling::</code></td><td>later siblings</td><td>—</td><td><code>following-sibling::ShareClass</code></td></tr>
+    <tr><td><code>preceding-sibling::</code></td><td>earlier siblings</td><td>—</td><td><code>preceding-sibling::ShareClass</code></td></tr>
+    <tr><td><code>following::</code></td><td>everything after</td><td>—</td><td><code>following::Fund</code></td></tr>
+    <tr><td><code>preceding::</code></td><td>everything before</td><td>—</td><td><code>preceding::Fund</code></td></tr>
+  </tbody>
+</table>
+
+<p>The axes that matter most for fund-data work are <code>child</code> (the default), <code>attribute</code> (<code>@</code>), <code>parent</code> (<code>..</code>), <code>descendant-or-self</code> (<code>//</code>), and <code>following-sibling</code> / <code>preceding-sibling</code>. A practical example: given a <code>Position</code> element, find the fund it belongs to:</p>
+
+<ul>
+  <li><code>ancestor::Fund/Names/OfficialName</code> — walks up the tree to the enclosing <code>Fund</code> and then back down to its name.</li>
+</ul>
+
+<h3>2.11.5 Functions</h3>
+
+<p>XPath 1.0 provides a compact function library. The functions most relevant to fund-data work fall into four groups.</p>
+
+<p><strong>String functions:</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>concat(a, b, …)</code></td><td>Concatenate strings</td><td><code>concat(//LEI, ' — ', //OfficialName)</code></td></tr>
+    <tr><td><code>contains(s, sub)</code></td><td>Test if <code>s</code> contains <code>sub</code></td><td><code>//Fund[contains(Names/OfficialName, 'Growth')]</code></td></tr>
+    <tr><td><code>starts-with(s, pre)</code></td><td>Test if <code>s</code> starts with <code>pre</code></td><td><code>//ISIN[starts-with(., 'LU')]</code></td></tr>
+    <tr><td><code>substring(s, pos, len)</code></td><td>Extract substring</td><td><code>substring(//ISIN, 1, 2)</code> → country code</td></tr>
+    <tr><td><code>string-length(s)</code></td><td>Length of string</td><td><code>//Name[string-length(.) &gt; 100]</code></td></tr>
+    <tr><td><code>normalize-space(s)</code></td><td>Strip and collapse whitespace</td><td><code>normalize-space(//OfficialName)</code></td></tr>
+    <tr><td><code>translate(s, from, to)</code></td><td>Character-by-character replacement</td><td><code>translate(//Currency, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')</code></td></tr>
+  </tbody>
+</table>
+
+<p><strong>Numeric functions:</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>sum(node-set)</code></td><td>Sum of numeric values</td><td><code>sum(//Position/MarketValue)</code></td></tr>
+    <tr><td><code>count(node-set)</code></td><td>Number of nodes</td><td><code>count(//ShareClass)</code></td></tr>
+    <tr><td><code>round(n)</code></td><td>Round to nearest integer</td><td><code>round(//NavPerShare)</code></td></tr>
+    <tr><td><code>floor(n)</code></td><td>Round down</td><td><code>floor(//NavPerShare)</code></td></tr>
+    <tr><td><code>ceiling(n)</code></td><td>Round up</td><td><code>ceiling(//NavPerShare)</code></td></tr>
+    <tr><td><code>number(s)</code></td><td>Convert to number</td><td><code>number(//TotalNetAssetValue/Amount)</code></td></tr>
+  </tbody>
+</table>
+
+<p><strong>Boolean functions:</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>not(expr)</code></td><td>Logical negation</td><td><code>//Fund[not(FundDynamicData)]</code></td></tr>
+    <tr><td><code>true()</code> / <code>false()</code></td><td>Boolean constants</td><td>predicate building blocks</td></tr>
+    <tr><td><code>boolean(expr)</code></td><td>Convert to boolean</td><td><code>boolean(//ISIN)</code> → true if any ISIN exists</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Node functions:</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>name()</code></td><td>Element name (with prefix)</td><td><code>//Fund/*[name()='Currency']</code></td></tr>
+    <tr><td><code>local-name()</code></td><td>Element name (without prefix)</td><td>useful in namespaced documents</td></tr>
+    <tr><td><code>namespace-uri()</code></td><td>Namespace URI of the node</td><td>debugging namespace issues</td></tr>
+  </tbody>
+</table>
+
+<p>Illustrated against the Europa Growth Fund document from §2.2: <code>count(//ShareClass)</code> returns <code>2</code>, <code>sum(//ShareClass/NavPerShare)</code> returns the sum of per-share NAVs, and <code>concat(//OfficialName, ' (', //Currency, ')')</code> returns <code>Europa Growth Fund (EUR)</code>.</p>
+
+<h3>2.11.6 Operators and expressions</h3>
+
+<p>XPath expressions support arithmetic, comparison, boolean logic, and the union operator.</p>
+
+<p><strong>Arithmetic</strong> — <code>+</code>, <code>-</code>, <code>*</code>, <code>div</code>, <code>mod</code>:</p>
+
+<ul>
+  <li><code>//MarketValue div //TotalNetAssetValue/Amount * 100</code> — position weight as a percentage.</li>
+  <li><code>count(//Position) mod 2</code> — is the number of positions odd or even?</li>
+</ul>
+
+<p>Note that division uses <code>div</code>, not <code>/</code>, because <code>/</code> is already taken as the path separator.</p>
+
+<p><strong>Comparison</strong> — <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>:</p>
+
+<ul>
+  <li><code>//Position[Quantity &gt; 10000]</code> — positions with more than ten thousand units.</li>
+  <li><code>//TotalAssetValue[NavDate = '2026-03-31']</code> — the asset value for a specific date.</li>
+</ul>
+
+<p>When used inside XML attributes (as in XSLT), the <code>&lt;</code> character must be escaped as <code>&amp;lt;</code>.</p>
+
+<p><strong>Boolean logic</strong> — <code>and</code>, <code>or</code>, <code>not()</code>:</p>
+
+<ul>
+  <li><code>//Position[Quantity &gt; 10000 and MarketValue &gt; 5000000]</code> — large positions by both measures.</li>
+</ul>
+
+<p><strong>Union</strong> — <code>|</code> combines two node sets:</p>
+
+<ul>
+  <li><code>//Fund/Names/OfficialName | //Fund/Names/ShortName</code> — all official and short names together.</li>
+</ul>
+
+<h3>2.11.7 XPath and namespaces</h3>
+
+<p>XPath 1.0 matches elements by their expanded name (namespace URI + local name), not by their textual prefix. When a document uses a namespace — as many real XML documents do — your XPath tooling must be told which prefix in the query stands for which namespace URI. Every XPath-capable tool has its own way of declaring the binding; the mechanism differs, but the obligation is the same. An XPath query written without a namespace binding against a namespaced document is the single most common source of "no results, but I can see the element right there" frustration.</p>
+
+<h3>2.11.8 XPath versions</h3>
+
+<p>XPath has evolved through several versions, and the differences matter for tool selection.</p>
+
+<p><strong>XPath 1.0</strong> (1999) is the version described in this section. It is universally supported by every XML library, every IDE, and every command-line tool. It works with node sets, strings, numbers, and booleans. For the purposes of reading and querying FundsXML, it is sufficient.</p>
+
+<p><strong>XPath 2.0</strong> (2007) adds a richer type system (sequences instead of node sets, typed values aligned with XSD), <code>if</code>/<code>then</code>/<code>else</code> expressions, <code>for</code> expressions, quantified expressions (<code>some</code>/<code>every</code>), and a much larger function library including regular-expression matching (<code>matches()</code>, <code>replace()</code>, <code>tokenize()</code>). It is the version used by XSLT 2.0, XQuery, and Schematron.</p>
+
+<p><strong>XPath 3.0 / 3.1</strong> (2014/2017) adds higher-order functions (functions as values), the <code>let</code> expression, arrow operator (<code>=&gt;</code>), inline functions, and maps and arrays. It is used by XSLT 3.0 and XQuery 3.1.</p>
+
+<p>For day-to-day FundsXML work, XPath 1.0 covers the vast majority of queries. XPath 2.0 becomes useful when writing Schematron business rules (Chapter 10) or complex XSLT transformations (§2.12), where its richer type system and <code>matches()</code> function simplify the work considerably.</p>
+
+<hr>
+
+<h2>2.12 XSLT Transformations</h2>
+
+<p>XSLT — the Extensible Stylesheet Language Transformations — is the standard way of turning one XML document into another document, which may itself be XML, HTML, CSV, plain text, or almost anything else. In a FundsXML context, XSLT is how a single canonical fund-data document becomes a fact-sheet HTML fragment, a distributor-specific CSV, a regulatory submission, or a formatted printout.</p>
+
+<h3>2.12.1 The mental model</h3>
+
+<p>An XSLT stylesheet is itself an XML document. It contains a set of <em>templates</em>, each of which says "when you encounter a node that matches <em>this pattern</em>, produce <em>this output</em>". The processor walks the input tree, matches each node against the templates in turn, and writes the output. The model is declarative, not imperative: you describe the mapping, and the processor decides how to traverse the source.</p>
+
+<p>The three templates you will see most often are <code>xsl:template</code>, which defines a match rule; <code>xsl:apply-templates</code>, which tells the processor to recursively process child nodes; and <code>xsl:value-of</code>, which inserts the string value of a node into the output.</p>
+
+<h3>2.12.2 Example: FundsXML to CSV</h3>
+
+<p>Here is a minimal stylesheet that turns the Europa Growth Fund document from §2.2 into a two-column CSV of ISINs and currencies:</p>
+
+<pre><code>&lt;xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="text" encoding="UTF-8"/&gt;
+
+  &lt;xsl:template match="/FundsXML4"&gt;
+    &lt;xsl:text&gt;ISIN;Currency&amp;#10;&lt;/xsl:text&gt;
+    &lt;xsl:apply-templates select="Funds/Fund/SingleFund/ShareClasses/ShareClass"/&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="ShareClass"&gt;
+    &lt;xsl:value-of select="Identifiers/ISIN"/&gt;
+    &lt;xsl:text&gt;;&lt;/xsl:text&gt;
+    &lt;xsl:value-of select="Currency"/&gt;
+    &lt;xsl:text&gt;&amp;#10;&lt;/xsl:text&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</code></pre>
+
+<p>The <code>xsl:output method="text"</code> declaration switches the processor into plain-text mode, so that the output is written directly without XML escaping. The root template matches the <code>FundsXML4</code> root element, writes a header line, and then delegates to the share-class template for each <code>ShareClass</code> child. The share-class template writes one CSV line per input share class. Against the §2.2 document the result is:</p>
+
+<pre><code>ISIN;Currency
+LU1234567890;EUR
+LU1234567892;CHF
+</code></pre>
+
+<p>A real counterparty feed, of course, requires more columns. The following stylesheet produces a richer export that includes the fund name, the share-class name, the LEI of the fund, and the NAV date — all the fields a distributor typically needs in a daily share-class listing:</p>
+
+<pre><code>&lt;xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="text" encoding="UTF-8"/&gt;
+
+  &lt;xsl:template match="/FundsXML4"&gt;
+    &lt;xsl:text&gt;FundName;LEI;ISIN;ShareClassName;Currency;NavDate&amp;#10;&lt;/xsl:text&gt;
+    &lt;xsl:apply-templates select="Funds/Fund"/&gt;
+  &lt;/xsl:template&gt;
+
+  &lt;xsl:template match="Fund"&gt;
+    &lt;xsl:variable name="fundName" select="Names/OfficialName"/&gt;
+    &lt;xsl:variable name="lei"      select="Identifiers/LEI"/&gt;
+    &lt;xsl:variable name="navDate"
+      select="FundDynamicData/TotalAssetValues/TotalAssetValue/NavDate"/&gt;
+    &lt;xsl:for-each select="SingleFund/ShareClasses/ShareClass"&gt;
+      &lt;xsl:value-of select="$fundName"/&gt;
+      &lt;xsl:text&gt;;&lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$lei"/&gt;
+      &lt;xsl:text&gt;;&lt;/xsl:text&gt;
+      &lt;xsl:value-of select="Identifiers/ISIN"/&gt;
+      &lt;xsl:text&gt;;&lt;/xsl:text&gt;
+      &lt;xsl:value-of select="Names/OfficialName"/&gt;
+      &lt;xsl:text&gt;;&lt;/xsl:text&gt;
+      &lt;xsl:value-of select="Currency"/&gt;
+      &lt;xsl:text&gt;;&lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$navDate"/&gt;
+      &lt;xsl:text&gt;&amp;#10;&lt;/xsl:text&gt;
+    &lt;/xsl:for-each&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</code></pre>
+
+<p>Two new XSLT features appear. First, <code>xsl:variable</code> captures values from the enclosing <code>Fund</code> node so that they can be reused inside the inner <code>xsl:for-each</code> loop without repeating the full XPath each time. Second, <code>xsl:for-each</code> iterates over the share classes directly rather than delegating to a separate template — a stylistic choice that works well when the logic is short and self-contained. Against the §2.2 document the output is:</p>
+
+<pre><code>FundName;LEI;ISIN;ShareClassName;Currency;NavDate
+Europa Growth Fund;549300ABCDEFGHIJ1234;LU1234567890;Europa Growth Fund I EUR Acc;EUR;2026-03-31
+Europa Growth Fund;549300ABCDEFGHIJ1234;LU1234567892;Europa Growth Fund R CHF Acc Hedged;CHF;2026-03-31
+</code></pre>
+
+<p>This is the beating heart of the distribution pipeline. Every bilateral CSV feed in an unstandardised production, of the kind Chapter 1 catalogued, can be replaced by a single canonical FundsXML file plus one XSLT per counterparty. If Distributor A wants semicolons and Distributor B wants tabs, the difference is a single character in one <code>xsl:text</code> element. Changes to any one counterparty touch one stylesheet and nothing else.</p>
+
+<h3>2.12.3 Example: FundsXML to fact-sheet HTML</h3>
+
+<p>A second stylesheet produces a fact-sheet page from the same Europa Growth Fund document. Unlike the CSV, this time the output is a complete HTML document with a title, a summary table of fund-level metadata, and a share-class listing:</p>
+
+<pre><code>&lt;xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="html" indent="yes" encoding="UTF-8"/&gt;
+
+  &lt;xsl:template match="/"&gt;
+    &lt;xsl:variable name="fund" select="/FundsXML4/Funds/Fund"/&gt;
+    &lt;xsl:variable name="nav"
+      select="$fund/FundDynamicData/TotalAssetValues/TotalAssetValue
+              /TotalNetAssetValue/Amount"/&gt;
+    &lt;html&gt;
+      &lt;head&gt;&lt;title&gt;&lt;xsl:value-of select="$fund/Names/OfficialName"/&gt;&lt;/title&gt;&lt;/head&gt;
+      &lt;body&gt;
+        &lt;h1&gt;&lt;xsl:value-of select="$fund/Names/OfficialName"/&gt;&lt;/h1&gt;
+        &lt;table border="1" cellpadding="4"&gt;
+          &lt;tr&gt;&lt;td&gt;LEI&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="$fund/Identifiers/LEI"/&gt;&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;Currency&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="$fund/Currency"/&gt;&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;NAV&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="$nav"/&gt;
+                  &lt;xsl:text&gt; &lt;/xsl:text&gt;
+                  &lt;xsl:value-of select="$nav/@ccy"/&gt;&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;NAV Date&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="$fund/FundDynamicData
+                    /TotalAssetValues/TotalAssetValue/NavDate"/&gt;&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;Content Date&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of
+                    select="/FundsXML4/ControlData/ContentDate"/&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;/table&gt;
+
+        &lt;h2&gt;Share classes&lt;/h2&gt;
+        &lt;table border="1" cellpadding="4"&gt;
+          &lt;tr&gt;&lt;th&gt;ISIN&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Currency&lt;/th&gt;&lt;/tr&gt;
+          &lt;xsl:for-each select="$fund/SingleFund/ShareClasses/ShareClass"&gt;
+            &lt;tr&gt;
+              &lt;td&gt;&lt;xsl:value-of select="Identifiers/ISIN"/&gt;&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="Names/OfficialName"/&gt;&lt;/td&gt;
+              &lt;td&gt;&lt;xsl:value-of select="Currency"/&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/xsl:for-each&gt;
+        &lt;/table&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</code></pre>
+
+<p>Several things are worth noting. The root template matches <code>/</code> rather than <code>/FundsXML4</code>; either form works, but matching the document root is slightly more idiomatic when the stylesheet produces a complete HTML page. The <code>$fund</code> and <code>$nav</code> variables keep the XPath expressions short and readable inside the template body. The <code>$nav/@ccy</code> expression reads the <code>ccy</code> attribute from the <code>Amount</code> element, so the currency appears next to the value without being hard-coded.</p>
+
+<p>The <code>method="html"</code> output declaration switches the processor into HTML-serialisation mode, which is subtly different from XML: empty elements like <code>&lt;br&gt;</code> are written without the self-closing slash, boolean attributes are written bare, and character references are emitted in a form that browsers expect. Against the §2.2 document, the result is a self-contained HTML page whose summary table reads:</p>
+
+<table>
+<tr><td></td><td></td></tr>
+<tr><td>LEI</td><td>549300ABCDEFGHIJ1234</td></tr>
+<tr><td>Currency</td><td>EUR</td></tr>
+<tr><td>NAV</td><td>464552848.78 EUR</td></tr>
+<tr><td>NAV Date</td><td>2026-03-31</td></tr>
+<tr><td>Content Date</td><td>2026-03-31</td></tr>
+</table>
+
+<p>and whose share-class table lists both share classes with their ISINs, names, and currencies. A production fact sheet would add styling, logos, and far more data — but the principle is the same: the XSLT carries the layout logic, and the FundsXML document supplies the data.</p>
+
+<h3>2.12.4 Example: data-quality checks with XSLT</h3>
+
+<p>The examples so far transform FundsXML into a different <em>format</em> — CSV, HTML. But XSLT can just as well transform a document into a <em>report about itself</em>. This opens the door to a lightweight data-quality layer: encode your business rules as an XSLT stylesheet, run it against every incoming file, and inspect the output for violations.</p>
+
+<p>Consider one of the most fundamental fund-data invariants: <em>the sum of the market values of all portfolio positions must equal the fund's total net asset value on the same date.</em> If a FundsXML file carries both a <code>TotalNetAssetValue</code> and a set of <code>Position</code> elements with <code>TotalValue</code> amounts, the following stylesheet checks whether they agree:</p>
+
+<pre><code>&lt;xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="text" encoding="UTF-8"/&gt;
+
+  &lt;xsl:template match="/FundsXML4"&gt;
+    &lt;xsl:for-each select="Funds/Fund"&gt;
+      &lt;xsl:variable name="fundName" select="Names/OfficialName"/&gt;
+      &lt;xsl:variable name="fundCcy"  select="Currency"/&gt;
+      &lt;xsl:variable name="fundNAV"
+        select="FundDynamicData/TotalAssetValues/TotalAssetValue
+                /TotalNetAssetValue/Amount[@ccy = $fundCcy]"/&gt;
+      &lt;xsl:variable name="positionSum"
+        select="sum(FundDynamicData/Portfolios/Portfolio
+                /Positions/Position/TotalValue/Amount[@ccy = $fundCcy])"/&gt;
+      &lt;xsl:variable name="diff" select="$fundNAV - $positionSum"/&gt;
+
+      &lt;xsl:value-of select="$fundName"/&gt;
+      &lt;xsl:text&gt;&amp;#10;  Fund NAV:      &lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$fundNAV"/&gt;
+      &lt;xsl:text&gt; &lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$fundCcy"/&gt;
+      &lt;xsl:text&gt;&amp;#10;  Position sum:  &lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$positionSum"/&gt;
+      &lt;xsl:text&gt; &lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$fundCcy"/&gt;
+      &lt;xsl:text&gt;&amp;#10;  Difference:    &lt;/xsl:text&gt;
+      &lt;xsl:value-of select="$diff"/&gt;
+      &lt;xsl:choose&gt;
+        &lt;xsl:when test="$diff = 0"&gt;
+          &lt;xsl:text&gt;&amp;#10;  Result:        PASS&amp;#10;&lt;/xsl:text&gt;
+        &lt;/xsl:when&gt;
+        &lt;xsl:when test="$diff &amp;gt; -1 and $diff &amp;lt; 1"&gt;
+          &lt;xsl:text&gt;&amp;#10;  Result:        PASS (rounding)&amp;#10;&lt;/xsl:text&gt;
+        &lt;/xsl:when&gt;
+        &lt;xsl:otherwise&gt;
+          &lt;xsl:text&gt;&amp;#10;  Result:        FAIL&amp;#10;&lt;/xsl:text&gt;
+        &lt;/xsl:otherwise&gt;
+      &lt;/xsl:choose&gt;
+    &lt;/xsl:for-each&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</code></pre>
+
+<p>The stylesheet iterates over every <code>Fund</code> in the document, computes the sum of position values in the fund's own currency, and compares it with the reported total NAV. A difference below one currency unit is accepted as a rounding tolerance; anything larger is flagged as <code>FAIL</code>. The output is plain text, easily piped into a log file or a monitoring system:</p>
+
+<pre><code>Europa Growth Fund
+  Fund NAV:      464552848.78 EUR
+  Position sum:  464552848.78 EUR
+  Difference:    0
+  Result:        PASS
+</code></pre>
+
+<p>The same principle scales to any business rule that can be expressed as a combination of XPath queries: <em>does every share class carry an ISIN?</em>, <em>is the NAV date consistent with the content date?</em>, <em>do percentage allocations sum to 100?</em> Each rule becomes one additional block in the stylesheet. The output can be plain text, as above, or HTML for a visual dashboard — or even XML, if the quality report is to be consumed by another automated step.</p>
+
+<p>This approach has a practical advantage: it requires nothing beyond an XSLT 1.0 processor, which is already available on every platform (§2.12.6). There is no need to learn a separate validation language. For organisations that prefer a more formal, standards-based approach to business-rule validation, Schematron — which Chapter 10 covers in detail — provides a dedicated assertion language on top of XPath and can be compiled to XSLT automatically. But for teams that already know XSLT, writing quality checks directly is a natural and effective starting point.</p>
+
+<p>The FundsXML working group maintains a public repository of ready-to-use XSLT stylesheets for data-quality checking at <a href="https://github.com/fundsxml/examples/">github.com/fundsxml/examples</a>. It includes both a basic five-section check (XSLT 2.0) and a comprehensive ten-section HTML dashboard (XSLT 1.0) that covers NAV reconciliation, share-class price verification, percentage-allocation checks, asset-specific validations, and more. These stylesheets can be used as-is against any FundsXML 4.x document or adapted to an organisation's specific rules.</p>
+
+<h3>2.12.5 The identity transform</h3>
+
+<p>One small but powerful idiom deserves mention. The <em>identity transform</em> is a stylesheet that simply copies its input to its output unchanged:</p>
+
+<pre><code>&lt;xsl:template match="@*|node()"&gt;
+  &lt;xsl:copy&gt;
+    &lt;xsl:apply-templates select="@*|node()"/&gt;
+  &lt;/xsl:copy&gt;
+&lt;/xsl:template&gt;
+</code></pre>
+
+<p>Combined with one or two additional templates that override specific nodes, the identity transform is the standard way of making surgical changes to a FundsXML document — for example, renaming a single element or stripping a specific attribute — without touching anything else. Any XSLT tutorial that goes beyond a few pages will show it again and again.</p>
+
+<h3>2.12.6 Versions</h3>
+
+<p>XSLT exists in three main versions. XSLT 1.0 is universally supported and is enough for almost every practical FundsXML transformation a fund practitioner will write. XSLT 2.0 adds sequences, richer types, and grouping constructs. XSLT 3.0 adds streaming (important for very large documents) and higher-order functions. The code in this book uses XSLT 1.0 unless explicitly noted; if you have access to a 2.0 or 3.0 processor, you lose nothing by running 1.0 stylesheets on it.</p>
+
+<hr>
+
+<h2>2.13 Tools for Day-to-Day XML Work</h2>
+
+<p>A practitioner need not build tools from scratch; a rich ecosystem already exists. This section gives the lie of the land; Chapter 11 revisits the tools in depth, with installation guides, configuration advice, and feature-by-feature comparisons.</p>
+
+<p><strong>Table 2.2 — XML tooling at a glance</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Tool</th><th>Kind</th><th>Strengths</th><th>Treated in depth</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>xmllint</strong></td><td>Command-line</td><td>Validation, formatting, XPath; ships with libxml2; free</td><td>§2.10, Chapter 10</td></tr>
+    <tr><td><strong>oXygen XML Editor</strong></td><td>Commercial IDE</td><td>Visual schema design, schema-aware editing, XSLT debugging</td><td>Chapter 11</td></tr>
+    <tr><td><strong>Altova XMLSpy</strong></td><td>Commercial IDE</td><td>Visual design, generation, data mapping</td><td>Chapter 11</td></tr>
+    <tr><td><strong>IntelliJ IDEA / Ultimate</strong></td><td>General IDE</td><td>Strong XML and XSD support, integrated validation</td><td>Chapter 11</td></tr>
+    <tr><td><strong>VS Code (+ XML plugins)</strong></td><td>General editor</td><td>Free; lightweight; good validation with the Red Hat XML plugin</td><td>Chapter 11</td></tr>
+    <tr><td><strong>Eclipse (+ Web Tools)</strong></td><td>General IDE</td><td>Schema view, XML editors, free</td><td>Chapter 11</td></tr>
+    <tr><td><strong>FreeXmlToolkit</strong></td><td>FundsXML-aware</td><td>Purpose-built for FundsXML workflows</td><td>Chapter 11</td></tr>
+  </tbody>
+</table>
+
+<p>Two points about this table matter now. First, all of these tools are namespace-aware and all support XSD validation against the FundsXML schemas. The choice between them is, to a first approximation, a choice of ergonomics and cost, not of capability. Second, the free options — <code>xmllint</code>, VS Code with the Red Hat plugin, and the FreeXmlToolkit — are enough to reach a fully operational FundsXML pipeline. The commercial IDEs become attractive when schema <em>authoring</em> and visual <em>data mapping</em> become part of the daily workflow, not merely schema <em>consumption</em>.</p>
+
+<p><strong>Beyond this chapter.</strong> A knowledgeable reader will notice that this chapter has stopped short of several valid XML topics: XML Catalogs, XInclude, XPointer, XQuery, Schematron, the XSD 1.1 assertion facility, SOAP and WSDL, and XSLT 2.0/3.0 features. None of them are needed to read, validate, or transform FundsXML, and each has been omitted deliberately to keep the chapter short. Where a later chapter reaches for one of them — Schematron in Chapter 10, XMLDSig in Chapter 9 — we will introduce it at that point, in the context where it matters.</p>
+
+<hr>
+
+<h2>2.14 Common Pitfalls</h2>
+
+<p>Every experienced FundsXML practitioner keeps a mental list of recurring traps. The list below is not exhaustive, but it covers the failures that appear most frequently in production.</p>
+
+<ul>
+  <li><strong>Encoding mismatches.</strong> A file declared as UTF-8 but actually written as Windows-1252 will parse — until the first accented character. Always emit UTF-8, always read it with a UTF-8-aware parser, and never paste text between editors that disagree on their default encoding.</li>
+  <li><strong>The byte-order mark.</strong> A BOM at the start of a UTF-8 file is legal but is rejected by some downstream tools and silently corrupts some others. Configure your editor to save UTF-8 without a BOM.</li>
+  <li><strong>Namespace-unaware XPath.</strong> If an XPath query returns an empty result set against a document in which the element is clearly present, the first check is whether the namespace has been declared to the XPath processor. It almost always has not.</li>
+  <li><strong>Attribute vs element confusion.</strong> Two producers of the same logical data choose differently — one writes <code>&lt;Currency&gt;EUR&lt;/Currency&gt;</code>, the other <code>&lt;Amount currency="EUR"&gt;100&lt;/Amount&gt;</code> — and a consumer that expects one form silently ignores the other. The schema is authoritative; read it.</li>
+  <li><strong>Decimal-separator locale.</strong> A decimal number written as <code>1.234,56</code> is not an <code>xs:decimal</code>. European locales that use the comma for the decimal separator and the period for the thousands separator must convert before emitting XML.</li>
+  <li><strong>Whitespace and the silent trim.</strong> <code>xs:token</code> collapses internal whitespace; <code>xs:string</code> preserves it. An ISIN that someone has appended a stray trailing space to will fail a pattern validation but can pass an <code>xs:token</code> comparison — or vice versa, depending on the order.</li>
+  <li><strong>Case-sensitivity of enumerations.</strong> <code>EUR</code>, <code>eur</code>, and <code>Eur</code> are three different values to an XSD enumeration. Converting incoming free text to a normalised form before validating is a defensive habit worth acquiring.</li>
+  <li><strong>Comments as data.</strong> Comments are stripped by many processors. Do not put anything in a comment that you expect to be available downstream.</li>
+  <li><strong>Large files and memory.</strong> A DOM-based parser loads the entire document into memory. For the hundreds-of-megabytes files that a fund-of-funds look-through can produce, a streaming parser (SAX, StAX, or XSLT 3.0 streaming) is the right tool.</li>
+</ul>
+
+<p>Each of these pitfalls has cost someone a production incident at some point. Recognising the pattern in your own pipelines is half the defence.</p>
+
+<hr>
+
+<h2>2.15 Key Takeaways</h2>
+
+<ul>
+  <li>XML represents data as a tree of named elements that may carry attributes and contain text; the whole technical apparatus of this chapter is layered on top of this simple model.</li>
+  <li>A document is <em>well-formed</em> if it obeys XML's syntactic rules, and <em>valid</em> if it additionally matches a schema. Well-formedness is a precondition for validation; validation is the first line of defence against production errors.</li>
+  <li>XML namespaces give elements and attributes globally unique identities, and XSD is the schema language in which FundsXML is written; together they enable the composition of independently maintained vocabularies into a single document.</li>
+  <li>XSD simple types — with restrictions such as <code>pattern</code>, <code>enumeration</code>, <code>minInclusive</code>, and <code>fractionDigits</code> — are the correct mechanism for enforcing formats like ISIN, currency, and NAV precision.</li>
+  <li>XSD complex types, built from <code>xs:sequence</code>, <code>xs:choice</code>, <code>xs:all</code>, and element occurrences, describe the shape of every non-leaf element. Type derivation lets specialised types extend or restrict general ones, and <code>xs:include</code> and <code>xs:import</code> stitch large schemas together from many files.</li>
+  <li>Schema validation is powerful but partial; semantic rules that XSD cannot express belong to a second, business-rule validation layer that Chapter 10 develops in full.</li>
+  <li>XPath in its 1.0 dialect is enough for almost every fund-data query a practitioner will need to write, and XSLT 1.0 is enough for almost every transformation.</li>
+  <li>A small, well-chosen toolchain — a namespace-aware editor, a command-line validator such as <code>xmllint</code>, and a FundsXML-aware tool such as the FreeXmlToolkit — is all the equipment required to work productively with FundsXML. Chapter 11 revisits each tool in depth.</li>
+</ul>
+
+<p>With the XML and XSD vocabulary in place, we are ready to look at FundsXML itself — its history, its organisation, its architecture, and its schema layout — which is the subject of Chapter 3.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter01.html">&lsaquo; Chapter 1</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter03.html">Chapter 3 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

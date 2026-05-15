@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 4 — ControlData — The Metadata of a Delivery</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter03.html">&lsaquo; Chapter 3</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter05.html">Chapter 5 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<div class="chapter-meta">Part II — FundsXML in Detail · Chapter 4</div>
+<h1>ControlData — The Metadata of a Delivery<span class="subtitle">Document ID, reporting date, sender, and operation type</span></h1>
+
+<hr>
+
+<h2>4.1 Setting the Scene: Opening the Envelope</h2>
+
+<p>At the end of Chapter 3, the operations team at the Europa Growth Fund had a mental map of the five main areas of a FundsXML document. The most natural next question is not <em>"how do we describe the fund?"</em> — that is Chapter 5's subject — but rather <em>"how do we describe the delivery itself?"</em> Who sent it, when, on behalf of whom, for which reporting date, and — most importantly — <em>what kind of delivery is it?</em> A first-time load is not the same thing as an afternoon correction of a morning NAV; a regular monthly update is not the same thing as the retraction of a delivery that should never have gone out. FundsXML answers all of these questions in the small but disproportionately important structure that sits at the top of every document: <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank"><em>ControlData</em></a>.</p>
+
+<p>Three reasons justify beginning Part II with the envelope rather than the fund itself. First, ControlData is the first element every consumer of a FundsXML file reads. A production pipeline that fails to understand ControlData never even gets to the fund data, let alone to the portfolios or regulatory modules. Second, ControlData is what makes a file identifiable, routable, and de-duplicable — without it, the same message arriving twice is indistinguishable from a genuine update, and a message arriving out of order is impossible to reconcile against what came before. Third, and most importantly, ControlData is where FundsXML takes its one explicit position on <em>time</em> — on how deliveries relate to one another across hours and days. That position is simple, deliberate, and not always what newcomers expect, and the six pages of §4.6 devoted to it are the conceptual core of this chapter.</p>
+
+<p>By the end of this chapter, you should be able to:</p>
+<ul>
+  <li>name every mandatory field of a ControlData block and explain what it identifies;</li>
+  <li>produce a <em><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/UniqueDocumentID" target="_blank">UniqueDocumentID</a></em> that is unique across a producer's output stream for the life of the system;</li>
+  <li>distinguish <em>INITIAL</em>, <em>AMEND</em>, and <em>DELETE</em> deliveries and choose the right one for a given operational situation;</li>
+  <li>trace a chain of related deliveries backwards to the <em>INITIAL</em> that started it;</li>
+  <li>recognise the half-dozen mistakes that cause the most production incidents in ControlData handling.</li>
+</ul>
+
+<p>No prior knowledge of the FundsXML schema beyond Chapter 3 is assumed. The chapter proceeds from purpose to fields to operations: §4.2 describes what ControlData <em>does</em> in a live pipeline; §4.3 gives the field skeleton; §4.4 and §4.5 walk through the identification and addressing fields; §4.6 covers <em><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/DataOperation" target="_blank">DataOperation</a></em> and its consequences; §4.7 treats the inter-document references that bind a stream together; §4.8 assembles everything into a complete, schema-valid example for the Europa Growth Fund. A short pitfalls list and the key takeaways close the chapter.</p>
+
+<hr>
+
+<h2>4.2 The Role of ControlData in a Production Flow</h2>
+
+<p>Before we look at any field, it is worth asking what a real consumer <em>does</em> with an arriving FundsXML file in its first few milliseconds of existence. The answer turns out to be a short, ordered list, and every item on the list is answered by ControlData. Understanding the list first makes the fields that follow feel obvious rather than arbitrary.</p>
+
+<p>Imagine the classic production setup at a distributor in Paris: an SFTP drop-box that receives FundsXML files from a dozen different asset managers, a dispatcher that triages every arriving file, and a family of downstream processors that each handle a particular kind of content. When a new file lands in the drop-box at 07:03 a.m. CET, the dispatcher does four things, strictly in this order:</p>
+
+<ol>
+  <li><strong>Recognise.</strong> What kind of file is this, and which schema version does it claim to conform to? The root element and its namespace declaration answer both questions; <code>ControlData</code> is inspected immediately afterwards to confirm that the file is a well-structured FundsXML delivery and to read the language of its contents.</li>
+  <li><strong>Authenticate at the business level.</strong> Who sent this? The <em><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/DataSupplier" target="_blank">DataSupplier</a></em> block inside ControlData is compared against an allowlist of approved senders. Transport-level authentication (TLS, SFTP keys) has already happened at this point; the dispatcher is now checking whether the <em>declared</em> sender is one it expects to receive data from.</li>
+  <li><strong>Deduplicate.</strong> Have I seen this delivery before? The <em>UniqueDocumentID</em> is looked up in a persistent store of previously processed identifiers. If it is already there, the file is logged and silently discarded; if not, it is recorded and passed on.</li>
+  <li><strong>Sequence.</strong> How does this delivery relate to what I already have? <em>DataOperation</em> and the <em><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/RelatedDocumentIDs" target="_blank">RelatedDocumentIDs</a></em> references decide whether the file is accepted as new, applied as an update, treated as a correction, or used to retract earlier content.</li>
+</ol>
+
+<p><strong>Figure 4.1 — The first four things a consumer does with a FundsXML file</strong></p>
+
+<pre><code> Recognise  →  Authenticate  →  Deduplicate  →  Sequence
+ ─────────     ────────────     ───────────     ────────
+ namespace     DataSupplier     DocumentID      DataOperation
+ + schema ref                   lookup          + Related
+                                                 Document IDs
+</code></pre>
+
+<p>Every one of these four steps runs <em>before</em> a single Fund, Portfolio, or RegulatoryReporting element has been read. That is why ControlData is small but disproportionately important: a mistake in the envelope makes the two hundred thousand lines behind it undeliverable.</p>
+
+<p>The rest of this chapter treats the same four steps in the same order. §4.4 fills in <em>Recognise</em> and <em>Deduplicate</em> (document identity and timestamps); §4.5 fills in <em>Authenticate</em> (sender and contact); §4.6 and §4.7 fill in <em>Sequence</em> (data operations and inter-document references). When we assemble the complete example in §4.8, the four steps above are the checklist against which the finished block can be read.</p>
+
+<hr>
+
+<h2>4.3 A First Look — Structure and Mandatory Fields</h2>
+
+<p>At its heart, a ControlData block is small. Reduced to its mandatory fields only, with generic placeholders in place of real values, it looks like this:</p>
+
+<pre><code>&lt;ControlData&gt;
+  &lt;UniqueDocumentID&gt;...&lt;/UniqueDocumentID&gt;
+  &lt;DocumentGenerated&gt;...&lt;/DocumentGenerated&gt;
+  &lt;ContentDate&gt;...&lt;/ContentDate&gt;
+  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
+&lt;/ControlData&gt;
+</code></pre>
+
+<p>Four elements — that is the whole of the mandatory core. Table 4.1 summarises every ControlData field at a glance.</p>
+
+<p><strong>Table 4.1 — ControlData fields at a glance</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Type</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/Version" target="_blank">Version</a></td><td>no</td><td>string</td><td>Schema version the producer built against</td></tr>
+    <tr><td>UniqueDocumentID</td><td>yes</td><td>string</td><td>Identifies the delivery uniquely in the producer's output stream</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/DocumentGenerated" target="_blank">DocumentGenerated</a></td><td>yes</td><td>dateTime (UTC)</td><td>Technical timestamp at which the file was created</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/ContentDate" target="_blank">ContentDate</a></td><td>yes</td><td>date</td><td>Business reporting date to which the content refers</td></tr>
+    <tr><td>DataSupplier</td><td>yes</td><td>complex</td><td>Identifies the business sender of the delivery</td></tr>
+    <tr><td>DataOperation</td><td>no</td><td>enumeration</td><td>Classifies the delivery: INITIAL, AMEND, DELETE</td></tr>
+    <tr><td>RelatedDocumentIDs</td><td>no</td><td>complex</td><td>Links the delivery to predecessors it depends on or supersedes</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/Language" target="_blank">Language</a></td><td>no</td><td>ISO 639-1 code</td><td>Language of the textual content of the delivery</td></tr>
+  </tbody>
+</table>
+
+<p>Several other fields are available but optional, and will appear in the sections that follow. The most important of them are <em>DataOperation</em>, which classifies the delivery as initial, amendment, or deletion; <em>RelatedDocumentIDs</em>, which links the current delivery to the ones it depends on or supersedes; <em>Language</em>, which declares the language of the textual content; and <em>Contact</em> (inside <em>DataSupplier</em>), which records the team or alias to call if the delivery turns out to be broken. §4.5 and §4.7 treat these in turn.</p>
+
+<p>One small but frequent source of confusion is worth mentioning now: the order in which the fields appear inside a real ControlData block is prescribed by the schema, and it is <em>not</em> the didactic order of this chapter. A validator will reject a file in which, for example, <code>ContentDate</code> appears before <code>DocumentGenerated</code> even if every value is correct. We treat the fields in the order that makes them easiest to understand; when we assemble the complete example in §4.8 we will rearrange them into the order the schema expects. The XSD in Appendix C is the authoritative reference for the exact sequence.</p>
+
+<hr>
+
+<h2>4.4 Identifying a Delivery — DocumentID, Timestamps, ContentDate</h2>
+
+<p>The first three mandatory fields answer the question <em>which delivery is this, and what does it refer to?</em> They look innocuous, but each of them carries a subtle design assumption that, if misunderstood, causes a surprising share of production incidents. We take them one at a time.</p>
+
+<h3>4.4.1 UniqueDocumentID — What Makes It Unique</h3>
+
+<p>The <em>UniqueDocumentID</em> is a string that identifies this particular FundsXML delivery. The schema places no structural constraint on the string other than that it exists; it is therefore tempting to treat the field as "some kind of identifier, the producer's choice". That reading is technically correct and operationally dangerous.</p>
+
+<p>The guarantee a producer makes when it fills in <em>UniqueDocumentID</em> is stronger than XML validity. It is a <em>promise</em>, to every current and future consumer, that this exact value will never again appear on any other FundsXML delivery coming out of the producer's systems — not tomorrow, not next year, not after a system migration, not after a disaster-recovery restore from a six-month-old backup. The reason the promise matters is step 4 of §4.2: the consumer uses the <em>UniqueDocumentID</em> to recognise duplicates. If the producer reuses an identifier, even once, the consumer's deduplication logic either silently drops a real new delivery (thinking it is a duplicate) or silently accepts two different deliveries as one (corrupting its downstream data).</p>
+
+<p>In practice, there are two sensible strategies.</p>
+
+<p>The first, and the one we recommend as the default, is to use a random <em>UUID</em> — version 4 or the newer version 7. UUIDs are long enough that accidental collisions are astronomically unlikely, and they are trivial to generate in every programming language the fund industry uses. Version 7, which embeds a timestamp in the high bits, has the pleasant side effect that identifiers sort chronologically, which helps when browsing archives.</p>
+
+<p>The second strategy is a <em>semantic</em> identifier constructed from known fields — something like <code>EGF-20260331-INITIAL-001</code>. Semantic identifiers are human-readable and sometimes useful during debugging. They are also fragile: the moment an operational situation demands that the same business day be processed twice (a restarted run, a re-export after a configuration fix), the naïve template collides with itself and the producer must invent an ad-hoc suffix. If you use a semantic scheme, build in a disambiguation suffix from the start — a sequence number, a UUID tail, or a timestamp to millisecond precision. Do not rely on "this can't happen twice".</p>
+
+<blockquote>
+<p><strong>Why not the filename?</strong> A natural shortcut is to reuse the filename of the FundsXML file as its <em>UniqueDocumentID</em>. This is almost always a mistake. Filenames are renamed by transfer agents, case-folded by Windows file systems, rewritten by archive extractors, and silently truncated by legacy pipelines. The <em>UniqueDocumentID</em> is part of the document; it survives every transport. The filename is a property of the envelope around the document; it does not.</p>
+</blockquote>
+
+<p>The <em>UniqueDocumentID</em> is also <em>not</em> the place to carry human-readable metadata such as the fund name, the reporting date, or the operation type. Those have their own fields. Loading them into the identifier tempts downstream consumers to parse the identifier instead of reading the proper fields — and parsing identifiers across producers is a well-known source of inter-operation bugs.</p>
+
+<h3>4.4.2 DocumentGenerated and ContentDate — Two Different Clocks</h3>
+
+<p>The most common mistake in ControlData handling is to confuse the two timestamps. The two fields look similar, they occupy adjacent positions in the schema, and under normal circumstances they carry values close to each other. They mean completely different things.</p>
+
+<p><em>DocumentGenerated</em> is a <em>technical</em> timestamp. It records the moment at which the FundsXML file was produced by the sending system — the point at which the serialiser finished writing bytes to disk or to a network socket. It is the clock that operations, monitoring, and audit pipelines care about. Its type is <code>xs:dateTime</code>, and it is almost always expressed in UTC with a <code>Z</code> suffix.</p>
+
+<p><em>ContentDate</em> is a <em>business</em> timestamp. It records the reporting date to which the content of the delivery refers — the day whose NAV is being reported, the day on which the portfolio was valued, the day on which the regulatory template is effective. Its type is <code>xs:date</code> (no time component), and it is interpreted in the business calendar of the subject of the delivery, not in the time zone of the producing system.</p>
+
+<p>An example makes the difference concrete. The Europa Growth Fund closes its books for 31 March 2026 at its Luxembourg valuation point (13:00 CET on that same day). The fund administrator's batch job runs overnight and produces the monthly FundsXML delivery at 06:47 UTC on 1 April 2026. The file is placed on the SFTP drop the moment it is finished. The correct ControlData values are:</p>
+
+<pre><code>&lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+&lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
+</code></pre>
+
+<p>Any other combination is wrong. Setting <em>ContentDate</em> to <code>2026-04-01</code> would claim that the content describes 1 April, which is untrue. Setting <em>DocumentGenerated</em> to <code>2026-03-31T…</code> would lie about when the file came into existence.</p>
+
+<p>A word on time zones. <em>DocumentGenerated</em> should be expressed in UTC. XML Schema allows local time with an offset (<code>2026-04-01T08:47:13+02:00</code>), and the schema accepts such values, but international lieferbeziehungen are better served by the Z convention: it avoids every ambiguity and simplifies comparison across files from different producers. If your system has a strong reason to emit local time with an offset, make sure the offset is correct and constant across daylight-saving transitions, and make sure every consumer you talk to can parse it.</p>
+
+<h3>4.4.3 Practical Recipes</h3>
+
+<p>The following short recipes cover the four situations that account for almost every real-world ControlData creation.</p>
+
+<ul>
+  <li><strong>Daily NAV, standard business day.</strong> <em>ContentDate</em> = today's valuation date. <em>DocumentGenerated</em> = the UTC moment the batch finished. <em>UniqueDocumentID</em> = a fresh UUID.</li>
+  <li><strong>Month-end delivery.</strong> <em>ContentDate</em> = the last business day of the month (not the first of the next month, and not a calendar month-end that fell on a weekend). <em>DocumentGenerated</em> = whenever the month-end batch actually ran, which may be a day or two later. <em>UniqueDocumentID</em> = a fresh UUID.</li>
+  <li><strong>Ad-hoc delivery outside the regular cycle.</strong> <em>ContentDate</em> = the business date the content refers to, even if no regular delivery exists for that date. <em>DocumentGenerated</em> = now. <em>UniqueDocumentID</em> = a fresh UUID.</li>
+  <li><strong>Backfill for a missed day.</strong> <em>ContentDate</em> = the day that was originally missed, possibly weeks in the past. <em>DocumentGenerated</em> = the UTC moment the backfill run finished. <em>UniqueDocumentID</em> = a fresh UUID — it is <em>not</em> the identifier of the original missed delivery, because that delivery never existed. §4.6 covers how backfills interact with <em>DataOperation</em>.</li>
+</ul>
+
+<hr>
+
+<h2>4.5 Sender and Contact — DataSupplier</h2>
+
+<p>Once a consumer has identified <em>which</em> delivery is on the wire, its next question is <em>who is talking</em>. FundsXML answers this with the mandatory <em>DataSupplier</em> structure, which names the business sender and optionally includes a <em>Contact</em> substructure for escalation.</p>
+
+<h3>4.5.1 DataSupplier — Who Is Sending, With What Authority</h3>
+
+<p>The <em>DataSupplier</em> block is a small record that describes the business entity responsible for the delivery. Its principal fields are <em>SystemCountry</em> (the ISO country code of the jurisdiction in which the supplier operates), <em>Short</em> (a compact code used for allowlist matching), <em>Name</em> (the full legal or commercial name), <em>Type</em> (an enumeration indicating the supplier's role — asset manager, fund administrator, depositary, and so on), and an optional <em>Contact</em> substructure (telephone or e-mail for incident escalation).</p>
+
+<p><strong>Table 4.2 — DataSupplier fields in practice</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Required</th><th>Used by consumer for</th><th>Typical value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>SystemCountry</td><td>yes</td><td>Jurisdictional context</td><td>"LU"</td></tr>
+    <tr><td>Short</td><td>yes</td><td>Allowlist matching, compact display</td><td>"EAM"</td></tr>
+    <tr><td>Name</td><td>yes</td><td>Human display, audit logs</td><td>"Europa Asset Management S.A."</td></tr>
+    <tr><td>Type</td><td>yes</td><td>Categorisation of sender role</td><td>"AssetManager"</td></tr>
+    <tr><td>Contact</td><td>no</td><td>Incident escalation (Name, Phone, Email)</td><td>email or phone alias</td></tr>
+  </tbody>
+</table>
+
+<p>The operational rule that matters more than any other is that a consumer that needs to match a sender against an allowlist matches on the <em>SystemCountry</em> / <em>Short</em> pair, not on the <em>Name</em>. Names change — a corporate rebrand, a merger, a translation of a German legal suffix into its English form — and consumers that match on the name will silently start rejecting valid deliveries after each such change. The <em>SystemCountry</em> / <em>Short</em> pair is stable across most corporate events and is under the producer's control. Any fund-data consumer with more than a handful of counterparties should treat the code pair as the primary key.</p>
+
+<p>It is worth drawing a distinction that causes friction in complex delivery setups: the supplier is not necessarily the party that technically produced the file. A typical arrangement is that an asset manager contracts a fund administrator, who in turn runs the batch that emits the FundsXML document. In this arrangement, <em>DataSupplier</em> usually names the asset manager — the <em>business</em> originator of the content — rather than the administrator, which is merely the technical producer. Consumers authenticate against the asset manager because that is the party they have a contractual relationship with. The administrator's involvement is operational, not declarative. Chapter 13 returns to this distinction when it discusses implementation-project governance; for Chapter 4, the point is simply that "sender" and "producer" can legitimately be different, and ControlData models the sender.</p>
+
+<h3>4.5.2 Contact Information</h3>
+
+<p><em>Contact</em>, which appears inside <em>DataSupplier</em>, records a telephone number, an e-mail address, or a team alias that the receiver can use if the delivery is broken and someone needs to be called. The content should be an <em>alias</em>, never an individual: the person who owns the inbox may change, but the alias survives. "fundsxml-support@europa-asset-management.com" is a good contact; "john.smith@europa-asset-management.com" is not.</p>
+
+<hr>
+
+<h2>4.6 DataOperation — Thinking Across Deliveries</h2>
+
+<p>We now arrive at the conceptual core of the chapter. The previous sections treated each delivery as an isolated object: it has an identity, a date, a sender, a receiver. In reality, every FundsXML delivery is part of a <em>stream</em> — a sequence of deliveries from the same producer to the same consumer, about the same fund, over time. <em>DataOperation</em> is the single field that FundsXML devotes to describing how one delivery relates to the ones that came before it. Six pages, the longest section of the chapter, are devoted to it, because it is also the single most common source of production incidents in FundsXML handling.</p>
+
+<h3>4.6.1 Why a Single Delivery Is Never the Whole Story</h3>
+
+<p>A live FundsXML interface is not a one-shot exchange. A fund administrator does not send a single file and never another one; it sends a daily NAV file every business day, a monthly portfolio file on the first working day of each month, an occasional correction when a mistake is discovered, and the occasional retraction when a file was emitted in error. Over a year, the same administrator–distributor pair exchanges hundreds of files, all referring to the same handful of funds, all sharing the same <em>DataSupplier</em>, and each of which changes the consumer's state in a specific way. The consumer's job is to reconstruct, at any given moment, the authoritative current picture of each fund — the most recent NAV, the most recent portfolio, the most recent regulatory template — from the accumulated history of deliveries.</p>
+
+<p>FundsXML makes a deliberate decision about who manages that accumulation: <em>not the schema</em>. There is no schema-level notion of a session, a sequence number, a delivery counter, a heartbeat, or a replay acknowledgement. The schema does not tell the producer how often to send, and it does not tell the consumer what to do if a delivery is missing. Everything it provides is one enumerated field — <em>DataOperation</em> — and a set of optional backward references — <em>RelatedDocumentIDs</em> — that §4.7 treats separately.</p>
+
+<p>This minimalism is intentional. FundsXML is a document format, not a workflow protocol. It describes <em>what is in a delivery</em>, not <em>how deliveries are orchestrated</em>. Orchestration — scheduling, retry, acknowledgement, exactly-once handling — lives at the transport and application layers, and is the subject of Chapters 12 and 13. What the schema gives us is a shared vocabulary for saying, about each individual file, <em>what kind of delivery this is</em>. The six pages that follow are about using that vocabulary correctly.</p>
+
+<h3>4.6.2 The Three Operation Types</h3>
+
+<p><em>DataOperation</em> is an enumerated field with exactly three values: <strong><code>INITIAL</code></strong>, <strong><code>AMEND</code></strong>, and <strong><code>DELETE</code></strong>. Each value carries a precise semantic meaning that every conforming consumer is expected to implement in the same way. Table 4.3 summarises the three at a glance; the narrative below it explains each in turn.</p>
+
+<p><strong>Table 4.3 — DataOperation semantics at a glance</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Operation</th><th>Requires a previous delivery?</th><th>Consumer action</th><th>Typical trigger</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>INITIAL</td><td>no</td><td>Replace any existing data for the same subject and ContentDate</td><td>First delivery of a new reporting period</td></tr>
+    <tr><td>AMEND</td><td>yes</td><td>Modify the previously delivered data (extend, refine, or replace)</td><td>Late-arriving data, or a mistake detected after acceptance</td></tr>
+    <tr><td>DELETE</td><td>yes</td><td>Retract the previously delivered data as if it had never existed</td><td>A delivery was emitted in error</td></tr>
+  </tbody>
+</table>
+
+<p><strong>INITIAL</strong> marks the beginning of a stream, or the beginning of the data for a particular <em>ContentDate</em> within a stream. When a consumer receives an <em>INITIAL</em> delivery, its expected action is to install the data as the authoritative state for that subject and date, replacing anything it may already hold for the same combination. Repeated <em>INITIAL</em> deliveries for the same <em>ContentDate</em> are permitted and, under the standard's convention, are idempotent: receiving the same <em>INITIAL</em> twice must produce the same end state as receiving it once, provided the content is the same. The deduplication logic of §4.2 exists precisely to let consumers discard the redundant second copy efficiently.</p>
+
+<p><strong>AMEND</strong> is FundsXML's single-value umbrella for every non-initial, non-deleting change to an earlier delivery. It covers two operationally distinct but schematically identical cases. The first case is <strong>extension</strong>: a late-arriving piece of data — a share class whose NAV was delayed by a corporate event, a regulatory template that could not be finalised until the close of a different market — is shipped as an addition to what the consumer already has. The second case is <strong>replacement</strong>: a figure in a previously delivered file turns out to have been wrong, and the producer ships the corrected value in a new file so that the consumer can overwrite the error. Some older conventions (and some non-FundsXML data standards) distinguish these cases through separate <code>UPDATE</code> and <code>CORRECTION</code> enum values, but FundsXML 4.2.8 folds them into a single <code>AMEND</code> and leaves the semantic distinction to producer-consumer convention. Producers that need to signal which case they are sending typically do so through a text-level marker — a field in <code>CustomAttributes</code>, a tag in the delivery filename, or an out-of-band note to the consumer — rather than through the schema enumeration itself.</p>
+
+<p>The consumer's expected action on receiving an <em>AMEND</em> delivery is to modify its stored state for the referenced subject and <code>ContentDate</code> according to the semantic intent that the producer has signalled. A replacement <em>AMEND</em> overwrites the earlier values; an extension <em>AMEND</em> adds to them. Either way, the <code>RelatedDocumentIDs</code> field (§4.7) should point at the previous delivery in the stream, so that the consumer can chain the changes correctly.</p>
+
+<p><strong>DELETE</strong> is the rarest and the most consequential of the three. It tells the consumer to treat a previously delivered document as if it had never existed. The canonical use case is a delivery that should never have been sent — a wrong fund, a wrong date, a draft that was promoted to production by mistake. The consumer's expected action is to remove the affected data from its authoritative state. Because <em>DELETE</em> leaves a hole, it is almost always followed by a corresponding <em>INITIAL</em> or <em>AMEND</em> that restores the intended state. A <em>DELETE</em> that is not followed by a replacement leaves the consumer without data, which is sometimes genuinely what is wanted (a subscription that was never real, a phantom transaction) but more often is a sign that the producer's pipeline is being used defensively when an <em>AMEND</em> would be clearer.</p>
+
+<h3>4.6.3 Idempotency and Ordering</h3>
+
+<p>Two properties of a consumer's handling of a FundsXML stream matter so much that they deserve to be named explicitly: <em>idempotency</em> and <em>order tolerance</em>.</p>
+
+<p>A consumer is <strong>idempotent</strong> if processing the same delivery twice produces the same end state as processing it once. Idempotency is not an optional refinement; it is the minimum contract a consumer owes its operational environment, because networks retry, pipelines restart, and drop-boxes occasionally hand the same file to two processing workers. The technical mechanism that makes idempotency achievable is the <em>UniqueDocumentID</em> from §4.4.1: a consumer that records every <em>UniqueDocumentID</em> it has ever successfully processed, and that rejects a second encounter as a duplicate, is idempotent by construction. This is why §4.4.1 spends more words on the identifier than its two lines of XML would seem to deserve.</p>
+
+<p>A consumer is <strong>order-tolerant</strong> if it behaves correctly when deliveries arrive in an unexpected sequence. The ideal case is that they arrive in the order they were sent; the real case is that networks reorder, queues deliver out of order, and retries of an older file can arrive after a newer one has already been processed. FundsXML does not provide a monotonic sequence number — there is no field whose sole purpose is to say "this delivery is the seventeenth from me". Instead, order is reconstructed after the fact from three signals: <em>ContentDate</em> (which business date does the content refer to?), <em>DocumentGenerated</em> (when was the file physically created?), and <em>RelatedDocumentIDs</em> (which earlier delivery does this one refer to?). A good consumer uses all three: it sorts deliveries for the same subject by <em>ContentDate</em>, breaks ties within a <em>ContentDate</em> by <em>DocumentGenerated</em>, and validates the chain of references with <em>RelatedDocumentIDs</em>.</p>
+
+<p>A short scenario illustrates why this matters. Suppose the producer emits an <em>INITIAL</em> for 31 March 2026 at 07:00 UTC, and ten minutes later emits an <em>AMEND</em> (intended as a correction of an erroneous NAV) for the same date at 07:10 UTC. The two files travel over different network paths, and the <em>AMEND</em> overtakes the <em>INITIAL</em>: the consumer sees the <em>AMEND</em> at 07:11 UTC and the <em>INITIAL</em> at 07:14 UTC. What should the consumer do?</p>
+
+<p>Two strategies are both acceptable, and a well-built pipeline will implement one of them explicitly. The first strategy, <em>buffer and reorder</em>, holds the <em>AMEND</em> aside until its referenced <em>INITIAL</em> has arrived, then applies them in the correct order; this gives the cleanest audit trail. The second strategy, <em>apply and reconcile</em>, applies the <em>AMEND</em> immediately, effectively installing the corrected data on an empty base, and then, when the late <em>INITIAL</em> arrives, refuses to replace the already-corrected state with the older uncorrected data; this is simpler to implement but requires that the consumer's state machine knows the difference between "no data" and "already corrected". Either way, the consumer must not blindly overwrite corrected data with older uncorrected data. The <em>DocumentGenerated</em> timestamp on each delivery is what makes either strategy possible.</p>
+
+<h3>4.6.4 Anti-Patterns</h3>
+
+<p>The following short list of anti-patterns accounts for the majority of FundsXML production incidents we have seen or heard of. Each item is a rule, followed by its one-line justification.</p>
+
+<ul>
+  <li><strong>Do not send an AMEND before the INITIAL it refers to exists.</strong> The consumer has no base on which to apply the change, and will either reject the file or, worse, silently install partial data.</li>
+  <li><strong>Do not reuse the same UniqueDocumentID for an INITIAL and a later AMEND.</strong> Idempotent deduplication depends on uniqueness; a collision makes the consumer drop the second file as a duplicate even though its content differs.</li>
+  <li><strong>Do not send two INITIAL deliveries for the same ContentDate without a clear resolution rule.</strong> The consumer does not know which one is authoritative. If the second <em>INITIAL</em> is meant to replace the first, make it an <em>AMEND</em>.</li>
+  <li><strong>Do not use DELETE without a follow-up.</strong> A <em>DELETE</em> leaves a hole in the consumer's state. If the intent is to correct rather than to retract, use <em>AMEND</em>. If the intent is genuinely to retract, make the retraction explicit in the consumer's audit trail, ideally by following it with an <em>INITIAL</em> that restores the intended state (which may be "no data at all for this date").</li>
+  <li><strong>Do not mislabel a replacement AMEND as a silent delta.</strong> Because FundsXML collapses extensions and replacements into a single <em>AMEND</em> enum value, the producer must communicate the intent clearly — through a filename convention, a <code>CustomAttributes</code> flag, or an out-of-band note. A consumer that cannot tell a replacement from an extension will either lose data or fail to propagate corrections.</li>
+</ul>
+
+<h3>4.6.5 A Small Example Series — ControlData Only</h3>
+
+<p>To see the three operations working together, consider four successive ControlData blocks for the same Europa Growth Fund over a four-day period. The rest of the file — <em>Funds</em>, <em>Portfolios</em>, <em>AssetMasterData</em> — is elided, because the payload is the subject of later chapters. Only the envelope is shown.</p>
+
+<p>Day 1, the first delivery of the month-end:</p>
+
+<pre><code>&lt;ControlData&gt;
+  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001&lt;/UniqueDocumentID&gt;
+  &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
+  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
+  &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
+  &lt;Language&gt;en&lt;/Language&gt;
+&lt;/ControlData&gt;
+</code></pre>
+
+<p>Day 2, a late-arriving piece of data extends the previous delivery without replacing it:</p>
+
+<pre><code>&lt;ControlData&gt;
+  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b002&lt;/UniqueDocumentID&gt;
+  &lt;DocumentGenerated&gt;2026-04-02T09:12:04Z&lt;/DocumentGenerated&gt;
+  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
+  &lt;DataOperation&gt;AMEND&lt;/DataOperation&gt;
+  &lt;RelatedDocumentIDs&gt;
+    &lt;RelatedDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001&lt;/RelatedDocumentID&gt;
+  &lt;/RelatedDocumentIDs&gt;
+  &lt;Language&gt;en&lt;/Language&gt;
+&lt;/ControlData&gt;
+</code></pre>
+
+<p>Day 3, an NAV that was reported incorrectly on Day 1 is corrected:</p>
+
+<pre><code>&lt;ControlData&gt;
+  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b003&lt;/UniqueDocumentID&gt;
+  &lt;DocumentGenerated&gt;2026-04-03T14:28:50Z&lt;/DocumentGenerated&gt;
+  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
+  &lt;DataOperation&gt;AMEND&lt;/DataOperation&gt;
+  &lt;RelatedDocumentIDs&gt;
+    &lt;RelatedDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b002&lt;/RelatedDocumentID&gt;
+  &lt;/RelatedDocumentIDs&gt;
+  &lt;Language&gt;en&lt;/Language&gt;
+&lt;/ControlData&gt;
+</code></pre>
+
+<p>Day 4, the producer discovers that the entire Day 1 delivery was emitted for the wrong fund and retracts it:</p>
+
+<pre><code>&lt;ControlData&gt;
+  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b004&lt;/UniqueDocumentID&gt;
+  &lt;DocumentGenerated&gt;2026-04-04T08:03:22Z&lt;/DocumentGenerated&gt;
+  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
+  &lt;DataOperation&gt;DELETE&lt;/DataOperation&gt;
+  &lt;RelatedDocumentIDs&gt;
+    &lt;RelatedDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b003&lt;/RelatedDocumentID&gt;
+  &lt;/RelatedDocumentIDs&gt;
+  &lt;Language&gt;en&lt;/Language&gt;
+&lt;/ControlData&gt;
+</code></pre>
+
+<p>Several observations deserve to be made about this small series. First, every delivery has a <em>new</em> <em>UniqueDocumentID</em> — never a reused one, even though the subject and the <em>ContentDate</em> are the same throughout. Second, every non-<em>INITIAL</em> delivery populates <em>RelatedDocumentIDs</em> to point at the immediately preceding delivery in the stream, not at the <em>INITIAL</em> from Day 1. This is the linear-chain convention that §4.7 recommends: it makes the full history reconstructable by walking the chain backwards, and it avoids the question of what a <em>RelatedDocumentID</em> should mean when it points at a delivery that has itself been superseded. Third, the <em>DataSupplier</em> block is identical across all four deliveries, because the business sender has not changed — only the operational relationship between the deliveries has.</p>
+
+<p>Finally, a meta-observation: most of the complexity in the <em>DataOperation</em> model lives on the consumer side, not on the producer side. A disciplined producer can set <em>DataOperation</em> correctly from a short rule set — "new data for a new date is <em>INITIAL</em>, any change to existing data is <em>AMEND</em>, retraction is <em>DELETE</em>" — and signal the fine distinction between an extension-<em>AMEND</em> and a replacement-<em>AMEND</em> through filename conventions or producer-consumer-specific metadata. A consumer, by contrast, must cope with every legal sequence the producer universe can throw at it, including ones the original producers did not anticipate. When in doubt, err on the side of the consumer: design <em>DataOperation</em> usage to make the consumer's life predictable, not the producer's life convenient.</p>
+
+<hr>
+
+<h2>4.7 Versioning and Related Documents</h2>
+
+<p>Where §4.6 treated the <em>kind</em> of a delivery, this section treats the <em>links</em> between deliveries. Two topics belong here: the <em>RelatedDocumentIDs</em> element, which binds non-<em>INITIAL</em> deliveries to the ones they depend on, and the schema version declared inside <code>ControlData</code>, which ties every delivery to a specific release of the FundsXML standard.</p>
+
+<h3>4.7.1 RelatedDocumentIDs — The Backward Pointer</h3>
+
+<p><em>RelatedDocumentIDs</em> is an optional structure that, when present, lists one or more <em>UniqueDocumentID</em> values referring to earlier deliveries. It appears in the <em>AMEND</em> and <em>DELETE</em> cases shown in §4.6.5 and is conventionally absent from <em>INITIAL</em> deliveries, which by definition do not refer to anything earlier. The schema even makes <code>RelatedDocumentIDs</code> mandatory on a <em>DELETE</em> operation — a <em>DELETE</em> that does not explicitly name the delivery being retracted is not a legal FundsXML file.</p>
+
+<p>Three properties of <em>RelatedDocumentIDs</em> are worth naming explicitly. First, the pointer is <em>backward</em>: an amendment points at the delivery it changes, not the other way round. There is no forward "this-delivery-has-been-superseded-by" pointer in the schema. A consumer that wants to know "is this delivery still authoritative?" must either remember the answer as it processes each new arrival or walk the chain backward from the newest delivery. Second, the pointer is <em>informative</em>, not enforced at the schema level: the XSD does not check that the referenced <em>UniqueDocumentID</em> actually exists, that it belongs to the same subject, or that the referencing operation makes semantic sense against what was referenced. All of that is a business-rule concern, and Chapter 10 treats it in its discussion of two-stage validation. Third, the element is <em>potentially transitive</em>: a second <em>AMEND</em> can refer to the first <em>AMEND</em>, forming a chain, or it can refer directly back to the original <em>INITIAL</em>, skipping the intermediate step. Both conventions are seen in the wild, and neither is forbidden by the schema.</p>
+
+<p>Because both conventions are possible, producers and consumers must agree on one. The convention we recommend — and that Chapter 13 will formalise as a project-level decision — is the <em>linear chain</em>: every non-<em>INITIAL</em> delivery refers to the immediately preceding delivery in the stream, regardless of operation type. The result is a singly-linked list stretching from the newest delivery back to the <em>INITIAL</em>; walking the list backwards always reconstructs the full history, and every intermediate step is explicitly represented. The alternative convention — always pointing at the <em>INITIAL</em> — is simpler to construct but hides intermediate steps and makes it harder to tell whether a replacement <em>AMEND</em> was applied before or after an extension <em>AMEND</em>. Pick one, document it, and stick to it.</p>
+
+<p>One final note: <em>RelatedDocumentIDs</em> is plural because there are cases in which one delivery legitimately depends on more than one predecessor. The most common is a consolidated correction that replaces two or more earlier deliveries at once. These cases are rare enough that most implementations can treat the element as effectively singular, but the plural form is there when it is needed.</p>
+
+<h3>4.7.2 Schema Version Handling</h3>
+
+<p>A point of practical importance that often surprises first-time FundsXML implementers: the schema file does <strong>not</strong> declare a <code>targetNamespace</code>. This means instance documents live in the unnamed namespace, and the root element is written without a default namespace declaration. Instead, the root element carries an <code>xsi:noNamespaceSchemaLocation</code> attribute that points directly to the schema file for the version the producer is building against:</p>
+
+<pre><code>&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:noNamespaceSchemaLocation="https://github.com/fundsxml/schema/releases/download/4.2.2/FundsXML.xsd"&gt;
+</code></pre>
+
+<p>Every released version of the schema is published as a GitHub release under the <code>fundsxml/schema</code> repository. The URL follows a predictable pattern — <code>https://github.com/fundsxml/schema/releases/download/{version}/FundsXML.xsd</code> — where <code>{version}</code> is the release tag (e.g. <code>4.2.2</code>). This gives every instance document a stable, publicly resolvable reference to the exact schema it was validated against, and it gives any consumer or validator a direct download path to that schema without needing a local copy.</p>
+
+<p><strong>Upgrading to a newer schema version</strong> is correspondingly straightforward: the producer updates the version number in the URL. Moving from 4.2.2 to 4.2.5, for example, requires nothing more than changing the root element to:</p>
+
+<pre><code>&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:noNamespaceSchemaLocation="https://github.com/fundsxml/schema/releases/download/4.2.5/FundsXML.xsd"&gt;
+</code></pre>
+
+<p>All versions of FundsXML since 4.0.0 are designed to be backward compatible, so within the 4.x line such an upgrade is a smooth transition: a consumer built against 4.2.2 will usually accept files produced against 4.2.5, and vice versa. The backwards-compatibility discipline described in §3.3.2 ensures that <em>patch</em> releases add clarifications and non-breaking adjustments, while <em>minor</em> releases add new elements or modules but preserve compatibility for everything that was already present.</p>
+
+<p>In addition to the schema reference in the root element, the schema version is also communicated <em>inside</em> the document, in <code>ControlData/Version</code>. A consumer can inspect this value before running schema validation to confirm which version the producer intended. Recording the version in the audit log alongside the delivery is a discipline worth following: mismatches between producer and consumer schema versions are a recurring source of "it worked yesterday, what changed?" incidents, and the audit log is often the only way to reconstruct what happened.</p>
+
+<hr>
+
+<h2>4.8 A Complete ControlData Block for the Europa Growth Fund</h2>
+
+<p>We are now ready to assemble the first complete, schema-valid example of the book. The block below is the actual <em>ControlData</em> envelope of the Europa Growth Fund's month-end delivery for 31 March 2026 — the same delivery from which every later chapter of Part II will show a fragment. Field order follows the sequence the schema requires, not the didactic order of this chapter.</p>
+
+<pre><code>&lt;ControlData&gt;
+  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001&lt;/UniqueDocumentID&gt;
+  &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
+  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+  &lt;DataSupplier&gt;
+    &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
+    &lt;Short&gt;EAM&lt;/Short&gt;
+    &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+    &lt;Type&gt;AssetManager&lt;/Type&gt;
+    &lt;Contact&gt;
+      &lt;Email&gt;fundsxml-support@europa-asset-management.com&lt;/Email&gt;
+    &lt;/Contact&gt;
+  &lt;/DataSupplier&gt;
+  &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
+  &lt;Language&gt;en&lt;/Language&gt;
+&lt;/ControlData&gt;
+</code></pre>
+
+<p>Reading the block field by field, every design choice from the previous sections becomes visible. The <em>UniqueDocumentID</em> is a UUID, unique across the producer's output stream for the life of the system (§4.4.1). The <em>DocumentGenerated</em> timestamp is expressed in UTC and records the moment the batch job finished writing the file; the <em>ContentDate</em> is a plain date and refers to the business reporting day, which is the last business day of March 2026 (§4.4.2). The <em>DataSupplier</em> block names the fund's asset manager rather than the fund administrator that technically produced the file, and carries the <em>SystemCountry</em> / <em>Short</em> pair that a consumer's allowlist will match against rather than the <em>Name</em> (§4.5.1). The <em>Language</em> is English, which indicates the language of the textual content inside the file — the fund's <em>marketing</em> names and descriptions may still appear in several languages, and Chapter 5 treats that case explicitly. The <em>DataOperation</em> is <em>INITIAL</em>, because this is the first month-end delivery for 31 March 2026; the next delivery in the same stream, whatever it turns out to be, will populate <em>RelatedDocumentIDs</em> to point back at this file's <em>UniqueDocumentID</em> (§4.6, §4.7).</p>
+
+<p>This block is short, and yet every one of the four steps from §4.2 is now answerable from it alone. A consumer that reads these lines and stops has enough information to decide whether to continue parsing the rest of the file, and in production that is exactly what the first stage of a real pipeline does. The complete end-to-end example of the Europa Growth Fund's month-end delivery — this <em>ControlData</em> block plus the <em>Funds</em>, <em>AssetMasterData</em>, <em>Documents</em>, and <em>RegulatoryReportings</em> sections — is printed in Appendix D, and each of the remaining chapters of Part II will take one piece of it for detailed treatment.</p>
+
+<hr>
+
+<h2>4.9 Common Pitfalls</h2>
+
+<p>The following short list captures the half-dozen mistakes that, in our experience, account for the majority of ControlData-related production incidents. Each entry gives the symptom, the underlying cause, and the fix.</p>
+
+<ul>
+  <li><strong>A new delivery is silently dropped as a duplicate.</strong> <em>UniqueDocumentID</em> has been reused, usually because it was generated from a non-unique source such as the filename or a timestamp at second precision. Switch to UUIDs.</li>
+  <li><strong>Reports appear for the wrong day.</strong> <em>ContentDate</em> has been set to the day the file was produced rather than to the business reporting date. Re-read §4.4.2 and fix the producer's timestamp derivation logic.</li>
+  <li><strong>The consumer rejects a known sender as unknown.</strong> The allowlist is matching on <em>Name</em> rather than on the <em>SystemCountry</em> / <em>Short</em> pair, and the sender's legal name has just changed (merger, rebrand, translation). Switch the match to the stable code pair.</li>
+  <li><strong>An AMEND is rejected because the consumer sees no base state.</strong> The <em>AMEND</em> was sent before its <em>INITIAL</em> was successfully processed, or the <em>RelatedDocumentIDs</em> pointer is missing or refers to a non-existent document. Re-issue the <em>INITIAL</em> first, or fix the pointer.</li>
+  <li><strong>A correction reaches investors without triggering recalculation.</strong> A replacement <em>AMEND</em> was emitted without the producer-consumer convention that distinguishes replacement from extension. The consumer's audit hooks assumed the <em>AMEND</em> was an additive extension rather than a correction and silently installed the new figures without re-issuing affected downstream documents. Agree on a replacement/extension signal between producer and consumer before going live.</li>
+  <li><strong>A retracted delivery leaves a hole in the consumer's state.</strong> A <em>DELETE</em> was sent without a follow-up <em>INITIAL</em> restoring the intended state. Either send the restoring <em>INITIAL</em>, or confirm explicitly that an empty state is intended and document the gap.</li>
+</ul>
+
+<hr>
+
+<h2>4.10 Key Takeaways</h2>
+
+<ul>
+  <li>ControlData is the envelope of every FundsXML delivery. It identifies, authenticates, deduplicates, and sequences the file — and all of this happens before any of the fund data behind it is read.</li>
+  <li>Four mandatory fields form the core: <em>UniqueDocumentID</em>, <em>DocumentGenerated</em>, <em>ContentDate</em>, and <em>DataSupplier</em>. The optional <em>DataOperation</em>, <em>RelatedDocumentIDs</em>, and <em>Language</em> fields are essential in any production setup.</li>
+  <li><em>DocumentGenerated</em> (technical timestamp) and <em>ContentDate</em> (business reporting date) are two different clocks and must never be confused.</li>
+  <li><em>DataSupplier</em> is matched by its <em>SystemCountry</em> / <em>Short</em> pair, not by <em>Name</em>; an allowlist that matches on the name will silently break on every rebrand or translation.</li>
+  <li><em>DataOperation</em> — <em>INITIAL</em>, <em>AMEND</em>, <em>DELETE</em> — is the only bridge FundsXML provides between successive deliveries. The schema collapses both extensions and replacements into a single <em>AMEND</em> value; the producer-consumer relationship must carry the finer distinction through convention. Idempotency and order tolerance on the consumer side are what make the bridge usable in practice.</li>
+  <li><em>RelatedDocumentIDs</em> carries backward pointers; the recommended convention is a linear chain, in which every non-<em>INITIAL</em> delivery refers to the immediately preceding delivery in the same stream.</li>
+  <li>The complete ControlData block in §4.8 is the first schema-valid FundsXML fragment of Part II, and the same values reappear in every subsequent example through to the end of the book.</li>
+</ul>
+
+<p>With the envelope in place, we can now open it and look inside. Chapter 5 turns to the subject of every FundsXML message — the fund itself — and to the static and dynamic data that describe it.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter03.html">&lsaquo; Chapter 3</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter05.html">Chapter 5 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

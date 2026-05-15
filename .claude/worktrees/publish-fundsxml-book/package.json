@@ -1,0 +1,18 @@
+{
+  "name": "fundsxml_book",
+  "version": "1.0.0",
+  "main": "build_pdf.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["fundsxml", "fund-data", "book"],
+  "author": "FundsXML",
+  "license": "MIT",
+  "description": "Source and build tooling for the book 'FundsXML — The European Standard for Fund Data Exchange'",
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  }
+}

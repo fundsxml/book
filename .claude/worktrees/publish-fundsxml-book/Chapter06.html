@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 6 — Portfolio and Positions</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter05.html">&lsaquo; Chapter 5</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter07.html">Chapter 7 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<h1>Portfolio and Positions<span class="subtitle">Holdings and asset classes</span></h1>
+<hr>
+<h2>6.1 Setting the Scene: What the Fund Actually Holds</h2>
+<p>At the end of Chapter 5 we had a complete description of the Europa Growth Fund: its identity, its three share classes, its fees, its total net assets of 464,552,848.78 EUR on 31 March 2026. What we did not have was any knowledge of <em>how that money is invested</em>. The <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios" target="_blank"><code>Portfolios</code></a> substructure of <code>FundDynamicData</code>, which Chapter 5 left as a placeholder comment, is where the answer lives; and alongside it, outside the <code>&lt;Funds&gt;</code> container at the root level of the document, sits its indispensable companion, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank"><code>AssetMasterData</code></a>. This chapter treats both.</p>
+<p>It is the longest chapter in the book — forty-five pages — and it is long for three reasons. First, the portfolio is structurally the richest part of a FundsXML delivery: it carries every instrument the fund holds, one entry per position, and instruments come in seven or eight broad families (equities, bonds, funds, derivatives, cash, real estate, commodities, alternatives) each with their own specialised fields. Second, the linkage between <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios/Portfolio" target="_blank"><code>Portfolio</code></a> and <code>AssetMasterData</code> through <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData/Asset/UniqueID" target="_blank"><code>UniqueID</code></a> is the working expression of design principle 2 from Chapter 3 — <em>linkage by UniqueID, not by nesting</em> — and mastering that linkage is central to every subsequent chapter. Third, portfolio breakdowns, the pre-computed aggregates that feed fact sheets and regulatory reports, have their own structure and their own conventions. All three topics justify the space.</p>
+<p>One editorial decision deserves to be stated up front. The Europa Growth Fund, as we have seen, is an actively managed European equity UCITS. It holds roughly 80 to 150 equity positions, a handful of cash accounts in several currencies, and the two currency forwards that implement the CHF hedge for the R-CHF-ACC-HEDGED share class. That is what its real portfolio looks like, and it is what the complete end-to-end example in §6.12 will show. For the asset classes the fund does not hold — bonds, investment funds held as positions, real estate, commodities — the per-asset-class sections use their own isolated examples drawn from generic illustrative funds, and the complete example in §6.12 does not attempt to force these classes into the Europa Growth Fund artificially. The reader who wants to see a bond position renders §6.7's example; the reader who wants to see a derivative in context renders §6.9.4 and the corresponding fragment of §6.12. The integrity of the running example and the coverage of the asset classes can both be preserved without compromise.</p>
+<p>By the end of this chapter, you should be able to:</p>
+<ul>
+<li>explain why portfolio positions reference <code>AssetMasterData</code> entries rather than containing them;</li>
+<li>produce a valid <code>UniqueID</code> that links a position to its asset description and defend your choice of generator;</li>
+<li>recognise the common fields that appear on every position, regardless of asset class;</li>
+<li>populate the asset-class-specific fields for equities, bonds, funds, derivatives, cash, and real estate;</li>
+<li>distinguish a derivative's notional from its market value and never again confuse the two;</li>
+<li>compute portfolio breakdowns by sector, country, currency, rating, and maturity from a list of positions, and recognise where breakdowns legitimately differ from a naive recomputation;</li>
+<li>read a complete mixed portfolio of a European equity UCITS on sight and cross-reference every position to its <code>AssetMasterData</code> entry.</li>
+</ul>
+<p>The chapter is organised into five parts. <strong>Part I</strong> (§6.2 and §6.3) establishes the shape of the problem and the linkage mechanism. <strong>Part II</strong> (§6.4 and §6.5) treats the common fields that appear on every position and every asset. <strong>Part III</strong> (§6.6 through §6.10) walks through the asset classes one at a time, each with its own specialised fields and a small isolated example. <strong>Part IV</strong> (§6.11) covers portfolio breakdowns. <strong>Part V</strong> (§6.12 through §6.14) assembles the complete portfolio of the Europa Growth Fund, lists the common pitfalls, and points at Chapter 7.</p>
+<hr>
+<h2>6.2 Portfolios and AssetMasterData — The Shape of the Problem</h2>
+<p>Before we look at any field, a step back. The portfolio representation in FundsXML is split into two physically separate blocks — <code>&lt;Portfolios&gt;</code> inside each fund's <code>&lt;FundDynamicData&gt;</code>, and <code>&lt;AssetMasterData&gt;</code> at the root of the document — and the split is the first thing a reader of a FundsXML document notices and the first thing that surprises them. Why not put the full asset description inside each position, as simpler formats do? The answer is the working expression of design principle 2 from Chapter 3, and the motivation is worth making concrete.</p>
+<p>Imagine a fund administrator's nightly batch file: twenty funds, each with a hundred and fifty positions, all serialised into a single FundsXML document. Many of those positions reference the same instruments. Siemens is held by twelve of the twenty funds; SAP by eight; Nestlé by fifteen; the short list of European blue chips appears in almost every one of them. If the full asset description of Siemens — its name, its LEI, its GICS classification, its primary listing information, its forty or so static fields — were embedded in every position that referenced it, Siemens would be described twelve times in a single file, each time with the same forty fields, each time vulnerable to a transcription or classification mismatch between copies. A producer that rewrites one copy and forgets another creates a file in which two Siemens entries disagree about what Siemens <em>is</em>, and every downstream consumer that tries to reconcile them has a data-quality problem.</p>
+<p>The solution is the one every relational database uses: describe each instrument <em>once</em>, in a central location, and have each position refer to it through an identifier. That central location is <code>&lt;AssetMasterData&gt;</code>, and it sits at the root level of the FundsXML document, outside the <code>&lt;Funds&gt;</code> container, precisely so that it can be shared between several funds in the same delivery. Each position in each fund's portfolio carries only a short pointer — a <code>UniqueID</code> — that tells the consumer where to find the full description. The file is smaller, the descriptions are consistent by construction, and the operational discipline is easier to enforce.</p>
+<p><strong>Figure 6.1 — The portfolio/master-data split</strong></p>
+<pre><code>                       &lt;FundsXML4&gt;
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                                   │
+       &lt;Funds&gt;                         &lt;AssetMasterData&gt;
+          │                                   │
+    ┌─────┴─────┐                        ┌────┴────┐
+    │           │                        │         │
+  &lt;Fund&gt;      &lt;Fund&gt;                   &lt;Asset&gt;   &lt;Asset&gt;
+    │           │                        ▲         ▲
+  Portfolio   Portfolio                  │         │
+    │           │                        │         │
+ &lt;Position&gt;──┐  │                        │         │
+    │        │  │                        │         │
+ &lt;Position&gt;──┼──┼──→ UniqueID reference──┘         │
+    │        │  │                                  │
+    │        └──┼──→ UniqueID reference────────────┘
+    │           │
+ &lt;Position&gt;─────┼──→ UniqueID reference (shared across funds)
+                │
+              (etc.)
+</code></pre>
+<p>The figure makes three points. First, both funds in the delivery reach into the same <code>&lt;AssetMasterData&gt;</code> block, and a single asset entry can be referenced by positions in several funds simultaneously. Second, the reference is <em>backward</em> — from position to asset — not forward; there is no "list of holders" on the asset side. Third, the containment hierarchy inside each fund (Portfolio → Position) and the containment hierarchy inside the root (AssetMasterData → Asset) are parallel, and the <code>UniqueID</code> is the only connection between them.</p>
+<p>One clarification deserves to be made now, before it becomes a source of confusion later in the chapter: <strong><code>AssetMasterData</code> exists even when the delivery contains a single fund</strong>. The Europa Growth Fund is delivered in its own FundsXML file each month-end, not as part of a twenty-fund batch, and yet every one of its deliveries carries a complete <code>&lt;AssetMasterData&gt;</code> block. The reason is not architectural consistency for its own sake; the reason is that the separation keeps positions slim. A Siemens position in the Europa Growth Fund's portfolio contains eight or nine fields (the <code>UniqueID</code> reference, the valuation currency, the single <code>TotalValue</code> in fund currency, the percentage weight, the price date, plus the equity-specific sub-block carrying the unit count, the price and the market value); the Siemens description in <code>AssetMasterData</code> contains forty or more fields covering identifiers, issuer, listing, classifications, ratings, and country-specific extensions. If the two were merged, a portfolio of 150 positions would carry 150 × 40 = 6,000 fields of description when 150 × 9 + 150 × 40 (one description per distinct asset, which, with overlap across funds, is often much smaller) would suffice. Even for a single fund, the separation is operationally meaningful.</p>
+<p>Two architectural observations close this section. <code>&lt;Portfolios&gt;</code> lives inside <code>&lt;FundDynamicData&gt;</code> — it belongs to a specific valuation date and is re-emitted whenever a new portfolio snapshot is produced. <code>&lt;AssetMasterData&gt;</code> lives at the root level and applies to the entire delivery. The first is <em>dynamic</em> in the sense that its content changes every valuation day; the second is closer to <em>static</em>, even though in practice it also evolves as new instruments enter the fund's universe. Finally, <strong>the two structures must be read together</strong>. A portfolio position without its corresponding asset entry is meaningless; an asset entry with no position pointing at it is dead weight. The schema enforces the first half of this discipline directly at parse time — the <code>&lt;UniqueID&gt;</code> on each <code>&lt;Asset&gt;</code> is declared as <code>xs:ID</code> and the <code>&lt;UniqueID&gt;</code> on each <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios/Portfolio/Positions/Position" target="_blank"><code>&lt;Position&gt;</code></a> as <code>xs:IDREF</code>, which means a position whose identifier does not match any asset is rejected by any conformant XML parser before any business-level validation even begins. The second half — orphaned asset entries — is not enforced by the schema and shows up only as a data-quality issue. Chapter 10 will formalise both halves as business-validation rules; for this chapter it is enough to carry the pairing in mind at every step.</p>
+<hr>
+<h2>6.3 The UniqueID Linkage in Detail</h2>
+<p>The <code>UniqueID</code> is the small glue that binds the two sides together. We treat it in three short subsections.</p>
+<h3>6.3.1 What a UniqueID Is</h3>
+<p>A <code>UniqueID</code> is a string, typically twenty to forty characters, that uniquely identifies each <code>&lt;Asset&gt;</code> entry inside <code>&lt;AssetMasterData&gt;</code> <em>within a single FundsXML delivery</em>. The schema does not declare it as a plain string — it declares it as <code>xs:ID</code> on the asset side and <code>xs:IDREF</code> on the position side. The practical consequence is twofold. First, the parser checks at load time that every position's <code>UniqueID</code> resolves to exactly one asset entry's <code>UniqueID</code>, and a mismatch is a schema-validation error rather than a business-rule error. Second, the value must conform to the XML Name syntax: it must begin with a letter or underscore, must not contain whitespace, and must be unique across the whole document. ISINs such as <code>DE0007236101</code> satisfy the syntax because they begin with a letter; purely numeric codes such as a raw five-digit internal reference would not, and producers using numeric internal codes typically prefix them with a letter (<code>EGF-12345</code>) to make them valid XML names.</p>
+<p>The scope of uniqueness is important: unlike the <code>UniqueDocumentID</code> of Chapter 4, which must be unique across every delivery a producer has ever emitted, the <code>UniqueID</code> of an asset need only be unique within the file in which it appears. Two deliveries from the same producer may carry different <code>UniqueID</code> values for the same Siemens entry without violating anything, as long as each file is internally consistent. In practice, producers that care about cross-delivery consistency pick a generator that is stable over time (see §6.3.2), but this is a convention, not a schema requirement.</p>
+<h3>6.3.2 How to Generate a UniqueID</h3>
+<p>Two strategies dominate production usage, and each has its own strengths.</p>
+<p>The first strategy is <strong>to use the instrument's ISIN as its <code>UniqueID</code></strong>. The ISIN is already globally unique in the instrument universe, is already present on almost every asset the fund is likely to hold, and is human-readable enough that a debugger looking at a portfolio dump recognises each line at a glance. A position that references <code>DE0007236101</code> and an asset entry with <code>UniqueID=DE0007236101</code> are visibly the same instrument; no translation is required. The strategy is so natural that it is the default in most production pipelines.</p>
+<p>The weakness of the ISIN strategy is that not every asset has an ISIN. Cash positions do not; over-the-counter derivatives do not; direct real estate holdings do not; some exotic private-equity commitments do not. For these assets, the producer needs a fallback, and that fallback is usually a UUID: a one hundred and twenty-eight-bit random or deterministically-derived identifier, long enough that collisions across producers are astronomically unlikely. The weakness of a UUID is the loss of readability; a debugger sees <code>7f8e3a2d-...</code> instead of a meaningful name and must perform a mental lookup.</p>
+<p>The recommended convention, which Chapter 13 will formalise as a project-level decision, is a hybrid: <strong>ISIN when the asset has one, UUID when it does not, and the choice must be deterministic across deliveries</strong>. Deterministic means that the same Siemens asset, generated by the same producer on a different day, receives the same <code>UniqueID</code>. For ISIN-bearing assets this is automatic; for UUID-generated assets it requires a UUID v5 (name-based) computed from a stable internal identifier rather than a fresh random v4 on every run. A producer that emits fresh UUIDs every day makes it impossible for consumers to reconcile the same instrument across consecutive deliveries, which is not quite a correctness problem but is a significant operational nuisance.</p>
+<h3>6.3.3 The Linkage Mechanism in Action</h3>
+<p>A concrete pair of elements makes the linkage visible. The Europa Growth Fund holds 50,000 shares of Siemens AG. In the portfolio block, inside <code>Fund/FundDynamicData/Portfolios/Portfolio/Positions</code>, the position looks like this:</p>
+<pre><code>&lt;Position&gt;
+  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;TotalValue&gt;
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
+  &lt;/TotalValue&gt;
+  &lt;TotalPercentage&gt;1.75&lt;/TotalPercentage&gt;
+  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+  &lt;Equity&gt;
+    &lt;Units&gt;50000&lt;/Units&gt;
+    &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;162.50&lt;/Amount&gt;&lt;/Price&gt;
+    &lt;MarketValue&gt;
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
+    &lt;/MarketValue&gt;
+  &lt;/Equity&gt;
+&lt;/Position&gt;
+</code></pre>
+<p>Elsewhere in the same document, inside the root-level <code>&lt;AssetMasterData&gt;</code>, the corresponding asset entry carries the matching <code>UniqueID</code> and the full instrument description:</p>
+<pre><code>&lt;Asset&gt;
+  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
+  &lt;Identifiers&gt;
+    &lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;
+  &lt;/Identifiers&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;Country&gt;DE&lt;/Country&gt;
+  &lt;Name&gt;Siemens AG&lt;/Name&gt;
+  &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+  &lt;AssetDetails&gt;
+    &lt;Equity&gt;
+      &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
+      &lt;Issuer&gt;
+        &lt;Identifiers&gt;
+          &lt;LEI&gt;W38RGI023J3WT1HWRP32&lt;/LEI&gt;
+        &lt;/Identifiers&gt;
+        &lt;Name&gt;Siemens Aktiengesellschaft&lt;/Name&gt;
+        &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
+        &lt;Type&gt;Non-financial corporations&lt;/Type&gt;
+      &lt;/Issuer&gt;
+      &lt;Listing&gt;A&lt;/Listing&gt;
+    &lt;/Equity&gt;
+  &lt;/AssetDetails&gt;
+&lt;/Asset&gt;
+</code></pre>
+<p>Four structural points about this pair are worth stating before we look at any single field. First, the position has a mandatory <code>&lt;TotalValue&gt;</code> (typed <code>FundAmountType</code>) that carries the consolidated value of the whole position in the fund's base currency. This is the one number against which the sum of all positions must reconcile to the fund's total net assets; the detail fields inside the asset-class-specific <code>&lt;Equity&gt;</code> child are there for transparency, not to replace the total. Second, the asset-class-specific child — here <code>&lt;Equity&gt;</code> — is one of a choice of twenty-one variants: <code>Equity</code>, <code>Bond</code>, <code>ShareClass</code>, <code>Warrant</code>, <code>Certificate</code>, <code>Option</code>, <code>Future</code>, <code>FXForward</code>, <code>Swap</code>, <code>Repo</code>, <code>FixedTimeDeposit</code>, <code>CallMoney</code>, <code>Account</code>, <code>Fee</code>, <code>RealEstate</code>, <code>REIT</code>, <code>Loan</code>, <code>Right</code>, <code>Commodity</code>, <code>PrivateEquity</code>, and <code>CommercialPaper</code>. Exactly one child of the choice is required at the end of every position. (The asset-master side of the linkage — <code>AssetDetails</code> — has two additional choice members, <code>Index</code> and <code>Crypto</code>, because the schema allows those instruments to be described as assets but not to be held as portfolio positions. §6.5 returns to this asymmetry.) Third, the asset side uses <code>&lt;AssetType&gt;</code> as a two-character discriminator code — <code>EQ</code> for Equity, <code>BO</code> for Bond, <code>SC</code> for fund share class, <code>FX</code> for FX forward, <code>AC</code> for account, and so on — and the asset's detailed fields live inside a separate <code>&lt;AssetDetails&gt;</code> child whose content mirrors the position-side choice by element name. Fourth, the <code>ISIN</code> lives inside <code>&lt;Identifiers&gt;</code>, not as a direct child of <code>&lt;Asset&gt;</code>; the container takes exactly the same shape as the fund-level and share-class-level <code>&lt;Identifiers&gt;</code> blocks of Chapter 5.</p>
+<p>A consumer that reads the position finds <code>DE0007236101</code> in the <code>UniqueID</code> field, jumps to the <code>&lt;AssetMasterData&gt;</code> block, finds the matching <code>&lt;Asset&gt;</code> entry, and now knows everything it needs to know about Siemens as an instrument. It does this lookup once per distinct asset per delivery, caches the results in memory, and processes the whole portfolio without ever re-parsing the asset descriptions. The cost is linear in the number of distinct instruments, not in the number of position-instrument references.</p>
+<p><strong>The key rule</strong>: consumers never read <code>Portfolio</code> and <code>AssetMasterData</code> in isolation. Both structures together form the complete information about what the fund holds. A production pipeline that parses only one of the two is fundamentally broken, and any validation discipline (Chapter 10) treats the pair as atomic.</p>
+<p>Two validation rules flow directly from the linkage. First, <strong>every <code>UniqueID</code> in a <code>Position</code> must match exactly one <code>&lt;Asset&gt;</code> in <code>AssetMasterData</code></strong>. As we saw in §6.3.1, the schema enforces this at the parser level through its <code>xs:ID</code>/<code>xs:IDREF</code> pairing; a position whose <code>UniqueID</code> has no target is a schema-validation failure, not a business-rule failure, and the document does not load at all. Second, <strong>every <code>&lt;Asset&gt;</code> in <code>AssetMasterData</code> should be referenced by at least one <code>Position</code></strong>. An orphaned asset entry is harmless from a consumer's perspective but is almost always a sign of a sloppy producer — typically the residue of a position that was deleted from the producer's database without a corresponding cleanup of the asset master. Chapter 10 lists this rule among the business-validation checks that a production consumer pipeline should run on every incoming file.</p>
+<hr>
+<h2>6.4 Position-Level Fields</h2>
+<p>We now descend into the fields. The common position-level fields, which appear on every <code>&lt;Position&gt;</code> element regardless of what asset class the position belongs to, are the subject of this section. Asset-class-specific extras come later in Part III.</p>
+<p>Table 6.1 lists the common children of <code>&lt;Position&gt;</code> in the order they must appear.</p>
+<p><strong>Table 6.1 — Common children of <code>&lt;Position&gt;</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Child element</th>
+<th>Schema type</th>
+<th>Purpose</th>
+<th>Example value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;UniqueID&gt;</code></td>
+<td><code>xs:IDREF</code> (max 256 chars)</td>
+<td>Reference to the matching <code>&lt;Asset&gt;</code> in <code>&lt;AssetMasterData&gt;</code></td>
+<td><code>DE0007236101</code></td>
+</tr>
+<tr>
+<td><code>&lt;Identifiers&gt;</code></td>
+<td><code>IdentifiersType</code></td>
+<td>Optional copy of key instrument codes — redundant with the asset's own <code>Identifiers</code>, present in some pipelines for debugging</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;Currency&gt;</code></td>
+<td><code>ISOCurrencyCodeType</code></td>
+<td>Valuation currency of the instrument (its native trading currency, not the fund's base currency)</td>
+<td><code>EUR</code></td>
+</tr>
+<tr>
+<td><code>&lt;TotalValue&gt;</code></td>
+<td><code>FundAmountType</code></td>
+<td>The consolidated value of the whole position, in the fund's base currency. <strong>Mandatory.</strong></td>
+<td><code>&lt;Amount ccy="EUR"&gt;8125000.00&lt;/Amount&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;OtherTotalValues&gt;</code></td>
+<td>container</td>
+<td>Additional valuations (Hold-To-Maturity, Swing-adjusted, Market, …)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;TotalPercentage&gt;</code></td>
+<td><code>PercentageType</code></td>
+<td>The position's weight in the fund, as a percentage of total net assets</td>
+<td><code>1.75</code></td>
+</tr>
+<tr>
+<td><code>&lt;AveragePurchasePrice&gt;</code></td>
+<td><code>FundAmountType</code></td>
+<td>The weighted-average cost basis of the position across all buys</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;AveragePurchaseFXRate&gt;</code></td>
+<td><code>FXRatesType</code></td>
+<td>The weighted-average FX rate at which the position was entered</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;Exposures&gt;</code></td>
+<td><code>ExposureType</code></td>
+<td>Exposure values under different regulatory approaches (commitment, AIFMD)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;FXRates&gt;</code></td>
+<td><code>FXRatesType</code></td>
+<td>FX rates used in evaluating this position</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;PriceDate&gt;</code></td>
+<td><code>xs:date</code></td>
+<td>The date of the price used for this valuation</td>
+<td><code>2026-03-31</code></td>
+</tr>
+<tr>
+<td><code>&lt;PricingSource&gt;</code></td>
+<td>choice(<code>Listed</code>/<code>Unlisted</code>)</td>
+<td>Pricing source — either a listed enumeration (<code>BLOOMBERG</code>, <code>REUTERS</code>, <code>FACTSET</code>, <code>MARKIT</code>, <code>BARCLAYS</code>, <code>JPMORGAN</code>, <code>MERRILL</code>, <code>BROKERS</code>, <code>LPC</code>, <code>NTRS</code>) or free text</td>
+<td><code>BLOOMBERG</code></td>
+</tr>
+<tr>
+<td><em>asset-class choice</em></td>
+<td>—</td>
+<td>Exactly one of <code>&lt;Equity&gt;</code>, <code>&lt;Bond&gt;</code>, <code>&lt;ShareClass&gt;</code>, <code>&lt;Warrant&gt;</code>, <code>&lt;Certificate&gt;</code>, <code>&lt;Option&gt;</code>, <code>&lt;Future&gt;</code>, <code>&lt;FXForward&gt;</code>, <code>&lt;Swap&gt;</code>, <code>&lt;Repo&gt;</code>, <code>&lt;FixedTimeDeposit&gt;</code>, <code>&lt;CallMoney&gt;</code>, <code>&lt;Account&gt;</code>, <code>&lt;Fee&gt;</code>, <code>&lt;RealEstate&gt;</code>, <code>&lt;REIT&gt;</code>, <code>&lt;Loan&gt;</code>, <code>&lt;Right&gt;</code>, <code>&lt;Commodity&gt;</code>, <code>&lt;PrivateEquity&gt;</code> or <code>&lt;CommercialPaper&gt;</code> — <strong>mandatory, exactly one</strong></td>
+<td>see Part III</td>
+</tr>
+<tr>
+<td><code>&lt;CapitalYieldsTaxClaim&gt;</code></td>
+<td>container</td>
+<td>Tax-accrual details at the position level — rarely populated for non-German funds</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;InflationaryAdjustment&gt;</code></td>
+<td>container</td>
+<td>Inflation-linked adjustment fields for index-linked instruments</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;RiskCodes&gt;</code></td>
+<td>list</td>
+<td>Risk indicator values attached to this individual position</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;Underlyings&gt;</code></td>
+<td>list</td>
+<td>Underlying-instrument references for derivatives and structured products</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;CustomAttributes&gt;</code></td>
+<td><code>AttributesType</code></td>
+<td>Producer-specific extensions</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>All children except <code>&lt;UniqueID&gt;</code>, <code>&lt;TotalValue&gt;</code>, and the asset-class choice are optional. The three mandatory members carry all the work of position identity, valuation, and asset-class branching, and everything above and below them in the table is supporting detail that producers populate when it matters.</p>
+<p>Note on vocabulary: there is <strong>no</strong> <code>&lt;Quantity&gt;</code> element anywhere on <code>&lt;Position&gt;</code> and no <code>&lt;PositionType&gt;</code> element distinguishing long from short. The schema element named <code>&lt;Position&gt;</code> is of schema type <code>PositionType</code> — the latter being the name of the complex type in the XSD, not a tag name that ever appears in a FundsXML document. The word "quantity" in the prose that follows always refers to the generic concept of "how many of the instrument does the fund hold"; the actual XML tag depends on the asset class and takes its name from the specific choice child (<code>&lt;Units&gt;</code>, <code>&lt;Nominal&gt;</code>, <code>&lt;Shares&gt;</code>, <code>&lt;Contracts&gt;</code>).</p>
+<p>Four points about the table deserve to be emphasised in plain text rather than left implicit.</p>
+<p><strong><code>&lt;TotalValue&gt;</code> is mandatory on every position and is the one figure that reconciles against the fund total net assets from Chapter 5.</strong> A <code>&lt;Position&gt;</code> element with no <code>&lt;TotalValue&gt;</code> is a schema-validation failure; a <code>&lt;Position&gt;</code> whose <code>&lt;TotalValue&gt;</code> does not match the fund's <code>&lt;TotalNetAssetValue&gt;</code> when summed across all positions is a business-validation failure. The consolidated total lives on the position, not on the asset-class-specific child, because the producer is the authoritative source for how the position rolls up into the fund currency and any downstream consumer should accept that roll-up without recomputing.</p>
+<p><strong>The asset-class-specific child is mandatory and the schema offers twenty-one variants.</strong> Every <code>&lt;Position&gt;</code> must end with exactly one of <code>&lt;Equity&gt;</code>, <code>&lt;Bond&gt;</code>, <code>&lt;ShareClass&gt;</code>, <code>&lt;Warrant&gt;</code>, <code>&lt;Certificate&gt;</code>, <code>&lt;Option&gt;</code>, <code>&lt;Future&gt;</code>, <code>&lt;FXForward&gt;</code>, <code>&lt;Swap&gt;</code>, <code>&lt;Repo&gt;</code>, <code>&lt;FixedTimeDeposit&gt;</code>, <code>&lt;CallMoney&gt;</code>, <code>&lt;Account&gt;</code>, <code>&lt;Fee&gt;</code>, <code>&lt;RealEstate&gt;</code>, <code>&lt;REIT&gt;</code>, <code>&lt;Loan&gt;</code>, <code>&lt;Right&gt;</code>, <code>&lt;Commodity&gt;</code>, <code>&lt;PrivateEquity&gt;</code> or <code>&lt;CommercialPaper&gt;</code>. This is where the per-class unit count, the per-unit price, and the detail fields live — <em>not</em> at the top of the position. An equity's <code>&lt;Units&gt;</code> field, for example, is a child of <code>&lt;Equity&gt;</code>, not of <code>&lt;Position&gt;</code>. A bond's <code>&lt;Nominal&gt;</code> field is a child of <code>&lt;Bond&gt;</code>. A cash account's balance lives in <code>&lt;Account&gt;/&lt;MarketValue&gt;</code>. The rule is strict and it organises everything that follows in Part III. (Producers describing an index or a crypto asset populate <code>AssetType=IX</code> or <code>AssetType=CR</code> on the asset-master side, but no corresponding choice exists on the position side; a fund holding such instruments emits them as <code>&lt;Equity&gt;</code> or <code>&lt;CommercialPaper&gt;</code> positions, depending on the operational convention.)</p>
+<p><strong>The concept of "quantity" does not correspond to a single schema element.</strong> Different asset classes describe their unit count with different tag names, each living inside the asset-class choice child:</p>
+<ul>
+<li>For an equity, <code>&lt;Equity&gt;/&lt;Units&gt;</code> carries the number of shares held.</li>
+<li>For a bond, <code>&lt;Bond&gt;/&lt;Nominal&gt;</code> carries the nominal value in the issue currency. A <code>&lt;Nominal&gt;1000000&lt;/Nominal&gt;</code> means one million euros face value of bonds, which might be a single bond certificate or a thousand of them depending on the issue's denomination.</li>
+<li>For a fund held as a position, <code>&lt;ShareClass&gt;/&lt;Shares&gt;</code> carries the number of fund units.</li>
+<li>For an option or a future, <code>&lt;Option&gt;/&lt;Contracts&gt;</code> (respectively <code>&lt;Future&gt;/&lt;Contracts&gt;</code>) carries the number of contracts, and the value may be negative to indicate a short position — <strong>FundsXML has no separate long/short flag</strong>. The same applies to <code>&lt;Swap&gt;</code> legs.</li>
+<li>For cash accounts there is no unit count at all, because an account balance is already a total value carried in <code>&lt;Account&gt;/&lt;MarketValue&gt;</code>.</li>
+</ul>
+<p>Section 6.7 will return to the bond case, which is the one that most frequently trips up implementers. The rule to remember is that each asset class has its own idiom and the element name is chosen to reflect it; <strong>no element called <code>&lt;Quantity&gt;</code> exists anywhere in the schema</strong>, and a producer writing <code>&lt;Quantity&gt;</code> will fail schema validation.</p>
+<p><strong><code>&lt;Amount&gt;</code> elements always carry a <code>ccy</code> attribute.</strong> The FundsXML <code>&lt;Amount&gt;</code> element — whether inside <code>&lt;TotalValue&gt;</code>, <code>&lt;Price&gt;</code>, <code>&lt;MarketValue&gt;</code>, <code>&lt;AveragePurchasePrice&gt;</code>, or any other amount-bearing field — names its currency explicitly. In addition, optional boolean attributes <code>isFundCcy</code>, <code>isSubfundCcy</code>, and <code>isShareClassCcy</code> let the producer flag which amount is the fund-base, sub-fund, or share-class currency when several are present. A position holding Swiss Nestlé shares may therefore carry its <code>&lt;TotalValue&gt;</code> with two <code>&lt;Amount&gt;</code> entries — one <code>ccy="EUR" isFundCcy="true"</code> for the fund-base figure, and one <code>ccy="CHF"</code> for the native currency figure — both describing the same economic value at different FX rates. A consumer that ignores the <code>ccy</code> attribute and assumes "everything in the fund's base currency" will misread the Swiss position's native amount and the error will propagate into any downstream calculation.</p>
+<p>One final remark before moving to the asset side. Every asset-class-specific field (coupon rate on a bond, strike on an option, counterparty LEI on a cash position) lives <strong>inside the asset-class child</strong>, not as a direct sibling of <code>&lt;UniqueID&gt;</code> or <code>&lt;TotalValue&gt;</code>. A bond position has <code>&lt;TotalValue&gt;</code> <em>and</em> a <code>&lt;Bond&gt;</code> sub-block containing <code>&lt;Nominal&gt;</code>, <code>&lt;Price&gt;</code>, <code>&lt;DirtyPrice&gt;</code>, <code>&lt;MarketValue&gt;</code>, <code>&lt;InterestClaimGross&gt;</code>, <code>&lt;AccruedInterestDays&gt;</code>, and so on. A cash account position has <code>&lt;TotalValue&gt;</code> <em>and</em> an <code>&lt;Account&gt;</code> sub-block containing <code>&lt;MarketValue&gt;</code> and <code>&lt;Interests&gt;</code>. The asset-class sections in Part III walk through each sub-block in detail; Table 6.1 is the contract for everything <em>outside</em> them.</p>
+<hr>
+<h2>6.5 Asset-Level Fields in AssetMasterData</h2>
+<p>Symmetrical to §6.4, but from the other side of the linkage: the fields that appear on every <code>&lt;Asset&gt;</code> entry in <code>&lt;AssetMasterData&gt;</code> regardless of asset class. The division of labour between position and asset is straightforward: <strong>the position answers the question "how much?", the asset answers the question "what is it?"</strong></p>
+<p>Table 6.2 lists the common asset-level fields and their schema types, in the exact order in which they must appear inside <code>&lt;Asset&gt;</code>.</p>
+<p><strong>Table 6.2 — Common asset-level fields (schema type <code>AssetType</code>)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Schema type</th>
+<th>Mandatory</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UniqueID</code></td>
+<td><code>xs:ID</code></td>
+<td>yes</td>
+<td>Globally unique identifier within the delivery; target of <code>Position/UniqueID</code></td>
+</tr>
+<tr>
+<td><code>Identifiers</code></td>
+<td><code>IdentifiersType</code></td>
+<td>no</td>
+<td>ISIN, LEI, GermanWKN, SwissValorenCode, CUSIP, SEDOL, Bloomberg, ReutersRIC, OtherID</td>
+</tr>
+<tr>
+<td><code>DataSupplier</code></td>
+<td><code>DataSupplierType</code></td>
+<td>no</td>
+<td>Producer of this asset record (usually inherited from <code>ControlData</code>)</td>
+</tr>
+<tr>
+<td><code>Currency</code></td>
+<td><code>ISOCurrencyCodeType</code></td>
+<td><strong>yes</strong></td>
+<td>Nominal currency of the instrument (three-letter ISO 4217 code)</td>
+</tr>
+<tr>
+<td><code>IncomeCurrency</code></td>
+<td><code>ISOCurrencyCodeType</code></td>
+<td>no</td>
+<td>Currency in which the instrument's income is paid, if different</td>
+</tr>
+<tr>
+<td><code>Country</code></td>
+<td><code>ISOCountryCodeType</code></td>
+<td>no</td>
+<td>Country of issue (<em>Emissionsland</em>)</td>
+</tr>
+<tr>
+<td><code>Name</code></td>
+<td><code>Text256Type</code></td>
+<td><strong>yes</strong></td>
+<td>Human-readable instrument name</td>
+</tr>
+<tr>
+<td><code>FISN</code></td>
+<td><code>xs:string</code> (128)</td>
+<td>no</td>
+<td>ISO 18774 Financial Instrument Short Name</td>
+</tr>
+<tr>
+<td><code>AssetType</code></td>
+<td>enum (2 chars)</td>
+<td><strong>yes</strong></td>
+<td>Discriminator: <code>EQ</code>/<code>BO</code>/<code>SC</code>/<code>WA</code>/<code>CE</code>/<code>OP</code>/<code>FU</code>/<code>FX</code>/<code>SW</code>/<code>RP</code>/<code>FT</code>/<code>CM</code>/<code>AC</code>/<code>FE</code>/<code>RE</code>/<code>RT</code>/<code>LO</code>/<code>RI</code>/<code>CO</code>/<code>PE</code>/<code>CP</code>/<code>IX</code>/<code>CR</code></td>
+</tr>
+<tr>
+<td><code>AssetDetails</code></td>
+<td><code>AssetDetailsType</code></td>
+<td>no</td>
+<td>A choice of 23 inline types carrying the asset-class-specific fields</td>
+</tr>
+<tr>
+<td><code>CountrySpecificData</code></td>
+<td>container</td>
+<td>no</td>
+<td>National reporting extensions (AT, DE, DK, FR, LU, NL)</td>
+</tr>
+<tr>
+<td><code>Securitized</code></td>
+<td><code>xs:boolean</code></td>
+<td>no</td>
+<td>Whether the asset is securitised</td>
+</tr>
+<tr>
+<td><code>IsInfrastructureInvestment</code></td>
+<td><code>xs:boolean</code></td>
+<td>no</td>
+<td>Infrastructure investment flag</td>
+</tr>
+<tr>
+<td><code>InfrastructureInvestmentType</code></td>
+<td>enum</td>
+<td>no</td>
+<td>Infrastructure category</td>
+</tr>
+<tr>
+<td><code>Ratings</code></td>
+<td><code>RatingsType</code></td>
+<td>no</td>
+<td>Credit ratings from agencies (one entry per agency)</td>
+</tr>
+<tr>
+<td><code>RealEstateCompany</code></td>
+<td><code>CompanyType</code></td>
+<td>no</td>
+<td>Corresponding real-estate company (for direct property holdings)</td>
+</tr>
+<tr>
+<td><code>Classifications</code></td>
+<td><code>ClassificationsType</code></td>
+<td>no</td>
+<td>Sector/industry/style classifications, same structure as in Chapter 5</td>
+</tr>
+<tr>
+<td><code>CustomAttributes</code></td>
+<td><code>AttributesType</code></td>
+<td>no</td>
+<td>Producer-specific extensions</td>
+</tr>
+</tbody>
+</table>
+<p>Four points about the table deserve to be emphasised in plain text.</p>
+<p><strong>The <code>AssetType</code> element is a two-character code, not an English word.</strong> The values are <code>EQ</code> for equity, <code>BO</code> for bond, <code>SC</code> for fund share class, <code>WA</code> for warrant, <code>CE</code> for certificate, <code>OP</code> for option, <code>FU</code> for future, <code>FX</code> for FX forward, <code>SW</code> for swap, <code>RP</code> for repo, <code>FT</code> for fixed-time deposit, <code>CM</code> for call money, <code>AC</code> for account, <code>FE</code> for fee, <code>RE</code> for real estate, <code>RT</code> for REIT, <code>LO</code> for loan, <code>RI</code> for right, <code>CO</code> for commodity, <code>PE</code> for private equity, <code>CP</code> for commercial paper, <code>IX</code> for index, <code>CR</code> for crypto. These are the operational codes used by fund accounting systems across Europe, and producers coming from such systems usually have the mapping built in already. A consumer that reads <code>AssetType</code> branches its parser on the two-letter code, loads the corresponding <code>AssetDetails</code> child, and applies the asset-class-specific logic. There is no enumeration with English labels anywhere in the schema.</p>
+<p><strong>The ISIN is not a direct child of <code>&lt;Asset&gt;</code>.</strong> The ISIN lives inside <code>&lt;Identifiers&gt;</code>, the same container we met at the fund and share-class level in Chapter 5. So does the LEI (used for issuers, not for the asset itself), the GermanWKN, the SwissValorenCode, and every other instrument code. A typical equity asset entry begins with <code>&lt;UniqueID&gt;</code>, then <code>&lt;Identifiers&gt;&lt;ISIN&gt;...&lt;/ISIN&gt;&lt;GermanWKN&gt;...&lt;/GermanWKN&gt;&lt;/Identifiers&gt;</code>, then <code>&lt;Currency&gt;</code>, then <code>&lt;Country&gt;</code>, then <code>&lt;Name&gt;</code>, then <code>&lt;AssetType&gt;</code>, then <code>&lt;AssetDetails&gt;</code>. Producers that write the ISIN as a top-level child will fail schema validation.</p>
+<p><strong><code>AssetDetails</code> is the home of asset-class-specific fields, not a collection of siblings of <code>&lt;Asset&gt;</code>.</strong> Everything that distinguishes an equity from a bond — the issuer block, the stock market, the coupon, the maturity, the strike, the counterparty of a forward, the counterparty of a cash account — lives one level below, inside an <code>&lt;AssetDetails&gt;</code> child whose content is exactly one of twenty-three sub-elements (<code>Equity</code>, <code>Bond</code>, <code>ShareClass</code>, <code>Warrant</code>, <code>Certificate</code>, <code>Option</code>, <code>Future</code>, <code>FXForward</code>, <code>Swap</code>, <code>Repo</code>, <code>FixedTimeDeposit</code>, <code>CallMoney</code>, <code>Account</code>, <code>Fee</code>, <code>RealEstate</code>, <code>REIT</code>, <code>Loan</code>, <code>Right</code>, <code>Commodity</code>, <code>PrivateEquity</code>, <code>CommercialPaper</code>, <code>Index</code>, <code>Crypto</code>). The element names match the ones on the position-side choice of §6.4 deliberately, so that the discriminator on both sides is the same word, not a mapping a consumer has to learn.</p>
+<p><strong>Issuer and instrument are distinct, and the schema respects that distinction.</strong> An asset entry has two identity layers. The <em>instrument</em> is the tradable unit — a specific equity share class, a specific bond issue, a specific derivative contract — and it is identified at the top of <code>&lt;Asset&gt;</code> by its own <code>&lt;Identifiers&gt;</code> block, whose <code>&lt;ISIN&gt;</code> (or <code>&lt;UniqueID&gt;</code>, for instruments without an ISIN) is the primary key. The <em>issuer</em> is the legal entity that issued the instrument — and it is identified by a separate <code>&lt;Issuer&gt;</code> block of schema type <code>CompanyType</code> that lives <strong>inside</strong> <code>AssetDetails/&lt;Equity&gt;</code> or <code>AssetDetails/&lt;Bond&gt;</code>. <code>CompanyType</code> carries its own <code>&lt;Identifiers&gt;</code> container with the issuer's LEI, a mandatory <code>&lt;Name&gt;</code>, optional <code>&lt;LegalName&gt;</code>, <code>&lt;LegalForm&gt;</code>, <code>&lt;Address&gt;</code>, <code>&lt;BusinessCountry&gt;</code>, <code>&lt;ParentCompany&gt;</code> for corporate hierarchies, an <code>&lt;OtherClassification&gt;</code> container, and a <code>&lt;Type&gt;</code> enumeration covering the ECB sector categories (<code>Non-financial corporations</code>, <code>Central bank</code>, <code>Deposit-taking corporations except the central bank</code>, <code>General government</code>, <code>Insurance corporations</code>, <code>Pension funds</code>, <code>Money market funds</code>, <code>Non-MMF investment funds</code>, and five others). For equities the instrument-issuer relationship is typically one-to-one: the Siemens AG legal entity has one LEI, and <code>DE0007236101</code> is the ordinary common stock of that entity. For bonds the relationship is one-issuer-to-many-instruments: the Federal Republic of Germany has one LEI but hundreds of bund series, each with its own ISIN, all backed by the same <code>&lt;Issuer&gt;</code> block carrying the Federal Republic's LEI and <code>Type="General government"</code>. Section 6.7 returns to this point in the context of bond-specific fields.</p>
+<p>All asset-class-specific fields — the strike of an option, the maturity of a bond, the counterparty of a forward — live <em>inside <code>&lt;AssetDetails&gt;</code></em> below the common fields of Table 6.2. The five sections that follow treat them one asset class at a time.</p>
+<hr>
+<h2>6.6 Equities</h2>
+<p>The primary case for the Europa Growth Fund. Three subsections.</p>
+<h3>6.6.1 The Equity Asset Model</h3>
+<p>An equity asset entry in <code>AssetMasterData</code> describes a tradable share class of a public company. Its structure has two layers: the generic asset-level fields of Table 6.2, populated with <code>AssetType=EQ</code>, followed by an <code>AssetDetails/Equity</code> child whose content follows the schema type <code>EquityType</code>. The generic fields carry identity and classification; the equity-specific fields carry listing, issuer, and equity-specific metadata.</p>
+<p><strong>Identifiers</strong> live inside the top-level <code>&lt;Identifiers&gt;</code> block of Table 6.2, not inside <code>&lt;Equity&gt;</code>. The primary identifier is the ISIN, twelve characters, ISO 6166. For securities that also trade in non-ISIN-using markets, FundsXML carries additional identifier fields in the same container: <code>SEDOL</code> for UK listings, <code>CUSIP</code> for North-American instruments, and <code>GermanWKN</code> for German securities. Bloomberg tickers and Reuters RICs have their own dedicated fields (<code>Bloomberg</code> with <code>Ticker</code>, <code>Exchange</code>, <code>Market</code>, <code>BBGID</code> sub-children; <code>ReutersRIC</code> with a <code>type</code> attribute).</p>
+<p><strong>Inside <code>&lt;Equity&gt;</code></strong>, the schema type <code>EquityType</code> (XSD §25059) carries the following children in order:</p>
+<ul>
+<li><code>ClassOfBusiness</code> — a structured <code>IndustryProviderType</code> block with <code>Offeror</code>, <code>Date</code>, <code>Value</code>, and optional <code>Text</code>, naming the sector classification provider (e.g. <em>Bloomberg</em>, <em>GICS</em>) and the value.</li>
+<li><code>StockMarket</code> — one or more <code>MICCodeType</code> values (ISO 10383 four-character market identifier codes) naming the exchanges on which the equity is listed. <code>XETR</code> for Xetra, <code>XPAR</code> for Euronext Paris, <code>XVTX</code> for SIX Swiss Exchange, <code>XAMS</code> for Euronext Amsterdam, <code>XLON</code> for the London Stock Exchange, <code>XMAD</code> for Bolsa de Madrid. The element repeats for multi-listed stocks.</li>
+<li><code>Issuer</code> — a structured <code>CompanyType</code> block identifying the issuing legal entity: <code>&lt;Identifiers&gt;</code> with the issuer's LEI, a mandatory <code>&lt;Name&gt;</code>, an optional <code>&lt;LegalForm&gt;</code>, an optional <code>&lt;BusinessCountry&gt;</code>, and an optional <code>&lt;Type&gt;</code> from the ECB sector enumeration.</li>
+<li><code>Listing</code> — an enumeration <code>A</code>/<code>B</code>/<code>G</code>/<code>K</code>/<code>M</code>/<code>S</code>/<code>V</code>/<code>Y</code>/<code>Z</code> indicating the kind of exchange listing. <code>A</code> (official market) is the ordinary case for blue-chip European stocks; <code>K</code> means <em>not listed</em>, used for private or unlisted issues.</li>
+<li><code>ParValue</code> — the nominal value of the share in the instrument's currency (often 1.00 for modern no-par-value shares).</li>
+<li><code>WithholdingTaxRate</code> — the producer's default withholding tax rate on dividends from this instrument.</li>
+<li><code>MarketCapitalization</code> — a <code>Date</code>/<code>Value</code> pair carrying the full market capitalisation of the issuer as at that date.</li>
+<li><code>CustomMarketCapitalization</code> — a <code>Name</code>/<code>Date</code>/<code>Value</code> triple where <code>Name</code> is drawn from the enumeration <code>Small Cap</code>, <code>Small &amp; Mid Cap</code>, <code>Mid Cap</code>, <code>Mid &amp; Large Cap</code>, <code>Large Cap</code>, <code>All Cap</code>, <code>Other</code>. This is the field a factsheet engine reads when it needs a size bucket.</li>
+<li><code>Industries</code> — a container for one or more <code>IndustryCode</code> entries, each with <code>Name</code> (the classification scheme, e.g. <code>GICS</code>), <code>Date</code>, and <code>Value</code> (the numeric or textual code within that scheme).</li>
+</ul>
+<p><strong>Classification through <code>AssetType/Classifications</code>.</strong> The generic-asset <code>&lt;Classifications&gt;</code> block from Table 6.2 is the more idiomatic place to carry sector-classification values for downstream consumers. Following the same pattern as in Chapter 5, each <code>&lt;Classification&gt;</code> entry names a provider via <code>&lt;ListedGroup&gt;</code> (<code>EFAMA</code>, <code>MORNINGSTAR</code>, <code>LIPPER</code>, <code>BLOOMBERG</code>, <code>MIFID</code>, <code>BVI</code>, <code>VOEIG</code>, <code>ESMA</code>, <code>AMF</code>, <code>WM</code>, <code>CIC</code>, <code>CFI</code>) or <code>&lt;UnlistedGroup&gt;</code> (free text, used for <code>GICS</code> and <code>ICB</code> which are not in the enumeration) and supplies one or more <code>&lt;Value&gt;</code> elements with optional <code>level</code> attributes for hierarchies. The <code>&lt;Industries&gt;</code> and <code>&lt;ClassOfBusiness&gt;</code> fields inside <code>&lt;Equity&gt;</code> are historical and mostly populated by legacy fund-accounting systems; modern producers prefer <code>&lt;Classifications&gt;</code>.</p>
+<p><strong>Table 6.3 — Equity-specific fields inside <code>AssetDetails/Equity</code> (schema type <code>EquityType</code>)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Schema type</th>
+<th>Example</th>
+<th>Mandatory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ClassOfBusiness</code></td>
+<td><code>IndustryProviderType</code></td>
+<td>Offeror=<em>Bloomberg</em>, Value=<em>BICS</em></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>StockMarket</code></td>
+<td><code>MICCodeType</code> (repeats)</td>
+<td><code>XETR</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Issuer</code></td>
+<td><code>CompanyType</code></td>
+<td>see text above</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Listing</code></td>
+<td>enum <code>A</code>/<code>B</code>/<code>G</code>/<code>K</code>/<code>M</code>/<code>S</code>/<code>V</code>/<code>Y</code>/<code>Z</code></td>
+<td><code>A</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>ParValue</code></td>
+<td><code>xs:decimal</code></td>
+<td><code>1.00</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>WithholdingTaxRate</code></td>
+<td><code>xs:decimal</code></td>
+<td><code>26.375</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>MarketCapitalization</code></td>
+<td>Date + Value</td>
+<td><em>2026-03-31</em>, 145 bn</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>CustomMarketCapitalization</code></td>
+<td>Name enum + Date + Value</td>
+<td><code>Large Cap</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Industries</code></td>
+<td>list of <code>IndustryCode</code></td>
+<td>GICS 20106010</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
+<p>All equity-level fields are optional; an <code>&lt;Equity&gt;</code> element with no children at all is schema-valid (an empty but schema-valid element). In practice, producers populate <code>Issuer</code>, <code>StockMarket</code>, and at least one classification entry for every equity in the portfolio; the rest depend on the producer's downstream consumers.</p>
+<h3>6.6.2 Position-Level Fields Specific to Equities</h3>
+<p>At the position level, an equity entry ends with an <code>&lt;Equity&gt;</code> child (defined inline as an anonymous complex type within <code>&lt;Position&gt;</code>, XSD §28571) whose mandatory first child is <code>&lt;Units&gt;</code>. Its sequence is:</p>
+<ul>
+<li><code>&lt;Units&gt;</code> (mandatory, <code>xs:decimal</code>) — the number of shares the fund holds. Almost always a whole number for traditional long-only UCITS; fractional shares exist in a few specialised vehicles (robo-advisors offering fractional investment, some unit-linked wrappers) but do not appear in the Europa Growth Fund or in most European institutional portfolios.</li>
+<li><code>&lt;Price&gt;</code> (optional, <code>FundAmountType</code>) — the last available quote, in the listing currency, typically the closing price on the valuation date at the primary listing. If the stock was suspended for the day, the price holds at the last valid quote and the position's <code>&lt;PriceDate&gt;</code> (inside the parent <code>&lt;Position&gt;</code>) reflects the age of the quote.</li>
+<li><code>&lt;OtherPrices&gt;</code> (optional) — additional prices (hold-to-maturity-style alternatives, rarely used for equities).</li>
+<li><code>&lt;MarketValue&gt;</code> (optional, <code>FundAmountType</code>) — <code>Units × Price</code>, converted into the fund's base currency if the listing currency differs. The conversion rate is the producer's reference rate at the valuation point.</li>
+<li><code>&lt;BookRate&gt;</code> (optional, <code>FundAmountType</code>) — the book value used for capital-gains accounting.</li>
+<li><code>&lt;PurchaseValue&gt;</code> (optional, <code>FundAmountType</code>) — the historical cost of the position.</li>
+<li><code>&lt;DividendsDue&gt;</code> (optional, <code>FundAmountType</code>) — the dividend income that has accrued between the last ex-dividend date and the valuation date but has not yet been paid out. Most producers do not populate it; they treat dividends as discrete events that flow through <code>Distributions</code> on the share class (Chapter 7) rather than accruing into the equity position.</li>
+<li><code>&lt;LendedFlag&gt;</code> (optional, <code>xs:boolean</code>) — whether part of the position is out on loan to a counterparty.</li>
+<li><code>&lt;LendedUnits&gt;</code> (optional, <code>xs:decimal</code>) — the number of shares out on loan.</li>
+<li><code>&lt;IndicatorRaffled&gt;</code> (optional, <code>xs:boolean</code>) — whether the security has been drawn by lot in a corporate action.</li>
+</ul>
+<p>Note what is <strong>not</strong> a child of <code>&lt;Equity&gt;</code> but lives one level up on <code>&lt;Position&gt;</code>: <code>TotalValue</code>, <code>TotalPercentage</code>, <code>Currency</code>, <code>PriceDate</code>, <code>PricingSource</code>. Those are position-level concerns and are common to every asset class. A producer that writes <code>&lt;TotalValue&gt;</code> as a sibling of <code>&lt;Units&gt;</code> inside <code>&lt;Equity&gt;</code> is wrong; the field must appear at <code>&lt;Position&gt;</code> level.</p>
+<h3>6.6.3 Equity Example: A Siemens Position</h3>
+<p>A complete pair — position and asset entry — for the Europa Growth Fund's Siemens holding on 31 March 2026.</p>
+<pre><code>&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio/Positions --&gt;
+&lt;Position&gt;
+  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;TotalValue&gt;
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
+  &lt;/TotalValue&gt;
+  &lt;TotalPercentage&gt;1.75&lt;/TotalPercentage&gt;
+  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+  &lt;Equity&gt;
+    &lt;Units&gt;50000&lt;/Units&gt;
+    &lt;Price&gt;
+      &lt;Amount ccy=&quot;EUR&quot;&gt;162.50&lt;/Amount&gt;
+    &lt;/Price&gt;
+    &lt;MarketValue&gt;
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
+    &lt;/MarketValue&gt;
+  &lt;/Equity&gt;
+&lt;/Position&gt;
+
+&lt;!-- Elsewhere, inside the root AssetMasterData block --&gt;
+&lt;Asset&gt;
+  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
+  &lt;Identifiers&gt;
+    &lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;
+    &lt;GermanWKN&gt;723610&lt;/GermanWKN&gt;
+  &lt;/Identifiers&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;Country&gt;DE&lt;/Country&gt;
+  &lt;Name&gt;Siemens AG&lt;/Name&gt;
+  &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+  &lt;AssetDetails&gt;
+    &lt;Equity&gt;
+      &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
+      &lt;Issuer&gt;
+        &lt;Identifiers&gt;
+          &lt;LEI&gt;W38RGI023J3WT1HWRP32&lt;/LEI&gt;
+        &lt;/Identifiers&gt;
+        &lt;Name&gt;Siemens Aktiengesellschaft&lt;/Name&gt;
+        &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
+        &lt;Type&gt;Non-financial corporations&lt;/Type&gt;
+      &lt;/Issuer&gt;
+      &lt;Listing&gt;A&lt;/Listing&gt;
+      &lt;CustomMarketCapitalization&gt;
+        &lt;Name&gt;Large Cap&lt;/Name&gt;
+        &lt;Date&gt;2026-03-31&lt;/Date&gt;
+        &lt;Value&gt;145000000000&lt;/Value&gt;
+      &lt;/CustomMarketCapitalization&gt;
+      &lt;Industries&gt;
+        &lt;IndustryCode&gt;
+          &lt;Name&gt;GICS&lt;/Name&gt;
+          &lt;Date&gt;2026-03-31&lt;/Date&gt;
+          &lt;Value&gt;20106010&lt;/Value&gt;
+        &lt;/IndustryCode&gt;
+      &lt;/Industries&gt;
+    &lt;/Equity&gt;
+  &lt;/AssetDetails&gt;
+  &lt;Classifications&gt;
+    &lt;Classification&gt;
+      &lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;
+      &lt;Type&gt;Sector&lt;/Type&gt;
+      &lt;Language&gt;en&lt;/Language&gt;
+      &lt;Value level=&quot;1&quot;&gt;Industrials&lt;/Value&gt;
+      &lt;Value level=&quot;2&quot;&gt;Industrial Conglomerates&lt;/Value&gt;
+    &lt;/Classification&gt;
+  &lt;/Classifications&gt;
+&lt;/Asset&gt;
+</code></pre>
+<p>Reading field by field: the position's <code>&lt;UniqueID&gt;</code> is the ISIN, following the convention of §6.3.2 (and satisfying the <code>xs:ID</code> constraint because <code>DE0007236101</code> begins with a letter). The consolidated <code>&lt;TotalValue&gt;</code> is 8.125 million euros — approximately 1.75% of the fund's total net assets from Chapter 5 — and lives in the fund's base currency, flagged <code>isFundCcy="true"</code>. Inside <code>&lt;Equity&gt;</code>, the position says the fund holds 50,000 Siemens shares, last priced at 162.50 EUR at Xetra's close on 31 March 2026, with a market value equal to <code>Units × Price</code> also in euros.</p>
+<p>The asset entry confirms the instrument identity. <code>&lt;Identifiers&gt;</code> carries the ISIN and the six-character German WKN (723610, the historical code that German retail systems still use alongside the ISIN). The top-level <code>&lt;Currency&gt;</code> names the instrument's nominal currency (EUR) and <code>&lt;Country&gt;</code> names the country of issue (DE). <code>&lt;AssetType&gt;EQ&lt;/AssetType&gt;</code> signals the asset-class to consumers. Inside <code>&lt;AssetDetails&gt;/&lt;Equity&gt;</code>, the listing information — Xetra (<code>XETR</code>) as the stock market, <code>A</code> (official market) as the listing category — sits above the issuer block. The issuer block is a full <code>&lt;Issuer&gt;</code> element of schema type <code>CompanyType</code>, with Siemens AG's LEI (20 characters, ISO 17442), a mandatory name, a business country, and an ECB-sector classification of <code>Non-financial corporations</code>. A <code>&lt;CustomMarketCapitalization&gt;</code> entry places Siemens in the <code>Large Cap</code> bucket as at 31 March 2026 with a rounded-EUR figure, and an <code>&lt;Industries&gt;</code> entry carries the GICS industry code 20106010 (Industrial Conglomerates) for downstream consumers that speak that taxonomy.</p>
+<p>The top-level <code>&lt;Classifications&gt;</code> block — sibling of <code>&lt;AssetDetails&gt;</code> — duplicates the GICS classification in the idiomatic form that the rest of the book uses: an <code>&lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;</code> (because <code>GICS</code> is not a listed provider in the schema's enumeration), a <code>&lt;Type&gt;Sector&lt;/Type&gt;</code>, a <code>&lt;Language&gt;en&lt;/Language&gt;</code>, and two <code>&lt;Value&gt;</code> elements with <code>level</code> attributes walking the hierarchy from Industrials down to Industrial Conglomerates. A consumer that reads this block picks whichever scheme it recognises.</p>
+<p>A consumer that produces a factsheet for the fund renders Siemens as "Siemens AG, 1.75%, Industrials, Germany" using five or six of the visible fields. A consumer that produces a regulatory report reads the LEI and the GICS code for their respective disclosures. The same pair serves every downstream use case without any additional data.</p>
+<p>This pair is the template that §6.12 will repeat fifteen times with different companies, sectors, and countries. The fields are always the same; the values vary.</p>
+<hr>
+<h2>6.7 Bonds</h2>
+<p>The Europa Growth Fund holds no bonds, but any treatment of FundsXML portfolios must cover them because bonds are structurally the most different asset class from equities and because most European fund portfolios outside pure equity mandates contain at least some. The example in this section comes from a generic European bond fund rather than from the Europa Growth Fund.</p>
+<p>Bonds are more complex than equities for one overriding reason: a bond carries two identities rather than one. The <em>instrument</em> is a specific bond issue with a specific maturity and coupon; the <em>issuer</em> is the legal entity that issued it. Where an equity share class is in one-to-one correspondence with its issuer's LEI, a single issuer may have issued dozens or hundreds of distinct bonds, each with its own ISIN and its own behaviour, all backed by the same credit. The bond asset model must represent both layers.</p>
+<h3>6.7.1 The Bond Asset Model</h3>
+<p>An <code>&lt;Asset&gt;</code> entry for a bond carries <code>AssetType=BO</code>, and its bond-specific details live inside <code>&lt;AssetDetails&gt;/&lt;Bond&gt;</code> (schema type <code>BondType</code>, XSD §2012). The type is large — thirty or more optional children — and the sequence below lists only the fields that matter for a typical European fund portfolio.</p>
+<p><strong>Convertible flag.</strong> The one <em>mandatory</em> child of <code>BondType</code> is <code>&lt;ConvertibleFlag&gt;</code> (<code>xs:boolean</code>). Every bond must state whether it carries equity conversion rights, even if the answer is trivially <em>false</em> for a straight government bond. Convertible bonds have an additional <code>&lt;ConvertibleBond&gt;</code> sub-block with strike and conversion ratio details.</p>
+<p><strong>Issuer.</strong> A structured <code>CompanyType</code> block identifying the issuing legal entity — the same type we saw for equities in §6.6.1, but the issuer for a bond is almost always populated more richly because rating agencies, regulatory reporting, and concentration limits all hang on it. <code>Issuer/Identifiers/LEI</code> is the single most important field on the whole entry.</p>
+<p><strong>Listing.</strong> <code>&lt;StockMarket&gt;</code> (repeatable MIC codes) and <code>&lt;Listing&gt;</code> (the same A/B/G/K/M/S/V/Y/Z enumeration as for equities) identify the exchanges on which the bond trades. A <code>&lt;ListingUnit&gt;</code> field, unique to bonds, distinguishes <code>P</code> (pieces — bonds denominated in whole certificates) from <code>N</code> (nominal amount — the more common case in Europe). For a typical German bund, <code>ListingUnit=N</code>.</p>
+<p><strong>Maturity and key dates.</strong></p>
+<ul>
+<li><code>IssueDate</code> — the date the bond was originally issued.</li>
+<li><code>MaturityDate</code> — the date on which the principal is repaid to investors.</li>
+<li><code>DateFirstCoupon</code> and <code>DateLastCoupon</code> — the boundary coupon dates.</li>
+<li><code>CouponDate</code> — the next scheduled coupon payment.</li>
+</ul>
+<p><strong>Coupon.</strong> The cash flow the bond pays to investors during its life is carried inside a <code>&lt;Coupon&gt;</code> sub-block with four children:</p>
+<ul>
+<li><code>&lt;Type&gt;</code> — an enumeration <code>fix</code>/<code>float</code>/<code>zero</code>/<code>others</code>. Note the lowercase spelling; the schema uses <code>fix</code>, not <code>Fixed</code>.</li>
+<li><code>&lt;PaymentFrequency&gt;</code> (<code>FrequencyType</code>) — a SWIFT-style four-letter code: <code>DAIL</code> (daily), <code>WEEK</code> (weekly), <code>TWWK</code> (two-weekly), <code>MNTH</code> (monthly), <code>TWMN</code> (two-monthly), <code>QURT</code> (quarterly), <code>SEMI</code> (semi-annual), <code>YEAR</code> (annual). Most European government bonds pay <code>YEAR</code>, most corporate bonds <code>SEMI</code>. These are the same codes the EMT/EPT regulatory templates of Chapter 8 use, so producers coming from that side of the house have the mapping already.</li>
+<li><code>&lt;InterestRate&gt;</code> (<code>xs:decimal</code>) — the nominal coupon rate as a percentage of nominal value (<code>2.50</code> for a 2.50% coupon).</li>
+<li>For floating-rate notes, <code>&lt;BaseIndex&gt;</code> (<code>IdentifiersType</code>) and <code>&lt;OffsetBPS&gt;</code> (<code>xs:decimal</code>) describe the floating rate formula.</li>
+</ul>
+<p><strong>Redemption.</strong> A <code>&lt;RedemptionRate&gt;</code> (<code>xs:decimal</code>) carries the price at which the bond will be redeemed at maturity — typically <code>100.00</code> (par). An optional <code>&lt;Redemption&gt;</code> sub-block carries the redemption type (<code>Bullet</code> or <code>Sinkable</code>), any call/put option date, the direction of the option (<code>Issuer</code>, <code>Bearer</code>, or <code>Both</code>), and the option strike price where relevant.</p>
+<p><strong>Tax fields.</strong> <code>&lt;WithholdingTaxRate&gt;</code>, <code>&lt;EUWithholdingTaxRate&gt;</code>, <code>&lt;EUWithholdingTaxCategory&gt;</code> (<code>A</code>/<code>B</code>/<code>C</code>) and <code>&lt;CapitalYieldsTaxKind&gt;</code> cover the various European withholding regimes. Most producers populate only the first.</p>
+<p><strong>The single biggest surprise in the bond type.</strong> There is <em>no</em> <code>BondType</code> enumeration. The schema does not distinguish a <em>Government</em> bond from a <em>Corporate</em> bond from a <em>Covered</em> bond at the <code>&lt;Bond&gt;</code> level; that distinction is carried through <code>Issuer/Type</code> (the ECB-sector enumeration: <code>General government</code>, <code>Non-financial corporations</code>, <code>Deposit-taking corporations</code>, and so on) and through the <code>&lt;Classifications&gt;</code> block on <code>&lt;Asset&gt;</code>. Similarly, there is <em>no</em> <code>CountryOfRisk</code> element, <em>no</em> <code>DayCountConvention</code> enumeration, and <em>no</em> <code>Seniority</code> field. The producer who needs these concepts must carry them in <code>&lt;Classifications&gt;</code> or <code>&lt;CustomAttributes&gt;</code>.</p>
+<p><strong>Credit ratings</strong> live on <code>&lt;Asset&gt;</code> itself (not inside <code>&lt;Bond&gt;</code>) under <code>&lt;Ratings&gt;</code>, schema type <code>RatingsType</code>. The structure is slightly unusual: the outer container has one <code>&lt;Rating&gt;</code> child per <em>agency</em>, and each agency <code>&lt;Rating&gt;</code> wraps a <code>RatingCompany</code> name and one or more inner <code>&lt;Rating&gt;</code> entries carrying the actual rating values. An agency's rating history is a sequence of inner entries; the current rating is the most recent one. A bond rated by three agencies therefore has three outer <code>&lt;Rating&gt;</code> entries, one per agency, each with at least one inner <code>&lt;Rating&gt;</code> entry.</p>
+<p><strong>Table 6.4 — Key bond-specific fields inside <code>AssetDetails/Bond</code> (schema type <code>BondType</code>)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Schema type</th>
+<th>Example</th>
+<th>Mandatory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ConvertibleFlag</code></td>
+<td><code>xs:boolean</code></td>
+<td><code>false</code></td>
+<td><strong>yes</strong></td>
+</tr>
+<tr>
+<td><code>Issuer</code></td>
+<td><code>CompanyType</code></td>
+<td>Federal Republic of Germany</td>
+<td>optional but expected</td>
+</tr>
+<tr>
+<td><code>StockMarket</code></td>
+<td><code>MICCodeType</code> (repeats)</td>
+<td><code>XETR</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Listing</code></td>
+<td>enum <code>A</code>/<code>B</code>/<code>G</code>/<code>K</code>/<code>M</code>/<code>S</code>/<code>V</code>/<code>Y</code>/<code>Z</code></td>
+<td><code>A</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>ListingUnit</code></td>
+<td>enum <code>P</code>/<code>N</code></td>
+<td><code>N</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>IssueDate</code></td>
+<td><code>xs:date</code></td>
+<td><code>2024-02-15</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>MaturityDate</code></td>
+<td><code>xs:date</code></td>
+<td><code>2034-02-15</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>CouponDate</code></td>
+<td><code>xs:date</code></td>
+<td><code>2027-02-15</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Coupon/Type</code></td>
+<td>enum <code>fix</code>/<code>float</code>/<code>zero</code>/<code>others</code></td>
+<td><code>fix</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Coupon/PaymentFrequency</code></td>
+<td><code>FrequencyType</code></td>
+<td><code>YEAR</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Coupon/InterestRate</code></td>
+<td><code>xs:decimal</code></td>
+<td><code>2.50</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>RedemptionRate</code></td>
+<td><code>xs:decimal</code></td>
+<td><code>100.00</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>Redemption/Type</code></td>
+<td>enum <code>Bullet</code>/<code>Sinkable</code></td>
+<td><code>Bullet</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>InterestRate</code></td>
+<td><code>xs:decimal</code></td>
+<td><code>2.50</code></td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>InterestsStartDate</code></td>
+<td><code>xs:date</code></td>
+<td><code>2026-02-15</code></td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
+<h3>6.7.2 Position-Level Fields Specific to Bonds</h3>
+<p>At the position level, a bond entry ends with a <code>&lt;Bond&gt;</code> child (defined inline as an anonymous complex type within <code>&lt;Position&gt;</code>, XSD §28640) whose mandatory first child is <code>&lt;Nominal&gt;</code>. Its sequence is:</p>
+<ul>
+<li><code>&lt;Nominal&gt;</code> (mandatory, <code>xs:decimal</code>) — the nominal value of the bonds held, in the issue currency. <strong><code>&lt;Nominal&gt;1000000&lt;/Nominal&gt;</code> means one million of nominal value, not one million pieces.</strong> This is the single most confusing convention in bond accounting for first-time implementers, and it is worth stating three times: bond <code>&lt;Nominal&gt;</code> is nominal, bond <code>&lt;Nominal&gt;</code> is nominal, bond <code>&lt;Nominal&gt;</code> is nominal. The total value of a bond position at par is therefore <code>Nominal × (Price / 100)</code>, because <code>Price</code> is expressed as a percentage of nominal.</li>
+<li><code>&lt;OriginalFace&gt;</code> (optional) — the par value at the time of purchase, used for sinking-fund bonds whose nominal has been reduced through partial redemptions.</li>
+<li><code>&lt;Price&gt;</code> (optional, <code>FundAmountType</code>) — the <strong>clean price</strong>, expressed as a percentage of nominal value. A bond trading at par has price 100.00, a bond at a five-point discount has price 95.00.</li>
+<li><code>&lt;OtherPrices&gt;</code> (optional) — additional price quotes (hold-to-maturity, for example).</li>
+<li><code>&lt;DirtyPrice&gt;</code> (optional, <code>FundAmountType</code>) — the clean price plus accrued interest, expressed as a percentage of nominal.</li>
+<li><code>&lt;MarketValue&gt;</code> (optional, <code>FundAmountType</code>) — the market value of the position <em>without interest</em>, computed as <code>Nominal × (Price / 100)</code>.</li>
+<li><code>&lt;InterestClaimNet&gt;</code> and <code>&lt;InterestClaimGross&gt;</code> (optional, <code>FundAmountType</code>) — the net and gross accrued interest in the bond's currency. The net/gross distinction reflects withholding tax treatment.</li>
+<li><code>&lt;AccruedInterestDays&gt;</code> (optional, <code>xs:integer</code>) — the number of days of interest that have accrued, as an audit field for consumers that want to verify the producer's computation.</li>
+<li><code>&lt;ZeroBondInterestClaimNet&gt;</code>, <code>&lt;ZeroBondInterestClaimGross&gt;</code>, <code>&lt;ZeroBondCapitalYieldsTaxClaim&gt;</code>, <code>&lt;ZeroBondYield&gt;</code> — analogues for zero-coupon bonds.</li>
+<li><code>&lt;Indexfactor&gt;</code>, <code>&lt;Poolfactor&gt;</code> — for index-linked and pass-through bonds.</li>
+<li><code>&lt;BookRate&gt;</code>, <code>&lt;PurchaseValue&gt;</code> — cost basis fields.</li>
+<li><code>&lt;LendedFlag&gt;</code>, <code>&lt;LendedUnits&gt;</code>, <code>&lt;IndicatorRaffled&gt;</code>, <code>&lt;CollateralValue&gt;</code> — loan and corporate-action fields shared with equities.</li>
+</ul>
+<p><strong>Clean price, dirty price, and position total.</strong> Bonds trade on clean price in European markets — a price that excludes accrued interest. The clean price is what gets quoted on trading screens and in newspaper tables. When an investor actually buys a bond, they pay the clean price plus the accrued interest since the last coupon date — the <em>dirty price</em> — because the seller is entitled to the portion of the next coupon that has accumulated during their ownership. FundsXML follows the clean-price convention for <code>&lt;Bond&gt;/&lt;Price&gt;</code> and models the accrued interest through <code>&lt;Bond&gt;/&lt;InterestClaimGross&gt;</code> (or <code>InterestClaimNet</code>) as a separate field, and optionally through <code>&lt;Bond&gt;/&lt;DirtyPrice&gt;</code> as the combined figure.</p>
+<p>The position's consolidated <code>&lt;TotalValue&gt;</code> at the <code>&lt;Position&gt;</code> level is therefore:</p>
+<pre><code>TotalValue = Nominal × (Price / 100) + InterestClaimGross
+</code></pre>
+<p>A consumer that computes the total as <code>Nominal × Price</code> without the percentage scaling will get an answer that is wrong by a factor of one hundred. A consumer that reads only <code>&lt;Bond&gt;/&lt;MarketValue&gt;</code> and omits the accrued interest will understate the position by the coupon accrual — small in absolute terms but meaningful for yield and duration calculations. In practice, the producer emits all three fields (<code>MarketValue</code>, <code>InterestClaimGross</code>, and the parent <code>&lt;Position&gt;/&lt;TotalValue&gt;</code> as the sum), and the consumer reads whichever it needs.</p>
+<p><strong>Optional analytics</strong> such as yield-to-maturity, modified duration, and convexity are not first-class fields of <code>&lt;Bond&gt;</code>. A producer that wants to ship them does so either through <code>&lt;OtherPrices&gt;</code> with a descriptive type label or through <code>&lt;CustomAttributes&gt;</code> on the asset entry. Most producers do not populate them; consumers who need them compute them locally from the bond's characteristics.</p>
+<h3>6.7.3 Bond Example: A German Bund Position</h3>
+<p>A generic European bond fund holds a position in a ten-year German federal government bond: nominal value 1,000,000 EUR, coupon 2.50%, maturity 15 February 2034, clean price 98.75 at the 31 March 2026 valuation. The accrued interest since the last coupon payment on 15 February 2026 is approximately 3,150 EUR (44 days at 2.50% on 1,000,000 EUR nominal).</p>
+<pre><code>&lt;!-- Portfolio position --&gt;
+&lt;Position&gt;
+  &lt;UniqueID&gt;DE0001102614&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;TotalValue&gt;
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;990650.68&lt;/Amount&gt;
+  &lt;/TotalValue&gt;
+  &lt;TotalPercentage&gt;0.99&lt;/TotalPercentage&gt;
+  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+  &lt;Bond&gt;
+    &lt;Nominal&gt;1000000&lt;/Nominal&gt;
+    &lt;Price&gt;
+      &lt;Amount ccy=&quot;EUR&quot;&gt;98.75&lt;/Amount&gt;
+    &lt;/Price&gt;
+    &lt;DirtyPrice&gt;
+      &lt;Amount ccy=&quot;EUR&quot;&gt;99.06507&lt;/Amount&gt;
+    &lt;/DirtyPrice&gt;
+    &lt;MarketValue&gt;
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;987500.00&lt;/Amount&gt;
+    &lt;/MarketValue&gt;
+    &lt;InterestClaimGross&gt;
+      &lt;Amount ccy=&quot;EUR&quot;&gt;3150.68&lt;/Amount&gt;
+    &lt;/InterestClaimGross&gt;
+    &lt;AccruedInterestDays&gt;44&lt;/AccruedInterestDays&gt;
+  &lt;/Bond&gt;
+&lt;/Position&gt;
+
+&lt;!-- Corresponding asset entry --&gt;
+&lt;Asset&gt;
+  &lt;UniqueID&gt;DE0001102614&lt;/UniqueID&gt;
+  &lt;Identifiers&gt;
+    &lt;ISIN&gt;DE0001102614&lt;/ISIN&gt;
+  &lt;/Identifiers&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;Country&gt;DE&lt;/Country&gt;
+  &lt;Name&gt;Bundesrepublik Deutschland 2.50% 02/2034&lt;/Name&gt;
+  &lt;AssetType&gt;BO&lt;/AssetType&gt;
+  &lt;AssetDetails&gt;
+    &lt;Bond&gt;
+      &lt;ConvertibleFlag&gt;false&lt;/ConvertibleFlag&gt;
+      &lt;Issuer&gt;
+        &lt;Identifiers&gt;
+          &lt;LEI&gt;529900PY3MOXO1E5MD14&lt;/LEI&gt;
+        &lt;/Identifiers&gt;
+        &lt;Name&gt;Federal Republic of Germany — Finance Agency&lt;/Name&gt;
+        &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
+        &lt;Type&gt;General government&lt;/Type&gt;
+      &lt;/Issuer&gt;
+      &lt;ListingUnit&gt;N&lt;/ListingUnit&gt;
+      &lt;IssueDate&gt;2024-02-15&lt;/IssueDate&gt;
+      &lt;MaturityDate&gt;2034-02-15&lt;/MaturityDate&gt;
+      &lt;CouponDate&gt;2027-02-15&lt;/CouponDate&gt;
+      &lt;Coupon&gt;
+        &lt;Type&gt;fix&lt;/Type&gt;
+        &lt;PaymentFrequency&gt;YEAR&lt;/PaymentFrequency&gt;
+        &lt;InterestRate&gt;2.50&lt;/InterestRate&gt;
+      &lt;/Coupon&gt;
+      &lt;RedemptionRate&gt;100.00&lt;/RedemptionRate&gt;
+      &lt;Redemption&gt;
+        &lt;Type&gt;Bullet&lt;/Type&gt;
+      &lt;/Redemption&gt;
+      &lt;InterestRate&gt;2.50&lt;/InterestRate&gt;
+      &lt;InterestsStartDate&gt;2026-02-15&lt;/InterestsStartDate&gt;
+    &lt;/Bond&gt;
+  &lt;/AssetDetails&gt;
+  &lt;Ratings&gt;
+    &lt;Rating&gt;
+      &lt;RatingCompany&gt;MOODYS&lt;/RatingCompany&gt;
+      &lt;Rating&gt;
+        &lt;Date&gt;2025-06-15&lt;/Date&gt;
+        &lt;Value&gt;Aaa&lt;/Value&gt;
+        &lt;Description&gt;Long-term issuer credit rating — stable outlook&lt;/Description&gt;
+      &lt;/Rating&gt;
+    &lt;/Rating&gt;
+    &lt;Rating&gt;
+      &lt;RatingCompany&gt;STANDARD-POORS&lt;/RatingCompany&gt;
+      &lt;Rating&gt;
+        &lt;Date&gt;2025-05-20&lt;/Date&gt;
+        &lt;Value&gt;AAA&lt;/Value&gt;
+        &lt;Description&gt;Long-term foreign currency — stable outlook&lt;/Description&gt;
+      &lt;/Rating&gt;
+    &lt;/Rating&gt;
+    &lt;Rating&gt;
+      &lt;RatingCompany&gt;FITCH&lt;/RatingCompany&gt;
+      &lt;Rating&gt;
+        &lt;Date&gt;2025-07-02&lt;/Date&gt;
+        &lt;Value&gt;AAA&lt;/Value&gt;
+        &lt;Description&gt;Long-term issuer default rating — stable outlook&lt;/Description&gt;
+      &lt;/Rating&gt;
+    &lt;/Rating&gt;
+  &lt;/Ratings&gt;
+  &lt;Classifications&gt;
+    &lt;Classification&gt;
+      &lt;ListedGroup&gt;ESMA&lt;/ListedGroup&gt;
+      &lt;Type&gt;Bond Type&lt;/Type&gt;
+      &lt;Language&gt;en&lt;/Language&gt;
+      &lt;Value&gt;Sovereign&lt;/Value&gt;
+    &lt;/Classification&gt;
+  &lt;/Classifications&gt;
+&lt;/Asset&gt;
+</code></pre>
+<p>Reading this pair: the position holds one million euros nominal of the 2.50% bund maturing 15 February 2034. The clean price is 98.75 (a small discount to par, reflecting a yield slightly above the coupon). The accrued interest of 3,150.68 EUR is the coupon income earned in the forty-four days since the 15 February 2026 payment, expressed as <code>&lt;InterestClaimGross&gt;</code> inside <code>&lt;Bond&gt;</code>. The position-level <code>&lt;TotalValue&gt;</code> is 990,650.68 EUR — the sum of <code>&lt;Bond&gt;/&lt;MarketValue&gt;</code> (987,500.00 EUR = 1,000,000 × 0.9875) and the interest claim. The <code>&lt;DirtyPrice&gt;</code> of 99.06507 is the clean price plus accrued expressed as a percentage, and consumers that prefer to read a single price number use it.</p>
+<p>The asset entry carries the mandatory <code>&lt;ConvertibleFlag&gt;false&lt;/ConvertibleFlag&gt;</code> as the first child of <code>&lt;Bond&gt;</code> — even for a vanilla government bond. The <code>&lt;Issuer&gt;</code> block names the Federal Republic's bond-issuing agency with its LEI, a business country of <code>DE</code>, and an ECB sector classification of <code>General government</code>; this is where the "sovereign" nature of the bond is encoded, not in any <code>BondType</code> enumeration. The <code>&lt;ListingUnit&gt;N&lt;/ListingUnit&gt;</code> declares that the bond trades by nominal, matching the position-level <code>&lt;Nominal&gt;</code> idiom. The <code>&lt;Coupon&gt;</code> sub-block uses the <code>&lt;PaymentFrequency&gt;YEAR&lt;/PaymentFrequency&gt;</code> code for an annual coupon, and <code>&lt;Type&gt;fix&lt;/Type&gt;</code> (lowercase, as the schema demands) for the fixed-rate nature. The <code>&lt;Redemption&gt;&lt;Type&gt;Bullet&lt;/Type&gt;&lt;/Redemption&gt;</code> declares that the bond is redeemed in a single payment at maturity, not in a sinking-fund pattern.</p>
+<p>The <code>&lt;Ratings&gt;</code> block carries three agency entries — Moody's, Standard &amp; Poor's, and Fitch — each wrapping a <code>&lt;RatingCompany&gt;</code> name and one inner <code>&lt;Rating&gt;</code> entry with date, value, and description. All three agree on <code>AAA</code> (or <code>Aaa</code> in Moody's scale), as one would expect for German government paper. A consumer that needs the <em>middle</em> of the three ratings can read all three and apply its own logic; a consumer that wants the <em>most conservative</em> picks the lowest. A <code>&lt;Classifications&gt;</code> entry under <code>&lt;ListedGroup&gt;ESMA&lt;/ListedGroup&gt;</code> classifies the bond as <code>Sovereign</code> for downstream consumers that want a textual label without walking into the issuer type.</p>
+<p>The bond example shows every structural feature that distinguishes bonds from equities: the nominal-quantity convention, the clean/dirty price split, the rich issuer information, the multiple rating agencies, and the surprising absence of a <code>BondType</code> enumeration in favour of issuer-sector and classifications-based categorisation. A European bond fund's portfolio is a long list of entries of this shape, one per issue.</p>
+<hr>
+<h2>6.8 Investment Funds</h2>
+<p>The case in which a fund holds another fund's shares as a position. For a pure equity UCITS like the Europa Growth Fund this is a minor pattern — the fund occasionally holds a European equity ETF as a liquidity substitute — but for a fund-of-funds it is the dominant pattern, and either way the asset class deserves its own treatment.</p>
+<h3>6.8.1 The Fund-as-an-Asset Model</h3>
+<p>A held fund is represented in <code>AssetMasterData</code> as an <code>&lt;Asset&gt;</code> element whose <code>&lt;AssetType&gt;</code> is <code>SC</code> (<em>Share Class</em>), not a nested <code>&lt;Fund&gt;</code> element. The discriminator is a deliberate reminder that from the holder's perspective, what is owned is always a <em>specific share class</em> of a fund — the euro-distributing class, the CHF-hedged class, the institutional class — never the fund as an abstraction. In Chapter 5 we spent twenty pages establishing that investable units are share classes; here we see the same principle applied from the other side.</p>
+<p>A fund-of-funds that holds six underlying funds therefore carries six <code>&lt;Asset&gt;</code> entries with <code>AssetType=SC</code>, not six nested <code>&lt;Fund&gt;</code> elements. Each position in the portfolio has a <code>&lt;ShareClass&gt;</code> child carrying its unit count and valuation, and each asset entry describes the held share class as an instrument. The portfolio-asset linkage mechanism is uniform across all asset classes, and introducing a nested-fund exception would complicate every consumer's parsing logic for no benefit.</p>
+<p><strong>Share-class details</strong> inside <code>AssetDetails/&lt;ShareClass&gt;</code> (schema type <code>ShareClassDetailsType</code>, XSD §32804) are surprisingly minimal. The schema treats a held share class as just another tradable instrument, and most of the rich fund-level metadata from Chapter 5 (legal structure, domicile, benchmarks, classifications, SFDR product type) is <em>not</em> duplicated on the holder's side. <code>ShareClassDetailsType</code> carries only:</p>
+<ul>
+<li><code>Issuer</code> — a <code>CompanyType</code> block identifying the fund's management company or promoter.</li>
+<li><code>StockMarket</code> — one or more MIC codes for the exchanges on which the share class trades (relevant only for listed share classes such as ETFs).</li>
+<li><code>Listing</code> — the same A/B/G/K/M/S/V/Y/Z enumeration as for equities.</li>
+<li><code>ListingUnit</code> — <code>U</code> (units) or <code>N</code> (nominal), almost always <code>U</code>.</li>
+<li><code>IssueDate</code> — the share class's inception date.</li>
+<li><code>MaturityDate</code> — the share class's maturity date, for closed-ended vehicles.</li>
+<li><code>WithholdingTaxRate</code> — the tax rate applied to distributions.</li>
+<li><code>ShareClassType</code> — a <code>ShareClassTypeType</code> block with <code>Code</code>, <code>EarningUse</code> (D/P/R), and short/long names, mirroring the structure we met at <code>ShareClass/ShareClassType</code> in Chapter 5.</li>
+<li><code>ExchangeTradedFundFlag</code> (<code>xs:boolean</code>) — a dedicated flag for ETFs, distinct from the generic listing enumeration.</li>
+</ul>
+<p><strong>Fields that the schema does not carry on a held share class</strong> are, notably, <code>FundLegalType</code>, <code>FundCategory</code>, <code>OngoingCharges</code>, and any explicit <em>lookthrough</em> flag. The legal type of a held fund, where relevant, lives in <code>&lt;Classifications&gt;</code> on the outer <code>&lt;Asset&gt;</code> (for example <code>&lt;ListedGroup&gt;ESMA&lt;/ListedGroup&gt;</code> with <code>&lt;Value&gt;UCITS&lt;/Value&gt;</code>). The held fund's ongoing charges figure — relevant for the holding fund's own MiFID II cost disclosure — is not a field on the instrument at all; it is delivered through the regulatory templates of Chapter 8, specifically the EMT section that aggregates per-instrument charges, and through <code>&lt;CustomAttributes&gt;</code> on the asset entry for producers that want to carry it inline.</p>
+<p>The <em>lookthrough</em> concept deserves a short explanation. For certain regulatory calculations — concentration limits, ESG exposure aggregation, Solvency II capital charges — the regulator asks not "what funds does this fund hold?" but "what underlying assets does this fund ultimately hold?" Lookthrough requires the holder to obtain the underlying composition of each held fund and aggregate it into its own exposure calculation. FundsXML carries the decomposition data itself through <code>Portfolio/PositionsDecomposed</code>, a dedicated sibling of <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios/Portfolio/Positions" target="_blank"><code>&lt;Positions&gt;</code></a> that replaces held share classes with the scaled-down positions of the underlying fund. A producer that wants to offer lookthrough data to its consumers populates <code>&lt;PositionsDecomposed&gt;</code> with the underlying positions and a <code>&lt;LookThroughLevels&gt;</code> count stating how deep the decomposition went; a consumer that needs lookthrough reads from <code>&lt;PositionsDecomposed&gt;</code> rather than from <code>&lt;Positions&gt;</code>. There is no boolean "lookthrough required" flag anywhere on the share-class instrument.</p>
+<h3>6.8.2 Fund Position Example</h3>
+<p>A small illustrative example — not from the Europa Growth Fund, because a pure equity UCITS rarely holds ETFs of its own asset class, but from a generic European multi-asset fund that parks liquidity in the <em>iShares Core MSCI Europe UCITS ETF EUR (Acc)</em> (ISIN IE00B4K48X80) while awaiting deployment.</p>
+<pre><code>&lt;!-- Portfolio position --&gt;
+&lt;Position&gt;
+  &lt;UniqueID&gt;IE00B4K48X80&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;TotalValue&gt;
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;2000250.00&lt;/Amount&gt;
+  &lt;/TotalValue&gt;
+  &lt;TotalPercentage&gt;0.43&lt;/TotalPercentage&gt;
+  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+  &lt;ShareClass&gt;
+    &lt;Shares&gt;22500&lt;/Shares&gt;
+    &lt;Price&gt;
+      &lt;Amount ccy=&quot;EUR&quot;&gt;88.90&lt;/Amount&gt;
+    &lt;/Price&gt;
+    &lt;PurchaseValue&gt;
+      &lt;Amount ccy=&quot;EUR&quot;&gt;1987420.00&lt;/Amount&gt;
+    &lt;/PurchaseValue&gt;
+  &lt;/ShareClass&gt;
+&lt;/Position&gt;
+
+&lt;!-- Asset entry --&gt;
+&lt;Asset&gt;
+  &lt;UniqueID&gt;IE00B4K48X80&lt;/UniqueID&gt;
+  &lt;Identifiers&gt;
+    &lt;ISIN&gt;IE00B4K48X80&lt;/ISIN&gt;
+  &lt;/Identifiers&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;Country&gt;IE&lt;/Country&gt;
+  &lt;Name&gt;iShares Core MSCI Europe UCITS ETF EUR (Acc)&lt;/Name&gt;
+  &lt;AssetType&gt;SC&lt;/AssetType&gt;
+  &lt;AssetDetails&gt;
+    &lt;ShareClass&gt;
+      &lt;Issuer&gt;
+        &lt;Identifiers&gt;
+          &lt;LEI&gt;549300MS535KC2WH4Z30&lt;/LEI&gt;
+        &lt;/Identifiers&gt;
+        &lt;Name&gt;BlackRock Asset Management Ireland Limited&lt;/Name&gt;
+        &lt;BusinessCountry&gt;IE&lt;/BusinessCountry&gt;
+        &lt;Type&gt;Non-MMF investment funds&lt;/Type&gt;
+      &lt;/Issuer&gt;
+      &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
+      &lt;Listing&gt;A&lt;/Listing&gt;
+      &lt;ListingUnit&gt;U&lt;/ListingUnit&gt;
+      &lt;IssueDate&gt;2009-09-29&lt;/IssueDate&gt;
+      &lt;ExchangeTradedFundFlag&gt;true&lt;/ExchangeTradedFundFlag&gt;
+    &lt;/ShareClass&gt;
+  &lt;/AssetDetails&gt;
+  &lt;Classifications&gt;
+    &lt;Classification&gt;
+      &lt;ListedGroup&gt;MORNINGSTAR&lt;/ListedGroup&gt;
+      &lt;Type&gt;Global Category&lt;/Type&gt;
+      &lt;Language&gt;en&lt;/Language&gt;
+      &lt;Value&gt;Europe Large-Cap Blend Equity&lt;/Value&gt;
+    &lt;/Classification&gt;
+  &lt;/Classifications&gt;
+&lt;/Asset&gt;
+</code></pre>
+<p>Three points about this example. First, the <code>&lt;ShareClass&gt;</code> child at the position level carries <code>&lt;Shares&gt;</code> (the number of fund units held, <code>xs:decimal</code>), <code>&lt;Price&gt;</code> (the last NAV of the held share class, in its native currency), and <code>&lt;PurchaseValue&gt;</code> (the historical cost). Unlike <code>&lt;Equity&gt;</code>, the share-class inner block has no <code>&lt;MarketValue&gt;</code> field — the consolidated value of the position lives at the <code>&lt;Position&gt;/&lt;TotalValue&gt;</code> level, not inside <code>&lt;ShareClass&gt;</code>. A producer that wants to carry the held fund's own NAV-times-units figure for debugging purposes can do so in <code>&lt;OtherPrices&gt;</code>.</p>
+<p>Second, the asset entry marks the held fund as an ETF through <code>&lt;ExchangeTradedFundFlag&gt;true&lt;/ExchangeTradedFundFlag&gt;</code> inside <code>&lt;AssetDetails&gt;/&lt;ShareClass&gt;</code> — a dedicated boolean that is <em>in addition to</em> the generic <code>Listing</code> enumeration. Consumers that want to identify ETFs read the flag directly rather than parsing the MIC code or the listing status. The <code>&lt;Classifications&gt;</code> block carries the Morningstar global category — a real Morningstar label that Europe-large-cap blend ETFs actually occupy — through the idiomatic <code>&lt;ListedGroup&gt;MORNINGSTAR&lt;/ListedGroup&gt;</code> path.</p>
+<p>Third, the holding fund's own cost disclosure under MiFID II does need to aggregate the held ETF's ongoing charges on a proportional basis, but the mechanism is not through a field on the share-class instrument. The aggregation happens in the regulatory templates of Chapter 8, where the EMT provides its own per-instrument cost structure and the consumer rolls them up. For the purposes of the portfolio block, the held ETF is just another position valued at its current NAV.</p>
+<hr>
+<h2>6.9 Derivatives</h2>
+<p>Derivatives are the most conceptually complex asset class in FundsXML, and they deserve the pages they are about to receive. For the Europa Growth Fund, derivatives appear in a single place: the two currency forwards that implement the CHF hedge for the R-CHF-ACC-HEDGED share class from Chapter 5. Other funds hold futures, options, and swaps in much larger proportions, and the general framework this section establishes applies to all of them.</p>
+<h3>6.9.1 Notional versus Market Value — the Key Concept</h3>
+<p>Derivatives differ from every other asset class because they have <em>two</em> value figures, and the figures can differ by orders of magnitude.</p>
+<p><strong>Notional</strong> is the <em>economic exposure</em> of the contract — the amount on which the contract's payoffs are based. A currency forward to buy 59 million CHF and sell 56.7 million EUR at a rate of 1.0420 has a notional of 56.7 million EUR on the sell side and 59 million CHF on the buy side — two valid representations of the same contract, related by the agreed forward rate. A futures contract on 10,000 units of a DAX index future has a notional equal to the index level times the contract multiplier times 10,000. A swap has a notional equal to the principal on which the periodic payments are computed.</p>
+<p><strong>Market value</strong> (also called <em>fair value</em>) is the <em>present value of the contract itself</em> as a tradable instrument — the amount a market participant would pay today to take the contract off the fund's hands. When a contract is first entered into, its market value is zero (because both parties agreed it was fair). As the underlying moves, the market value moves away from zero: a currency forward to sell EUR becomes valuable to the seller if the EUR weakens against the bought currency, and worthless or negative if the EUR strengthens. The absolute value of the market value is typically tiny compared to the notional — perhaps one-hundredth to one-thousandth of it, depending on the time remaining to expiry and the volatility of the underlying.</p>
+<p>The difference matters enormously. The Europa Growth Fund's CHF hedge forwards have notional amounts in the tens of millions of euros but market values in the hundreds of thousands or less. A consumer that reads the notional and treats it as the position's contribution to market value will overstate the fund's portfolio by tens of millions of euros, and the fund's NAV calculation will be impossible to reconcile.</p>
+<p><strong>Where the two numbers live in FundsXML.</strong> The schema does not have dedicated <em><code>Notional</code></em> and <em><code>MarketValue</code></em> fields at the position level — this is the single most important difference from the generic derivative model a newcomer might expect. Instead:</p>
+<ul>
+<li>The <strong>fair value</strong> of the contract, in the fund's base currency, lives in the position's mandatory <code>&lt;TotalValue&gt;</code> element (schema type <code>FundAmountType</code>, at the top of <code>&lt;Position&gt;</code>, as for every other asset class). For an FX forward, <code>TotalValue</code> is the mark-to-market of the contract, and can be positive or negative depending on whether the trade is in or out of the money.</li>
+<li>The <strong>notional amounts</strong> live on the asset side, inside <code>AssetDetails/&lt;FXForward&gt;/&lt;AmountBuy&gt;</code> and <code>&lt;AmountSell&gt;</code>, paired with the two currencies (<code>CurrencyBuy</code> and <code>CurrencySell</code>). These are the contractual quantities of each currency, not valuations — they do not change over the life of the contract, while <code>TotalValue</code> moves with the spot rate.</li>
+<li>An optional <code>&lt;Exposures&gt;</code> container at the position level (schema type <code>ExposureType</code>) carries additional exposure figures computed under specific regulatory methodologies — the AIFMD commitment approach, the gross commitment approach, a custom producer method — each as a labelled <code>&lt;Exposure&gt;</code> entry with its own amount. This is the field producers populate when they need to carry a notional-style exposure figure explicitly rather than leaving it implicit in the asset-side <code>AmountSell</code>.</li>
+</ul>
+<p>The discipline is therefore subtly different from the "Notional vs MarketValue" framing one finds in textbook descriptions. A consumer reads <code>&lt;TotalValue&gt;</code> for the mark-to-market contribution to the fund's NAV, reads the asset-side <code>AmountBuy</code>/<code>AmountSell</code> for the contractual notional amounts, and reads <code>&lt;Exposures&gt;/&lt;Exposure&gt;</code> for any regulatory exposure figure the producer chose to publish. Substituting one for another is still a catastrophic error — it is just that the labels the schema uses are different from the ones the textbook story suggests.</p>
+<p><strong>Table 6.5 — Key derivative-related fields, where they live</strong></p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Field location</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mark-to-market in fund currency</td>
+<td><code>Position/TotalValue</code></td>
+<td><code>FundAmountType</code></td>
+</tr>
+<tr>
+<td>Regulatory exposure</td>
+<td><code>Position/Exposures/Exposure</code></td>
+<td>labelled <code>Type</code>+<code>Value</code></td>
+</tr>
+<tr>
+<td>Asset-class discriminator</td>
+<td><code>Asset/AssetType</code></td>
+<td>2-char: <code>FX</code>/<code>OP</code>/<code>FU</code>/<code>SW</code></td>
+</tr>
+<tr>
+<td>Position-side sub-block</td>
+<td><code>Position/FXForward</code> | <code>/Option</code> | <code>/Future</code> | <code>/Swap</code></td>
+<td>inline type</td>
+</tr>
+<tr>
+<td>Contract details</td>
+<td><code>Asset/AssetDetails/FXForward</code> | <code>/Option</code> | <code>/Future</code> | <code>/Swap</code></td>
+<td><code>FXForward</code> carries <code>ForeignExchangeTradeType</code></td>
+</tr>
+<tr>
+<td>Contract currencies and notionals (FX)</td>
+<td><code>AssetDetails/FXForward/CurrencyBuy</code> + <code>AmountBuy</code> + <code>CurrencySell</code> + <code>AmountSell</code></td>
+<td>decimal + ISO currency</td>
+</tr>
+<tr>
+<td>Agreed forward rate (FX)</td>
+<td><code>AssetDetails/FXForward/AgreedFxRate</code></td>
+<td><code>xs:decimal</code></td>
+</tr>
+<tr>
+<td>Maturity (FX)</td>
+<td><code>AssetDetails/FXForward/MaturityDate</code></td>
+<td><code>xs:date</code> (mandatory)</td>
+</tr>
+<tr>
+<td>Counterparty</td>
+<td><code>AssetDetails/FXForward/Counterparty</code></td>
+<td><code>CompanyType</code> (mandatory for FX, must have LEI)</td>
+</tr>
+<tr>
+<td>Strike (options)</td>
+<td><code>AssetDetails/Option/StrikePrice</code></td>
+<td><code>xs:decimal</code></td>
+</tr>
+<tr>
+<td>Contract size (futures, options)</td>
+<td><code>AssetDetails/Future/ContractSize</code> / <code>AssetDetails/Option/ContractSize</code></td>
+<td><code>xs:decimal</code></td>
+</tr>
+</tbody>
+</table>
+<h3>6.9.2 FX Forwards</h3>
+<p>The derivative type the Europa Growth Fund actually holds, and the simplest class of all.</p>
+<p>A currency forward is a contract to exchange a fixed amount of one currency for a fixed amount of another currency at a specific date in the future, at a rate agreed when the contract was entered into. In FundsXML, an FX forward is modelled as <code>AssetType=FX</code>, and the contract details live in <code>AssetDetails/&lt;FXForward&gt;</code>, which is an element of schema type <code>ForeignExchangeTradeType</code> (XSD §25529). Its mandatory children, in order, are:</p>
+<ul>
+<li><code>&lt;CurrencyBuy&gt;</code> — the currency the fund is contractually buying (ISO 4217 code). An optional <code>@isBaseCCY</code> boolean attribute flags this as the fund's base currency.</li>
+<li><code>&lt;AmountBuy&gt;</code> — the amount in the buy currency, as a plain <code>xs:decimal</code>. Note that this is <strong>not</strong> an <code>&lt;Amount ccy="..."&gt;</code> wrapper; it is a bare decimal, with the currency given by the sibling <code>&lt;CurrencyBuy&gt;</code> element. This is a deliberate asymmetry with the position-side amounts, driven by the schema's choice to model the FX trade as a contract rather than a valuation.</li>
+<li><code>&lt;CurrencySell&gt;</code> — the currency the fund is contractually selling.</li>
+<li><code>&lt;AmountSell&gt;</code> — the amount in the sell currency, again as a plain <code>xs:decimal</code>.</li>
+<li><code>&lt;AgreedFxRate&gt;</code> — the forward rate agreed at trade time, as a decimal (e.g. <code>1.0420</code> for EUR/CHF at 1.0420 Swiss francs per euro).</li>
+<li><code>&lt;StartDate&gt;</code> (optional) — the trade date.</li>
+<li><code>&lt;MaturityDate&gt;</code> — the value date / settlement date. <strong>Mandatory</strong>; this is the date on which the actual currency exchange takes place.</li>
+<li><code>&lt;Counterparty&gt;</code> — a <code>CompanyType</code> block naming the bank on the other side of the trade, with its LEI inside <code>&lt;Identifiers&gt;</code>. <strong>Mandatory</strong>; every FX forward in FundsXML must name its counterparty.</li>
+<li><code>&lt;Deliverable&gt;</code> (optional, <code>xs:boolean</code>) — whether the currencies will be physically exchanged at maturity (<em>true</em>) or only the profit/loss will be transferred (<em>false</em>, a non-deliverable forward or <em>NDF</em>).</li>
+</ul>
+<p>The notional of an FX forward is thus <strong>two amounts</strong>, not one: the <code>AmountBuy</code> and the <code>AmountSell</code>. Producers pick whichever side corresponds to the fund's base currency as the "economic" notional and ignore the other; for a CHF-hedge forward on a EUR-base fund, the EUR-side <code>AmountSell</code> (the amount the fund has committed to sell) is the operational notional.</p>
+<p>The market value of an FX forward at any time between trade and maturity is a function of the current spot rate and the agreed forward rate: when the current rate is favourable to the fund's side of the trade, the value is positive; when unfavourable, it is negative. The producer computes the mark-to-market using standard present-value techniques and writes the result into the <strong>position's</strong> <code>&lt;TotalValue&gt;</code> in the fund's base currency. Consumers do not attempt to recompute.</p>
+<p><strong>The position-side <code>&lt;FXForward&gt;</code> sub-block carries almost no content.</strong> The only fields it defines are <code>&lt;HedgeRatio&gt;</code> (an optional <code>PercentageType</code> stating how much of the target exposure the forward covers) and <code>&lt;FxRateForEvaluation&gt;</code> (an optional <code>xs:decimal</code> with the spot rate used for today's valuation). Everything else — the currencies, the amounts, the maturity, the counterparty — lives on the asset side. The reason is that the same contract is usually described once per delivery in <code>AssetMasterData</code> and may be held by several funds in the same file; the per-position data is only the fund-specific hedge ratio and today's valuation.</p>
+<p>The Europa Growth Fund's CHF hedge consists of one or two overlapping forward contracts at any time: a currently-active forward that was rolled from the previous month and is due to settle at the end of the current month, and sometimes a just-entered forward for the next period. The structure is simple: approximately 56.7 million EUR (equal to the EUR equivalent of the R-CHF-ACC-HEDGED class's total net assets from §5.12) is sold forward against CHF at a forward rate close to the current spot. The forward is rolled at the end of each month, closing out the old contract and opening a new one.</p>
+<h3>6.9.3 Futures, Options, and Swaps</h3>
+<p>The remaining derivative types appear more briefly because they are not held by the Europa Growth Fund. Each gets a short paragraph naming its distinguishing fields.</p>
+<p><strong>Futures</strong> (<code>AssetType=FU</code>, asset-side details in <code>AssetDetails/&lt;Future&gt;</code> with schema type <code>FutureType</code>) are standardised, exchange-listed derivative contracts. Unlike forwards, they are margined daily — the fund pays or receives a cash amount each day equal to the change in the contract's mark-to-market value, so the position's <code>&lt;TotalValue&gt;</code> is conventionally zero or close to it (yesterday's margin movement has already moved into the cash balance). The <code>FutureType</code> fields that matter are <code>&lt;Type&gt;</code> (an enumeration covering <code>BF</code> Bond Future, <code>CF</code> Currency Future, <code>EF</code> Equity Future, <code>FRA</code> Forward Rate Agreement, <code>IF</code> Index Future, <code>IRF</code> Interest Rate Future, <code>MMF</code> Money Market Future, and <code>OTHER</code>), <code>&lt;ContractSize&gt;</code>, <code>&lt;MaturityDate&gt;</code>, and <code>&lt;BasePrice&gt;</code>. The position-side <code>&lt;Future&gt;</code> sub-block carries <code>&lt;Contracts&gt;</code> (the number of contracts, which may be negative for a short position) and a few supporting fields.</p>
+<p><strong>Options</strong> (<code>AssetType=OP</code>, asset-side details in <code>AssetDetails/&lt;Option&gt;</code> with schema type <code>OptionType</code>) carry additional fields because they are asymmetric contracts. <code>OptionType/&lt;Type&gt;</code> distinguishes the option family through a twelve-value enumeration: <code>BFO</code> Bond Future Option, <code>BO</code> Bond Option, <code>CFO</code> Currency Future Option, <code>EFO</code> Equity Future Option, <code>CO</code> Currency Option, <code>IFO</code> Index Future Option, <code>IO</code> Index Option, <code>IRFO</code> Interest Rate Future Option, <code>IRO</code> Interest Rate Option, <code>OTCIB</code> OTC Index-basket Option, <code>SO</code> Stock Option, <code>OTHER</code>. Strike price lives in <code>OptionType/&lt;StrikePrice&gt;</code>, contract size in <code>&lt;ContractSize&gt;</code>, expiry in <code>&lt;MaturityDate&gt;</code>, the call/put distinction in <code>&lt;CallPutIndicator&gt;</code> (<code>C</code> or <code>P</code>), and the exercise style in <code>&lt;ExecutionStyle&gt;</code> (American or European). The position-side <code>&lt;Option&gt;</code> sub-block carries <code>&lt;Contracts&gt;</code> (negative for a written option) and <code>&lt;Price&gt;</code> (the option premium). The market value of a long option is its premium times the number of contracts; the notional is the strike times the contract size times the number of contracts. A short option contributes the premium negatively.</p>
+<p><strong>Swaps</strong> (<code>AssetType=SW</code>, asset-side details in <code>AssetDetails/&lt;Swap&gt;</code> with schema type <code>SwapType</code>) are a family rather than a single type. <code>SwapType/&lt;Type&gt;</code> is an enumeration that covers <code>Currencyswap</code>, <code>Crosscurrencyswap</code>, <code>Creditdefaultswap</code>, <code>Indexswap</code>, <code>Totalreturnswap</code>, <code>Assetswap</code>, <code>Commodityswap</code>, <code>Interestrateswap</code>, <code>Inflationswap</code>, and <code>Other</code>. The rest of <code>SwapType</code> carries the shared metadata — <code>StartDate</code>, <code>MaturityDate</code>, <code>SettlementDate</code>, <code>Counterparty</code>, <code>FXRate</code>, <code>AgreedFxRate</code> — and the per-leg detail lives in a <code>&lt;Legs&gt;</code> container holding one or more <code>&lt;Leg&gt;</code> entries with their own rate, reference index, and payment-schedule fields. The position-side <code>&lt;Swap&gt;</code> sub-block carries <code>&lt;HedgeRatio&gt;</code>, <code>&lt;CurrentSpread&gt;</code> (relevant for Credit Default Swaps), <code>&lt;PresentValueOfPayments&gt;</code>, and a <code>&lt;LegValues&gt;</code> container with one entry per leg showing the current valuation of each side as <code>&lt;Type&gt;BUY&lt;/Type&gt;</code> or <code>&lt;Type&gt;SELL&lt;/Type&gt;</code> plus <code>&lt;Value&gt;</code>. For most European equity UCITS readers this chapter's treatment is enough; specialised bond and macro funds will need the detailed derivative documentation referenced in Appendix E.</p>
+<h3>6.9.4 FX Forward Example</h3>
+<p>The active CHF hedge forward of the Europa Growth Fund on 31 March 2026, as it would appear in the portfolio block and the asset master data block.</p>
+<pre><code>&lt;!-- Portfolio position --&gt;
+&lt;Position&gt;
+  &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;TotalValue&gt;
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;-142318.50&lt;/Amount&gt;
+  &lt;/TotalValue&gt;
+  &lt;FXForward&gt;
+    &lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;
+    &lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;
+  &lt;/FXForward&gt;
+&lt;/Position&gt;
+
+&lt;!-- Asset entry --&gt;
+&lt;Asset&gt;
+  &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;Name&gt;EUR/CHF Forward 30/04/2026 (main hedge roll)&lt;/Name&gt;
+  &lt;AssetType&gt;FX&lt;/AssetType&gt;
+  &lt;AssetDetails&gt;
+    &lt;FXForward&gt;
+      &lt;CurrencyBuy&gt;CHF&lt;/CurrencyBuy&gt;
+      &lt;AmountBuy&gt;59107354.41&lt;/AmountBuy&gt;
+      &lt;CurrencySell isBaseCCY=&quot;true&quot;&gt;EUR&lt;/CurrencySell&gt;
+      &lt;AmountSell&gt;56724871.39&lt;/AmountSell&gt;
+      &lt;AgreedFxRate&gt;1.0420&lt;/AgreedFxRate&gt;
+      &lt;StartDate&gt;2026-02-28&lt;/StartDate&gt;
+      &lt;MaturityDate&gt;2026-04-30&lt;/MaturityDate&gt;
+      &lt;Counterparty&gt;
+        &lt;Identifiers&gt;
+          &lt;LEI&gt;O2RNE8IBXP4R0TD8PU41&lt;/LEI&gt;
+        &lt;/Identifiers&gt;
+        &lt;Name&gt;Société Générale S.A.&lt;/Name&gt;
+        &lt;BusinessCountry&gt;FR&lt;/BusinessCountry&gt;
+        &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
+      &lt;/Counterparty&gt;
+      &lt;Deliverable&gt;true&lt;/Deliverable&gt;
+    &lt;/FXForward&gt;
+  &lt;/AssetDetails&gt;
+&lt;/Asset&gt;
+</code></pre>
+<p>Reading field by field: the position has no <code>&lt;Currency&gt;</code> override (the forward is already expressed in the fund's EUR base) and a mandatory <code>&lt;TotalValue&gt;</code> of <em>negative</em> 142,318.50 EUR, because the EUR has strengthened slightly against the CHF since the forward was entered into on 28 February, making the agreed sell rate slightly unfavourable to the fund. The negative sign on the <code>&lt;Amount&gt;</code> value is entirely schema-valid (the underlying <code>xs:decimal</code> type accepts negative values), and it is how the schema represents an out-of-the-money derivative position. Inside <code>&lt;FXForward&gt;</code>, the <code>&lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;</code> declares that the forward fully covers its target exposure, and <code>&lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;</code> is the spot rate the producer used for today's mark-to-market.</p>
+<p>The asset entry identifies the contract as an FX forward through <code>&lt;AssetType&gt;FX&lt;/AssetType&gt;</code> and places the contract details inside <code>&lt;AssetDetails&gt;/&lt;FXForward&gt;</code>. The buy side is 59,107,354.41 CHF; the sell side is 56,724,871.39 EUR with <code>@isBaseCCY="true"</code> flagging it as the fund base currency; and the agreed forward rate is 1.0420 (close to the then-prevailing spot). <code>&lt;MaturityDate&gt;</code> is the settlement date on which the currencies will actually be exchanged (30 April 2026, one month out from the valuation point). The <code>&lt;Counterparty&gt;</code> is a full <code>CompanyType</code> block — the schema refuses anything less — with Société Générale's LEI inside <code>&lt;Identifiers&gt;</code> and the ECB sector classification identifying it as a deposit-taking corporation. The <code>&lt;Deliverable&gt;true&lt;/Deliverable&gt;</code> flag declares that this is a standard deliverable forward, not a non-deliverable forward with cash settlement.</p>
+<p>The <code>UniqueID</code> is a producer-generated string (<code>EGF-FXF-20260430-001</code>) rather than an ISIN, because over-the-counter forwards have no ISIN. The format is conventional: the fund short code, the instrument type, the maturity date, and a sequence number. Because <code>xs:ID</code> demands that the value begin with a letter, the <code>EGF-</code> prefix is mandatory; a raw numeric code would not pass schema validation.</p>
+<p>The linkage to Chapter 5 is worth making explicit. The R-CHF-ACC-HEDGED share class from §5.10.2 carries <code>&lt;CurrencyHedgedFlag&gt;true&lt;/CurrencyHedgedFlag&gt;</code>. That flag is the <em>declaration</em> that the class is currency-hedged; this forward is the <em>operational mechanism</em> by which the hedge is implemented. Without the forward, the CHF class would be exposed to EUR/CHF movements; with the forward, those movements are neutralised (imperfectly — the hedge cost absorbs into NAV, as §5.10.2 warned). The −142,318.50 EUR <code>&lt;TotalValue&gt;</code> is exactly the kind of small mark-to-market movement that gets absorbed into the CHF class's daily NAV.</p>
+<hr>
+<h2>6.10 Cash, Real Estate, and Other Asset Classes</h2>
+<p>The catchment section for everything that is neither equity, bond, fund, nor derivative. Three subsections of unequal importance.</p>
+<h3>6.10.1 Cash Positions</h3>
+<p>Cash is operationally the simplest asset class but deserves a careful discussion because FundsXML models it through a choice of three distinct asset-type codes, and picking the right one is the first decision.</p>
+<p><strong>Three asset-type codes for cash.</strong> The schema distinguishes:</p>
+<ul>
+<li><strong><code>AC</code> — Account</strong>: an ordinary bank account the fund maintains with its custodian. Details live in <code>AssetDetails/&lt;Account&gt;</code> (schema type <code>AccountType</code>, XSD §68). This is the most common cash asset class and covers current accounts, nostro accounts, and cash management accounts.</li>
+<li><strong><code>FT</code> — Fixed Time Deposit</strong>: a fixed-term deposit, typically thirty or ninety days, earning a rate above the current-account rate. Details live in <code>AssetDetails/&lt;FixedTimeDeposit&gt;</code> with schema type <code>FixedTimeDepositType</code>, which adds <code>StartDate</code>, <code>MaturityDate</code>, <code>MethodForCalculationOfInterest</code>, and <code>InterestRate</code> fields on top of the counterparty block.</li>
+<li><strong><code>CM</code> — Call Money</strong>: a short-term call money or call capital position, possibly used as collateral. Details live in <code>AssetDetails/&lt;CallMoney&gt;</code> with schema type <code>CallCapitalType</code>, which adds fields for <code>CollateralFlag</code> (whether the cash is pledged) and <code>CollateralDirection</code> (<code>PAID</code> or <code>RECEIVED</code>).</li>
+</ul>
+<p>The generic <em>CurrentAccount / TimeDeposit / CashCollateral</em> trio one sees in textbook descriptions is therefore expressed through three separate asset-type codes, not through a single <code>CashType</code> enumeration on a single asset. A producer picks the code that best fits the account's operational nature and populates the corresponding details block.</p>
+<p><strong>The <code>AccountType</code> details block</strong> is the one most fund administrators actually use, and its children are minimal: an optional <code>&lt;IndicatorCreditDebit&gt;</code> (<code>Credit</code> or <code>Debit</code>) naming the account's default balance direction, optional <code>&lt;AccountNumber&gt;</code> and <code>&lt;IBAN&gt;</code> for regulatory reporting, optional <code>&lt;InterestRateDebit&gt;</code> and <code>&lt;InterestRateCredit&gt;</code> for overdraft and credit rates, and a <strong>mandatory</strong> <code>&lt;Counterparty&gt;</code> block of type <code>CompanyType</code> identifying the bank holding the account.</p>
+<p><strong>One position per currency.</strong> A fund with positions in EUR, GBP, and CHF has three cash positions, each representing one currency balance, each with its own <code>&lt;Asset&gt;</code> entry. There is no mechanism for aggregating multi-currency cash into a single position; the model forces the producer to name each currency explicitly. The position's <code>&lt;Currency&gt;</code> element and the asset's top-level <code>&lt;Currency&gt;</code> element must agree.</p>
+<p><strong>Counterparty and concentration limits.</strong> The bank holding the cash matters operationally because concentration limits under UCITS and AIFMD are applied against the counterparty, not the currency; a fund that holds 50 million EUR at a single bank has a 50 million EUR concentration against that bank, regardless of what other banks it also uses. For a custodian-held account the counterparty is the custodian itself; for cash collateral it is whichever party holds the collateral account (often a different bank). The counterparty's LEI is the single most important field on the whole cash asset entry.</p>
+<p><strong>Position-side fields.</strong> At the position level, a cash entry ends with an <code>&lt;Account&gt;</code> child (or <code>&lt;FixedTimeDeposit&gt;</code>, <code>&lt;CallMoney&gt;</code> for the other types). The <code>&lt;Account&gt;</code> inner block is the simplest of all choice children: both its children are optional — an <code>&lt;MarketValue&gt;</code> (the current balance, in the account's currency) and an <code>&lt;Interests&gt;</code> (accrued interest not yet credited). In practice producers populate <code>&lt;MarketValue&gt;</code> because it carries the operational balance, but the schema does not insist. There is no <code>&lt;Units&gt;</code>, no <code>&lt;Shares&gt;</code>, no <code>&lt;Contracts&gt;</code> — cash has no unit count, only a balance — and the authoritative fund-currency value lives at the position's <code>&lt;TotalValue&gt;</code> as always.</p>
+<p>Example: the Europa Growth Fund's primary EUR cash position at its Luxembourg custodian on 31 March 2026.</p>
+<pre><code>&lt;!-- Portfolio position --&gt;
+&lt;Position&gt;
+  &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;TotalValue&gt;
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;
+  &lt;/TotalValue&gt;
+  &lt;TotalPercentage&gt;0.70&lt;/TotalPercentage&gt;
+  &lt;Account&gt;
+    &lt;MarketValue&gt;
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;
+    &lt;/MarketValue&gt;
+  &lt;/Account&gt;
+&lt;/Position&gt;
+
+&lt;!-- Asset entry --&gt;
+&lt;Asset&gt;
+  &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
+  &lt;Currency&gt;EUR&lt;/Currency&gt;
+  &lt;Country&gt;LU&lt;/Country&gt;
+  &lt;Name&gt;EUR Current Account — BGL BNP Paribas&lt;/Name&gt;
+  &lt;AssetType&gt;AC&lt;/AssetType&gt;
+  &lt;AssetDetails&gt;
+    &lt;Account&gt;
+      &lt;IndicatorCreditDebit&gt;Credit&lt;/IndicatorCreditDebit&gt;
+      &lt;InterestRateCredit&gt;0.15&lt;/InterestRateCredit&gt;
+      &lt;Counterparty&gt;
+        &lt;Identifiers&gt;
+          &lt;LEI&gt;549300CL2K1QUOZK7T97&lt;/LEI&gt;
+        &lt;/Identifiers&gt;
+        &lt;Name&gt;BGL BNP Paribas S.A.&lt;/Name&gt;
+        &lt;BusinessCountry&gt;LU&lt;/BusinessCountry&gt;
+        &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
+      &lt;/Counterparty&gt;
+    &lt;/Account&gt;
+  &lt;/AssetDetails&gt;
+&lt;/Asset&gt;
+</code></pre>
+<p>Reading this pair: the position says the fund holds a euro current-account balance of 3.25 million euros at its Luxembourg custodian, representing 0.70% of total net assets. The <code>&lt;Account&gt;</code> inner block at the position level carries only the same balance as the position's consolidated <code>&lt;TotalValue&gt;</code> — for cash, the two are identical by construction, and the apparent redundancy is a schema artefact. The asset entry uses <code>&lt;AssetType&gt;AC&lt;/AssetType&gt;</code> to signal <em>Account</em>, places the counterparty block inside <code>&lt;AssetDetails&gt;/&lt;Account&gt;</code> as the schema requires, and populates the counterparty's LEI (the critical field for concentration-limit reporting) inside <code>&lt;Identifiers&gt;</code> following the <code>CompanyType</code> convention. An optional <code>&lt;InterestRateCredit&gt;</code> of 0.15% indicates the rate the custodian is currently paying on the credit balance.</p>
+<p>The Europa Growth Fund also holds small balances in GBP (from sterling dividend receipts on UK-listed holdings) and in CHF (for the CHF-hedge operational account). Both follow the same pattern, each as its own position with its own asset entry, both held at the same BGL BNP Paribas custodian.</p>
+<h3>6.10.2 Real Estate</h3>
+<p>The Europa Growth Fund holds no real estate, and this chapter does not attempt a detailed treatment. The structural essentials are worth naming briefly so that a reader who one day meets a real-estate fund delivery recognises the pattern.</p>
+<p>Real estate comes in two forms. <strong>Indirect real estate</strong> — shares in listed REITs, units in property funds, private real-estate vehicles — is modelled through the ordinary <code>EQ</code> or <code>SC</code> asset types; the "real estate" nature shows up in the issuer's business and in classifications, not in a new asset class. <strong>Direct real estate</strong> — the fund owns the physical building — is modelled through <code>AssetType=RE</code> with <code>AssetDetails/&lt;RealEstate&gt;</code>, which carries property-specific fields for location, valuation method, and occupancy. Open-ended German and Luxembourg property funds are the usual populators of this branch; the schema's <code>RealEstateType</code> runs to several pages and its detail is outside the scope of this chapter. Readers interested in real-estate-specific reporting should consult the specialised documentation referenced in Appendix E.</p>
+<h3>6.10.3 Commodities, Private Equity, and Alternatives</h3>
+<p>A short catch-all for asset classes that do not appear in the Europa Growth Fund and are not treated in detail in this chapter. The schema has dedicated types for each:</p>
+<ul>
+<li><strong>Commodities</strong> — <code>AssetType=CO</code>, details in <code>AssetDetails/&lt;Commodity&gt;</code>. Physical commodities are effectively excluded from UCITS portfolios by eligibility rules; they appear in specialised AIFs. Commodity futures are derivatives (§6.9), commodity-linked structured notes are bonds (§6.7).</li>
+<li><strong>Private equity</strong> — <code>AssetType=PE</code>, details in <code>AssetDetails/&lt;PrivateEquity&gt;</code>. Holdings in non-listed companies, typically held through a limited partnership structure. Valued by mark-to-model rather than by market quote, updated quarterly or semi-annually. AIF territory.</li>
+<li><strong>Hedge funds</strong> use <code>AssetType=SC</code> (share class, like any other fund) but with additional operational complications around redemption gates, lock-up periods, and side pockets that the position-level schema does not model directly. Producers extend through <code>&lt;CustomAttributes&gt;</code>.</li>
+<li><strong>Rights, warrants, certificates, crypto</strong> — <code>AssetType=RI</code>/<code>WA</code>/<code>CE</code>/<code>CR</code> respectively, each with a dedicated details block in <code>AssetDetailsType</code>.</li>
+</ul>
+<p>None of these asset classes appears in the Europa Growth Fund's portfolio, and none appears in the complete example of §6.12. They are named for completeness and for the reader who one day encounters an AIF delivery and needs to know that the mechanism exists — the branch in <code>AssetDetailsType</code> is already there, waiting for the asset.</p>
+<hr>
+<h2>6.11 Portfolio Breakdowns by Dimension</h2>
+<p>We close Part III of the chapter with a topic that sits alongside positions rather than inside them: the pre-computed aggregates that FundsXML delivers in its <code>&lt;BreakDowns&gt;</code> element. The capitalisation is deliberate — the element name is <code>BreakDowns</code> with a capital D, the container is a child of <code>Portfolio</code> (not of <code>FundDynamicData</code> or a separate root), and the structure is surprisingly more flexible than most readers expect.</p>
+<h3>6.11.1 Why Breakdowns Exist</h3>
+<p>A portfolio with 150 positions can be sliced along many dimensions — by sector, by country, by currency, by rating, by maturity, by instrument type. A consumer that wants to render a sector chart on a factsheet does not want to re-aggregate 150 position records every time the factsheet regenerates; it wants a ready-made list of "Healthcare 17.50%, Financials 17.20%, Industrials 14.40%, …". The <code>&lt;BreakDowns&gt;</code> element carries exactly this: pre-computed slices of the portfolio along standard dimensions, each containing a list of buckets with labels and percentages.</p>
+<p>Two more substantive reasons justify the pre-computation. First, <strong>classification conventions are producer-specific</strong>. Two consumers that re-aggregate the same 150 positions may apply different sector classifications (GICS vs ICB), different country assignments (country of issue vs country of risk), or different lookthrough rules for held funds. The producer, being the single authoritative source, emits <em>one</em> classification, and every consumer using the producer's breakdowns sees the same picture. Consumers that want a different classification can still re-aggregate themselves, but the default is to trust the producer.</p>
+<p>Second, <strong>some breakdowns cannot be re-computed from positions alone</strong>. A fund's currency breakdown, if it takes hedging into account, cannot be derived from the position-level currency fields alone — it requires knowledge of which forwards hedge which exposures, and the producer computes the net result after applying the hedges. A consumer recomputing from raw positions would get a pre-hedge exposure, which is not what the factsheet shows.</p>
+<h3>6.11.2 Structure of a Breakdown</h3>
+<p>The schema type is <code>BreakDownsType</code> (XSD §2390), and it is multi-dimensional by design. A single <code>&lt;BreakDowns&gt;</code> element contains one or more <code>&lt;BreakDown&gt;</code> children; each <code>&lt;BreakDown&gt;</code> carries:</p>
+<ul>
+<li>A <code>&lt;Dimensions&gt;</code> container holding one or more <code>&lt;Dimension&gt;</code> strings naming the dimensions along which the breakdown slices the portfolio. Common values are <code>Sector</code>, <code>Country</code>, <code>Currency</code>, <code>Rating</code>, <code>Duration</code>, <code>AssetType</code>, <code>Region</code>, <code>Size</code>. A single <code>&lt;Dimension&gt;</code> gives a one-dimensional breakdown; two <code>&lt;Dimension&gt;</code> entries (<code>Currency</code> and <code>AssetType</code>) produce a two-dimensional cross-tabulation.</li>
+<li>An optional <code>&lt;CalculationMethod&gt;</code> free-text field naming the basis of the calculation (<code>Market Value</code>, <code>Exposure</code>, <code>Brutto</code>, <code>Netto</code>, and so on).</li>
+<li>A mandatory <code>&lt;Values&gt;</code> container holding one or more <code>&lt;Value&gt;</code> entries. Each <code>&lt;Value&gt;</code> is one cell of the breakdown table and carries:</li>
+<li>A <code>&lt;DimValues&gt;</code> container with one <code>&lt;DimValue&gt;</code> per dimension, each labelled by a <code>@dim</code> attribute identifying which dimension the value belongs to. For a one-dimensional sector breakdown, each <code>&lt;Value&gt;</code> has one <code>&lt;DimValue dim="Sector"&gt;Financials&lt;/DimValue&gt;</code> element; for a two-dimensional breakdown, each <code>&lt;Value&gt;</code> has two <code>&lt;DimValue&gt;</code> elements, one per dimension.</li>
+<li>A mandatory <code>&lt;Percentage&gt;</code> (PercentageType, in per cent) giving the cell's share of the portfolio, from 0 to 100.</li>
+<li>An optional nested <code>&lt;BreakDowns&gt;</code> element, allowing a breakdown cell to carry its own sub-breakdowns — the structure is recursive. A <em>Financials</em> sector cell, for example, can carry an inner breakdown into <em>Banks</em>, <em>Insurance</em>, <em>Diversified Financials</em>, each with its own percentage relative to the parent cell's share of the portfolio.</li>
+</ul>
+<p>The completeness rule is that the sum of percentages across all <code>&lt;Value&gt;</code> entries within a single <code>&lt;BreakDown&gt;</code> should equal 100, subject to a rounding tolerance of a few basis points. A breakdown that sums to 99.95% or 100.03% is acceptable; a breakdown that sums to 92% is missing a cell and is a data-quality issue.</p>
+<p>A concrete example — a one-dimensional sector breakdown for a generic European equity fund, shortened to four cells:</p>
+<pre><code>&lt;BreakDowns&gt;
+  &lt;BreakDown&gt;
+    &lt;Dimensions&gt;
+      &lt;Dimension&gt;Sector&lt;/Dimension&gt;
+    &lt;/Dimensions&gt;
+    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
+    &lt;Values&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Financials&lt;/DimValue&gt;
+        &lt;/DimValues&gt;
+        &lt;Percentage&gt;22.50&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Industrials&lt;/DimValue&gt;
+        &lt;/DimValues&gt;
+        &lt;Percentage&gt;18.75&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Discretionary&lt;/DimValue&gt;
+        &lt;/DimValues&gt;
+        &lt;Percentage&gt;15.20&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Healthcare&lt;/DimValue&gt;
+        &lt;/DimValues&gt;
+        &lt;Percentage&gt;14.15&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;!-- further cells elided --&gt;
+    &lt;/Values&gt;
+  &lt;/BreakDown&gt;
+&lt;/BreakDowns&gt;
+</code></pre>
+<p>A producer typically emits several <code>&lt;BreakDown&gt;</code> entries inside one <code>&lt;BreakDowns&gt;</code> container — one for each dimension the fund's consumers need. The Europa Growth Fund's monthly delivery emits breakdowns by sector, country, and currency at a minimum, and its complete <code>&lt;BreakDowns&gt;</code> block in §6.12 shows all three as sibling <code>&lt;BreakDown&gt;</code> entries.</p>
+<p><strong>Two-dimensional breakdowns.</strong> The multi-dimensional design shines when a consumer needs a cross-tabulation. A <code>&lt;BreakDown&gt;</code> with two <code>&lt;Dimension&gt;</code> children (<em>Country</em> and <em>Sector</em>) has one <code>&lt;Value&gt;</code> per country-sector cell, each with two <code>&lt;DimValue&gt;</code> elements carrying the two labels. The German Financials cell, the French Industrials cell, the Swiss Healthcare cell, and so on — each appears as a separate <code>&lt;Value&gt;</code> entry with its own percentage. This flexibility is largely unused in current production pipelines because most consumers prefer simpler one-dimensional breakdowns, but it is there when the need arises.</p>
+<h3>6.11.3 The Common Breakdown Types in Practice</h3>
+<p><strong>Sector breakdown</strong> uses GICS by default for European equity funds, ICB for some British contexts, NACE for regulatory reporting. A diversified European equity fund typically shows Financials, Industrials, Consumer Discretionary, Healthcare, Technology, and Consumer Staples as the five or six largest sectors, each in the 10% to 25% range, followed by Utilities, Energy, Materials, Real Estate, and Communication Services in smaller allocations. The precise weights shift with the benchmark and the manager's active bets.</p>
+<p><strong>Country breakdown</strong> is based on the issuer's country of domicile (for equities) or country of risk (for bonds). A typical European equity fund is weighted heavily toward France and Germany — together 40% to 50% — with Switzerland, the Netherlands, Spain, Italy, and Scandinavia filling the remainder. The Europa Growth Fund's breakdown in §6.12 will show exactly this pattern.</p>
+<p><strong>Currency breakdown</strong> shows the currencies in which the portfolio is denominated, typically before hedging effects. For a European equity fund the dominant currency is EUR, with CHF (Swiss stocks), GBP (UK stocks), and smaller allocations to DKK, NOK, and SEK from Nordic holdings.</p>
+<p><strong>Rating breakdown</strong> matters for bond portfolios and is largely irrelevant for pure equity funds. The standard cells are <em>AAA</em>, <em>AA+</em> through <em>AA-</em>, <em>A+</em> through <em>A-</em>, <em>BBB+</em> through <em>BBB-</em>, <em>BB and below</em>, <em>Not Rated</em>. The producer picks a convention for which agency's rating to use (typically the middle of the three main agencies, or the lowest for conservatism).</p>
+<p><strong>Duration breakdown</strong> likewise matters for bonds. Cells are typically <em>0–1 year</em>, <em>1–3 years</em>, <em>3–5 years</em>, <em>5–10 years</em>, <em>10–20 years</em>, <em>20+ years</em>, or a shorter set for short-duration funds. The dimension name in the schema is <code>Duration</code>, and the convention is to put the same bucket labels that the factsheet uses into the <code>&lt;DimValue dim="Duration"&gt;</code> elements. Equity funds do not emit duration breakdowns.</p>
+<h3>6.11.4 Producer versus Consumer Computation</h3>
+<p>A consumer that re-computes breakdowns from the raw positions will often find small differences from the producer's figures. Three sources account for almost all of the differences.</p>
+<p><strong>Rounding</strong>. Position-level percentages are rounded to two decimal places; summing rounded values gives a total that can differ from the producer's figure (which was computed at full precision before rounding) by a few basis points. This is an artefact of rounding, not a data error.</p>
+<p><strong>Classification ambiguity</strong>. A company like Siemens is both an industrial conglomerate and a technology provider, and different classification schemes place it differently. The producer's breakdown reflects the producer's chosen classification; a consumer using its own classification library will get different numbers. Neither is wrong; they are answers to slightly different questions.</p>
+<p><strong>Lookthrough</strong>. When the fund holds another fund (§6.8) and the producer has populated <code>&lt;PositionsDecomposed&gt;</code> to apply lookthrough to the held fund's underlying holdings, the producer's sector breakdown is computed from the decomposed positions and reflects the underlying holdings rather than the held fund as a single <em>Fund</em> cell. A consumer that reads <code>&lt;Positions&gt;</code> directly but reads the producer's breakdown will see a different picture than one that re-aggregates <code>&lt;Positions&gt;</code> itself. The difference is the lookthrough effect.</p>
+<p>The operational rule is straightforward: <strong>consumers trust the producer's breakdowns and recompute only for validation purposes, with appropriate tolerance</strong>. Chapter 10 will formalise the tolerances that production validators should apply to breakdown reconciliation.</p>
+<hr>
+<h2>6.12 The Complete Europa Growth Fund Portfolio</h2>
+<p>We are now ready to assemble the largest example in the book. The Europa Growth Fund on 31 March 2026 holds approximately 150 distinct positions: 145 European equity positions across eleven countries and eleven sectors, three cash positions (EUR, GBP, CHF), and two currency forwards implementing the CHF hedge. The complete portfolio appears in Appendix D; this section shows a representative sample of fifteen equity positions, the three cash positions, and the two forwards, together with their <code>AssetMasterData</code> entries and the resulting portfolio breakdowns.</p>
+<h3>6.12.1 The Real Portfolio</h3>
+<p>Before looking at the XML, a word on what the real portfolio looks like. The fund's 145 equity positions are not uniform in size; the largest ten or so positions account for thirty to forty percent of the portfolio (the manager's conviction picks), while the remaining 130-plus positions form a long tail of smaller holdings for diversification. The sample of fifteen positions shown below is drawn from the larger end of the portfolio, so that each position is meaningful in size (between five and fifteen million euros), and is distributed across sectors and countries so that the portfolio breakdowns at the end of the section are meaningful.</p>
+<p>The combined market value of the fifteen sample positions plus the three cash positions comes to approximately 130 million EUR — roughly 28% of the fund's total net assets of 464.55 million EUR. The remaining 72% lives in the 130 positions that are not shown here. The currency forwards do not add materially to the portfolio market value (their market values are in the low hundreds of thousands, positive or negative, absorbed into the hedged class's NAV).</p>
+<h3>6.12.2 The Portfolio Block</h3>
+<pre><code>&lt;Portfolio&gt;
+  &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+  &lt;Positions&gt;
+    &lt;!-- Equity positions (fifteen representative entries) --&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;1.75&lt;/TotalPercentage&gt;
+      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+      &lt;Equity&gt;
+        &lt;Units&gt;50000&lt;/Units&gt;
+        &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;162.50&lt;/Amount&gt;&lt;/Price&gt;
+        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;&lt;/MarketValue&gt;
+      &lt;/Equity&gt;
+    &lt;/Position&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;DE0007164600&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8538000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;1.84&lt;/TotalPercentage&gt;
+      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+      &lt;Equity&gt;
+        &lt;Units&gt;60000&lt;/Units&gt;
+        &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;142.30&lt;/Amount&gt;&lt;/Price&gt;
+        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8538000.00&lt;/Amount&gt;&lt;/MarketValue&gt;
+      &lt;/Equity&gt;
+    &lt;/Position&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;DE0008404005&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;7964800.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;1.72&lt;/TotalPercentage&gt;
+      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+      &lt;Equity&gt;
+        &lt;Units&gt;32000&lt;/Units&gt;
+        &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;248.90&lt;/Amount&gt;&lt;/Price&gt;
+        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;7964800.00&lt;/Amount&gt;&lt;/MarketValue&gt;
+      &lt;/Equity&gt;
+    &lt;/Position&gt;
+    &lt;!-- LVMH, TotalEnergies, BNP Paribas (FR) and Nestlé, Roche, Novartis (CH)
+         follow the same pattern; the three Swiss positions carry their prices in
+         CHF and their TotalValue in EUR (isFundCcy=&quot;true&quot;) alongside a CHF-native
+         Amount for transparency --&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;CH0038863350&lt;/UniqueID&gt;
+      &lt;Currency&gt;CHF&lt;/Currency&gt;
+      &lt;TotalValue&gt;
+        &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;6017500.00&lt;/Amount&gt;
+        &lt;Amount ccy=&quot;CHF&quot;&gt;6270290.00&lt;/Amount&gt;
+      &lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;1.30&lt;/TotalPercentage&gt;
+      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
+      &lt;Equity&gt;
+        &lt;Units&gt;65000&lt;/Units&gt;
+        &lt;Price&gt;&lt;Amount ccy=&quot;CHF&quot;&gt;96.40&lt;/Amount&gt;&lt;/Price&gt;
+        &lt;MarketValue&gt;
+          &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;6017500.00&lt;/Amount&gt;
+          &lt;Amount ccy=&quot;CHF&quot;&gt;6270290.00&lt;/Amount&gt;
+        &lt;/MarketValue&gt;
+      &lt;/Equity&gt;
+    &lt;/Position&gt;
+    &lt;!-- ASML (NL), Shell, Unilever, AstraZeneca (GB), Iberdrola, Banco Santander (ES)
+         follow the pattern. Cash positions come next. --&gt;
+
+    &lt;!-- Cash accounts (one position per currency) --&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;0.70&lt;/TotalPercentage&gt;
+      &lt;Account&gt;
+        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;&lt;/MarketValue&gt;
+      &lt;/Account&gt;
+    &lt;/Position&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;EGF-CASH-GBP-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;GBP&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;208541.30&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;0.04&lt;/TotalPercentage&gt;
+      &lt;Account&gt;
+        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;208541.30&lt;/Amount&gt;&lt;/MarketValue&gt;
+      &lt;/Account&gt;
+    &lt;/Position&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;EGF-CASH-CHF-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;CHF&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;156217.80&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;TotalPercentage&gt;0.03&lt;/TotalPercentage&gt;
+      &lt;Account&gt;
+        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;156217.80&lt;/Amount&gt;&lt;/MarketValue&gt;
+      &lt;/Account&gt;
+    &lt;/Position&gt;
+
+    &lt;!-- FX forwards implementing the CHF hedge for R-CHF-ACC-HEDGED --&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;-142318.50&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;FXForward&gt;
+        &lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;
+        &lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;
+      &lt;/FXForward&gt;
+    &lt;/Position&gt;
+    &lt;Position&gt;
+      &lt;UniqueID&gt;EGF-FXF-20260430-002&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;18420.75&lt;/Amount&gt;&lt;/TotalValue&gt;
+      &lt;FXForward&gt;
+        &lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;
+        &lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;
+      &lt;/FXForward&gt;
+    &lt;/Position&gt;
+  &lt;/Positions&gt;
+  &lt;!-- BreakDowns follow in §6.12.4 --&gt;
+&lt;/Portfolio&gt;
+</code></pre>
+<h3>6.12.3 The AssetMasterData Block (Representative Entries)</h3>
+<p>At the root level of the document, the <code>AssetMasterData</code> block carries one entry per unique position referenced above. We show three representative entries in full — a German equity, a Swiss equity, and a cash account — together with one FX forward, and list the remainder in summary form.</p>
+<pre><code>&lt;AssetMasterData&gt;
+  &lt;Asset&gt;
+    &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
+    &lt;Identifiers&gt;
+      &lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;
+      &lt;GermanWKN&gt;723610&lt;/GermanWKN&gt;
+    &lt;/Identifiers&gt;
+    &lt;Currency&gt;EUR&lt;/Currency&gt;
+    &lt;Country&gt;DE&lt;/Country&gt;
+    &lt;Name&gt;Siemens AG&lt;/Name&gt;
+    &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;AssetDetails&gt;
+      &lt;Equity&gt;
+        &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
+        &lt;Issuer&gt;
+          &lt;Identifiers&gt;&lt;LEI&gt;W38RGI023J3WT1HWRP32&lt;/LEI&gt;&lt;/Identifiers&gt;
+          &lt;Name&gt;Siemens Aktiengesellschaft&lt;/Name&gt;
+          &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
+          &lt;Type&gt;Non-financial corporations&lt;/Type&gt;
+        &lt;/Issuer&gt;
+        &lt;Listing&gt;A&lt;/Listing&gt;
+        &lt;CustomMarketCapitalization&gt;
+          &lt;Name&gt;Large Cap&lt;/Name&gt;
+          &lt;Date&gt;2026-03-31&lt;/Date&gt;
+          &lt;Value&gt;145000000000&lt;/Value&gt;
+        &lt;/CustomMarketCapitalization&gt;
+        &lt;Industries&gt;
+          &lt;IndustryCode&gt;
+            &lt;Name&gt;GICS&lt;/Name&gt;
+            &lt;Date&gt;2026-03-31&lt;/Date&gt;
+            &lt;Value&gt;20106010&lt;/Value&gt;
+          &lt;/IndustryCode&gt;
+        &lt;/Industries&gt;
+      &lt;/Equity&gt;
+    &lt;/AssetDetails&gt;
+    &lt;Classifications&gt;
+      &lt;Classification&gt;
+        &lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;
+        &lt;Type&gt;Sector&lt;/Type&gt;
+        &lt;Language&gt;en&lt;/Language&gt;
+        &lt;Value level=&quot;1&quot;&gt;Industrials&lt;/Value&gt;
+        &lt;Value level=&quot;2&quot;&gt;Industrial Conglomerates&lt;/Value&gt;
+      &lt;/Classification&gt;
+    &lt;/Classifications&gt;
+  &lt;/Asset&gt;
+
+  &lt;Asset&gt;
+    &lt;UniqueID&gt;CH0038863350&lt;/UniqueID&gt;
+    &lt;Identifiers&gt;
+      &lt;ISIN&gt;CH0038863350&lt;/ISIN&gt;
+      &lt;SwissValorenCode&gt;3886335&lt;/SwissValorenCode&gt;
+    &lt;/Identifiers&gt;
+    &lt;Currency&gt;CHF&lt;/Currency&gt;
+    &lt;Country&gt;CH&lt;/Country&gt;
+    &lt;Name&gt;Nestlé S.A.&lt;/Name&gt;
+    &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;AssetDetails&gt;
+      &lt;Equity&gt;
+        &lt;StockMarket&gt;XVTX&lt;/StockMarket&gt;
+        &lt;Issuer&gt;
+          &lt;Identifiers&gt;&lt;LEI&gt;549300DLLUD0PKVWST52&lt;/LEI&gt;&lt;/Identifiers&gt;
+          &lt;Name&gt;Nestlé S.A.&lt;/Name&gt;
+          &lt;BusinessCountry&gt;CH&lt;/BusinessCountry&gt;
+        &lt;/Issuer&gt;
+      &lt;/Equity&gt;
+    &lt;/AssetDetails&gt;
+    &lt;Classifications&gt;
+      &lt;Classification&gt;
+        &lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;
+        &lt;Type&gt;Sector&lt;/Type&gt;
+        &lt;Language&gt;en&lt;/Language&gt;
+        &lt;Value&gt;Consumer Staples&lt;/Value&gt;
+      &lt;/Classification&gt;
+    &lt;/Classifications&gt;
+  &lt;/Asset&gt;
+
+  &lt;Asset&gt;
+    &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
+    &lt;Currency&gt;EUR&lt;/Currency&gt;
+    &lt;Country&gt;LU&lt;/Country&gt;
+    &lt;Name&gt;EUR Current Account — BGL BNP Paribas&lt;/Name&gt;
+    &lt;AssetType&gt;AC&lt;/AssetType&gt;
+    &lt;AssetDetails&gt;
+      &lt;Account&gt;
+        &lt;IndicatorCreditDebit&gt;Credit&lt;/IndicatorCreditDebit&gt;
+        &lt;InterestRateCredit&gt;0.15&lt;/InterestRateCredit&gt;
+        &lt;Counterparty&gt;
+          &lt;Identifiers&gt;&lt;LEI&gt;549300CL2K1QUOZK7T97&lt;/LEI&gt;&lt;/Identifiers&gt;
+          &lt;Name&gt;BGL BNP Paribas S.A.&lt;/Name&gt;
+          &lt;BusinessCountry&gt;LU&lt;/BusinessCountry&gt;
+          &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
+        &lt;/Counterparty&gt;
+      &lt;/Account&gt;
+    &lt;/AssetDetails&gt;
+  &lt;/Asset&gt;
+
+  &lt;!-- Remaining equity asset entries (summary): --&gt;
+  &lt;!-- SAP SE (DE0007164600, LEI 529900D6BF99LW9F3487, IT, DE, XETR)             --&gt;
+  &lt;!-- Allianz SE (DE0008404005, LEI 529900K9B0N5BT694847, Insurance, DE, XETR)  --&gt;
+  &lt;!-- LVMH (FR0000121014, LEI 96950065LBWY0APQIM86, Cons. Discr., FR, XPAR)     --&gt;
+  &lt;!-- TotalEnergies (FR0000120271, LEI 529900S21EQ1BO4ESM68, Energy, FR, XPAR)  --&gt;
+  &lt;!-- BNP Paribas (FR0000131104, LEI R0MUWSFPU8MPRO8K5P83, Financials, FR, XPAR)--&gt;
+  &lt;!-- Roche (CH0012032048, LEI 549300D3OHVV27GBHI46, Healthcare, CH, XVTX)      --&gt;
+  &lt;!-- Novartis (CH0012005267, LEI 549300D9YI2R72XBBM14, Healthcare, CH, XVTX)   --&gt;
+  &lt;!-- ASML (NL0010273215, LEI 724500Y6DUVHQD6OXN27, IT, NL, XAMS)               --&gt;
+  &lt;!-- Shell (GB00BP6MXD84, LEI 21380068P1DRHMJ8KU70, Energy, GB, XLON)          --&gt;
+  &lt;!-- Unilever (GB00B10RZP78, LEI 549300MKFYEKVRWML317, Cons. Staples, GB, XLON)--&gt;
+  &lt;!-- Iberdrola (ES0144580Y14, LEI K2RJR3UR2UQIYOV1YS65, Utilities, ES, XMAD)   --&gt;
+  &lt;!-- Santander (ES0113900J37, LEI 5493006QMFDDMYWIAM13, Financials, ES, XMAD)  --&gt;
+  &lt;!-- AstraZeneca (GB0009895292, LEI 213800ZCSBQL7LI8DI47, Healthcare, GB, XLON)--&gt;
+
+  &lt;!-- Cash asset entries (summary): --&gt;
+  &lt;!-- EGF-CASH-GBP-001 (AC, GBP, custodian BGL BNP Paribas LEI 549300CL2K1QUOZK7T97) --&gt;
+  &lt;!-- EGF-CASH-CHF-001 (AC, CHF, custodian BGL BNP Paribas LEI 549300CL2K1QUOZK7T97) --&gt;
+
+  &lt;!-- FX Forward asset entries --&gt;
+  &lt;Asset&gt;
+    &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
+    &lt;Currency&gt;EUR&lt;/Currency&gt;
+    &lt;Name&gt;EUR/CHF Forward 30/04/2026 (main hedge roll)&lt;/Name&gt;
+    &lt;AssetType&gt;FX&lt;/AssetType&gt;
+    &lt;AssetDetails&gt;
+      &lt;FXForward&gt;
+        &lt;CurrencyBuy&gt;CHF&lt;/CurrencyBuy&gt;
+        &lt;AmountBuy&gt;59107354.41&lt;/AmountBuy&gt;
+        &lt;CurrencySell isBaseCCY=&quot;true&quot;&gt;EUR&lt;/CurrencySell&gt;
+        &lt;AmountSell&gt;56724871.39&lt;/AmountSell&gt;
+        &lt;AgreedFxRate&gt;1.0420&lt;/AgreedFxRate&gt;
+        &lt;StartDate&gt;2026-02-28&lt;/StartDate&gt;
+        &lt;MaturityDate&gt;2026-04-30&lt;/MaturityDate&gt;
+        &lt;Counterparty&gt;
+          &lt;Identifiers&gt;&lt;LEI&gt;O2RNE8IBXP4R0TD8PU41&lt;/LEI&gt;&lt;/Identifiers&gt;
+          &lt;Name&gt;Société Générale S.A.&lt;/Name&gt;
+          &lt;BusinessCountry&gt;FR&lt;/BusinessCountry&gt;
+          &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
+        &lt;/Counterparty&gt;
+        &lt;Deliverable&gt;true&lt;/Deliverable&gt;
+      &lt;/FXForward&gt;
+    &lt;/AssetDetails&gt;
+  &lt;/Asset&gt;
+  &lt;!-- Second FX forward (EGF-FXF-20260430-002) is structurally identical with
+       AmountBuy=2918000.00, AmountSell=2800000.00, AgreedFxRate=1.0421,
+       StartDate=2026-03-15, same MaturityDate and counterparty. --&gt;
+&lt;/AssetMasterData&gt;
+</code></pre>
+<p>The elided entries follow the same pattern as the fully-shown ones; each equity entry carries its <code>&lt;Identifiers&gt;</code> block with the ISIN (and where present the GermanWKN or SwissValorenCode), its <code>&lt;Currency&gt;</code>, its <code>&lt;Country&gt;</code>, its <code>&lt;Name&gt;</code>, its <code>AssetType=EQ</code>, and an <code>&lt;AssetDetails&gt;/&lt;Equity&gt;</code> block with the stock market MIC, the issuer's LEI inside a <code>CompanyType</code> block, the listing status, and an optional <code>&lt;CustomMarketCapitalization&gt;</code> size bucket; each cash entry carries its counterparty in <code>&lt;AssetDetails&gt;/&lt;Account&gt;</code>; the second FX forward is structurally identical to the first with different amounts and rates. Appendix D prints the full block with every entry populated.</p>
+<h3>6.12.4 Portfolio Breakdowns for the Sample</h3>
+<p>Computed from the fifteen equity positions shown above (scaled to 100% of the equity portion, excluding cash and forwards), three breakdowns are representative. They sit inside the same <code>&lt;Portfolio&gt;</code> element as the positions, as a sibling of <code>&lt;Positions&gt;</code> rather than at the root.</p>
+<pre><code>&lt;BreakDowns&gt;
+  &lt;BreakDown&gt;
+    &lt;Dimensions&gt;&lt;Dimension&gt;Sector&lt;/Dimension&gt;&lt;/Dimensions&gt;
+    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
+    &lt;Values&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Healthcare&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;17.50&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Financials&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;17.20&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Industrials&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;14.40&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Technology&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;14.30&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Staples&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;11.90&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Discretionary&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;9.80&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Energy&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;8.90&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Utilities&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;6.00&lt;/Percentage&gt;
+      &lt;/Value&gt;
+    &lt;/Values&gt;
+  &lt;/BreakDown&gt;
+  &lt;BreakDown&gt;
+    &lt;Dimensions&gt;&lt;Dimension&gt;Country&lt;/Dimension&gt;&lt;/Dimensions&gt;
+    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
+    &lt;Values&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;GB&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;24.70&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;FR&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;20.20&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;DE&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;19.90&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;CH&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;13.40&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;ES&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;12.00&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;NL&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;9.80&lt;/Percentage&gt;
+      &lt;/Value&gt;
+    &lt;/Values&gt;
+  &lt;/BreakDown&gt;
+  &lt;BreakDown&gt;
+    &lt;Dimensions&gt;&lt;Dimension&gt;Currency&lt;/Dimension&gt;&lt;/Dimensions&gt;
+    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
+    &lt;Values&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Currency&quot;&gt;EUR&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;61.90&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Currency&quot;&gt;GBP&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;24.70&lt;/Percentage&gt;
+      &lt;/Value&gt;
+      &lt;Value&gt;
+        &lt;DimValues&gt;&lt;DimValue dim=&quot;Currency&quot;&gt;CHF&lt;/DimValue&gt;&lt;/DimValues&gt;
+        &lt;Percentage&gt;13.40&lt;/Percentage&gt;
+      &lt;/Value&gt;
+    &lt;/Values&gt;
+  &lt;/BreakDown&gt;
+&lt;/BreakDowns&gt;
+</code></pre>
+<p>The breakdowns above are computed from the fifteen-position sample. The breakdowns for the full 150-position portfolio in Appendix D are somewhat different: the UK weighting, in particular, is far less pronounced in the real portfolio (our sample overweights UK blue chips for illustrative purposes), and the sector distribution is more evenly spread across Financials, Industrials, Consumer, and Healthcare without the healthcare dominance that our sample shows. Note also that the country breakdown uses ISO 3166-1 alpha-2 codes (<code>DE</code>, <code>FR</code>, <code>CH</code>, <code>GB</code>, <code>ES</code>, <code>NL</code>) as <code>DimValue</code> labels — a producer convention that keeps the breakdown language-independent; a factsheet engine that wants to render "Germany" rather than "DE" applies its own localised mapping at display time. The <em>structural</em> lesson is the same either way: a breakdown is a cell-by-cell summary of the portfolio along one or more dimensions, and consumers read it directly rather than re-computing from positions.</p>
+<h3>6.12.5 A Three-Pass Reading</h3>
+<p>The example is best understood in three passes, each focusing on one of the asset classes the fund holds.</p>
+<p><strong>First pass — equities.</strong> Each of the fifteen equity positions follows the pattern of §6.6: a <code>&lt;Position&gt;</code> with mandatory <code>&lt;UniqueID&gt;</code> (the ISIN), optional <code>&lt;Currency&gt;</code> (the instrument's native currency), mandatory <code>&lt;TotalValue&gt;</code> (the consolidated value in the fund's EUR base, flagged <code>isFundCcy="true"</code>), optional <code>&lt;TotalPercentage&gt;</code> (the position's weight), optional <code>&lt;PriceDate&gt;</code>, and a mandatory <code>&lt;Equity&gt;</code> child carrying the per-unit detail fields (<code>&lt;Units&gt;</code>, <code>&lt;Price&gt;</code>, <code>&lt;MarketValue&gt;</code>). The asset entries populate the instrument's identifiers, the <code>&lt;Equity&gt;</code> details block with issuer LEI and stock market, and one or more <code>&lt;Classifications&gt;</code> entries. Three of the fifteen positions are Swiss companies priced in CHF (Nestlé, Roche, Novartis) and three are British companies priced in GBP (Shell, Unilever, AstraZeneca); the remaining nine are priced in EUR. The <code>&lt;TotalValue&gt;</code> on every position is EUR-tagged with <code>isFundCcy="true"</code>, with the non-EUR positions carrying a second <code>&lt;Amount&gt;</code> in their native currency for transparency.</p>
+<p><strong>Second pass — cash.</strong> Three cash positions, one per currency, each with <code>AssetType=AC</code> in the master-data entry and an <code>&lt;Account&gt;</code> child at both the position level and inside <code>AssetDetails</code>. The <code>&lt;Account&gt;</code> inner block at the position level contains only a <code>&lt;MarketValue&gt;</code> (the account balance), and the consolidated <code>&lt;TotalValue&gt;</code> at the position's top level carries the same balance expressed in the fund's base currency. Each cash asset entry names the custodian (BGL BNP Paribas S.A., the Europa Growth Fund's Luxembourg custodian) inside <code>AssetDetails/Account/Counterparty</code>, with the counterparty's LEI embedded in <code>CompanyType/Identifiers</code>. The GBP and CHF balances are small — residues from dividend receipts and hedge-operational needs — while the EUR balance of 3.24 million is the fund's main working cash.</p>
+<p><strong>Third pass — derivatives.</strong> Two currency forwards implementing the CHF hedge for the R-CHF-ACC-HEDGED share class. Each appears in <code>&lt;Positions&gt;</code> with an almost-empty <code>&lt;FXForward&gt;</code> sub-block (just a <code>&lt;HedgeRatio&gt;</code> and the spot rate used for today's valuation) and a position-level <code>&lt;TotalValue&gt;</code> that is the mark-to-market of the contract in EUR — <em>negative</em> 142,318.50 EUR for the main forward and a small positive 18,420.75 EUR for the secondary forward. The actual contract details — who is buying what from whom, at what rate, for settlement on which date, with whose LEI — live on the asset side under <code>AssetDetails/FXForward</code>. The main forward has an <code>AmountSell</code> of 56.7 million EUR and a matching <code>AmountBuy</code> of 59.1 million CHF at the <code>AgreedFxRate</code> of 1.0420 (matching the EUR-equivalent of the hedged class's total net assets from Chapter 5). The secondary forward is a much smaller residual covering a change in the class's AUM since the last monthly roll, with <code>AmountSell</code> 2.8 million EUR. Together the two forwards represent the hedge that makes the <code>&lt;CurrencyHedgedFlag&gt;true&lt;/CurrencyHedgedFlag&gt;</code> on the share class operational, and their <code>TotalValue</code> figures absorb directly into the CHF class's NAV as part of its daily valuation.</p>
+<p>The sum of <code>&lt;TotalValue&gt;</code> across the fifteen equities, three cash positions, and two forwards is approximately 116.8 million EUR — roughly 25% of the fund's total net assets of 464.55 million EUR. The remaining 75% lives in the 130 equity positions that our sample does not show, and the complete portfolio in Appendix D reconciles exactly to the 464.55 million EUR figure. The structural lesson remains the same: every position, every asset entry, every breakdown follows the same patterns established in the earlier sections of this chapter, and those patterns scale from fifteen positions to one hundred and fifty without modification.</p>
+<hr>
+<h2>6.13 Common Pitfalls</h2>
+<p>The following short list captures the mistakes that, in our experience, cause the greatest share of portfolio-related production incidents.</p>
+<ul>
+<li><strong>Schema validation fails at load time because a position references a <code>UniqueID</code> that no asset carries.</strong> The parser raises an <code>xs:IDREF</code> error — a schema-validation error, not a business-validation error — and the document does not load at all. This is usually the residue of a pipeline in which the position writer and the asset writer ran out of sync. The fix is to emit positions and assets from the same producer pass and to validate every file against the schema before shipping it; Chapter 10 lists this as the first of the mandatory checks.</li>
+<li><strong>Orphaned <code>&lt;Asset&gt;</code> entries in <code>AssetMasterData</code>.</strong> Asset entries appear with no position pointing at them — typically the residue of a position that was removed from the portfolio without a cleanup of the master data. Harmless for consumers (the parser does not complain), but a sign of a sloppy producer; pipelines should clean up orphans before emitting.</li>
+<li><strong><code>TotalValue</code> is missing on a position.</strong> A producer writes the position with <code>&lt;Equity&gt;/&lt;MarketValue&gt;</code> but forgets the position-level <code>&lt;TotalValue&gt;</code>. The file fails schema validation — <code>&lt;TotalValue&gt;</code> is mandatory — and the fund's NAV reconciliation cannot proceed. The fix is to populate <code>&lt;TotalValue&gt;</code> on every position without exception, with the position's consolidated market value in the fund's base currency.</li>
+<li><strong>Bond nominal written as pieces instead of nominal amount.</strong> A producer writes <code>&lt;Nominal&gt;1000&lt;/Nominal&gt;</code> meaning "one thousand pieces" for a bond whose face value is one million EUR total, when the correct representation is <code>&lt;Nominal&gt;1000000&lt;/Nominal&gt;</code>. The resulting <code>Bond/MarketValue</code> (computed as <code>Nominal × Price / 100</code>) is off by a factor of a thousand. The fix is to treat bond <code>&lt;Nominal&gt;</code> as a nominal amount without exception and to verify, on every bond position, that <code>Bond/MarketValue + Bond/InterestClaimGross ≈ Position/TotalValue</code> to within a rounding tolerance.</li>
+<li><strong>Market value amount in the wrong currency.</strong> The Nestlé position's price is in CHF, and a careless producer writes <code>&lt;Equity&gt;/&lt;MarketValue&gt;</code> in CHF while leaving the position-level <code>&lt;TotalValue&gt;</code> empty. A consumer that reads <code>&lt;TotalValue&gt;</code> to compute the fund total gets a missing value; a consumer that reads <code>&lt;Equity&gt;/&lt;MarketValue&gt;</code> and adds it to the EUR totals of other positions gets an answer that is wrong by the EUR/CHF rate. The fix is to always populate <code>&lt;TotalValue&gt;</code> with at least one <code>&lt;Amount&gt;</code> in the fund's base currency, tagged <code>isFundCcy="true"</code>, and to let the asset-class-specific <code>&lt;MarketValue&gt;</code> carry whichever currency suits the producer's internal accounting.</li>
+<li><strong>FX forward <code>&lt;TotalValue&gt;</code> confused with the notional.</strong> A consumer reads the <code>&lt;AmountSell&gt;</code> of 56.7 million EUR from <code>AssetDetails/FXForward</code> and treats it as the forward's contribution to the fund's total net assets. The fund's NAV suddenly appears to be 56 million EUR larger than reality, and reconciliation fails. The fix is to always read <code>&lt;Position&gt;/&lt;TotalValue&gt;</code> for the mark-to-market contribution (which is the small positive or negative mark-to-market value, not the notional) and to use <code>&lt;AmountBuy&gt;</code>/<code>&lt;AmountSell&gt;</code> only for exposure reporting, not for valuation.</li>
+<li><strong><code>&lt;AssetType&gt;</code> is written as <code>Equity</code> or <code>Bond</code> instead of the two-character code.</strong> The schema enforces a two-character enumeration (<code>EQ</code>, <code>BO</code>, <code>SC</code>, <code>FX</code>, <code>AC</code>, …) on <code>&lt;AssetType&gt;</code>, and anything else is a schema-validation failure at load time. Producers migrating from formats with English type names must run a mapping pass before emitting the file.</li>
+<li><strong>Breakdown cell percentages do not sum to 100.</strong> A sector breakdown sums to 93% because a cell for <em>Utilities</em> is missing from the <code>&lt;Values&gt;</code> list even though some positions belong there. The consumer sees the breakdown as incomplete and either refuses to render it or renders it with a suspicious gap. The fix is to emit every non-empty cell and to include an "Other" catch-all <code>&lt;Value&gt;</code> for positions that do not fit the standard categories.</li>
+<li><strong>Cash position without a counterparty LEI.</strong> A cash asset's <code>AssetDetails/Account/Counterparty</code> is a <code>CompanyType</code>, which requires <code>&lt;Identifiers&gt;</code> <em>before</em> <code>&lt;Name&gt;</code>. A producer that writes <code>&lt;Counterparty&gt;&lt;Name&gt;BGL BNP Paribas S.A.&lt;/Name&gt;&lt;/Counterparty&gt;</code> without the <code>&lt;Identifiers&gt;/&lt;LEI&gt;</code> child fails schema validation immediately — <code>Identifiers</code> is mandatory on <code>CompanyType</code>. Even if validation somehow passed, a regulatory consumer could not apply counterparty concentration limits to the position because it cannot identify the counterparty unambiguously. The fix is to populate the counterparty LEI on every cash, derivative, and collateral position without exception.</li>
+</ul>
+<hr>
+<h2>6.14 Key Takeaways</h2>
+<ul>
+<li>Portfolio positions and <code>AssetMasterData</code> entries together describe what a fund holds. Positions answer the question <em>how much</em>; asset entries answer <em>what</em>. Neither is complete without the other, and consumers always read the two structures together.</li>
+<li>The linkage between positions and asset entries runs through the <code>UniqueID</code> field, declared <code>xs:ID</code> on the asset side and <code>xs:IDREF</code> on the position side. The pairing is enforced by the parser at load time, not by business validation at a later stage. The value must conform to XML Name syntax (must not begin with a digit), and the recommended convention is <em>ISIN when available, deterministic producer-generated string otherwise</em>, so that the same asset receives the same identifier across consecutive deliveries.</li>
+<li>A <code>&lt;Position&gt;</code> has a fixed head of common children — <code>&lt;UniqueID&gt;</code>, optional <code>&lt;Identifiers&gt;</code>, optional <code>&lt;Currency&gt;</code>, mandatory <code>&lt;TotalValue&gt;</code>, optional <code>&lt;TotalPercentage&gt;</code>, optional cost and FX fields, optional <code>&lt;PriceDate&gt;</code>, optional <code>&lt;PricingSource&gt;</code> — followed by a <strong>mandatory choice</strong> of exactly one asset-class-specific child from twenty-one options (<code>&lt;Equity&gt;</code>, <code>&lt;Bond&gt;</code>, <code>&lt;ShareClass&gt;</code>, <code>&lt;Warrant&gt;</code>, <code>&lt;Certificate&gt;</code>, <code>&lt;Option&gt;</code>, <code>&lt;Future&gt;</code>, <code>&lt;FXForward&gt;</code>, <code>&lt;Swap&gt;</code>, <code>&lt;Repo&gt;</code>, <code>&lt;FixedTimeDeposit&gt;</code>, <code>&lt;CallMoney&gt;</code>, <code>&lt;Account&gt;</code>, <code>&lt;Fee&gt;</code>, <code>&lt;RealEstate&gt;</code>, <code>&lt;REIT&gt;</code>, <code>&lt;Loan&gt;</code>, <code>&lt;Right&gt;</code>, <code>&lt;Commodity&gt;</code>, <code>&lt;PrivateEquity&gt;</code>, <code>&lt;CommercialPaper&gt;</code>), and optionally a trailing block (<code>&lt;CapitalYieldsTaxClaim&gt;</code>, <code>&lt;InflationaryAdjustment&gt;</code>, <code>&lt;RiskCodes&gt;</code>, <code>&lt;Underlyings&gt;</code>, <code>&lt;CustomAttributes&gt;</code>). The unit count, per-unit price, and market value of the position live inside the chosen asset-class child (for example <code>&lt;Equity&gt;/&lt;Units&gt;</code>, <code>&lt;Bond&gt;/&lt;Nominal&gt;</code>, <code>&lt;ShareClass&gt;/&lt;Shares&gt;</code>, <code>&lt;Option&gt;/&lt;Contracts&gt;</code>), not on the position element itself. There is <strong>no</strong> element called <code>&lt;Quantity&gt;</code>, and no element called <code>&lt;PositionType&gt;</code> — the complex type <code>PositionType</code> is the XSD name of the type of <code>&lt;Position&gt;</code>, never a tag in the document.</li>
+<li>An <code>&lt;Asset&gt;</code> in <code>&lt;AssetMasterData&gt;</code> has its own fixed sequence — <code>UniqueID</code>, optional <code>Identifiers</code>, optional <code>DataSupplier</code>, mandatory <code>Currency</code>, optional <code>IncomeCurrency</code>, optional <code>Country</code>, mandatory <code>Name</code>, optional <code>FISN</code>, mandatory <code>AssetType</code> (as a two-character code), and optional <code>AssetDetails</code> carrying the asset-class-specific choice. <code>Ratings</code>, <code>Classifications</code>, and <code>CustomAttributes</code> follow at the bottom.</li>
+<li>For bonds, <code>&lt;Bond&gt;/&lt;Nominal&gt;</code> is the nominal value in the issue currency, not the number of pieces. The clean price is expressed as a percentage of nominal, so <code>MarketValue ≈ Nominal × (Price / 100)</code>, plus <code>InterestClaimGross</code> for the accrued coupon, sums to <code>Position/TotalValue</code> in the fund's base currency. There is no <code>BondType</code> enumeration; the sovereign-versus-corporate distinction lives on <code>Issuer/Type</code> (ECB sector codes) or in <code>Classifications</code>.</li>
+<li>For FX forwards, the mark-to-market lives in <code>Position/TotalValue</code> and may be positive or negative. The notional amounts live on the asset side in <code>AssetDetails/FXForward/AmountBuy</code> and <code>AmountSell</code>, paired with <code>CurrencyBuy</code> and <code>CurrencySell</code>. The position-side <code>&lt;FXForward&gt;</code> sub-block is almost empty — just <code>HedgeRatio</code> and <code>FxRateForEvaluation</code>. The mandatory <code>Counterparty</code> on the asset side uses <code>CompanyType</code> and must carry an LEI.</li>
+<li>For cash, one position per currency, <code>AssetType=AC</code> (or <code>FT</code> for fixed-term deposits, <code>CM</code> for call money), and the counterparty's LEI on <code>AssetDetails/Account/Counterparty/Identifiers/LEI</code>. There is no <code>CashType</code> enumeration — the account type is expressed through the two-character <code>AssetType</code> code.</li>
+<li>Portfolio breakdowns live in <code>Portfolio/BreakDowns</code> (not a separate root-level element) and are multi-dimensional by design. Each <code>&lt;BreakDown&gt;</code> names one or more <code>&lt;Dimension&gt;</code> strings and carries <code>&lt;Value&gt;</code> cells, each with a <code>&lt;DimValues&gt;</code> container (one <code>&lt;DimValue dim="..."&gt;</code> per dimension) and a mandatory <code>&lt;Percentage&gt;</code>. The structure is recursive: a cell can carry its own nested <code>&lt;BreakDowns&gt;</code>. Trust the producer's breakdowns and tolerate small rounding discrepancies; Chapter 10 formalises the tolerance.</li>
+<li>The Europa Growth Fund's portfolio consists of roughly 150 European equity positions, three cash accounts in three currencies, and two currency forwards implementing the CHF hedge from Chapter 5. The complete representation appears in Appendix D and anchors every fragment treated in the remaining chapters of Part II.</li>
+</ul>
+<p>We know what the Europa Growth Fund holds on 31 March 2026. What we do not yet know is <em>how it got there</em>. Chapter 7 turns to the events that flow in and out of the fund every business day — subscriptions, redemptions, distributions, and corporate actions — and shows how each of them reshapes the portfolio from one valuation point to the next.</p>
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter05.html">&lsaquo; Chapter 5</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter07.html">Chapter 7 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

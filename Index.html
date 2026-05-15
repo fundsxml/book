@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="AppendixE.html">&lsaquo; Appendix E</a><a class="cn-toc" href="index.html">Contents</a><span class="cn-next cn-disabled">End &rsaquo;</span></nav>
+
+<div class="chapter-meta">Index</div>
+<h1>Index</h1>
+
+<p class="index-note">Page references point to the chapter and section where the topic is treated substantively, not to every passing mention. Bold entries indicate the primary treatment. Appendix references use the letter prefix (A, B, C, D, E). The Glossary (Appendix A) is not indexed separately; readers looking for a definition should consult it directly.</p>
+
+<hr>
+
+<h2>A</h2>
+<p class="idx">Acceptance testing, <strong>13.6.1</strong></p>
+<p class="idx">Account (AssetType AC), 6, C.4.3, C.4.4</p>
+<p class="idx">Accumulating share class, 5, A.1</p>
+<p class="idx">AIFMD (Alternative Investment Fund Managers Directive), <strong>1</strong>, 8, A.1, E.5</p>
+<p class="idx">AMEND (DataOperation), <strong>4</strong>, 10, 13.5.3, C.7.3, D.4</p>
+<p class="idx">AmountType, <strong>C.7.1</strong></p>
+<p class="idx">API facades, <strong>14.3.2</strong></p>
+<p class="idx">Asset management company, <em>see</em> Investment company</p>
+<p class="idx">AssetMasterData, <strong>6</strong>, C.4.4, D.2, D.3</p>
+<p class="idx">AssetType enumeration (two-character codes), <strong>C.4.4</strong></p>
+<p class="idx">Audit log, 12.2.1, <strong>13.7.1</strong></p>
+<p class="idx">Auditor (FundStaticData), C.3.3</p>
+
+<h2>B</h2>
+<p class="idx">Base currency, 5, A.1</p>
+<p class="idx">Batch delivery, 1, <strong>12.2</strong>, 14.3.1, A.1</p>
+<p class="idx">Benchmarks (FundStaticData/FundDynamicData), C.3.3, C.3.4</p>
+<p class="idx">Bond position, 6, C.4.2, C.4.3, D.2</p>
+<p class="idx">Business rules, <em>see</em> Schematron</p>
+
+<h2>C</h2>
+<p class="idx">Cash account position, 6, C.4.2, C.4.3, D.2</p>
+<p class="idx">CDATA sections, B.1.3</p>
+<p class="idx">CFI (Classification of Financial Instruments), A.1, E.6</p>
+<p class="idx">Character escaping (XML), <strong>B.1.3</strong></p>
+<p class="idx">Classifications (FundStaticData), C.3.3</p>
+<p class="idx">Comdirect Bank (pilot consumer), 13.4.4</p>
+<p class="idx">Comments (XML), B.1.4</p>
+<p class="idx">Community contributions, <strong>14.5</strong></p>
+<p class="idx">CompanyType, C.3.3</p>
+<p class="idx">Compliance sign-off, 13.6.1</p>
+<p class="idx">Consumer pipeline, <strong>12.2.2</strong>, A.1</p>
+<p class="idx">ContentDate, <strong>4</strong>, C.2.1</p>
+<p class="idx">ControlData, <strong>4</strong>, C.2, D.1</p>
+<p class="idx">Corporate action (CORP_ACTION), 7, C.5.1</p>
+<p class="idx">CountrySpecificData, <strong>9</strong>, C.8.2</p>
+<p class="idx">Cross-border distribution, 1, 9, 14.2.2, A.1</p>
+<p class="idx">Crypto (AssetType CR), C.4.4</p>
+<p class="idx">Currency codes (ISO 4217), 5, E.6</p>
+<p class="idx">CUSIP, A.1, C.7.2</p>
+<p class="idx">CustomAttributes, <strong>9</strong>, C.8.1, D.3</p>
+<p class="idx">Custodian, 1, 5, C.3.3, A.1</p>
+<p class="idx">Cutoff time, A.1</p>
+<p class="idx">Cutover versus parallel run, <strong>13.6.2</strong>, 13.9</p>
+
+<h2>D</h2>
+<p class="idx">Dashboard (operations), 13.7.1</p>
+<p class="idx">Data gaps, <strong>13.3.3</strong></p>
+<p class="idx">Data quality issues, <strong>13.3.4</strong></p>
+<p class="idx">DataOperation (INITIAL/AMEND/DELETE), <strong>4</strong>, C.2.1, C.7.3</p>
+<p class="idx">DataSupplier, <strong>4</strong>, C.2.2</p>
+<p class="idx">DataSupplierType, C.2.2</p>
+<p class="idx">DELETE (DataOperation), <strong>4</strong>, 10, C.7.3</p>
+<p class="idx">Digital assets (tokenised funds), 14.2.2</p>
+<p class="idx">DirectReporting, <strong>C.6.1</strong></p>
+<p class="idx">Dispatcher, <strong>12.2.3</strong>, A.1</p>
+<p class="idx">Distribution country, 1, 9, A.1</p>
+<p class="idx">DocumentGenerated, 4, C.2.1</p>
+<p class="idx">Documents block, <strong>9</strong>, C.7.5, D.3</p>
+<p class="idx">DocumentType (listed types), C.7.5</p>
+<p class="idx">Domicile, 5, C.3.3, A.1</p>
+<p class="idx">DOM parsing, 12.3</p>
+
+<h2>E</h2>
+<p class="idx">Earnings, 7, C.4.1, C.5.2</p>
+<p class="idx">EET (European ESG Template), <strong>8</strong>, C.6.1, E.3</p>
+<p class="idx">EFT (European Feedback Template), <strong>8</strong>, C.6.1, E.3</p>
+<p class="idx">Element order (XML schema), 2, 10, C</p>
+<p class="idx">EMT (European MiFID Template), <strong>8</strong>, C.6.1, E.3</p>
+<p class="idx">Emission window, 13.7.1, A.1</p>
+<p class="idx">Enumerations, <em>see</em> individual enumeration names; summary <strong>C.7.3</strong></p>
+<p class="idx">EPT (European PRIIPs Template), <strong>8</strong>, C.6.2, E.3</p>
+<p class="idx">Equity position, 6, C.4.2, C.4.3, D.2</p>
+<p class="idx">ESAP (European Single Access Point), <strong>14.3.3</strong>, E.5</p>
+<p class="idx">ESG, <em>see</em> SFDR; EET</p>
+<p class="idx">ESMA, 1, 8, A.1, E.5</p>
+<p class="idx">ETF (Exchange-Traded Fund), A.1</p>
+<p class="idx">EUR-Lex, E.5</p>
+<p class="idx">Europa Asset Management S.A., <em>passim</em>; implementation project <strong>13</strong></p>
+<p class="idx">Europa Growth Fund, <em>passim</em>; complete examples <strong>D</strong></p>
+<p class="idx">Event-driven architecture, 14.3.4, A.1</p>
+<p class="idx">Extension points, <em>see</em> CustomAttributes; CountrySpecificData</p>
+
+<h2>F</h2>
+<p class="idx">Fair value, A.1</p>
+<p class="idx">fast-xml-parser (Node.js), <strong>12.3</strong>, E.4.3</p>
+<p class="idx">Feeder fund, 8, A.1</p>
+<p class="idx">FIGI, A.1, C.7.2</p>
+<p class="idx">FinDatEx, <strong>8</strong>, 14.2.4, E.3</p>
+<p class="idx">Fixture (test fixture), <strong>13.5.2</strong>, A.1</p>
+<p class="idx">FreeXmlToolkit, <strong>11</strong>, 14.5.5, E.4.1</p>
+<p class="idx">Fund (FundType), <strong>5</strong>, C.3.1</p>
+<p class="idx">Fund administrator, 1, A.1</p>
+<p class="idx">FundAmountType, C.7.1</p>
+<p class="idx">FundDynamicData, <strong>5</strong>, C.3.4</p>
+<p class="idx">FundStaticData, <strong>5</strong>, C.3.3</p>
+<p class="idx">FundsXML association, 1, <strong>14.2.3</strong>, E.1</p>
+<p class="idx">FundsXML4 (root element), <strong>C.1</strong></p>
+<p class="idx">FX forward position, C.4.3, D.3</p>
+
+<h2>G</h2>
+<p class="idx">Generator (FreeXmlToolkit), 11, A.1</p>
+<p class="idx">GitHub (FundsXML repository), 14.5.2, E.1</p>
+<p class="idx">GLEIF, A.1, E.6</p>
+<p class="idx">Go-live, <em>see</em> Acceptance testing; Parallel run</p>
+<p class="idx">Golden fixture, 13.5.2, A.1</p>
+<p class="idx">Governance, <strong>14.2.3</strong></p>
+<p class="idx">GraphQL facade, 14.3.2</p>
+
+<h2>H</h2>
+<p class="idx">Hedged share class, 5, A.1</p>
+
+<h2>I</h2>
+<p class="idx">Idempotency, 12.2.2, A.1</p>
+<p class="idx">Identifiers (IdentifiersType), <strong>C.7.2</strong></p>
+<p class="idx">Implementation project, <strong>13</strong></p>
+<p class="idx">IndirectReporting, <strong>C.6.2</strong></p>
+<p class="idx">INITIAL (DataOperation), <strong>4</strong>, C.7.3</p>
+<p class="idx">Integration test, 13.5.1, A.1</p>
+<p class="idx">InvestmentCompany (FundStaticData), C.3.3</p>
+<p class="idx">ISIN, 5, 6, C.7.2, E.6</p>
+
+<h2>J</h2>
+<p class="idx">Java (JAXP), <strong>12.3</strong>, E.4.3</p>
+<p class="idx">JSON versus XML, <strong>14.3.1</strong></p>
+
+<h2>K</h2>
+<p class="idx">KID (Key Information Document), 8, A.1</p>
+<p class="idx">Knowledge transfer, <strong>13.7.1</strong>, A.1</p>
+
+<h2>L</h2>
+<p class="idx">Language (ControlData), 4, C.2.1</p>
+<p class="idx">Legal structure, <em>see</em> ListedLegalStructure</p>
+<p class="idx">LEI (Legal Entity Identifier), 4, 5, C.7.2, E.6</p>
+<p class="idx">ListedLegalStructure enumeration, <strong>C.7.4</strong></p>
+<p class="idx">Locale-dependent number formatting (bug), 13.5.3, 13.6.3</p>
+<p class="idx">lxml (Python), <strong>10</strong>, <strong>12.3</strong>, E.4.2</p>
+
+<h2>M</h2>
+<p class="idx">Mailing list (FundsXML), 14.5.3, E.1</p>
+<p class="idx">Mapping (data mapping), <strong>13.3</strong></p>
+<p class="idx">Mapping table, <strong>13.3.2</strong>, Table 13.1</p>
+<p class="idx">Master fund, A.1</p>
+<p class="idx">MiFID II, <strong>8</strong>, E.5</p>
+<p class="idx">ModuleUsage, C.2.3</p>
+<p class="idx">Monthly delivery (example), <strong>D.2</strong></p>
+
+<h2>N</h2>
+<p class="idx">Namespace, <strong>4</strong>, B.1.5, A.1</p>
+<p class="idx">NAV (Net Asset Value), <strong>5</strong>, A.1</p>
+<p class="idx">NamesType, C.3.2</p>
+<p class="idx">Node.js, <em>see</em> fast-xml-parser</p>
+<p class="idx">NominalOrUnitsOrContracts (Transaction), C.5.1</p>
+<p class="idx">Non-functional requirements, 13.2.2</p>
+
+<h2>O</h2>
+<p class="idx">OFFICIAL (TotalAssetNature), <strong>5</strong>, C.7.3</p>
+<p class="idx">OngoingCosts (FundStaticData), C.3.3, D.3</p>
+<p class="idx">OpenClosedEnded enumeration, C.7.3</p>
+<p class="idx">Operations and maintenance, <strong>13.7</strong></p>
+
+<h2>P</h2>
+<p class="idx">PAI (Principal Adverse Impacts), 8, A.1</p>
+<p class="idx">Parallel run, <strong>13.6.2</strong>, 13.9, A.1</p>
+<p class="idx">Paying agent, A.1</p>
+<p class="idx">Performance (pipeline), 13.6.3</p>
+<p class="idx">Pipeline, <em>see</em> Producer pipeline; Consumer pipeline</p>
+<p class="idx">Portfolio (PortfolioType), <strong>6</strong>, C.4.1</p>
+<p class="idx">Position (PositionType), <strong>6</strong>, C.4.2</p>
+<p class="idx">Position ordering, 13.4.3</p>
+<p class="idx">PRIIPs, <strong>8</strong>, E.5</p>
+<p class="idx">Producer pipeline, <strong>12.2.1</strong>, A.1</p>
+<p class="idx">Prospectus, A.1, D.3</p>
+<p class="idx">Prototype, <strong>13.4</strong>, A.1</p>
+<p class="idx">Python, <em>see</em> lxml</p>
+
+<h2>R</h2>
+<p class="idx">Redemption, 7, A.1</p>
+<p class="idx">RegulatoryReportings, <strong>8</strong>, C.6</p>
+<p class="idx">RelatedDocumentIDs, <strong>4</strong>, 10, C.2.4, D.4</p>
+<p class="idx">REST facade, <strong>14.3.2</strong></p>
+<p class="idx">Runbook, <strong>13.7.1</strong>, A.1</p>
+
+<h2>S</h2>
+<p class="idx">SAX parsing, 12.3</p>
+<p class="idx">Saxon (XSLT processor), E.4.2</p>
+<p class="idx">Schema (FundsXML4.xsd), <strong>C</strong>, E.2</p>
+<p class="idx">Schema upgrades, <strong>13.7.3</strong>, 14.2.1</p>
+<p class="idx">Schematron, <strong>10</strong>, B.2, E.4.2</p>
+<p class="idx">SEDOL, A.1, C.7.2</p>
+<p class="idx">SFDR (Sustainable Finance Disclosure Regulation), <strong>8</strong>, 14.2.2, E.5</p>
+<p class="idx">SFDRProductType enumeration, C.3.3, C.7.3</p>
+<p class="idx">Share class (ShareClassType), <strong>5</strong>, C.3.7, D.3</p>
+<p class="idx">Signature (XML Digital Signature), <strong>9</strong>, C.1</p>
+<p class="idx">SingleFund / Subfunds (choice), <strong>5</strong>, C.3.1, C.3.6</p>
+<p class="idx">SingleFundFlag, 5, C.3.1</p>
+<p class="idx">Source system, 13.2.2, 13.3, A.1</p>
+<p class="idx">StAX parsing, 12.3</p>
+<p class="idx">Streaming architecture, 14.3.4</p>
+<p class="idx">Sub-fund, 5, A.1</p>
+<p class="idx">Subscription, 7, A.1</p>
+<p class="idx">Swing pricing, A.1</p>
+
+<h2>T</h2>
+<p class="idx">T+1 / T+2 settlement, 14.2.2, A.1</p>
+<p class="idx">Target market, 8, A.1</p>
+<p class="idx">Taxonomy Regulation, 8, E.5</p>
+<p class="idx">TECHNICAL (TotalAssetNature), 5, C.7.3</p>
+<p class="idx">Test fixtures, <em>see</em> Fixture</p>
+<p class="idx">Testing (implementation project), <strong>13.5</strong></p>
+<p class="idx">Text types (Text16Type through Text500Type), C.7.6</p>
+<p class="idx">TNAV (Total Net Asset Value), <strong>5</strong>, C.3.5, A.1</p>
+<p class="idx">TotalAssetNature enumeration, <strong>C.7.3</strong></p>
+<p class="idx">TotalAssetValueType, <strong>C.3.5</strong></p>
+<p class="idx">TPT (Tripartite Template), <strong>8</strong>, C.6.2, E.3</p>
+<p class="idx">Transaction (TransactionType), <strong>7</strong>, C.5.1, D.3</p>
+<p class="idx">TransactionKind enumeration, <strong>C.5.1</strong>, C.7.3</p>
+<p class="idx">Transfer agent, A.1</p>
+<p class="idx">Two-stage validation, <strong>10</strong>, 12.2.1</p>
+
+<h2>U</h2>
+<p class="idx">UAT (User Acceptance Testing), <strong>13.6.1</strong>, A.1</p>
+<p class="idx">UCITS, <strong>1</strong>, E.5</p>
+<p class="idx">Umbrella fund, 5, C.3.1, A.1</p>
+<p class="idx">UniqueDocumentID, 4, C.2.1</p>
+<p class="idx">Unit test, 13.5.1, A.1</p>
+
+<h2>V</h2>
+<p class="idx">Validation (XSD + Schematron), <strong>10</strong>, D.5</p>
+<p class="idx">Validation failures (error messages), 10</p>
+<p class="idx">Valuation point, A.1</p>
+<p class="idx">Version (ControlData), 4, C.2.1</p>
+
+<h2>W</h2>
+<p class="idx">Warehouse loader, <strong>12.2.4</strong></p>
+<p class="idx">WKN (Wertpapierkennnummer), A.1, C.7.2</p>
+<p class="idx">Working groups (FundsXML association), 14.2.3, <strong>14.5.4</strong>, E.7</p>
+
+<h2>X</h2>
+<p class="idx">XML declaration, B.1.1</p>
+<p class="idx">XML Digital Signature, <em>see</em> Signature</p>
+<p class="idx">xmllint, <strong>10</strong>, D.5, E.4.2</p>
+<p class="idx">XPath, <strong>B.2</strong>; FundsXML recipes B.2.6</p>
+<p class="idx">XSD (XML Schema Definition), <strong>2</strong>, <strong>10</strong>, B, C</p>
+<p class="idx">XSLT, <strong>B.3</strong>; FundsXML recipes B.3.6; FreeXmlToolkit 11</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="AppendixE.html">&lsaquo; Appendix E</a><a class="cn-toc" href="index.html">Contents</a><span class="cn-next cn-disabled">End &rsaquo;</span></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

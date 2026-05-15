@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 8 — Regulatory Modules</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter07.html">&lsaquo; Chapter 7</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter09.html">Chapter 9 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<h1>Regulatory Modules<span class="subtitle">EMT, EPT, EET, EFT, and TPT in FundsXML</span></h1>
+<hr>
+<h2>8.1 Setting the Scene: The Fifth Area</h2>
+<p>At the end of Chapter 7 we had covered four of the five main areas of a FundsXML delivery: <code>ControlData</code>, <code>Funds</code>, <code>AssetMasterData</code>, and the substructures inside <code>FundDynamicData</code>. The fifth main area — <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank"><code>RegulatoryReportings</code></a> — has been waiting since Chapter 3, mentioned in passing but never treated in its own right. This chapter fills that gap, and it fills it at length, because the regulatory modules that live inside <code>RegulatoryReportings</code> are both varied in their subject matter and unavoidable in their practical importance. A European fund that cannot deliver its EMT cannot be retailed under MiFID II. A fund that cannot deliver its EPT cannot publish a PRIIPs KID. A fund that cannot deliver its EET cannot qualify for SFDR-classified distribution. A fund that cannot deliver its TPT cannot be meaningfully held by insurance investors under Solvency II. The templates behind these acronyms are, collectively, the regulatory operating system of the European fund industry.</p>
+<p>The chapter covers all five FinDatEx templates — EMT, EPT, EET, EFT, and TPT — together with the European Single Access Point (ESAP) that is in the process of becoming the EU-wide gateway for regulatory disclosures. The treatment is weighted by practical importance: EMT and EET, the two most operationally consequential templates, receive the most attention; EPT follows closely; TPT and EFT are lighter; ESAP rounds the chapter off with a short section.</p>
+<p>Before we begin, one honest framing deserves to be stated up front. This is not a chapter about PRIIPs, SFDR, or MiFID II <em>as regulations</em>. Entire books are written about each of those topics, and readers who need the full regulatory depth should consult them; Appendix E lists the primary sources. This chapter treats the <strong>FundsXML embedding</strong> of the FinDatEx templates — the XML structure, the main field groups, the relationship to the rest of a FundsXML document, and enough regulatory context (a page or two per template) that the reader can populate the fields correctly for a realistic fund. For the deep regulatory interpretation of any particular field, the authoritative source is always the current FinDatEx template specification and the corresponding ESMA technical standards.</p>
+<p>By the end of this chapter, you should be able to:</p>
+<ul>
+<li>explain how <code>RegulatoryReportings</code> sits in a FundsXML document and how it splits into <code>DirectReporting</code> and <code>IndirectReporting</code> branches;</li>
+<li>name the regulatory driver of each template (MiFID II for EMT, PRIIPs for EPT, SFDR for EET, product governance for EFT, Solvency II for TPT);</li>
+<li>populate the main fields of each template for a realistic European UCITS;</li>
+<li>distinguish the cost fields of EMT from the cost fields of EPT and know which consumer uses which;</li>
+<li>classify a fund as SFDR Article 6, 8, or 9 and populate the corresponding EET fields;</li>
+<li>explain what ESAP is and how FundsXML deliveries may reach it;</li>
+<li>read a complete regulatory-reporting block and recognise which templates are present, which are absent, and why.</li>
+</ul>
+<p>The Europa Growth Fund continues as the running example through all five templates. The fund is natively well-suited to the regulatory agenda of this chapter: it is a UCITS sold across eleven distribution countries (EMT and EPT), it carries an SFDR Article 8 classification (EET), it is held by European insurance investors (TPT), and it receives regular feedback from its distributors (EFT, though EFT will not appear in the March 2026 delivery for reasons explained in §8.6).</p>
+<hr>
+<h2>8.2 RegulatoryReportings and the FinDatEx Consortium</h2>
+<p>Before we look at any individual template, the structural question: where, inside a FundsXML document, does <code>RegulatoryReportings</code> sit, and who decides what goes into it?</p>
+<h3>8.2.1 The Structural Location</h3>
+<p><code>&lt;RegulatoryReportings&gt;</code> is a root-level element of a FundsXML document, a sibling of <code>&lt;Funds&gt;</code> and <code>&lt;AssetMasterData&gt;</code>. It does <em>not</em> live inside <code>&lt;FundDynamicData&gt;</code> alongside <code>TotalAssetValues</code>, <code>Portfolios</code>, and <code>SingleFundFlows</code>. The choice of position is deliberate: regulatory modules have their own release cadence, their own semantics, and their own consumer audiences, and coupling them tightly to the valuation-point-driven dynamic data would be the wrong design. A fund may emit a fresh EMT every month without changing its NAV, and a fund may publish a new daily NAV without changing its EMT. The two are decoupled, and the schema expresses the decoupling by placing them in separate branches of the document.</p>
+<p>Inside <code>&lt;RegulatoryReportings&gt;</code> the schema immediately splits into two parallel branches — <code>DirectReporting</code> and <code>IndirectReporting</code> — and the five FinDatEx templates are distributed between them:</p>
+<pre><code>&lt;FundsXML4&gt;
+  &lt;ControlData&gt;...&lt;/ControlData&gt;                &lt;!-- Chapter 4 --&gt;
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;FundStaticData&gt;...&lt;/FundStaticData&gt;       &lt;!-- Chapter 5 --&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;...&lt;/TotalAssetValues&gt; &lt;!-- Chapter 5 --&gt;
+        &lt;Portfolios&gt;...&lt;/Portfolios&gt;             &lt;!-- Chapter 6 --&gt;
+        &lt;SingleFundFlows&gt;...&lt;/SingleFundFlows&gt;   &lt;!-- Chapter 7 --&gt;
+      &lt;/FundDynamicData&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+  &lt;AssetMasterData&gt;...&lt;/AssetMasterData&gt;         &lt;!-- Chapter 6 --&gt;
+  &lt;RegulatoryReportings&gt;                         &lt;!-- this chapter --&gt;
+    &lt;DirectReporting&gt;
+      &lt;EMT_V4_2&gt;...&lt;/EMT_V4_2&gt;                   &lt;!-- MiFID II --&gt;
+      &lt;EFTs&gt;...&lt;/EFTs&gt;                           &lt;!-- product governance --&gt;
+      &lt;EET1.1.3&gt;...&lt;/EET1.1.3&gt;                   &lt;!-- SFDR --&gt;
+    &lt;/DirectReporting&gt;
+    &lt;IndirectReporting&gt;
+      &lt;TripartiteTemplateSolvencyII_V6&gt;...
+      &lt;/TripartiteTemplateSolvencyII_V6&gt;         &lt;!-- Solvency II --&gt;
+      &lt;PRIIPS_V20&gt;...&lt;/PRIIPS_V20&gt;               &lt;!-- PRIIPs KID --&gt;
+    &lt;/IndirectReporting&gt;
+  &lt;/RegulatoryReportings&gt;
+&lt;/FundsXML4&gt;
+</code></pre>
+<p><strong>Figure 8.1 — The RegulatoryReportings block</strong></p>
+<pre><code>                  &lt;RegulatoryReportings&gt;
+                            │
+               ┌────────────┴────────────┐
+               │                         │
+       &lt;DirectReporting&gt;         &lt;IndirectReporting&gt;
+               │                         │
+       ┌───────┼───────┐          ┌──────┴──────┐
+       │       │       │          │             │
+   &lt;EMT_V4_2&gt; &lt;EFTs&gt; &lt;EET1.1.3&gt;   &lt;TPT_V6&gt;  &lt;PRIIPS_V20&gt;
+       │       │       │          │             │
+    MiFID II  EFT    SFDR      Solvency II    PRIIPs
+    costs &amp;  (rare)  ESG       lookthrough     KID
+    target                    for insurers    data
+    market
+</code></pre>
+<p>The split between <code>DirectReporting</code> and <code>IndirectReporting</code> reflects the intended distribution path of each template. <code>DirectReporting</code> contains the templates that flow directly between regulated counterparties — EMT from manufacturer to distributor, EFT from distributor to manufacturer, EET as an SFDR disclosure artefact shared bilaterally. <code>IndirectReporting</code> contains the templates that flow through an intermediated disclosure chain — PRIIPs data, which ultimately reaches retail investors via a KID generator or an aggregator; TPT, which reaches insurance investors via their Solvency II reporting pipeline. Both branches are optional, and a fund that emits only one branch (or neither) is still schema-valid.</p>
+<p>The critical rule is that <strong>each module is self-contained</strong>. EMT does not depend on EPT; EET does not know about EFT; TPT is independent of all the others. A consumer that processes only EMT reads only the <code>&lt;EMT_V4_2&gt;</code> branch; a consumer that needs TPT for Solvency II purposes reads only the <code>&lt;TripartiteTemplateSolvencyII_V6&gt;</code> branch. The modules share the enclosing <code>&lt;RegulatoryReportings&gt;</code> container and nothing else. There is no cross-module linking, no shared lookup tables, no implicit dependencies between the five blocks.</p>
+<p>A corollary of this independence is that a <code>&lt;RegulatoryReportings&gt;</code> block may contain any subset of the five modules. A fund that has no insurance investors omits TPT. A fund that receives no distributor feedback in the reporting period omits EFT. A fund that is not actively subject to SFDR disclosures (a rare case, but it exists for some AIFs) omits EET. The schema tolerates any combination of the five, and consumers are expected to cope with partial blocks.</p>
+<p>A brief note on the versioned element names that will appear throughout this chapter. <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings/EMT" target="_blank"><code>EMT_V4_2</code></a> corresponds to FinDatEx European MiFID Template version 4.2 of April 2024. <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings/EPT" target="_blank"><code>PRIIPS_V20</code></a> is the FinDatEx European PRIIPs Template v2.0. <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings/EET" target="_blank"><code>EET1.1.3</code></a> is the European ESG Template v1.1.3. <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings/EFT" target="_blank"><code>EFTs</code></a> is the container for the European Feedback Template v1.0. <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings/TPT" target="_blank"><code>TripartiteTemplateSolvencyII_V6</code></a> is the Tripartite Template v6.0 of March 2022. Each versioned element has its own type definition in the FundsXML XSD, and the schema retains every historical version (<code>EMT</code>, <code>EMT_V3</code>, <code>EMT_V4</code>, <code>EMT_V4_1</code>, <code>EMT_V4_2</code>; <code>EET1.0</code>, <code>EET1.1</code>, <code>EET1.1.1</code>, <code>EET1.1.2</code>, <code>EET1.1.3</code>; and so on) so that older documents continue to validate. A producer targeting a contemporary consumer uses the latest version on each line.</p>
+<h3>8.2.2 The FinDatEx Consortium</h3>
+<p>A point of great importance that deserves to be stated plainly: <strong>FinDatEx is not FundsXML</strong>. FinDatEx is an independent industry body, formed in 2018 and 2019 by the principal European financial-services associations — EFAMA for the fund industry, EBF for banks, Insurance Europe for insurers, among others — with the single mission of defining and maintaining standardised data templates to meet the regulatory disclosure requirements of the European financial sector. The templates are published and governed by FinDatEx. FundsXML embeds them.</p>
+<p>The division of labour is worth spelling out because it determines who is responsible for what:</p>
+<ul>
+<li>
+<p><strong>FinDatEx</strong> decides the <em>content</em> of the templates: which fields exist, what they mean, what enumerated values they take, which validation rules apply at the semantic level. When a new PRIIPs technical standard is adopted by ESMA, FinDatEx updates the EPT to reflect the new field set. When SFDR Level 2 RTS introduces a new mandatory PAI indicator, FinDatEx updates the EET. The changes are published as new template versions — typically annually, with hotfix releases when regulatory changes demand them — in the form of Excel specifications that list every field, its type, and its regulatory meaning.</p>
+</li>
+<li>
+<p><strong>FundsXML</strong> decides the <em>form</em> in which the templates are embedded: the XML element structure, the complex types, the way enumerations are serialised, and how each new FinDatEx version is added as a new, side-by-side versioned element under <code>DirectReporting</code> or <code>IndirectReporting</code>. When FinDatEx publishes a new EMT version, FundsXML follows in its next minor release, incorporating the new fields into its XSD and exposing the new version as a sibling element next to the previous one.</p>
+</li>
+</ul>
+<p>The separation is clean and the two organisations work closely together. Chapter 3 introduced this relationship in §3.2.3 as one of the patterns of FundsXML's history — regulation drives a new payload, FundsXML absorbs the payload as a new module. This chapter is where the pattern becomes operational: the five templates that follow are each an example of a regulation-driven module absorbed into a stable envelope.</p>
+<p>An important practical consequence of the separation: <strong>disputes about field meaning are settled at FinDatEx, not at FundsXML</strong>. A producer who is unsure how a particular EMT cost field should be populated for a complex fee structure should consult the current FinDatEx EMT specification and its field-level guidance, not the FundsXML schema documentation. The FundsXML schema tells the producer <em>where</em> to put the value; the FinDatEx specification tells the producer <em>what</em> value to put there.</p>
+<h3>8.2.3 Module Selection — What to Send When</h3>
+<p>Not every FundsXML delivery carries all five templates. Which templates are included depends on the purpose of the delivery and on the needs of its consumers. The conventions that govern module selection are stable enough to be summarised.</p>
+<p><strong>EMT</strong> is the most frequently updated of the five. A fund that is actively retailed across the European Union typically emits a fresh EMT in every monthly delivery, and more frequently when something in its cost structure or target market changes (a new share class is launched, a fee is revised, a distribution country is added). A consumer that runs a retail distribution platform expects to find EMT in every delivery from every manufacturer it has a contract with.</p>
+<p><strong>EPT</strong> follows the PRIIPs KID refresh cycle. The KID itself must be reviewed at least annually, and re-issued whenever anything material changes (a significant shift in SRI, a new fee structure, a change in recommended holding period). EPT is re-emitted at the same cadence — typically monthly, to keep the downstream KID-generation pipelines synchronised, but the material updates are yearly.</p>
+<p><strong>EET</strong> runs on a slower cycle than EMT and EPT. SFDR pre-contractual disclosures are updated as the regulatory situation evolves, and PAI values are published on a quarterly or semi-annual basis. A monthly FundsXML delivery usually carries an EET that has been refreshed at most once in the preceding three months; a reporting cycle of quarterly EET updates is common.</p>
+<p><strong>EFT</strong>, as §8.6 will explain, flows in the opposite direction — from distributor to manufacturer — and therefore appears almost never in a manufacturer-to-distributor delivery. A fund's own monthly delivery does not contain EFT, because the fund is not the one providing feedback to itself. EFT appears in deliveries <em>from</em> a distributor <em>to</em> the fund's manufacturer, and those are separate files.</p>
+<p><strong>TPT</strong> is driven by Solvency II reporting dates, which are quarterly and year-end-anchored. An insurance consumer that produces its Solvency II QRT (Quantitative Reporting Template) in the weeks following each quarter-end needs the TPT for the funds it holds. The Europa Growth Fund emits TPT in every monthly delivery, because some of its institutional investors — insurance companies holding the I-EUR-DIST class — need month-end data.</p>
+<p>The Europa Growth Fund's delivery of 31 March 2026 contains <strong>EMT, EPT, EET, and TPT</strong> — the four templates that the Europa Asset Management team publishes each month. It does not contain EFT, because no distributor feedback arrived in March that needed to be forwarded. The complete block in §8.9 reflects this pattern.</p>
+<hr>
+<h2>8.3 EMT — European MiFID Template</h2>
+<p>The most operationally important of the five templates, and the one that first brought FinDatEx into the foreground of European fund-data exchange.</p>
+<h3>8.3.1 What EMT Is and Why It Exists</h3>
+<p>MiFID II — the second Markets in Financial Instruments Directive, in force across the European Union since January 2018 — fundamentally restructured European retail financial advice. Its central theme, repeated in every corner of the legislation, is <strong>transparency</strong>: retail investors should know what they are buying, what it costs, and whether it is appropriate for them. The regulation places concrete obligations on both sides of the distribution chain. Manufacturers (typically asset managers) must disclose their products in structured detail, and distributors (banks, independent financial advisers, insurance brokers) must pass the disclosures on to investors before a sale and must verify that the investor falls within the manufacturer's intended target market.</p>
+<p>The practical consequence is a continuous stream of structured data flowing from every manufacturer to every distributor, for every product, in every jurisdiction. Before the EMT existed, this stream ran over bilateral Excel files in every conceivable format — the exact problem that Chapter 1 cited as the motivation for a standard. A German distributor expected one spreadsheet layout, a French distributor expected another, and a Luxembourg fund administrator maintained dozens of variant templates to keep every bilateral relationship functional. The situation was unsustainable, and FinDatEx published the EMT in 2018 as the common answer. Within two years the European distribution chain had adopted it almost universally, and EMT has since become the <em>de facto</em> standard for manufacturer-to-distributor data exchange under MiFID II.</p>
+<p>What EMT covers:</p>
+<ul>
+<li><strong>Product identification</strong> — ISINs, names, currency, manufacturer LEI. Much of this content is repeated from the <code>FundStaticData</code> block (Chapter 5), with minor formatting differences to match FinDatEx conventions.</li>
+<li><strong>Target market</strong> — the five MiFID II dimensions (investor type, knowledge and experience, ability to bear losses, risk tolerance, client objectives). Each dimension is expressed through yes/no/neutral flags so that a distributor can determine which clients the product is intended for and which it is explicitly <em>not</em> intended for.</li>
+<li><strong>Costs and charges</strong> — the full cost structure in the MiFID II format, with one-off costs, ongoing costs, transaction costs, and incidental costs each broken down into their constituent parts. The section splits into <em>ex ante</em> (forward-looking) and <em>ex post</em> (realised) blocks.</li>
+<li><strong>Product governance</strong> — the distribution strategy (execution only, with check, investment advice, portfolio management), the recommended holding period, and other governance flags.</li>
+</ul>
+<p>EMT is emitted at the <strong>share-class level</strong>, not at the fund level. The Europa Growth Fund, with its three share classes, emits three separate <code>&lt;FinancialInstrument&gt;</code> blocks inside the enclosing <code>&lt;EMT_V4_2&gt;</code> — one for R-EUR-ACC, one for R-CHF-ACC-HEDGED, and one for I-EUR-DIST — because the cost structure, the target market, and the distribution strategy differ between the classes. The retail classes are aimed at retail investors across eleven countries; the institutional class is aimed at professional investors with a 1,000,000 EUR minimum investment. The same fund, three different disclosures.</p>
+<h3>8.3.2 Structure of the EMT Module</h3>
+<p>In the FundsXML embedding, the EMT module is rooted at a <code>&lt;EMT_V4_2&gt;</code> element inside <code>&lt;DirectReporting&gt;</code>. Its content is a sequence of one or more <code>&lt;FinancialInstrument&gt;</code> children, each of which is of type <code>EMT_V42_FinancialInstrumentType</code>. The type is structurally rich — nested, not flat — and its sequence has five mandatory top-level sections that together hold the full FinDatEx EMT v4.2 payload:</p>
+<ol>
+<li><code>&lt;DataSetInformation&gt;</code> — metadata about the EMT delivery itself (version, producer, generation timestamp, and three <code>Data_Reporting_*</code> flags that declare which sections the delivery populates);</li>
+<li><code>&lt;GeneralInformation&gt;</code> — product identification and manufacturer information (ISIN, instrument name, currency, manufacturer name and LEI, product type, and the <code>Fund</code> sub-block for UCITS-specific fields);</li>
+<li><code>&lt;TargetMarket&gt;</code> — the five MiFID II target market dimensions;</li>
+<li><code>&lt;CostsAndChargesExAnte&gt;</code> — the forward-looking cost disclosure;</li>
+<li><code>&lt;CostsAndChargesExPost&gt;</code> — the realised cost disclosure (optional, populated only when the <code>DataReportingExPost</code> flag in <code>DataSetInformation</code> is set to <code>Y</code>).</li>
+</ol>
+<p>A minimal skeleton of one <code>&lt;FinancialInstrument&gt;</code> block looks like this:</p>
+<pre><code>&lt;EMT_V4_2&gt;
+  &lt;FinancialInstrument&gt;
+    &lt;DataSetInformation&gt;
+      &lt;Version&gt;V4&lt;/Version&gt;
+      &lt;ProducerName&gt;Europa Asset Management S.A.&lt;/ProducerName&gt;
+      &lt;ProducerLEI&gt;529900T8BM49AURSDO55&lt;/ProducerLEI&gt;
+      &lt;ProducerEmail&gt;emt@europa-am.lu&lt;/ProducerEmail&gt;
+      &lt;FileGenerationDateTime&gt;2026-03-31T18:00:00Z&lt;/FileGenerationDateTime&gt;
+      &lt;DataReportingTargetMarket&gt;Y&lt;/DataReportingTargetMarket&gt;
+      &lt;DataReportingExAnte&gt;Y&lt;/DataReportingExAnte&gt;
+      &lt;DataReportingExPost&gt;N&lt;/DataReportingExPost&gt;
+    &lt;/DataSetInformation&gt;
+    &lt;GeneralInformation&gt;
+      &lt;!-- product identification — see §8.3.3 --&gt;
+    &lt;/GeneralInformation&gt;
+    &lt;TargetMarket&gt;
+      &lt;!-- five MiFID II dimensions — see §8.3.4 --&gt;
+    &lt;/TargetMarket&gt;
+    &lt;CostsAndChargesExAnte&gt;
+      &lt;!-- cost structure — see §8.3.5 --&gt;
+    &lt;/CostsAndChargesExAnte&gt;
+    &lt;!-- CostsAndChargesExPost is optional --&gt;
+  &lt;/FinancialInstrument&gt;
+&lt;/EMT_V4_2&gt;
+</code></pre>
+<p>A few structural points are worth noting. The <code>&lt;Version&gt;</code> element inside <code>&lt;DataSetInformation&gt;</code> uses the FinDatEx internal version string (<code>V4</code>, <code>V4S1</code>, <code>V4S2</code> for EMT version 4 with semantic sub-variants), not the FundsXML element name <code>EMT_V4_2</code>. The two are related but serve different purposes: the element name identifies the XSD schema used, and the <code>&lt;Version&gt;</code> string identifies the FinDatEx specification being implemented. The three <code>DataReporting*</code> flags are a producer's declaration of completeness — they tell the consumer which of the three data sections (target market, ex-ante costs, ex-post costs) have been populated in this particular delivery.</p>
+<h3>8.3.3 General Information Fields</h3>
+<p>The <code>&lt;GeneralInformation&gt;</code> section carries the identification fields and the manufacturer information. Most of the mandatory content is a rearrangement of what the fund already has in <code>&lt;FundStaticData&gt;</code> (Chapter 5), but with FinDatEx-specific formatting conventions that are worth calling out.</p>
+<pre><code>&lt;GeneralInformation&gt;
+  &lt;Code&gt;LU2031234567&lt;/Code&gt;
+  &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+  &lt;InstrumentName&gt;Europa Growth Fund R EUR ACC&lt;/InstrumentName&gt;
+  &lt;InstrumentCurrency&gt;EUR&lt;/InstrumentCurrency&gt;
+  &lt;InstrumentPerformanceFee&gt;N&lt;/InstrumentPerformanceFee&gt;
+  &lt;InstrumentDistributionCash&gt;N&lt;/InstrumentDistributionCash&gt;
+  &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+  &lt;ProductType&gt;U&lt;/ProductType&gt;
+  &lt;ManufacturerName&gt;Europa Asset Management S.A.&lt;/ManufacturerName&gt;
+  &lt;ManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/ManufacturerLEI&gt;
+  &lt;LeveragedOrContingentLiability&gt;N&lt;/LeveragedOrContingentLiability&gt;
+  &lt;Fund&gt;
+    &lt;FundShareClassWithoutRetrocession&gt;N&lt;/FundShareClassWithoutRetrocession&gt;
+  &lt;/Fund&gt;
+&lt;/GeneralInformation&gt;
+</code></pre>
+<p>The <code>&lt;Code&gt;</code> plus <code>&lt;CodificationSystem&gt;</code> pair replaces a single ISIN field: the code is the actual identifier value, and the codification system is an integer enumeration telling the consumer what kind of code was used. <code>1</code> means ISO 6166 ISIN, <code>2</code> CUSIP, <code>3</code> SEDOL, <code>4</code> WKN, <code>5</code> Bloomberg Ticker, <code>8</code> FIGI, and so on, up to <code>99</code> for a producer-attributed internal code. The priority rule in the FinDatEx specification is: use ISIN when available, otherwise fall back to the codification in order of preference. For a European UCITS like the Europa Growth Fund, ISIN is always available.</p>
+<p><code>&lt;ProductType&gt;</code> uses a single-letter enumeration. <code>U</code> is UCITS, <code>N</code> is Non-UCITS (AIF), <code>S</code> is Structured Security, <code>SF</code> is Structured Fund, <code>LM</code> is UCITS Money Market Fund, <code>NM</code> is Non-UCITS Money Market Fund, <code>ETC</code> is Exchange Traded Commodity, <code>B</code> is Bond. The Europa Growth Fund is <code>U</code>.</p>
+<p>The <code>&lt;Fund&gt;</code> sub-block at the bottom of <code>&lt;GeneralInformation&gt;</code> is selected via an <code>xs:choice</code> between <code>&lt;Fund&gt;</code> and <code>&lt;StructuredSecurity&gt;</code>. The schema offers the two alternatives because the fields that matter for a fund (retrocession status, exit-cost calculation basis) are different from the fields that matter for a structured security (notional-based versus item-based pricing, EUSIPA product category, quotation mode). For any UCITS or AIF, the <code>&lt;Fund&gt;</code> branch is chosen. The only mandatory field inside it is <code>&lt;FundShareClassWithoutRetrocession&gt;</code>: <code>Y</code> means the share class pays no inducement to distributors in the MiFID II sense, <code>N</code> means it does.</p>
+<p><code>&lt;LeveragedOrContingentLiability&gt;</code> is a yes/no flag used for MiFID II Article 62 reporting on leveraged instruments. For an ordinary long-only equity UCITS it is <code>N</code>; the flag is relevant for synthetic leveraged products or certain derivative-heavy funds.</p>
+<p>The <code>&lt;InstrumentPerformanceFee&gt;</code> and <code>&lt;InstrumentDistributionCash&gt;</code> flags are derived from the fund's charter and its distribution policy: the Europa Growth Fund R-EUR-ACC class has no performance fee and is accumulating, so both values are <code>N</code>.</p>
+<h3>8.3.4 Target Market Fields</h3>
+<p>MiFID II defines the target market along five dimensions, and the FundsXML <code>&lt;TargetMarket&gt;</code> element maps each dimension to one nested child element with yes/no/neutral flags inside it. The five dimensions are <code>&lt;InvestorType&gt;</code>, <code>&lt;KnowledgeAndExperience&gt;</code>, <code>&lt;AbilityToBearLosses&gt;</code>, <code>&lt;RiskTolerance&gt;</code>, and <code>&lt;ClientObjectives&gt;</code>, plus a <code>&lt;DistributionStrategy&gt;</code> child that captures the MiFID II distribution strategy matrix.</p>
+<p>For the Europa Growth Fund R-EUR-ACC, the block looks like this:</p>
+<pre><code>&lt;TargetMarket&gt;
+  &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+  &lt;InvestorType&gt;
+    &lt;Retail&gt;Y&lt;/Retail&gt;
+    &lt;Professional&gt;Y&lt;/Professional&gt;
+    &lt;EligibleCounterparty&gt;Y&lt;/EligibleCounterparty&gt;
+  &lt;/InvestorType&gt;
+  &lt;KnowledgeAndExperience&gt;
+    &lt;BasicInvestor&gt;Y&lt;/BasicInvestor&gt;
+    &lt;InformedInvestor&gt;Y&lt;/InformedInvestor&gt;
+    &lt;AdvancedInvestor&gt;Y&lt;/AdvancedInvestor&gt;
+  &lt;/KnowledgeAndExperience&gt;
+  &lt;AbilityToBearLosses&gt;
+    &lt;CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;N&lt;/CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;
+    &lt;CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;Y&lt;/CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;
+    &lt;CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;N&lt;/CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;
+  &lt;/AbilityToBearLosses&gt;
+  &lt;RiskTolerance&gt;
+    &lt;PRIIPSMethodology&gt;4&lt;/PRIIPSMethodology&gt;
+  &lt;/RiskTolerance&gt;
+  &lt;ClientObjectives&gt;
+    &lt;ReturnProfile&gt;
+      &lt;ClientLookingForPreservation&gt;N&lt;/ClientLookingForPreservation&gt;
+      &lt;ClientLookingForCapitalGrowth&gt;Y&lt;/ClientLookingForCapitalGrowth&gt;
+      &lt;ClientLookingForIncome&gt;N&lt;/ClientLookingForIncome&gt;
+    &lt;/ReturnProfile&gt;
+    &lt;MinimumRecommendedHoldingPeriod&gt;
+      &lt;Years&gt;5&lt;/Years&gt;
+    &lt;/MinimumRecommendedHoldingPeriod&gt;
+    &lt;IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;Y&lt;/IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;
+  &lt;/ClientObjectives&gt;
+  &lt;DistributionStrategy&gt;
+    &lt;ExecutionOnly&gt;B&lt;/ExecutionOnly&gt;
+    &lt;ExecutionWithCheckOrNonAdvisedServices&gt;B&lt;/ExecutionWithCheckOrNonAdvisedServices&gt;
+    &lt;InvestmentAdvice&gt;B&lt;/InvestmentAdvice&gt;
+    &lt;PortfolioManagement&gt;B&lt;/PortfolioManagement&gt;
+  &lt;/DistributionStrategy&gt;
+&lt;/TargetMarket&gt;
+</code></pre>
+<p>The values above reflect a UCITS equity fund that is appropriate for a broad range of retail and professional investors and is distributed through all four MiFID II distribution modes. A few notes on the enumerations:</p>
+<ul>
+<li>The <code>&lt;InvestorType&gt;/&lt;Professional&gt;</code> field takes <code>Y</code>, <code>N</code>, <code>P</code>, or <code>E</code>: <code>Y</code> covers both professional-per-se and elective-professional clients; <code>P</code> means only per-se professionals are compatible; <code>E</code> means only elective professionals are compatible; <code>N</code> means neither. The Europa Growth Fund accepts both, so the value is <code>Y</code>.</li>
+<li>All three knowledge levels are marked <code>Y</code> because a long-only European equity UCITS does not require any specialised financial sophistication. A more complex product (a leveraged ETF, a structured note, a convertible arbitrage fund) would typically mark <code>BasicInvestor</code> as <code>N</code> because the risk profile is too sophisticated for a first-time investor.</li>
+<li>The <code>&lt;AbilityToBearLosses&gt;</code> block uses three yes/no/neutral flags that together describe the loss profile. An equity UCITS can lose up to the entire invested capital (but no more — there is no leverage or margin), so the values are: <em>not</em> compatible with clients who cannot bear capital loss (<code>N</code>), compatible with clients who need no capital guarantee (<code>Y</code>), <em>not</em> compatible with clients who could face losses beyond their invested capital (<code>N</code>, because that scenario does not occur for a regular UCITS). The fourth optional field <code>&lt;CompatibleWithClientsWhoCanBearLimitedCapitalLoss&gt;</code> is omitted because it applies only to capital-protected or money market funds.</li>
+<li><code>&lt;RiskTolerance&gt;/&lt;PRIIPSMethodology&gt;</code> is the PRIIPs SRI on the 1-to-7 scale — the same number that also appears in the EPT (§8.4.3). The Europa Growth Fund's SRI is 4.</li>
+<li><code>&lt;ClientObjectives&gt;/&lt;ReturnProfile&gt;</code> uses three flags for preservation, capital growth, and income. The Europa Growth Fund is a growth product, so only <code>&lt;ClientLookingForCapitalGrowth&gt;</code> is <code>Y</code>.</li>
+<li>The <code>&lt;MinimumRecommendedHoldingPeriod&gt;</code> is expressed as an <code>xs:choice</code> between <code>&lt;Years&gt;</code> (a decimal) and <code>&lt;Category&gt;</code> (a one-letter V/S/M/L/H code for Very short / Short / Medium / Long / Hold to maturity). For the Europa Growth Fund, the RHP is five years, so <code>&lt;Years&gt;5&lt;/Years&gt;</code> is used.</li>
+<li><code>&lt;IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;</code> is a yes-or-neutral flag (there is no "No" — the MiFID II sustainability preferences framework does not allow negative target market on this dimension). For the Europa Growth Fund, which is SFDR Article 8, the value is <code>Y</code>.</li>
+<li><code>&lt;DistributionStrategy&gt;</code> uses a four-value enumeration per distribution channel: <code>R</code> (Retail only), <code>P</code> (Professional only), <code>B</code> (Both), <code>N</code> (Neither). The Europa Growth Fund is distributed through all channels to both segments, so every channel is marked <code>B</code>.</li>
+</ul>
+<p><strong>Table 8.1 — The MiFID II target market dimensions for the Europa Growth Fund R-EUR-ACC</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>FundsXML element</th>
+<th>Positive values</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client type</td>
+<td><code>InvestorType</code></td>
+<td>Retail=Y, Professional=Y, EligibleCounterparty=Y</td>
+<td>All three categories</td>
+</tr>
+<tr>
+<td>Knowledge and experience</td>
+<td><code>KnowledgeAndExperience</code></td>
+<td>Basic=Y, Informed=Y, Advanced=Y</td>
+<td>Non-complex UCITS</td>
+</tr>
+<tr>
+<td>Ability to bear losses</td>
+<td><code>AbilityToBearLosses</code></td>
+<td>Full loss acceptable</td>
+<td>No capital guarantee</td>
+</tr>
+<tr>
+<td>Risk tolerance</td>
+<td><code>RiskTolerance/PRIIPSMethodology</code></td>
+<td>4</td>
+<td>PRIIPs SRI value</td>
+</tr>
+<tr>
+<td>Client objectives</td>
+<td><code>ClientObjectives/ReturnProfile</code></td>
+<td>Capital growth only</td>
+<td>Accumulating class</td>
+</tr>
+</tbody>
+</table>
+<p>The institutional class I-EUR-DIST has a different target market: the <code>&lt;Retail&gt;</code> flag drops to <code>N</code>, because the 1,000,000 EUR minimum investment effectively excludes retail investors. The other dimensions remain the same, because the underlying portfolio and risk profile are identical across share classes. A producer emits one <code>&lt;FinancialInstrument&gt;</code> block per share class and repeats the identification, target-market, and cost content with the per-class differences.</p>
+<h3>8.3.5 Cost and Charges Fields</h3>
+<p>The cost fields are the most conceptually intricate part of EMT, because they implement the MiFID II cost classification, which is itself elaborate. MiFID II divides the forward-looking cost disclosure into several categories, and the FundsXML <code>&lt;CostsAndChargesExAnte&gt;/&lt;Fund&gt;</code> block mirrors those categories field by field:</p>
+<ul>
+<li><strong>Entry costs</strong> — <code>&lt;GrossMaxEntryCostNonAcquired&gt;</code> (entry load not acquired to the fund), <code>&lt;MaxEntryCostAcquired&gt;</code> (entry load acquired to the fund), plus two optional Italy-specific variants.</li>
+<li><strong>Exit costs</strong> — <code>&lt;MaxExitCost&gt;</code>, <code>&lt;MaxExitCostAcquired&gt;</code>, <code>&lt;TypicalExitCost&gt;</code>, plus further optional fields for structured funds.</li>
+<li><strong>Ongoing costs</strong> — <code>&lt;OngoingCosts&gt;</code> (the headline figure, equivalent to the Ongoing Charges Figure from Chapter 5), <code>&lt;ManagementFee&gt;</code> (the pure management fee component, which must be less than or equal to the total ongoing costs), and the optional <code>&lt;DistributionFee&gt;</code>.</li>
+<li><strong>Transaction costs</strong> — <code>&lt;TransactionCosts&gt;</code>.</li>
+<li><strong>Incidental costs</strong> — <code>&lt;IncidentalCosts&gt;</code>, primarily capturing performance fees.</li>
+</ul>
+<p>All of these fields are decimals expressed as proportions of NAV in annualised terms: <code>0.0175</code> means 1.75% per year. A <code>&lt;CostsReferenceDate&gt;</code> element closes the block, recording the reference date of the cost figures (which may or may not coincide with the general reference date).</p>
+<p>For the Europa Growth Fund R-EUR-ACC class, the forward-looking cost block looks like this:</p>
+<pre><code>&lt;CostsAndChargesExAnte&gt;
+  &lt;Fund&gt;
+    &lt;GrossMaxEntryCostNonAcquired&gt;0.0500&lt;/GrossMaxEntryCostNonAcquired&gt;
+    &lt;MaxExitCost&gt;0.0000&lt;/MaxExitCost&gt;
+    &lt;OngoingCosts&gt;0.0175&lt;/OngoingCosts&gt;
+    &lt;ManagementFee&gt;0.0150&lt;/ManagementFee&gt;
+    &lt;TransactionCosts&gt;0.0012&lt;/TransactionCosts&gt;
+    &lt;IncidentalCosts&gt;0.0000&lt;/IncidentalCosts&gt;
+  &lt;/Fund&gt;
+  &lt;CostsReferenceDate&gt;2026-03-31&lt;/CostsReferenceDate&gt;
+&lt;/CostsAndChargesExAnte&gt;
+</code></pre>
+<p>Reading the block: the share class allows a maximum entry load of 5% (the contractual cap in the prospectus), although actual distributor agreements typically waive or reduce this figure. The exit cost is zero. The ongoing cost is 1.75% per year, of which 1.50% is the management fee and the remaining 0.25% covers administration, depositary, and other ongoing costs. The transaction cost estimate is 0.12% per year, computed according to the FinDatEx methodology from the fund's realised trading activity over the preceding period. The incidental cost is zero because the fund charges no performance fee. The total of 1.87% (ongoing + transaction + incidental, excluding the prospectus-cap entry load) is the headline annual cost figure that a consumer would show to a retail investor.</p>
+<p>The <code>&lt;CostsAndChargesExPost&gt;</code> block, populated only when the <code>&lt;DataReportingExPost&gt;</code> flag is set to <code>Y</code>, carries the realised costs for a past reference period. Its structure mirrors the ex-ante block but with slightly different field names (<code>EntryCostAcquired</code>, <code>OngoingCosts</code>, <code>ManagementFee</code>, <code>TransactionCosts</code>, <code>IncidentalCosts</code>) and records actually incurred rather than contractually possible charges. A producer that publishes ex-post figures typically does so on an annual basis rather than monthly, because the computations depend on a full reporting period's trading data.</p>
+<p><strong>An important relationship to Chapter 5</strong>: the cost structure in EMT is <em>not</em> identical to the <code>&lt;Fees&gt;</code> block in <code>FundStaticData</code>. The <code>&lt;Fees&gt;</code> block is the fund's own representation of its charges, organised by fee type and computation basis. The EMT cost block is the MiFID II representation, organised by MiFID II's own categorisation. The two must be <em>consistent</em> — the management fee in EMT must equal the management fee in <code>&lt;Fees&gt;</code>, the total ongoing costs must equal the Ongoing Charges Figure, the transaction-cost methodologies must align — but they are not byte-for-byte copies of each other. Producers who generate both representations must take care that they reconcile, because a downstream consumer comparing the two will flag any discrepancy.</p>
+<p>An even more important relationship concerns EPT, which we will treat in §8.4.4. EPT (inside <code>&lt;PRIIPS_V20&gt;</code>) also carries cost fields, but with a PRIIPs-specific breakdown and with horizon-dependent values computed at one year and at the recommended holding period. The EMT figures above are annual percentages; the EPT figures express the same underlying cost structure over the RHP, and the arithmetic of amortising one-off costs over five years versus one year produces different aggregated numbers. The two representations are both authoritative, and consumers must use the one that matches their disclosure horizon.</p>
+<h3>8.3.6 EMT in Context — Multiple Share Classes</h3>
+<p>The <code>&lt;EMT_V4_2&gt;</code> element contains a sequence of <code>&lt;FinancialInstrument&gt;</code> children, so a fund with multiple share classes emits one block per class under the same EMT wrapper:</p>
+<pre><code>&lt;EMT_V4_2&gt;
+  &lt;FinancialInstrument&gt;
+    &lt;!-- R-EUR-ACC: ISIN LU2031234567 --&gt;
+    ...
+  &lt;/FinancialInstrument&gt;
+  &lt;FinancialInstrument&gt;
+    &lt;!-- R-CHF-ACC-HEDGED: ISIN LU2031234641 --&gt;
+    ...
+  &lt;/FinancialInstrument&gt;
+  &lt;FinancialInstrument&gt;
+    &lt;!-- I-EUR-DIST: ISIN LU2031234724 --&gt;
+    ...
+  &lt;/FinancialInstrument&gt;
+&lt;/EMT_V4_2&gt;
+</code></pre>
+<p>A consumer iterates the <code>&lt;FinancialInstrument&gt;</code> children and matches each one to its corresponding share class by <code>&lt;Code&gt;</code>. Nothing in the schema prevents mixing share classes from different funds inside a single <code>&lt;EMT_V4_2&gt;</code> element (the element is a flat list), but operational practice is to keep one EMT block per fund per delivery for clarity. Where a single delivery covers many funds — typical for large multi-manager platforms — the <code>RegulatoryReportings/DirectReporting/EMT_V4_2</code> branch can contain one <code>&lt;FinancialInstrument&gt;</code> per share class across all funds, and consumers split them at processing time by the <code>&lt;Code&gt;</code> field.</p>
+<p>The complete EMT example for the Europa Growth Fund R-EUR-ACC class — combining the <code>DataSetInformation</code>, <code>GeneralInformation</code>, <code>TargetMarket</code>, and <code>CostsAndChargesExAnte</code> sections from §§8.3.2–8.3.5 — appears in full in §8.9 alongside the other templates.</p>
+<hr>
+<h2>8.4 EPT — European PRIIPs Template</h2>
+<p>The PRIIPs-focused counterpart to EMT, embedded in FundsXML under <code>&lt;IndirectReporting&gt;/&lt;PRIIPS_V20&gt;</code>.</p>
+<h3>8.4.1 The PRIIPs Regulation and the KID</h3>
+<p>PRIIPs — the Packaged Retail and Insurance-based Investment Products regulation — has governed European retail investment disclosure since its original entry into force in 2018 and has applied to UCITS since January 2023, when the transition period expired and the UCITS-specific KIID regime gave way to the PRIIPs-wide KID. The PRIIPs framework covers not only traditional funds but also structured products, unit-linked insurance products, and similar retail-accessible instruments, and it aims to make disclosures comparable across these otherwise very different product types.</p>
+<p>The central output of PRIIPs is the <strong>KID — the Key Information Document</strong> — a three-page standardised document that every retail investor must be given <em>before</em> they invest. The KID is highly structured and, in practice, very nearly identical in layout across all PRIIPs products. It must include: the product's name and identification, its risk level (the SRI from 1 to 7), a set of performance scenarios over the recommended holding period, the costs the investor will bear, and a limited number of free-text sections that explain the product type and the intended target market.</p>
+<p>The KID is a PDF that an end-investor reads. The <em>data</em> that populates the KID lives in a structured template — the <strong>European PRIIPs Template, EPT</strong> — which FinDatEx publishes and maintains. A manufacturer produces EPT; a distributor (or a specialised KID-generation service) consumes EPT and renders from it the final PDF document that goes into the investor's hands. EPT is the input; the KID is the output.</p>
+<p>What the transition from UCITS KIID to PRIIPs KID changed:</p>
+<ul>
+<li><strong>Risk indicator</strong>: the UCITS KIID used the SRRI (Synthetic Risk and Reward Indicator), a 1-to-7 scale based on past volatility of returns. The PRIIPs KID uses the SRI (Summary Risk Indicator), also 1 to 7, but computed as a combination of the Market Risk Measure (MRM, based on volatility and on the volatility-equivalent value) and the Credit Risk Measure (CRM). For most equity funds, CRM is 1 and the SRI is driven by MRM alone; for bond funds or structured products, the CRM contribution can dominate.</li>
+<li><strong>Performance presentation</strong>: the UCITS KIID showed historical performance as a bar chart of the last ten years. The PRIIPs KID shows <strong>four performance scenarios</strong> — stress, unfavourable, moderate, favourable — as prospective outcomes over the recommended holding period, computed from the statistical distribution of the fund's historical returns.</li>
+<li><strong>Cost disclosure</strong>: the UCITS KIID had a single Ongoing Charges figure. The PRIIPs KID has a detailed cost structure presented at multiple horizons (one year, half the RHP, and the full RHP), broken down into one-off, ongoing, and incidental categories.</li>
+</ul>
+<p>EPT carries the structured data for all of these fields, and is therefore the template that any producer distributing UCITS to retail investors after January 2023 must emit alongside EMT.</p>
+<h3>8.4.2 Structure of the EPT Module</h3>
+<p>In FundsXML, EPT lives under <code>&lt;IndirectReporting&gt;/&lt;PRIIPS_V20&gt;</code>. The <code>PRIIPSType_V20</code> complex type has three children: a single <code>&lt;EPTV2&gt;</code> element that carries the core EPT payload, plus two optional <code>&lt;CEPTV2History&gt;</code> and <code>&lt;CEPTV2Performance&gt;</code> children that carry the Comfort EPT history and performance data (used primarily by insurance-linked products). For a plain UCITS like the Europa Growth Fund, only <code>&lt;EPTV2&gt;</code> is populated.</p>
+<p>The <code>&lt;EPTV2&gt;</code> element groups the EPT fields into six mandatory sections:</p>
+<ol>
+<li><code>&lt;DataSetInformation&gt;</code> — the file-level metadata;</li>
+<li><code>&lt;GeneralPortfolioInformation&gt;</code> — product identification (the PRIIPs term "portfolio" refers to the <em>product</em> being disclosed, not to the fund's holdings portfolio from Chapter 6);</li>
+<li><code>&lt;RiskAssessment&gt;</code> — the SRI, MRM, CRM, and related indicators;</li>
+<li><code>&lt;PerformanceScenario&gt;</code> — the four PRIIPs performance scenarios;</li>
+<li><code>&lt;Costs&gt;</code> — the cost structure in the PRIIPs format;</li>
+<li><code>&lt;Narratives&gt;</code> — the standardised free-text fields that appear on the KID.</li>
+</ol>
+<p>A skeleton:</p>
+<pre><code>&lt;PRIIPS_V20&gt;
+  &lt;EPTV2&gt;
+    &lt;DataSetInformation&gt;
+      &lt;Version&gt;V21&lt;/Version&gt;
+      &lt;!-- four Data_Reporting* flags --&gt;
+    &lt;/DataSetInformation&gt;
+    &lt;GeneralPortfolioInformation&gt;
+      &lt;!-- product identification — see §8.4.3 --&gt;
+    &lt;/GeneralPortfolioInformation&gt;
+    &lt;RiskAssessment&gt;
+      &lt;!-- SRI, MRM, CRM — see §8.4.4 --&gt;
+    &lt;/RiskAssessment&gt;
+    &lt;PerformanceScenario&gt;
+      &lt;!-- four scenarios — see §8.4.5 --&gt;
+    &lt;/PerformanceScenario&gt;
+    &lt;Costs&gt;
+      &lt;!-- cost structure — see §8.4.6 --&gt;
+    &lt;/Costs&gt;
+    &lt;Narratives&gt;
+      &lt;!-- KID free-text fields --&gt;
+    &lt;/Narratives&gt;
+  &lt;/EPTV2&gt;
+&lt;/PRIIPS_V20&gt;
+</code></pre>
+<p>The <code>&lt;Version&gt;</code> element inside <code>&lt;DataSetInformation&gt;</code> takes the single value <code>V21</code>, reflecting EPT version 2.1 — the FinDatEx EPT revision that accompanies the PRIIPs technical standards currently in force. As with EMT, the element name (<code>PRIIPS_V20</code>) and the <code>&lt;Version&gt;</code> string (<code>V21</code>) refer to two different things: the former is the FundsXML-side XSD version, the latter is the FinDatEx-side template version.</p>
+<p>One important schema quirk: the <code>DataSetInformation</code> block inside <code>&lt;EPTV2&gt;</code> uses yes/no fields of type <code>YesNoType</code>, which in this corner of the schema takes the string values <code>YES</code> and <code>NO</code> in full — not the single-letter <code>Y</code> and <code>N</code> used by EMT's <code>EMTYesNoType</code>. A producer who mechanically copies <code>Y</code>/<code>N</code> from one template to the other will hit a validation error. The fragments in this section use the correct <code>YES</code>/<code>NO</code> spelling.</p>
+<h3>8.4.3 General Portfolio Information</h3>
+<p>The <code>&lt;GeneralPortfolioInformation&gt;</code> block is the EPT equivalent of EMT's <code>&lt;GeneralInformation&gt;</code>: it identifies the product (manufacturer, LEI, group, the ISIN or internal code, the product name, currency, reference date, PRIIPs category, autocallable flag). For the Europa Growth Fund R-EUR-ACC class:</p>
+<pre><code>&lt;GeneralPortfolioInformation&gt;
+  &lt;PortfolioManufacturerName&gt;Europa Asset Management S.A.&lt;/PortfolioManufacturerName&gt;
+  &lt;PortfolioManufacturerGroupName&gt;Europa Financial Group&lt;/PortfolioManufacturerGroupName&gt;
+  &lt;PortfolioManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/PortfolioManufacturerLEI&gt;
+  &lt;PortfolioID&gt;
+    &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+    &lt;Code&gt;LU2031234567&lt;/Code&gt;
+  &lt;/PortfolioID&gt;
+  &lt;PortfolioName&gt;Europa Growth Fund R EUR ACC&lt;/PortfolioName&gt;
+  &lt;PortfolioCurrency&gt;EUR&lt;/PortfolioCurrency&gt;
+  &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+  &lt;PortfolioPRIIPSCategory&gt;2&lt;/PortfolioPRIIPSCategory&gt;
+  &lt;IsAnAutocallableProduct&gt;NO&lt;/IsAnAutocallableProduct&gt;
+&lt;/GeneralPortfolioInformation&gt;
+</code></pre>
+<p>The <code>&lt;PortfolioPRIIPSCategory&gt;</code> field is a small integer on the closed enumeration 1 to 4, corresponding to the four PRIIPs product categories:</p>
+<ul>
+<li><strong>Category 1</strong> — products where the retail investor could lose more than the amount invested (certain CFDs and derivative products) or where the product has no liquid market. Not applicable to traditional UCITS.</li>
+<li><strong>Category 2</strong> — products whose return is linearly related to the performance of a diversified set of underlyings, and whose historical returns can be used directly for statistical modelling. Most long-only UCITS fall into Category 2. The Europa Growth Fund is Category 2.</li>
+<li><strong>Category 3</strong> — products whose return depends non-linearly on the underlying (structured products with barriers, options, or path-dependency). These require Monte Carlo simulation for scenario generation.</li>
+<li><strong>Category 4</strong> — products where the return depends on factors not observable in market data (with-profits insurance products, unit-linked wrappers with guarantees). These require their own scenario methodology.</li>
+</ul>
+<p>The category choice drives much of the downstream scenario calculation, because the four categories use different methodologies for the performance scenario section. Most equity, bond, and balanced UCITS are Category 2; Category 3 is the natural home for structured funds.</p>
+<h3>8.4.4 Risk Assessment — SRI, MRM, and CRM</h3>
+<p>The <code>&lt;RiskAssessment&gt;</code> block carries the PRIIPs risk indicators and a handful of related fields. For the Europa Growth Fund:</p>
+<pre><code>&lt;RiskAssessment&gt;
+  &lt;ValuationFrequency&gt;252&lt;/ValuationFrequency&gt;
+  &lt;IS_Flexible&gt;NO&lt;/IS_Flexible&gt;
+  &lt;Existing_Credit_Risk&gt;NO&lt;/Existing_Credit_Risk&gt;
+  &lt;SRI&gt;4&lt;/SRI&gt;
+  &lt;IsSRIAdjusted&gt;NO&lt;/IsSRIAdjusted&gt;
+  &lt;MRM&gt;4&lt;/MRM&gt;
+  &lt;Recommended_Holding_Period&gt;5&lt;/Recommended_Holding_Period&gt;
+  &lt;HasAContractualMaturityDate&gt;NO&lt;/HasAContractualMaturityDate&gt;
+  &lt;Liquidity_Risk&gt;L&lt;/Liquidity_Risk&gt;
+&lt;/RiskAssessment&gt;
+</code></pre>
+<p><code>&lt;ValuationFrequency&gt;</code> is the number of valuation days per year. The Europa Growth Fund values daily, so the value is 252 (business days). The field takes an enumeration — 1 (annual), 2 (biannual), 4 (quarterly), 12 (monthly), 24 (bimonthly), 52 (weekly), 104 (biweekly), 252 (daily) — and the producer chooses the one that matches the actual valuation cadence.</p>
+<p><code>&lt;IS_Flexible&gt;</code> marks whether the fund is a flexible fund under the PRIIPs Annex II clause 14. A flexible fund changes its asset-allocation profile over time and must disclose a historical VEV alongside a reference-allocation VEV. The Europa Growth Fund is a straight equity fund with a stable mandate and is therefore <code>NO</code>.</p>
+<p><code>&lt;Existing_Credit_Risk&gt;</code> is a yes/no flag. For a pure equity UCITS, the answer is <code>NO</code> because the fund holds no direct credit exposure. For a bond fund or a mixed fund with bond holdings, the answer is <code>YES</code> and the CRM (Credit Risk Measure) fields become load-bearing.</p>
+<p><code>&lt;SRI&gt;</code> is the headline 1-to-7 risk figure. For the Europa Growth Fund, the SRI is 4 — middle of the scale, consistent with a diversified European equity fund with moderate volatility and negligible credit risk.</p>
+<p><code>&lt;MRM&gt;</code> is the Market Risk Measure, also 1 to 7. The SRI is computed from the MRM and the CRM through a standardised matrix published in the PRIIPs regulatory technical standards; for a fund with no credit risk, MRM = SRI, and both are 4.</p>
+<p><code>&lt;IsSRIAdjusted&gt;</code> marks whether the manufacturer has exercised the regulatory option to increase the SRI beyond the value computed from the formula. This option exists for funds where the manufacturer believes the mechanical SRI understates the perceived investor risk — a rare occurrence, but the field is mandatory. For the Europa Growth Fund, the value is <code>NO</code>.</p>
+<p><code>&lt;Recommended_Holding_Period&gt;</code> is a decimal number of years, consistent with the EMT target market's <code>&lt;MinimumRecommendedHoldingPeriod&gt;/&lt;Years&gt;</code> field. Both say 5 for the Europa Growth Fund.</p>
+<p><code>&lt;HasAContractualMaturityDate&gt;</code> is <code>NO</code> for an open-ended UCITS and <code>YES</code> for a closed-ended or fixed-maturity product; the optional <code>&lt;MaturityDate&gt;</code> is populated only in the <code>YES</code> case.</p>
+<p><code>&lt;Liquidity_Risk&gt;</code> uses a single-letter enumeration: <code>M</code> (material liquidity risk), <code>I</code> (illiquid), or <code>L</code> (no liquidity issue). The Europa Growth Fund, invested in large-cap European equities, has no liquidity issue and is marked <code>L</code>.</p>
+<h3>8.4.5 Performance Scenarios</h3>
+<p>The <code>&lt;PerformanceScenario&gt;</code> block carries the four PRIIPs performance scenarios — <strong>stress, unfavourable, moderate, favourable</strong> — that appear on the KID. Each scenario is expressed as an annualised return (a decimal, e.g. <code>0.0540</code> for 5.40% per year) at the recommended holding period; the optional <code>&lt;OneYear&gt;</code> and <code>&lt;HalfRHP&gt;</code> children carry the shorter-horizon values.</p>
+<p>For the Europa Growth Fund:</p>
+<pre><code>&lt;PerformanceScenario&gt;
+  &lt;ReturnUnfavorable&gt;
+    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.0120&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+  &lt;/ReturnUnfavorable&gt;
+  &lt;ReturnModerate&gt;
+    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.0540&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+  &lt;/ReturnModerate&gt;
+  &lt;ReturnFavorable&gt;
+    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.1080&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+  &lt;/ReturnFavorable&gt;
+  &lt;ReturnStress&gt;
+    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.2750&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+  &lt;/ReturnStress&gt;
+  &lt;PortfolioPastPerformanceDisclosureRequired&gt;YES&lt;/PortfolioPastPerformanceDisclosureRequired&gt;
+&lt;/PerformanceScenario&gt;
+</code></pre>
+<p>The child element name <code>&lt;RHPOrFirstCallDateOrFirstCallDate&gt;</code> is awkward — it is a schema artefact reflecting the fact that the same field is used for fixed-RHP products (where it carries the RHP value) and for autocallable products (where it carries the value at the first call date). For a straight UCITS, the interpretation is always "at RHP".</p>
+<p><strong>The four values in turn</strong>. A moderate annual return of +5.40% per year over the five-year RHP represents the median of the historical-return distribution — the honest central estimate of what an investor might expect. The unfavourable scenario at −1.20% per year represents the 10th percentile of the distribution: a plausible but pessimistic outcome. The favourable scenario at +10.80% per year is the 90th percentile. The stress scenario at −27.50% per year is the extreme tail, derived from the worst historical episodes in the measurement window; this scenario is deliberately much worse than the unfavourable one to illustrate that equity investments can suffer severe drawdowns.</p>
+<p>A KID generator reads these four values, compounds them over the RHP, applies them to the standard 10,000 EUR illustrative investment, and renders the resulting monetary outcomes on the KID performance table. For the Europa Growth Fund, the moderate scenario of +5.40% per year over five years produces an outcome of approximately 13,000 EUR on a 10,000 EUR initial investment — the figure a retail investor sees in the "What could I get in return?" section of the KID.</p>
+<p><code>&lt;PortfolioPastPerformanceDisclosureRequired&gt;</code> is <code>YES</code> for any fund that meets the PRIIPs Annex VIII conditions (a UCITS with at least one year of history), requiring the KID to link to the past performance document. For the Europa Growth Fund, which has been operating for several years, the flag is <code>YES</code>.</p>
+<h3>8.4.6 Costs in the PRIIPs Format</h3>
+<p>The <code>&lt;Costs&gt;</code> block decomposes the PRIIPs cost structure into three sub-blocks: <code>&lt;OneOff&gt;</code>, <code>&lt;Ongoing&gt;</code>, and <code>&lt;Incidental&gt;</code>. Each sub-block carries the cost components in the PRIIPs-specific breakdown:</p>
+<pre><code>&lt;Costs&gt;
+  &lt;OneOff&gt;
+    &lt;EntryCost&gt;0.0500&lt;/EntryCost&gt;
+    &lt;EntryCostsAcquired&gt;0.0000&lt;/EntryCostsAcquired&gt;
+    &lt;ExitCostAtRHP&gt;0.0000&lt;/ExitCostAtRHP&gt;
+    &lt;SlidingExitCostIndicator&gt;NO&lt;/SlidingExitCostIndicator&gt;
+  &lt;/OneOff&gt;
+  &lt;Ongoing&gt;
+    &lt;OtherCost&gt;0.0025&lt;/OtherCost&gt;
+    &lt;ManagementCosts&gt;0.0150&lt;/ManagementCosts&gt;
+    &lt;Transaction&gt;0.0012&lt;/Transaction&gt;
+  &lt;/Ongoing&gt;
+  &lt;Incidental&gt;
+    &lt;ExistringIncidentalCostsPortfolio&gt;NO&lt;/ExistringIncidentalCostsPortfolio&gt;
+    &lt;ExistingIncidentalCostsPortfolio&gt;NO&lt;/ExistingIncidentalCostsPortfolio&gt;
+  &lt;/Incidental&gt;
+&lt;/Costs&gt;
+</code></pre>
+<p>A few points that the naive reader should be warned about. The <code>&lt;Transaction&gt;</code> field inside <code>&lt;Ongoing&gt;</code> carries the portfolio transaction costs — the same concept as EMT's <code>&lt;TransactionCosts&gt;</code> but at the same decimal-percent scale. The <code>&lt;ManagementCosts&gt;</code> field carries the management fee plus other administrative and operational running costs, which is a <em>superset</em> of the <code>&lt;ManagementFee&gt;</code> field in EMT's <code>&lt;CostsAndChargesExAnte&gt;/&lt;Fund&gt;</code>. A producer filling both templates must take care that the EPT's <code>&lt;ManagementCosts&gt;</code> is at least as large as the EMT's <code>&lt;ManagementFee&gt;</code>, and the difference, if any, reflects non-management administrative running costs that PRIIPs bundles into the management bucket but MiFID II breaks out separately.</p>
+<p>The two similarly named children of <code>&lt;Incidental&gt;</code> — <code>&lt;ExistringIncidentalCostsPortfolio&gt;</code> and <code>&lt;ExistingIncidentalCostsPortfolio&gt;</code> — are not a typo in this book: they are two separate elements in the schema, and both are mandatory. The FinDatEx specification uses them to distinguish two types of incidental cost indicator, and the nearly identical spelling reflects a historical quirk of the template's field naming. A producer must populate both, and, in the absence of performance fees or carried interest, both are <code>NO</code>.</p>
+<p>The <code>&lt;Narratives&gt;</code> section of <code>&lt;EPTV2&gt;</code> — a block of short free-text fields that populate the KID's narrative sections (intended target market description, investment objective, exit cost description, and so on) — is mandatory for all PRIIPs products. Its content is closed to a maximum character count and is intended to be reused verbatim on the final KID. For the Europa Growth Fund, the narrative fields are drawn from the fund's prospectus with minimal editorial adaptation to fit the character limits.</p>
+<h3>8.4.7 The EPT and EMT Cost Relationship</h3>
+<p>A critical practical point that is worth restating. EMT expresses cost figures as annual percentages, which is the MiFID II cost disclosure horizon. EPT expresses some cost figures over the recommended holding period as well — notably through the KID generator's downstream calculations, which aggregate the annual figures over the fund's RHP and display the result on the KID's "Costs over time" table. The input fields in <code>&lt;PRIIPS_V20&gt;</code> are still annualised decimals, but the downstream KID output amortises one-off costs across the RHP: for a 5% entry load and a 5-year RHP, the KID shows approximately 1% per year, and a 5-year investment horizon sees the full 5% taken at entry.</p>
+<p>A consumer that reads "total cost of 1.87% per year" from EMT and "reduction in yield of 2.87% per year" from the KID generator for the same share class is not seeing a contradiction: the EMT number excludes the amortised entry load and the KID number includes it. Both figures are individually valid in their own disclosure contexts, and the difference reflects the different treatment of one-off costs under the two regulations.</p>
+<hr>
+<h2>8.5 EET — European ESG Template</h2>
+<p>The largest of the five templates by field count, and the most rapidly evolving of them. Embedded under <code>&lt;DirectReporting&gt;/&lt;EET1.1.3&gt;</code>.</p>
+<h3>8.5.1 SFDR and the Sustainability Regulatory Wave</h3>
+<p>SFDR — the Sustainable Finance Disclosure Regulation — is the regulatory cornerstone of European sustainable finance, and arguably the most consequential single piece of fund regulation of the last five years. It entered into force in March 2021, with its technical standards (the Level 2 RTS) becoming applicable in January 2023. SFDR sits inside a larger sustainability framework that includes the EU Taxonomy Regulation (which defines what counts as "environmentally sustainable" at the activity level), the Corporate Sustainability Reporting Directive (CSRD, which requires companies to publish sustainability data that fund managers can then consume), and a growing body of country-specific national regulations.</p>
+<p>The mechanics of SFDR run primarily through three articles that classify the intensity of a fund's sustainability integration:</p>
+<ul>
+<li><strong>Article 6</strong> — no specific ESG orientation. The fund discloses sustainability risks that are material to its investment decisions (which every fund must do), but it does not claim to pursue any particular sustainability outcome. This is the default classification for funds that do not incorporate ESG considerations beyond risk management.</li>
+<li><strong>Article 8</strong> — "light green". The fund <em>promotes</em> environmental or social characteristics among its investment decisions, without making sustainability the overriding objective. Most European actively managed funds that market themselves as ESG-integrated, best-in-class, or exclusion-based fall into this category. Article 8 is a broad tent, and the precise definition of "promoting" characteristics is the subject of continuous clarification from ESMA and national regulators.</li>
+<li><strong>Article 9</strong> — "dark green". The fund has <em>sustainable investment</em> as its specific objective, in the sense defined by SFDR Article 2(17). This is a narrower category, with stricter disclosure and allocation requirements. Article 9 funds must invest predominantly in assets that meet the SFDR definition of sustainable investment, and must apply the "do no significant harm" (DNSH) test to their holdings.</li>
+</ul>
+<p>The <strong>EU Taxonomy</strong> is a separate but related framework that defines, at the level of individual economic activities, which ones qualify as environmentally sustainable. It currently covers climate change mitigation and climate change adaptation as its two primary environmental objectives, with four further objectives (water, circular economy, pollution prevention, biodiversity) progressively being added. A fund's Taxonomy alignment is the percentage of its portfolio investments whose underlying economic activities are Taxonomy-aligned, and it is reported separately from the SFDR classification.</p>
+<p><strong>Principal Adverse Impacts (PAI)</strong> are a list of fourteen mandatory indicators of negative sustainability impacts, published by the European Supervisory Authorities as part of the SFDR Level 2 RTS. Asset managers must disclose PAI values both at the entity level (aggregate across all their products) and, for Article 8 and Article 9 products, at the product level. The fourteen indicators cover greenhouse gas emissions, exposure to fossil fuels, biodiversity damage, water emissions, hazardous waste, violations of international norms, gender pay gaps, and exposure to controversial weapons.</p>
+<p>The collective data burden of SFDR, the Taxonomy, and PAI is large, and FinDatEx addressed it with the <strong>EET</strong> — a template with several hundred fields that carries all the structured data points a European distributor or pre-contractual-disclosure generator needs.</p>
+<h3>8.5.2 Structure of the EET Module</h3>
+<p>EET is embedded in FundsXML at <code>&lt;DirectReporting&gt;/&lt;EET1.1.3&gt;</code>. The outer <code>EET1.1.3</code> element is the template-version container, of type <code>EETsType1.1.3</code>, which carries one or more <code>&lt;EET1.1.3&gt;</code> children of type <code>EETReportType1.1.3</code>. The inner-outer element reuse is a schema quirk — FinDatEx uses the same versioned string for the wrapper and for each report entry — but the sequence is one wrapper, one or more report entries. Each report entry corresponds to one share class (or one product at whatever level the template specification requires).</p>
+<p>The <code>EETReportType1.1.3</code> type arranges the EET payload into several top-level sections:</p>
+<ol>
+<li><code>&lt;DataSetInformation&gt;</code> — an outer wrapper (the doubly-nested name is intentional in the schema) that contains an inner <code>&lt;DataSetInformation&gt;</code> with the file-level metadata and a <code>&lt;ManufacturerInformation&gt;</code> block;</li>
+<li><code>&lt;GeneralFinancialInstrumentInformation&gt;</code> — product identification (ISIN, name, currency);</li>
+<li><code>&lt;MainCriterias&gt;</code> — the top-level SFDR product-type classification;</li>
+<li><code>&lt;MiFIDIDDTargetMarket&gt;</code> — how the product fits into the MiFID II sustainability preferences framework;</li>
+<li><code>&lt;ScreeningCriteria&gt;</code> — exclusion and screening strategies;</li>
+<li><code>&lt;TaxonomyAlignedInvestments&gt;</code> — the EU Taxonomy alignment percentages (optional but populated for Article 8 and Article 9 funds);</li>
+<li><code>&lt;PrincipalAdverseIndicators&gt;</code> — the fourteen mandatory PAI values and the optional additional indicators (optional but populated for Article 8 and Article 9 funds that consider PAIs).</li>
+</ol>
+<p>Groups 6 and 7 are by far the largest by field count, because they carry the structured numerical data that SFDR Level 2 mandates. The mandatory minimum is a surprisingly small subset of the full template — most of the numerical PAI and Taxonomy fields are optional, conditional on the fund's SFDR article and its PAI-consideration flag. An Article 6 fund that does not consider PAIs can produce a valid EET with only a handful of fields populated; an Article 8 fund with full PAI consideration and a Taxonomy disclosure is where the file grows to its full size.</p>
+<p>The minimal mandatory structure of one <code>&lt;EET1.1.3&gt;</code> entry is surprisingly compact:</p>
+<pre><code>&lt;EET1.1.3&gt;
+  &lt;EET1.1.3&gt;
+    &lt;DataSetInformation&gt;
+      &lt;DataSetInformation&gt;
+        &lt;Version&gt;V1.1.3&lt;/Version&gt;
+        &lt;Producer&gt;
+          &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+          &lt;LEI&gt;529900T8BM49AURSDO55&lt;/LEI&gt;
+          &lt;Email&gt;eet@europa-am.lu&lt;/Email&gt;
+        &lt;/Producer&gt;
+        &lt;FileGeneration&gt;2026-03-31T18:30:00Z&lt;/FileGeneration&gt;
+        &lt;DataReporting&gt;
+          &lt;SFDRPreContractual&gt;Y&lt;/SFDRPreContractual&gt;
+          &lt;SFDRPeriodic&gt;Y&lt;/SFDRPeriodic&gt;
+          &lt;SFDREntityLevel&gt;Y&lt;/SFDREntityLevel&gt;
+          &lt;MiFID&gt;Y&lt;/MiFID&gt;
+          &lt;IDD&gt;Y&lt;/IDD&gt;
+        &lt;/DataReporting&gt;
+      &lt;/DataSetInformation&gt;
+      &lt;ManufacturerInformation&gt;
+        &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+        &lt;CodeType&gt;L&lt;/CodeType&gt;
+        &lt;Code&gt;529900T8BM49AURSDO55&lt;/Code&gt;
+        &lt;Email&gt;esg@europa-am.lu&lt;/Email&gt;
+        &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+      &lt;/ManufacturerInformation&gt;
+      &lt;ManufacturerWebsiteInformationStewardshipAndEngagement&gt;https://www.europa-am.lu/sustainability&lt;/ManufacturerWebsiteInformationStewardshipAndEngagement&gt;
+    &lt;/DataSetInformation&gt;
+    &lt;GeneralFinancialInstrumentInformation&gt;
+      &lt;IdentifyingData&gt;LU2031234567&lt;/IdentifyingData&gt;
+      &lt;TypeOfIdentification&gt;1&lt;/TypeOfIdentification&gt;
+      &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+    &lt;/GeneralFinancialInstrumentInformation&gt;
+    &lt;MainCriterias&gt;
+      &lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;
+      &lt;ConsidersPrincipleAdverseImpact&gt;Y&lt;/ConsidersPrincipleAdverseImpact&gt;
+    &lt;/MainCriterias&gt;
+    &lt;MiFIDIDDTargetMarket&gt;
+      &lt;EndClientSustainabilityPreferences_Considered&gt;Y&lt;/EndClientSustainabilityPreferences_Considered&gt;
+    &lt;/MiFIDIDDTargetMarket&gt;
+    &lt;ScreeningCriteria&gt;
+      &lt;ExistingNegativeScreeningStrategy&gt;Y&lt;/ExistingNegativeScreeningStrategy&gt;
+    &lt;/ScreeningCriteria&gt;
+  &lt;/EET1.1.3&gt;
+&lt;/EET1.1.3&gt;
+</code></pre>
+<p>Note the two features that are easy to stumble over. First, the double nesting of the version element name: the outer <code>&lt;EET1.1.3&gt;</code> is the wrapper, and each inner <code>&lt;EET1.1.3&gt;</code> is a single report entry. A file with several share classes emits several inner entries inside one outer wrapper. Second, the double nesting of <code>&lt;DataSetInformation&gt;</code> inside <code>&lt;DataSetInformation&gt;</code> — the outer is a section wrapper, the inner is the metadata block, and a <code>&lt;ManufacturerInformation&gt;</code> sibling of the inner <code>&lt;DataSetInformation&gt;</code> completes the outer section. The EET schema is, in this respect, more awkward than either EMT or EPT, and a producer building the block by hand benefits from keeping a validated template file as a copy source.</p>
+<p>The <code>&lt;DataReporting&gt;</code> flags inside the inner <code>&lt;DataSetInformation&gt;</code> declare which regulatory contexts the EET instance supports. An <code>SFDRPreContractual=Y</code> value means the file is suitable to populate the SFDR pre-contractual disclosure; <code>SFDRPeriodic=Y</code> means it supports the annual periodic disclosure; <code>MiFID=Y</code> and <code>IDD=Y</code> mean the file carries the data needed for the MiFID II / IDD sustainability preferences assessment. The Europa Growth Fund supports all five regulatory uses.</p>
+<h3>8.5.3 SFDR Article Classification</h3>
+<p>The entry point for any EET consumer is the single field that determines which version of the disclosure the fund must produce: <strong>under which SFDR article is the fund classified?</strong></p>
+<p>The <code>&lt;MainCriterias&gt;/&lt;SFDRProductType&gt;</code> field carries the classification as a single-digit string: <code>0</code> for "not in SFDR scope" (some structured products and non-EU AIFs), <code>6</code> for Article 6, <code>8</code> for Article 8, or <code>9</code> for Article 9. The <strong>Europa Growth Fund is an Article 8 fund</strong>, so <code>&lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;</code>.</p>
+<p>The Europa Growth Fund promotes environmental and social characteristics through the integration of ESG criteria into its active investment process — specifically, it applies a best-in-class screen that tilts the portfolio towards companies with stronger ESG profiles relative to their sector peers, and it excludes companies in controversial sectors (tobacco, controversial weapons, thermal coal extraction above a certain threshold). It does not, however, have "sustainable investment" as its overriding objective in the Article 9 sense — the fund's primary investment objective remains the long-term capital appreciation of its investors through a diversified European equity portfolio, and the ESG integration is a <em>means</em> rather than the <em>end</em>.</p>
+<p>The <code>&lt;ConsidersPrincipleAdverseImpact&gt;</code> flag alongside <code>&lt;SFDRProductType&gt;</code> is the second-most important field in the EET: it declares whether the fund considers Principal Adverse Impacts at the <em>product</em> level. For Article 8 and Article 9 products, setting this flag to <code>Y</code> opens the door to a much larger PAI section in the template; setting it to <code>N</code> tells the consumer that the fund does not report PAI at the product level and that the optional PAI section will be absent. The Europa Growth Fund considers PAIs, so the flag is <code>Y</code>.</p>
+<p>Article 8 classification brings concrete disclosure obligations that the EET must carry:</p>
+<ul>
+<li><strong>Which environmental or social characteristics does the fund promote?</strong> For the Europa Growth Fund: reduction of carbon intensity relative to the benchmark (MSCI Europe), avoidance of companies with major ESG controversies, and a tilt towards companies with diverse boards.</li>
+<li><strong>What methodology is used to measure and demonstrate the promotion?</strong> For the Europa Growth Fund: a proprietary ESG scoring methodology that combines data from MSCI ESG, Sustainalytics, and the fund's own analyst assessments, applied at the security level in the portfolio construction process.</li>
+<li><strong>What minimum share of investments is sustainable within the meaning of SFDR?</strong> For the Europa Growth Fund: 30% of the portfolio is committed to SFDR-sustainable investments, defined as companies whose primary economic activity meets the DNSH criteria and whose operations comply with minimum safeguards.</li>
+<li><strong>Which principal adverse impacts does the fund consider at the product level?</strong> See §8.5.4.</li>
+</ul>
+<p>All of these questions map to specific optional fields in the EET schema — each with its own FinDatEx field number (20200, 20210, 20220, and so on) and its own constraint on when it must be populated. A producer that fills the EET correctly for an Article 8 fund populates a substantial subset of the optional fields, even though none of them are schema-mandatory. A consumer that receives an Article 8 EET with only the five mandatory fields filled in would accept the file as schema-valid but flag it as semantically incomplete.</p>
+<p>Article 9 funds would have additional and stricter disclosures: a description of the specific sustainability objective being pursued, the binding elements of the investment strategy, the reference benchmark (for passive Article 9 funds), and the methodology to demonstrate alignment with the Paris Agreement or other relevant international frameworks. The Europa Growth Fund, as an Article 8 fund, does not populate these fields; they appear in the EET schema but are left empty for Article 8 classifications.</p>
+<h3>8.5.4 PAI Fields and Taxonomy Alignment</h3>
+<p>The fourteen mandatory PAI indicators live inside the optional <code>&lt;PrincipalAdverseIndicators&gt;</code> section of <code>EETReportType1.1.3</code>, organised into subgroups by theme: <code>ClimateAndEnvironmentRelatedIndicators</code> (greenhouse gas emissions, carbon footprint, energy, biodiversity, water, waste) and <code>SocialAndEmployeeMatters</code> (UN Global Compact violations, gender pay gap, board diversity, controversial weapons).</p>
+<p>The fourteen mandatory PAI indicators divide into two groups.</p>
+<p><strong>Environmental PAIs</strong> (nine indicators):</p>
+<ol>
+<li>GHG emissions (Scope 1, Scope 2, Scope 3, and total) of investee companies</li>
+<li>Carbon footprint of the portfolio</li>
+<li>GHG intensity of investee companies</li>
+<li>Exposure to companies active in the fossil fuel sector</li>
+<li>Share of non-renewable energy consumption and production of investee companies</li>
+<li>Energy consumption intensity per high impact climate sector</li>
+<li>Activities negatively affecting biodiversity-sensitive areas</li>
+<li>Emissions to water</li>
+<li>Hazardous waste and radioactive waste ratio</li>
+</ol>
+<p><strong>Social and employee-related PAIs</strong> (five indicators):</p>
+<ol>
+<li>Violations of the UN Global Compact principles and the OECD Guidelines for Multinational Enterprises</li>
+<li>Lack of processes and compliance mechanisms to monitor compliance with those principles</li>
+<li>Unadjusted gender pay gap of investee companies</li>
+<li>Board gender diversity of investee companies</li>
+<li>Exposure to controversial weapons (anti-personnel mines, cluster munitions, chemical weapons, biological weapons)</li>
+</ol>
+<p>Each PAI is quantified either as a numerical value (for indicators with a natural numeric measure, such as GHG emissions or carbon intensity) or as a percentage exposure (for indicators that are effectively binary at the company level, such as controversial weapons exposure). The schema carries each indicator as a small structured type with sub-fields for value, strategy, and coverage — capturing the fact that a reported PAI value is only as reliable as the share of the portfolio for which underlying data was available.</p>
+<p>A critical and practically difficult point: <strong>not all portfolio companies report PAI data</strong>. Asset managers must fill the gaps in their PAI coverage through a combination of issuer-reported data (where available), third-party data provider estimates (MSCI ESG, Sustainalytics, ISS ESG, Moody's ESG are the main providers), and modelled values from industry benchmarks. The EET distinguishes between measured and estimated values through dedicated flags, so that consumers can assess the data quality of each indicator. A PAI value marked as "estimated" is weaker evidence than a value marked as "reported", and a downstream consumer (for example, a sustainability-focused distributor) may treat the two differently in its own product evaluation.</p>
+<p><strong>Taxonomy Alignment</strong> is reported separately from PAI, inside the optional <code>&lt;TaxonomyAlignedInvestments&gt;</code> section, and is expressed as the percentage share of the portfolio whose underlying investments are Taxonomy-aligned. Fields include the minimum committed alignment (separately including and excluding sovereign bonds), the methodology used for the calculation (revenue-based, CapEx-based, or OpEx-based), the share of transitional and enabling activities, and the breakdown by the six environmental objectives. The calculation runs from the investee company's reported turnover, capital expenditure, or operational expenditure that comes from Taxonomy-eligible economic activities. For a European equity fund like the Europa Growth Fund, Taxonomy alignment typically falls in the range of 15% to 35%, depending on the sector allocation and on how many of the portfolio companies have begun to report their Taxonomy alignment (CSRD is progressively expanding the reporting population).</p>
+<h3>8.5.5 The EET in Practice</h3>
+<p>For the March 2026 delivery of the Europa Growth Fund, the EET instance contains the mandatory skeleton shown in §8.5.2 plus a populated <code>&lt;TaxonomyAlignedInvestments&gt;</code> section and a populated <code>&lt;PrincipalAdverseIndicators&gt;</code> section — together amounting to several dozen fields. The full instance is carried in Appendix D as part of the complete sample file. The abbreviated version in §8.9 below — showing only the mandatory skeleton — is the shape of the EET entry, with the understanding that a production-grade Article 8 fund emits substantially more content than the bare minimum.</p>
+<hr>
+<h2>8.6 EFT — European Feedback Template</h2>
+<p>The lightest of the five templates, and the one that runs in the reverse direction — from distributor to manufacturer rather than from manufacturer to distributor. Embedded under <code>&lt;DirectReporting&gt;/&lt;EFTs&gt;</code>.</p>
+<h3>8.6.1 What EFT Is and Why It Exists</h3>
+<p>MiFID II does not treat the manufacturer-distributor relationship as a one-way street. Beyond the manufacturer's obligation to deliver EMT, EPT, and EET <em>to</em> the distributor, there is a corresponding obligation on the distributor to provide <strong>feedback</strong> <em>back</em> to the manufacturer. The feedback covers questions that only the distributor can answer: how is the product selling in practice, do the actual buyers match the manufacturer's target market, are there client complaints, has the distributor identified any product governance issues?</p>
+<p>The obligation sits within MiFID II's product governance framework — specifically, under the requirement that manufacturers and distributors work together to ensure ongoing product suitability. Without systematic feedback from distributors, a manufacturer cannot know whether its product is being sold to the clients it was designed for, and cannot update its target market definition or product governance arrangements in response to real-world evidence.</p>
+<p><strong>EFT</strong> is the FinDatEx template that standardises this feedback. It is created by the <strong>distributor</strong> and sent to the <strong>manufacturer</strong>, typically once a year (the minimum frequency under MiFID II) but sometimes more often when the manufacturer wants quarterly data. The content covers distribution statistics, target market alignment, and product governance observations.</p>
+<p>The key operational consequence of the reverse direction is that <strong>EFT does not appear in a fund's own monthly delivery</strong>. The Europa Growth Fund's 31 March 2026 delivery flows from Europa Asset Management S.A. <em>to</em> its distributors, and it carries EMT, EPT, EET, and TPT but not EFT, because the fund's manufacturer is not the party producing feedback. EFT would appear in a separate delivery flowing from each of the fund's distributors <em>back</em> to Europa Asset Management S.A., on the distributor's own schedule. §8.9 will reflect this absence in the complete example block.</p>
+<h3>8.6.2 Structure of the EFT Module</h3>
+<p>The FundsXML embedding follows the same wrapper pattern as the other templates. The <code>&lt;EFTs&gt;</code> element (of type <code>EFTType</code>) is the container, and each child <code>&lt;EFT&gt;</code> (of type <code>EFTReportType</code>) is one feedback report. A report has three mandatory sections:</p>
+<ol>
+<li><code>&lt;DataSetInformation&gt;</code> — the file-level metadata, split into <code>ReportInformationAndScope</code> (version, generation timestamp, reporting period, and the <code>M</code>/<code>D</code>/<code>B</code> reference target market flag for whether the deviations are measured against the Manufacturer's, the Distributor's, or Both target markets), <code>SubmitterEntityInformation</code> (the distributor's name, identifier, identifier type, and position in the distribution chain), and <code>ManufacturerEntityInformation</code> (the recipient manufacturer's equivalent fields);</li>
+<li><code>&lt;GeneralFinancialInstrumentInformation&gt;</code> — product identification (ISIN, identification type, name, and total number of transactions for the period);</li>
+<li>optional <code>&lt;DeviationReportManufacturerTargetMarketPerspective&gt;</code> and <code>&lt;DeviationReportDistributorTargetMarketPerspective&gt;</code> blocks — the actual feedback data, broken down into <code>Sales_OTM_NTM</code> (sales outside target market or in negative target market) and <code>Widening</code> sub-blocks.</li>
+</ol>
+<p>The mandatory minimum is small. A distributor that observed no target-market deviations during the reporting period can emit a valid EFT with only the three mandatory sections populated and no deviation reports — effectively a "nil return" that communicates "we distributed the product, we reviewed the target market alignment, we observed no issues".</p>
+<p>A complete minimal EFT entry:</p>
+<pre><code>&lt;EFTs&gt;
+  &lt;EFT&gt;
+    &lt;DataSetInformation&gt;
+      &lt;ReportInformationAndScope&gt;
+        &lt;Version&gt;V1&lt;/Version&gt;
+        &lt;FileGeneration&gt;2026-04-05T08:00:00Z&lt;/FileGeneration&gt;
+        &lt;PeriodStartData&gt;2026-01-01&lt;/PeriodStartData&gt;
+        &lt;PeriodEndData&gt;2026-03-31&lt;/PeriodEndData&gt;
+        &lt;ReferenceTargetMarket&gt;B&lt;/ReferenceTargetMarket&gt;
+      &lt;/ReportInformationAndScope&gt;
+      &lt;SubmitterEntityInformation&gt;
+        &lt;Name&gt;Nordbank Privatkunden AG&lt;/Name&gt;
+        &lt;Identifier&gt;5299001NORDBANK00001&lt;/Identifier&gt;
+        &lt;IdentifierType&gt;L&lt;/IdentifierType&gt;
+        &lt;PositionInTheDistributionChain&gt;D&lt;/PositionInTheDistributionChain&gt;
+      &lt;/SubmitterEntityInformation&gt;
+      &lt;ManufacturerEntityInformation&gt;
+        &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+        &lt;Identifier&gt;529900T8BM49AURSDO55&lt;/Identifier&gt;
+        &lt;IdentifierType&gt;L&lt;/IdentifierType&gt;
+      &lt;/ManufacturerEntityInformation&gt;
+    &lt;/DataSetInformation&gt;
+    &lt;GeneralFinancialInstrumentInformation&gt;
+      &lt;IdentifyingData&gt;LU2031234567&lt;/IdentifyingData&gt;
+      &lt;TypeOfIdentification&gt;1&lt;/TypeOfIdentification&gt;
+      &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
+      &lt;TotalNumberOfTransactions&gt;1243&lt;/TotalNumberOfTransactions&gt;
+    &lt;/GeneralFinancialInstrumentInformation&gt;
+    &lt;DeviationReportManufacturerTargetMarketPerspective&gt;
+      &lt;Sales_OTM_NTM&gt;
+        &lt;RetailInvestorTypeAndSelfService&gt;0&lt;/RetailInvestorTypeAndSelfService&gt;
+        &lt;RetailInvestorTypeAndExecutionWithSuitabilityTest&gt;0&lt;/RetailInvestorTypeAndExecutionWithSuitabilityTest&gt;
+        &lt;KnowledgeAndExperienceAndSelfService&gt;2&lt;/KnowledgeAndExperienceAndSelfService&gt;
+        &lt;KnowledgeAndExperienceAndWithSuitabilityTest&gt;0&lt;/KnowledgeAndExperienceAndWithSuitabilityTest&gt;
+      &lt;/Sales_OTM_NTM&gt;
+    &lt;/DeviationReportManufacturerTargetMarketPerspective&gt;
+  &lt;/EFT&gt;
+&lt;/EFTs&gt;
+</code></pre>
+<p>Reading the block: a hypothetical distributor (Nordbank Privatkunden AG) reports on the Q1 2026 period. The reference target market is <code>B</code> (Both) — the distributor checked deviations against both the manufacturer's target market and its own refined distributor target market. The distributor processed 1,243 transactions in the R-EUR-ACC share class during the period. The deviation report shows that all 1,243 transactions were aligned on the Retail Investor Type dimension (0 deviations) but that 2 transactions were identified as deviations on the Knowledge and Experience dimension under self-service execution — presumably, two clients with "Basic" knowledge level bought the fund via the bank's online execution-only channel despite the product's target market being Informed / Advanced. The distributor is required to disclose this, and the manufacturer will read it during the annual product governance review.</p>
+<p>This feedback, once processed by Europa Asset Management S.A., becomes one of the inputs to the fund's annual product governance review. If several distributors were reporting consistent misalignment on one of the target market dimensions, the manufacturer would be expected to investigate — perhaps the product's risk characteristics have drifted, or the target market definition was drawn too narrowly for the actual investor base.</p>
+<p>For the purpose of this chapter, the important point is that EFT exists, runs in the reverse direction, and is absent from the 31 March 2026 delivery of the Europa Growth Fund produced by Europa Asset Management S.A. The next section, on TPT, returns to a template that <em>is</em> present in the delivery.</p>
+<hr>
+<h2>8.7 TPT — Tripartite Template for Solvency II</h2>
+<p>The template that gives insurance investors the data they need to hold fund positions under Solvency II. Embedded under <code>&lt;IndirectReporting&gt;/&lt;TripartiteTemplateSolvencyII_V6&gt;</code>.</p>
+<h3>8.7.1 Solvency II and Insurance Reporting</h3>
+<p>Solvency II is the European insurance regulation that has governed the capital adequacy of insurance companies since 2016. Its central mechanism is the <strong>Solvency Capital Requirement (SCR)</strong> — a risk-based capital charge calculated from the insurance company's asset and liability positions, designed to ensure that the insurer can survive a one-in-two-hundred-year adverse event over a one-year horizon. The SCR is updated at least annually and is reported to the national supervisor through the Quantitative Reporting Templates (QRTs) that Solvency II specifies.</p>
+<p>Many European insurance companies hold fund positions as part of their investment portfolios. When a life insurer invests 50 million EUR in the Europa Growth Fund through an insurance mandate or a unit-linked wrapper, the Europa Growth Fund position becomes part of the insurer's asset base, and the insurer must calculate its SCR including that position. Solvency II requires this calculation to be done on a <strong>lookthrough basis</strong> — not by treating the fund as a single opaque asset with an estimated overall risk, but by looking through to the fund's underlying holdings (the individual European equities, cash positions, and currency forwards we met in Chapter 6) and applying the Solvency II risk modules to each underlying.</p>
+<p>The problem is that the insurer does not have direct access to the fund's portfolio detail. Without a standardised data exchange, the insurer would have to approximate the lookthrough data or negotiate bilateral data-sharing arrangements with each fund manager it held positions with. The operational burden would be enormous.</p>
+<p><strong>TPT</strong> — the Tripartite Template — is the FinDatEx solution. The name comes from the three parties historically involved in defining the template: asset managers (who produce fund data), fund administrators (who hold the position details), and insurers (who need the data for Solvency II). TPT standardises the lookthrough data into a single well-defined format that every European insurer knows how to consume. An asset manager that produces TPT for each of its funds makes those funds "Solvency II ready" for any insurance investor, without needing bilateral negotiation.</p>
+<p>TPT has become operationally critical for any fund that wants to be held by insurance money. The Europa Growth Fund carries insurance investors among its I-EUR-DIST class unit holders, and Europa Asset Management S.A. therefore emits TPT in every monthly delivery of the fund's data.</p>
+<h3>8.7.2 Structure of TPT V6</h3>
+<p>In FundsXML, TPT lives at <code>&lt;IndirectReporting&gt;/&lt;TripartiteTemplateSolvencyII_V6&gt;</code>. The element name carries the version number explicitly: <code>V6</code> is FinDatEx Tripartite Template version 6.0 of March 2022, which accompanies the current Solvency II technical standards. The earlier versions (<code>TripartiteTemplateSolvencyII</code>, <code>TripartiteTemplateSolvencyII_V5</code>) are still in the schema for backward compatibility.</p>
+<p>The type <code>TripartiteTemplateSolvencyIIType_V6</code> is a thin wrapper whose content is a sequence of <code>&lt;Portfolio&gt;</code> children, each of type <code>SolvencyIIPortfolioType_V6</code>. The term "portfolio" here follows the Solvency II convention — one <code>&lt;Portfolio&gt;</code> corresponds to one fund or one share class — not the FundsXML convention where <code>&lt;Portfolio&gt;</code> refers to a holdings list inside <code>FundDynamicData</code>. The two uses of the same word are a source of confusion; within this section the Solvency II meaning prevails.</p>
+<p>A <code>&lt;Portfolio&gt;</code> has the following mandatory fields at the top level:</p>
+<ul>
+<li><code>&lt;TPTVersion&gt;</code> — must be exactly the string <code>V6.0</code>. This is a regulatory versioning marker inside the schema, distinct from the element name.</li>
+<li><code>&lt;PortfolioID&gt;</code> — a <code>SIISecurityCodificationType_V6</code> pair (CodificationSystem integer plus Code string) identifying the fund.</li>
+<li><code>&lt;PortfolioName&gt;</code> — the fund's name.</li>
+<li><code>&lt;PortfolioCurrency&gt;</code> — an ISO 4217 currency code.</li>
+<li><code>&lt;TotalNetAssets&gt;</code> — the fund's total net asset value in portfolio currency.</li>
+<li><code>&lt;ValuationDate&gt;</code> — the date the portfolio inventory is valid for.</li>
+<li><code>&lt;ReportingDate&gt;</code> — the date the data refers to (typically the end of the reporting period).</li>
+<li><code>&lt;CompleteSCRDelivery&gt;</code> — <code>Y</code> if the producer has computed all SCR contributions for each position and included them in the file; <code>N</code> otherwise. The distinction matters because a <code>Y</code> file lets the insurance consumer use the pre-computed SCR inputs directly, whereas an <code>N</code> file requires the insurer to compute its own SCR from the raw positions.</li>
+<li><code>&lt;Positions&gt;</code> — the holdings lookthrough, containing one or more <code>&lt;Position&gt;</code> children of type <code>SIIPositionType_V6</code>.</li>
+</ul>
+<p>Each position inside <code>&lt;Positions&gt;</code> is itself a complex block with mandatory sub-fields including <code>InstrumentCIC</code> (the four-character CIC code classifying the instrument type and country), <code>InstrumentCode</code> (the ISIN or alternative identifier), <code>InstrumentName</code>, <code>Valuation</code> (with six mandatory monetary sub-fields in quotation currency and portfolio currency plus market-exposure figures), and <code>AdditionalInformation</code> (a structured block of optional QRT-specific sub-fields).</p>
+<p>A position for a single equity holding — SAP SE — looks like this:</p>
+<pre><code>&lt;Position&gt;
+  &lt;InstrumentCIC&gt;DE31&lt;/InstrumentCIC&gt;
+  &lt;InstrumentCode&gt;
+    &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+    &lt;Code&gt;DE0007164600&lt;/Code&gt;
+  &lt;/InstrumentCode&gt;
+  &lt;InstrumentName&gt;SAP SE&lt;/InstrumentName&gt;
+  &lt;Valuation&gt;
+    &lt;QuotationCurrency&gt;EUR&lt;/QuotationCurrency&gt;
+    &lt;MarketValueQC&gt;7450000.00&lt;/MarketValueQC&gt;
+    &lt;CleanValueQC&gt;7450000.00&lt;/CleanValueQC&gt;
+    &lt;MarketValuePC&gt;7450000.00&lt;/MarketValuePC&gt;
+    &lt;CleanValuePC&gt;7450000.00&lt;/CleanValuePC&gt;
+    &lt;PositionWeight&gt;0.0300&lt;/PositionWeight&gt;
+    &lt;MarketExposureQC&gt;7450000.00&lt;/MarketExposureQC&gt;
+    &lt;MarketExposurePC&gt;7450000.00&lt;/MarketExposurePC&gt;
+    &lt;MarketExposureWeight&gt;0.0300&lt;/MarketExposureWeight&gt;
+  &lt;/Valuation&gt;
+  &lt;AdditionalInformation/&gt;
+&lt;/Position&gt;
+</code></pre>
+<p>The six mandatory monetary fields — <code>MarketValueQC</code>, <code>CleanValueQC</code>, <code>MarketValuePC</code>, <code>CleanValuePC</code>, <code>MarketExposureQC</code>, <code>MarketExposurePC</code> — carry the position's market value and market exposure in both quotation currency (QC, the currency the instrument is quoted in) and portfolio currency (PC, the fund's base currency). For an equity holding in a single-currency fund, the QC and PC values are identical, and the clean values equal the market values (there is no accrued interest on equity). For a foreign-currency equity or for a bond with accrued coupon, the QC and PC values differ and the clean and market values differ respectively. The <code>PositionWeight</code> expresses the share of the fund's net assets that the position represents, as a decimal (<code>0.0300</code> = 3% of NAV).</p>
+<p>The four-character <strong>CIC (Complementary Identification Code)</strong> is an EIOPA-defined classification standardised in the Solvency II regulation. Its format is <code>CC</code> (ISO country code) followed by two digits, where the first digit identifies the asset category (1 = government bond, 2 = corporate bond, 3 = listed equity, 4 = unlisted equity, and so on) and the second digit refines it. <code>DE31</code> means "listed equity in Germany, asset sub-category 1"; <code>FR31</code> would be the French equivalent, <code>CH31</code> the Swiss equivalent. The CIC is the single most important classification field in TPT, because the Solvency II SCR calculation uses it as the primary key for applying the standard-formula shock factors — 39% for EEA listed equities, 49% for non-EEA listed equities, different percentages for different bond categories.</p>
+<p><code>&lt;AdditionalInformation&gt;</code> is mandatory but may be empty (as in the example), because all of its children are optional. Its optional children cover the fund custodian name, infrastructure investment flags, Type 1 private equity eligibility, counterparty sector codes, collateral eligibility, and collateral market value — fields that are relevant only for specific asset categories.</p>
+<h3>8.7.3 TPT in Practice</h3>
+<p>The <strong>holdings lookthrough</strong> section of TPT is by far the largest part of the template by row count: a fund with 150 equity positions plus three cash balances plus two FX forwards produces 155 <code>&lt;Position&gt;</code> entries, each with ten to twenty sub-fields. A full delivery of the Europa Growth Fund's TPT is therefore several thousand lines of XML, which is why the example in §8.9 shows only a single representative position.</p>
+<p>The TPT lookthrough exists <em>in addition to</em> the native <code>&lt;Portfolios&gt;</code> block in <code>FundDynamicData</code> (Chapter 6). The two representations of the portfolio are not the same — they serve different consumers and use different field formats — but they describe the same economic reality. A consumer that reads both should find that the position list and the aggregate market values reconcile, within small rounding tolerances. Producers must maintain consistency between the two views: a mismatch between the native portfolio and the TPT holdings section is a data quality error that a validating consumer should flag.</p>
+<p>An important decision for TPT producers: <strong>should the holdings lookthrough be complete, or should it be aggregated?</strong> The standard answer for Solvency II is <em>complete</em> — every individual holding should appear in TPT, not just sector or country aggregates. The reason is that precise SCR calculations depend on the characteristics of individual issuers (their rating, their country of risk, their sector) and aggregation would lose the information that the calculation needs. The cost of the full lookthrough is a much larger TPT section per fund, and deliveries covering many funds can reach tens or hundreds of thousands of TPT position rows. Producers who emit batched deliveries need to watch the file sizes and, where necessary, split batches into smaller chunks.</p>
+<p>The Europa Growth Fund's TPT for 31 March 2026 carries the full 155-position lookthrough, with <code>&lt;CompleteSCRDelivery&gt;</code> set to <code>N</code> (the manufacturer provides the raw positions but leaves the SCR computation to each consuming insurer, which is the more common pattern because insurers prefer to run the calculation through their own internal models). An insurance consumer reads the block, runs its own SCR calculation, and determines the capital charge that the fund position adds to the insurer's overall SCR. The entire workflow is repeatable, auditable, and standardised — exactly what Solvency II requires.</p>
+<hr>
+<h2>8.8 ESAP — European Single Access Point</h2>
+<p>The final regulatory topic of the chapter is not a FinDatEx template but an EU infrastructure initiative that affects how FundsXML deliveries reach their ultimate consumers.</p>
+<h3>8.8.1 What ESAP Is</h3>
+<p>The <strong>European Single Access Point</strong> is an EU-wide regulatory disclosure portal whose phased rollout began in 2026. Its purpose is to provide a single, centralised point through which investors, analysts, regulators, and the general public can retrieve public financial and sustainability disclosures from across the European financial sector. Before ESAP, these disclosures were scattered across national regulators, company websites, industry databases, and private data vendors, with no common format, no common access protocol, and no way to aggregate them across borders without bilateral data integration.</p>
+<p>ESAP is part of the <strong>Capital Markets Union</strong> (CMU), the longer-running EU initiative to reduce the fragmentation of European capital markets. The CMU goals include making it easier for companies to raise capital across borders, for investors to access cross-border investment opportunities, and for retail savers to compare products from different countries. ESAP supports the last of these goals by ensuring that the regulatory data needed for comparison is available in one place, in structured machine-readable formats.</p>
+<p>For funds specifically, ESAP aggregates several kinds of regulatory disclosure: SFDR pre-contractual and periodic disclosures (the Article 6/8/9 information that every fund must provide under the sustainable finance regulation); PRIIPs KIDs (for retail products); prospectuses for regulated investment products; and sustainability reports under CSRD. Not every fund disclosure goes to ESAP — bilateral deliveries (a monthly FundsXML file from Europa Asset Management S.A. to Nordbank Privatkunden AG, for example) are private contractual exchanges and are outside ESAP's remit. What ESAP covers is the category of disclosures that are supposed to be publicly available under their respective regulations.</p>
+<h3>8.8.2 FundsXML and ESAP</h3>
+<p>ESAP is a consumer of regulatory disclosures rather than an element of the FundsXML schema. As of the current FundsXML 4.2.8 release there is <strong>no dedicated ESAP metadata element inside <code>ControlData</code> or elsewhere in the schema</strong>, and no schema-level mechanism that declares "this file is destined for ESAP". That is a conscious choice: ESAP's submission channel is a separate pipeline governed by ESMA-maintained specifications, and the FundsXML association has so far held back from adding ESAP-specific elements until the submission format stabilises across the phased rollout.</p>
+<p>In practice, a producer that publishes to ESAP typically does so by transforming an existing FundsXML document (or a reg-reporting-only projection of it) into whatever format the ESAP gateway currently accepts for the category in question — which, depending on the category, may be XBRL, ESMA-specified XML, or increasingly a FundsXML subset aligned with the relevant FinDatEx template. The routing, the authentication, and the acceptance rules all live outside the FundsXML schema, in the pipeline code that sits between the producer's systems and the ESAP API.</p>
+<p>A brief list of practical consequences for a fund data pipeline in 2026:</p>
+<ul>
+<li><strong>Private bilateral deliveries remain private</strong>. The monthly FundsXML file from a manufacturer to one of its distributors is not automatically published to ESAP; it is a private contractual exchange.</li>
+<li><strong>SFDR disclosures are the main ESAP category that touches a typical fund pipeline today</strong>. A manufacturer's quarterly SFDR pre-contractual disclosure — which overlaps substantially with the content of the EET in <code>DirectReporting</code> — is the document that goes to ESAP, typically through a separate submission channel.</li>
+<li><strong>Expect the situation to evolve</strong>. Each FundsXML minor release since 4.2 has added hooks or allowed extensions for progressively more ESAP-oriented metadata, and future versions may well introduce dedicated ESAP elements. Chapter 10 will return to the operational pattern of publishing to ESAP as part of a production pipeline.</li>
+</ul>
+<p>For the Europa Growth Fund, the 31 March 2026 delivery is a private bilateral delivery — from Europa Asset Management S.A. to one of its distributors — and does not go through ESAP. A separate quarterly SFDR disclosure, due at the end of Q1, is the artefact that reaches ESAP. The two artefacts share some underlying data but are routed, packaged, and authenticated differently.</p>
+<hr>
+<h2>8.9 The Complete RegulatoryReportings Block for the Europa Growth Fund</h2>
+<p>The integrative close of the chapter. A <code>&lt;RegulatoryReportings&gt;</code> block containing four of the five templates — EMT, EFT-free, EET, TPT, and PRIIPs — for the 31 March 2026 delivery of the Europa Growth Fund R-EUR-ACC share class.</p>
+<p><strong>EFT is absent</strong>, because this delivery flows from the manufacturer to distributors rather than in the reverse direction. The absence is structural and correct, and the block below reflects it. The four modules that <em>are</em> present — <code>EMT_V4_2</code>, <code>EET1.1.3</code>, <code>TripartiteTemplateSolvencyII_V6</code>, and <code>PRIIPS_V20</code> — have been introduced in the preceding sections; here we see them side by side in one container. Because the embedding uses the two branches <code>DirectReporting</code> and <code>IndirectReporting</code>, the templates appear in their respective branches rather than as flat siblings.</p>
+<p>The abbreviated block is:</p>
+<pre><code>&lt;RegulatoryReportings&gt;
+
+  &lt;DirectReporting&gt;
+
+    &lt;!-- EMT: MiFID II costs and target market --&gt;
+    &lt;EMT_V4_2&gt;
+      &lt;FinancialInstrument&gt;
+        &lt;DataSetInformation&gt;
+          &lt;Version&gt;V4&lt;/Version&gt;
+          &lt;ProducerName&gt;Europa Asset Management S.A.&lt;/ProducerName&gt;
+          &lt;ProducerLEI&gt;529900T8BM49AURSDO55&lt;/ProducerLEI&gt;
+          &lt;ProducerEmail&gt;emt@europa-am.lu&lt;/ProducerEmail&gt;
+          &lt;FileGenerationDateTime&gt;2026-03-31T18:00:00Z&lt;/FileGenerationDateTime&gt;
+          &lt;DataReportingTargetMarket&gt;Y&lt;/DataReportingTargetMarket&gt;
+          &lt;DataReportingExAnte&gt;Y&lt;/DataReportingExAnte&gt;
+          &lt;DataReportingExPost&gt;N&lt;/DataReportingExPost&gt;
+        &lt;/DataSetInformation&gt;
+        &lt;GeneralInformation&gt;
+          &lt;Code&gt;LU2031234567&lt;/Code&gt;
+          &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+          &lt;InstrumentName&gt;Europa Growth Fund R EUR ACC&lt;/InstrumentName&gt;
+          &lt;InstrumentCurrency&gt;EUR&lt;/InstrumentCurrency&gt;
+          &lt;InstrumentPerformanceFee&gt;N&lt;/InstrumentPerformanceFee&gt;
+          &lt;InstrumentDistributionCash&gt;N&lt;/InstrumentDistributionCash&gt;
+          &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+          &lt;ProductType&gt;U&lt;/ProductType&gt;
+          &lt;ManufacturerName&gt;Europa Asset Management S.A.&lt;/ManufacturerName&gt;
+          &lt;ManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/ManufacturerLEI&gt;
+          &lt;LeveragedOrContingentLiability&gt;N&lt;/LeveragedOrContingentLiability&gt;
+          &lt;Fund&gt;
+            &lt;FundShareClassWithoutRetrocession&gt;N&lt;/FundShareClassWithoutRetrocession&gt;
+          &lt;/Fund&gt;
+        &lt;/GeneralInformation&gt;
+        &lt;TargetMarket&gt;
+          &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+          &lt;InvestorType&gt;
+            &lt;Retail&gt;Y&lt;/Retail&gt;
+            &lt;Professional&gt;Y&lt;/Professional&gt;
+            &lt;EligibleCounterparty&gt;Y&lt;/EligibleCounterparty&gt;
+          &lt;/InvestorType&gt;
+          &lt;KnowledgeAndExperience&gt;
+            &lt;BasicInvestor&gt;Y&lt;/BasicInvestor&gt;
+            &lt;InformedInvestor&gt;Y&lt;/InformedInvestor&gt;
+            &lt;AdvancedInvestor&gt;Y&lt;/AdvancedInvestor&gt;
+          &lt;/KnowledgeAndExperience&gt;
+          &lt;AbilityToBearLosses&gt;
+            &lt;CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;N&lt;/CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;
+            &lt;CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;Y&lt;/CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;
+            &lt;CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;N&lt;/CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;
+          &lt;/AbilityToBearLosses&gt;
+          &lt;RiskTolerance&gt;
+            &lt;PRIIPSMethodology&gt;4&lt;/PRIIPSMethodology&gt;
+          &lt;/RiskTolerance&gt;
+          &lt;ClientObjectives&gt;
+            &lt;ReturnProfile&gt;
+              &lt;ClientLookingForPreservation&gt;N&lt;/ClientLookingForPreservation&gt;
+              &lt;ClientLookingForCapitalGrowth&gt;Y&lt;/ClientLookingForCapitalGrowth&gt;
+              &lt;ClientLookingForIncome&gt;N&lt;/ClientLookingForIncome&gt;
+            &lt;/ReturnProfile&gt;
+            &lt;MinimumRecommendedHoldingPeriod&gt;
+              &lt;Years&gt;5&lt;/Years&gt;
+            &lt;/MinimumRecommendedHoldingPeriod&gt;
+            &lt;IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;Y&lt;/IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;
+          &lt;/ClientObjectives&gt;
+          &lt;DistributionStrategy&gt;
+            &lt;ExecutionOnly&gt;B&lt;/ExecutionOnly&gt;
+            &lt;ExecutionWithCheckOrNonAdvisedServices&gt;B&lt;/ExecutionWithCheckOrNonAdvisedServices&gt;
+            &lt;InvestmentAdvice&gt;B&lt;/InvestmentAdvice&gt;
+            &lt;PortfolioManagement&gt;B&lt;/PortfolioManagement&gt;
+          &lt;/DistributionStrategy&gt;
+        &lt;/TargetMarket&gt;
+        &lt;CostsAndChargesExAnte&gt;
+          &lt;Fund&gt;
+            &lt;GrossMaxEntryCostNonAcquired&gt;0.0500&lt;/GrossMaxEntryCostNonAcquired&gt;
+            &lt;MaxExitCost&gt;0.0000&lt;/MaxExitCost&gt;
+            &lt;OngoingCosts&gt;0.0175&lt;/OngoingCosts&gt;
+            &lt;ManagementFee&gt;0.0150&lt;/ManagementFee&gt;
+            &lt;TransactionCosts&gt;0.0012&lt;/TransactionCosts&gt;
+            &lt;IncidentalCosts&gt;0.0000&lt;/IncidentalCosts&gt;
+          &lt;/Fund&gt;
+          &lt;CostsReferenceDate&gt;2026-03-31&lt;/CostsReferenceDate&gt;
+        &lt;/CostsAndChargesExAnte&gt;
+      &lt;/FinancialInstrument&gt;
+    &lt;/EMT_V4_2&gt;
+
+    &lt;!-- EFT: absent — this delivery flows from manufacturer to distributor,
+         not distributor to manufacturer, so there is no feedback content. --&gt;
+
+    &lt;!-- EET: SFDR and sustainability data (mandatory minimum only) --&gt;
+    &lt;EET1.1.3&gt;
+      &lt;EET1.1.3&gt;
+        &lt;DataSetInformation&gt;
+          &lt;DataSetInformation&gt;
+            &lt;Version&gt;V1.1.3&lt;/Version&gt;
+            &lt;Producer&gt;
+              &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+              &lt;LEI&gt;529900T8BM49AURSDO55&lt;/LEI&gt;
+              &lt;Email&gt;eet@europa-am.lu&lt;/Email&gt;
+            &lt;/Producer&gt;
+            &lt;FileGeneration&gt;2026-03-31T18:30:00Z&lt;/FileGeneration&gt;
+            &lt;DataReporting&gt;
+              &lt;SFDRPreContractual&gt;Y&lt;/SFDRPreContractual&gt;
+              &lt;SFDRPeriodic&gt;Y&lt;/SFDRPeriodic&gt;
+              &lt;SFDREntityLevel&gt;Y&lt;/SFDREntityLevel&gt;
+              &lt;MiFID&gt;Y&lt;/MiFID&gt;
+              &lt;IDD&gt;Y&lt;/IDD&gt;
+            &lt;/DataReporting&gt;
+          &lt;/DataSetInformation&gt;
+          &lt;ManufacturerInformation&gt;
+            &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+            &lt;CodeType&gt;L&lt;/CodeType&gt;
+            &lt;Code&gt;529900T8BM49AURSDO55&lt;/Code&gt;
+            &lt;Email&gt;esg@europa-am.lu&lt;/Email&gt;
+            &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+          &lt;/ManufacturerInformation&gt;
+          &lt;ManufacturerWebsiteInformationStewardshipAndEngagement&gt;https://www.europa-am.lu/sustainability&lt;/ManufacturerWebsiteInformationStewardshipAndEngagement&gt;
+        &lt;/DataSetInformation&gt;
+        &lt;GeneralFinancialInstrumentInformation&gt;
+          &lt;IdentifyingData&gt;LU2031234567&lt;/IdentifyingData&gt;
+          &lt;TypeOfIdentification&gt;1&lt;/TypeOfIdentification&gt;
+          &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
+          &lt;Currency&gt;EUR&lt;/Currency&gt;
+        &lt;/GeneralFinancialInstrumentInformation&gt;
+        &lt;MainCriterias&gt;
+          &lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;
+          &lt;ConsidersPrincipleAdverseImpact&gt;Y&lt;/ConsidersPrincipleAdverseImpact&gt;
+        &lt;/MainCriterias&gt;
+        &lt;MiFIDIDDTargetMarket&gt;
+          &lt;EndClientSustainabilityPreferences_Considered&gt;Y&lt;/EndClientSustainabilityPreferences_Considered&gt;
+        &lt;/MiFIDIDDTargetMarket&gt;
+        &lt;ScreeningCriteria&gt;
+          &lt;ExistingNegativeScreeningStrategy&gt;Y&lt;/ExistingNegativeScreeningStrategy&gt;
+        &lt;/ScreeningCriteria&gt;
+        &lt;!-- Additional Article 8 sections (TaxonomyAlignedInvestments,
+             PrincipalAdverseIndicators, etc.) are elided here and carried
+             in full in Appendix D. --&gt;
+      &lt;/EET1.1.3&gt;
+    &lt;/EET1.1.3&gt;
+
+  &lt;/DirectReporting&gt;
+
+  &lt;IndirectReporting&gt;
+
+    &lt;!-- TPT: Solvency II lookthrough (abbreviated to one representative position) --&gt;
+    &lt;TripartiteTemplateSolvencyII_V6&gt;
+      &lt;Portfolio&gt;
+        &lt;TPTVersion&gt;V6.0&lt;/TPTVersion&gt;
+        &lt;PortfolioID&gt;
+          &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+          &lt;Code&gt;LU2031234567&lt;/Code&gt;
+        &lt;/PortfolioID&gt;
+        &lt;PortfolioName&gt;Europa Growth Fund R EUR ACC&lt;/PortfolioName&gt;
+        &lt;PortfolioCurrency&gt;EUR&lt;/PortfolioCurrency&gt;
+        &lt;TotalNetAssets&gt;248500000.00&lt;/TotalNetAssets&gt;
+        &lt;ValuationDate&gt;2026-03-31&lt;/ValuationDate&gt;
+        &lt;ReportingDate&gt;2026-03-31&lt;/ReportingDate&gt;
+        &lt;CompleteSCRDelivery&gt;Y&lt;/CompleteSCRDelivery&gt;
+        &lt;Positions&gt;
+          &lt;Position&gt;
+            &lt;InstrumentCIC&gt;DE31&lt;/InstrumentCIC&gt;
+            &lt;InstrumentCode&gt;
+              &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+              &lt;Code&gt;DE0007164600&lt;/Code&gt;
+            &lt;/InstrumentCode&gt;
+            &lt;InstrumentName&gt;SAP SE&lt;/InstrumentName&gt;
+            &lt;Valuation&gt;
+              &lt;QuotationCurrency&gt;EUR&lt;/QuotationCurrency&gt;
+              &lt;MarketValueQC&gt;7450000.00&lt;/MarketValueQC&gt;
+              &lt;CleanValueQC&gt;7450000.00&lt;/CleanValueQC&gt;
+              &lt;MarketValuePC&gt;7450000.00&lt;/MarketValuePC&gt;
+              &lt;CleanValuePC&gt;7450000.00&lt;/CleanValuePC&gt;
+              &lt;PositionWeight&gt;0.0300&lt;/PositionWeight&gt;
+              &lt;MarketExposureQC&gt;7450000.00&lt;/MarketExposureQC&gt;
+              &lt;MarketExposurePC&gt;7450000.00&lt;/MarketExposurePC&gt;
+              &lt;MarketExposureWeight&gt;0.0300&lt;/MarketExposureWeight&gt;
+            &lt;/Valuation&gt;
+            &lt;AdditionalInformation/&gt;
+          &lt;/Position&gt;
+          &lt;!-- Remaining 154 positions elided; full lookthrough in Appendix D. --&gt;
+        &lt;/Positions&gt;
+      &lt;/Portfolio&gt;
+    &lt;/TripartiteTemplateSolvencyII_V6&gt;
+
+    &lt;!-- EPT (inside PRIIPS_V20): KID-input data for the PRIIPs disclosure --&gt;
+    &lt;PRIIPS_V20&gt;
+      &lt;EPTV2&gt;
+        &lt;DataSetInformation&gt;
+          &lt;Version&gt;V21&lt;/Version&gt;
+          &lt;Data_ReportingNarratives&gt;YES&lt;/Data_ReportingNarratives&gt;
+          &lt;DataReportingCosts&gt;YES&lt;/DataReportingCosts&gt;
+          &lt;DataReportingAdditionalRequirementsGermanMOPs&gt;NO&lt;/DataReportingAdditionalRequirementsGermanMOPs&gt;
+          &lt;AdditionalInformationStructuredProductsRIY&gt;NO&lt;/AdditionalInformationStructuredProductsRIY&gt;
+        &lt;/DataSetInformation&gt;
+        &lt;GeneralPortfolioInformation&gt;
+          &lt;PortfolioManufacturerName&gt;Europa Asset Management S.A.&lt;/PortfolioManufacturerName&gt;
+          &lt;PortfolioManufacturerGroupName&gt;Europa Financial Group&lt;/PortfolioManufacturerGroupName&gt;
+          &lt;PortfolioManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/PortfolioManufacturerLEI&gt;
+          &lt;PortfolioID&gt;
+            &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
+            &lt;Code&gt;LU2031234567&lt;/Code&gt;
+          &lt;/PortfolioID&gt;
+          &lt;PortfolioName&gt;Europa Growth Fund R EUR ACC&lt;/PortfolioName&gt;
+          &lt;PortfolioCurrency&gt;EUR&lt;/PortfolioCurrency&gt;
+          &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
+          &lt;PortfolioPRIIPSCategory&gt;2&lt;/PortfolioPRIIPSCategory&gt;
+          &lt;IsAnAutocallableProduct&gt;NO&lt;/IsAnAutocallableProduct&gt;
+        &lt;/GeneralPortfolioInformation&gt;
+        &lt;RiskAssessment&gt;
+          &lt;ValuationFrequency&gt;252&lt;/ValuationFrequency&gt;
+          &lt;IS_Flexible&gt;NO&lt;/IS_Flexible&gt;
+          &lt;Existing_Credit_Risk&gt;NO&lt;/Existing_Credit_Risk&gt;
+          &lt;SRI&gt;4&lt;/SRI&gt;
+          &lt;IsSRIAdjusted&gt;NO&lt;/IsSRIAdjusted&gt;
+          &lt;MRM&gt;4&lt;/MRM&gt;
+          &lt;Recommended_Holding_Period&gt;5&lt;/Recommended_Holding_Period&gt;
+          &lt;HasAContractualMaturityDate&gt;NO&lt;/HasAContractualMaturityDate&gt;
+          &lt;Liquidity_Risk&gt;L&lt;/Liquidity_Risk&gt;
+        &lt;/RiskAssessment&gt;
+        &lt;PerformanceScenario&gt;
+          &lt;ReturnUnfavorable&gt;
+            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.0120&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+          &lt;/ReturnUnfavorable&gt;
+          &lt;ReturnModerate&gt;
+            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.0540&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+          &lt;/ReturnModerate&gt;
+          &lt;ReturnFavorable&gt;
+            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.1080&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+          &lt;/ReturnFavorable&gt;
+          &lt;ReturnStress&gt;
+            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.2750&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
+          &lt;/ReturnStress&gt;
+          &lt;PortfolioPastPerformanceDisclosureRequired&gt;YES&lt;/PortfolioPastPerformanceDisclosureRequired&gt;
+        &lt;/PerformanceScenario&gt;
+        &lt;Costs&gt;
+          &lt;OneOff&gt;
+            &lt;EntryCost&gt;0.0500&lt;/EntryCost&gt;
+            &lt;EntryCostsAcquired&gt;0.0000&lt;/EntryCostsAcquired&gt;
+            &lt;ExitCostAtRHP&gt;0.0000&lt;/ExitCostAtRHP&gt;
+            &lt;SlidingExitCostIndicator&gt;NO&lt;/SlidingExitCostIndicator&gt;
+          &lt;/OneOff&gt;
+          &lt;Ongoing&gt;
+            &lt;OtherCost&gt;0.0025&lt;/OtherCost&gt;
+            &lt;ManagementCosts&gt;0.0150&lt;/ManagementCosts&gt;
+            &lt;Transaction&gt;0.0012&lt;/Transaction&gt;
+          &lt;/Ongoing&gt;
+          &lt;Incidental&gt;
+            &lt;ExistringIncidentalCostsPortfolio&gt;NO&lt;/ExistringIncidentalCostsPortfolio&gt;
+            &lt;ExistingIncidentalCostsPortfolio&gt;NO&lt;/ExistingIncidentalCostsPortfolio&gt;
+          &lt;/Incidental&gt;
+        &lt;/Costs&gt;
+        &lt;Narratives&gt;
+          &lt;ComprehensionAlert&gt;NO&lt;/ComprehensionAlert&gt;
+          &lt;IntendedTargetMarketRetailInvestor&gt;Retail investors with basic or informed knowledge of equity funds, willing to accept market risk, seeking long-term capital growth over at least five years.&lt;/IntendedTargetMarketRetailInvestor&gt;
+          &lt;InvestmentObjective&gt;The fund aims to achieve long-term capital growth by investing primarily in European large-cap equities that meet the manager's sustainability criteria.&lt;/InvestmentObjective&gt;
+          &lt;OtherMaterialyRelevantRiskNarrative&gt;No other materially relevant risks beyond market and sustainability risk.&lt;/OtherMaterialyRelevantRiskNarrative&gt;
+          &lt;TypeUnderlyingInvestmentOption&gt;UCITS SICAV&lt;/TypeUnderlyingInvestmentOption&gt;
+          &lt;CapitalGuarantee&gt;NO&lt;/CapitalGuarantee&gt;
+          &lt;OneOffCostPortfolioExitCostDescription&gt;No exit cost is charged at redemption.&lt;/OneOffCostPortfolioExitCostDescription&gt;
+          &lt;OngoingCostsPortfolioManagementCostsDescription&gt;Ongoing management and operating costs deducted from fund NAV.&lt;/OngoingCostsPortfolioManagementCostsDescription&gt;
+          &lt;DoCostsDependOnInvestedAmount&gt;NO&lt;/DoCostsDependOnInvestedAmount&gt;
+        &lt;/Narratives&gt;
+      &lt;/EPTV2&gt;
+    &lt;/PRIIPS_V20&gt;
+
+  &lt;/IndirectReporting&gt;
+
+&lt;/RegulatoryReportings&gt;
+</code></pre>
+<p>A three-pass reading of the block closes the example.</p>
+<p><strong>First pass — presence and absence</strong>. Four templates are present: EMT (MiFID II, under <code>DirectReporting</code>), EET (SFDR, also under <code>DirectReporting</code>), TPT (Solvency II, under <code>IndirectReporting</code>), and EPT inside <code>PRIIPS_V20</code> (PRIIPs, also under <code>IndirectReporting</code>). One template — EFT — is absent, and the absence is both visible (marked by a comment) and deliberate. A consumer who expects EFT in this delivery is confused about the delivery's direction; a consumer who correctly identifies the delivery as manufacturer-to-distributor accepts the absence as normal. The two-branch structure (<code>DirectReporting</code> versus <code>IndirectReporting</code>) is itself a structural feature that is worth highlighting: every FundsXML <code>RegulatoryReportings</code> block either places templates into these branches or is empty.</p>
+<p><strong>Second pass — shared identification across modules</strong>. Every one of the four present templates contains the same fund identifier (<code>LU2031234567</code>, the R-EUR-ACC share class) and the same manufacturer LEI (<code>529900T8BM49AURSDO55</code>, Europa Asset Management S.A.). A consumer can read any single module and verify which fund and which manufacturer it refers to. The reference date (31 March 2026) appears under each module's own date field and is implicit in the enclosing <code>ContentDate</code> from the <code>ControlData</code> block (Chapter 4). The four modules are, in this sense, different views of the same product at the same moment in time.</p>
+<p><strong>Third pass — module-specific disclosures</strong>. Each module contributes its own distinctive content. EMT provides the target market classification, the forward-looking cost disclosure (1.75% ongoing + 0.12% transaction), and the distribution strategy. EET provides the SFDR Article 8 classification, the PAI consideration flag, the MiFID II sustainability preferences flag, and the existence of a negative screening strategy — all in their mandatory minimum form, with the full Article 8 disclosures (Taxonomy alignment, detailed PAI indicators) deferred to the unabbreviated version in Appendix D. TPT provides the fund's total NAV (248.5 million EUR), the 155-position lookthrough (abbreviated here to a single SAP SE position), and the CIC-coded asset classification that drives the insurer's SCR calculation. EPT, inside <code>PRIIPS_V20</code>, provides the SRI of 4, the four PRIIPs performance scenarios (from −27.5% annualised in stress to +10.8% favourable), the PRIIPs-specific cost breakdown, and the nine mandatory narrative fields that populate the KID's text sections. Each consumer reads the module relevant to its own purpose and ignores the others.</p>
+<p>The complete block — with all 120+ EMT fields, the full PRIIPs v2.0 field set, all several hundred EET fields, and the full 155-position TPT lookthrough — appears in Appendix D as part of the end-to-end Europa Growth Fund sample file. This chapter's version is deliberately compressed to focus on the structural patterns.</p>
+<hr>
+<h2>8.10 Common Pitfalls</h2>
+<p>The following short list captures the mistakes that, in our experience, cause the greatest share of regulatory-module-related production incidents.</p>
+<ul>
+<li>
+<p><strong>Templates placed at the wrong level of <code>RegulatoryReportings</code></strong>. A producer places <code>&lt;EMT_V4_2&gt;</code> directly inside <code>&lt;RegulatoryReportings&gt;</code> instead of inside <code>&lt;DirectReporting&gt;</code>, or places <code>&lt;TripartiteTemplateSolvencyII_V6&gt;</code> inside <code>&lt;DirectReporting&gt;</code> instead of <code>&lt;IndirectReporting&gt;</code>. The file fails schema validation. The rule is fixed by the XSD: EMT, EFTs, and EET belong in <code>DirectReporting</code>; PRIIPS_V20 and TripartiteTemplateSolvencyII_V6 belong in <code>IndirectReporting</code>; and neither branch may be skipped by lifting its children up one level.</p>
+</li>
+<li>
+<p><strong>Mixing <code>Y</code>/<code>N</code> with <code>YES</code>/<code>NO</code></strong>. EMT's <code>EMTYesNoType</code> uses single-letter <code>Y</code>/<code>N</code>/<code>Neutral</code>; EPT's (and the PRIIPS_V20's) <code>YesNoType</code> uses <code>YES</code>/<code>NO</code> in full; EET's <code>EETYesNoType</code> uses <code>Y</code>/<code>N</code>. A producer that copies field values mechanically from one template to another will produce <code>Y</code> in a PRIIPs field where the schema expects <code>YES</code>, and the file fails validation. The fix is to use template-specific helpers when emitting the boolean fields and to test each template under xmllint.</p>
+</li>
+<li>
+<p><strong>EMT and EPT cost fields confused</strong>. A consumer takes the annual total from EMT and treats it as the five-year-amortised figure that PRIIPs uses, or vice versa. The two figures are related (one-year costs × RHP, roughly) but they are not interchangeable, and the disclosure document generated will show the wrong figure. The rule: match the cost horizon to the disclosure horizon, and read the template appropriate to the disclosure being produced.</p>
+</li>
+<li>
+<p><strong>SFDR Article classification missing or wrong in EET</strong>. A producer emits an EET block with <code>&lt;SFDRProductType&gt;</code> populated with the wrong digit — typically <code>6</code> (Article 6) on an Article 8 fund because an internal classification table had the wrong default. The consumer processes the fund as Article 6 and silently suppresses its ESG disclosures, misrepresenting the product. The field is mandatory and its value is business-critical; every EET must carry the correct value, and the producer's QA pipeline should cross-check against the fund's prospectus.</p>
+</li>
+<li>
+<p><strong>TPT lookthrough inconsistent with the native portfolio</strong>. The <code>&lt;Positions&gt;</code> block inside TPT shows 155 positions, but the <code>&lt;Portfolios&gt;</code> block in the same delivery shows 153, because the TPT generator and the portfolio generator were run on different snapshots. An insurance consumer notices the discrepancy and raises a data quality flag. The fix is to produce both blocks from a single canonical source and to validate internal consistency before emitting.</p>
+</li>
+<li>
+<p><strong>Old template version in use</strong>. A producer emits <code>&lt;EMT_V4_1&gt;</code> while its consumer expects <code>&lt;EMT_V4_2&gt;</code>. Both elements exist in the schema (FundsXML keeps every historical FinDatEx version), but a consumer's processing pipeline may only handle the current version, and the older element is silently ignored. The fix is to coordinate template version upgrades bilaterally and to migrate to the current version as soon as it is supported by all relevant consumers.</p>
+</li>
+<li>
+<p><strong>EFT included in a manufacturer delivery</strong>. A producer (the asset manager) mistakenly includes an <code>&lt;EFTs&gt;</code> block in its own manufacturer-to-distributor delivery, perhaps because the producer's generator offers an "emit all templates" option and the operator forgot to deselect EFT. Consumers either reject the module as misplaced or log warnings. The fix is to enforce the direction rule in the producer's tooling: manufacturers produce EMT/EPT/EET/TPT; distributors produce EFT; neither produces the other's content.</p>
+</li>
+<li>
+<p><strong>Minimal EET emitted for an Article 8 fund</strong>. A producer emits only the mandatory minimum of the EET — the skeleton shown in §8.9 — for an Article 8 fund that should carry a substantial additional payload of Taxonomy alignment and PAI data. The file passes schema validation but fails downstream semantic checks at the distributor, which expects the richer Article 8 content and flags the delivery as semantically incomplete. The fix is to populate the optional Article 8 / Article 9 sections whenever the fund is classified accordingly, even though the schema does not force the content.</p>
+</li>
+</ul>
+<hr>
+<h2>8.11 Key Takeaways</h2>
+<ul>
+<li><code>RegulatoryReportings</code> is the fifth and final main area of a FundsXML delivery, a root-level sibling of <code>&lt;Funds&gt;</code> and <code>&lt;AssetMasterData&gt;</code>. Inside, it immediately splits into <code>&lt;DirectReporting&gt;</code> and <code>&lt;IndirectReporting&gt;</code>, and the five FinDatEx templates are distributed between the two branches.</li>
+<li>FinDatEx maintains the templates; FundsXML embeds them. The two organisations have clearly separated responsibilities — FinDatEx decides the <em>what</em>, FundsXML decides the <em>how</em>. Each FinDatEx template version appears in the FundsXML schema as its own versioned element (e.g. <code>EMT_V4_2</code>, <code>EET1.1.3</code>, <code>PRIIPS_V20</code>, <code>TripartiteTemplateSolvencyII_V6</code>).</li>
+<li><strong>EMT</strong> (under <code>DirectReporting</code>, as <code>EMT_V4_2</code>) carries MiFID II cost and target market data at the share-class level and is the operationally most important template for retail distribution. Its <code>FinancialInstrument</code> complex type has five mandatory sections: <code>DataSetInformation</code>, <code>GeneralInformation</code>, <code>TargetMarket</code>, <code>CostsAndChargesExAnte</code>, and the optional <code>CostsAndChargesExPost</code>.</li>
+<li><strong>EPT</strong> (under <code>IndirectReporting</code>, as <code>PRIIPS_V20/EPTV2</code>) provides the data that populates the PRIIPs KID: the SRI on the 1-to-7 scale, the four performance scenarios as annualised returns over the recommended holding period, the PRIIPs-specific cost breakdown, and the mandatory narrative fields. Several of the boolean fields use <code>YES</code>/<code>NO</code> in full, unlike EMT's single-letter flags.</li>
+<li><strong>EET</strong> (under <code>DirectReporting</code>, as <code>EET1.1.3</code>) covers SFDR classification (Articles 6, 8, 9), the fourteen mandatory Principal Adverse Impacts, and the EU Taxonomy alignment. It is by far the largest template by field count, with several hundred mostly optional fields organised into sections for main criteria, MiFID/IDD target market, screening, Taxonomy alignment, and PAI. The mandatory minimum is compact, but Article 8 and Article 9 funds are expected to populate the optional sections substantively.</li>
+<li><strong>EFT</strong> (under <code>DirectReporting</code>, as <code>EFTs</code>) flows in the reverse direction (distributor to manufacturer) and therefore does not appear in manufacturer deliveries like the Europa Growth Fund's monthly file. EFT carries distribution statistics, reference target market specification, and deviation reports under the manufacturer or distributor target market perspective.</li>
+<li><strong>TPT</strong> (under <code>IndirectReporting</code>, as <code>TripartiteTemplateSolvencyII_V6</code>) provides lookthrough data for Solvency II SCR calculations by insurance investors. Each <code>Portfolio</code> entry carries mandatory top-level fields (<code>TPTVersion=V6.0</code>, <code>PortfolioID</code>, <code>PortfolioName</code>, <code>PortfolioCurrency</code>, <code>TotalNetAssets</code>, <code>ValuationDate</code>, <code>ReportingDate</code>, <code>CompleteSCRDelivery</code>) plus one or more <code>Position</code> entries, each with an InstrumentCIC classification and six mandatory valuation sub-fields.</li>
+<li><strong>ESAP</strong> is the EU-wide access point for regulatory disclosures, live in phased rollout from 2026. FundsXML 4.2.8 has no schema-level ESAP metadata element; ESAP routing is handled by the production pipeline outside the schema, and producers publish SFDR disclosures, prospectuses, and similar public documents through a separate ESMA-specified channel.</li>
+<li>The Europa Growth Fund's 31 March 2026 delivery carries EMT, EPT, EET, and TPT — but not EFT — reflecting the direction of the delivery and the reporting needs of its consumers.</li>
+</ul>
+<p>We have now covered all five main areas of a FundsXML delivery — <code>ControlData</code>, <code>Funds</code>, <code>AssetMasterData</code>, the four substructures of <code>FundDynamicData</code>, and <code>RegulatoryReportings</code>. What remains are the less-frequently-used but operationally important schema areas: the <code>Documents</code> section for factsheets and signed attachments, XML digital signatures, <code>CustomAttributes</code> for proprietary extensions, and country-specific additions. Chapter 9 closes Part II of the book with these advanced topics.</p>
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter07.html">&lsaquo; Chapter 7</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter09.html">Chapter 9 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

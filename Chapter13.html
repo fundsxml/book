@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 13 — An Implementation Project from A to Z</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter12.html">&lsaquo; Chapter 12</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter14.html">Chapter 14 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<div class="chapter-meta">Part III — Implementation and Practice · Chapter 13</div>
+<h1>An Implementation Project from A to Z<span class="subtitle">A practical guide for introducing FundsXML</span></h1>
+
+<hr>
+
+<h2>13.1 Setting the Scene: What an Implementation Project Looks Like</h2>
+
+<p>Thirteen chapters of schema, tooling, and architecture are useful only insofar as they help a real team ship a real pipeline. This chapter is about that shipping process. It describes, phase by phase, how an asset management company actually introduces FundsXML into its operational landscape — not as a collection of abstract project-management principles, but as a concrete nine-month project at the Europa Asset Management S.A. fictional-but-realistic team that has been the producer of the Europa Growth Fund's data throughout the book.</p>
+
+<p>The project we follow runs from December 2025, when the project kickoff meeting was held, to August 2026, when the first production FundsXML delivery reached all eleven of the fund's distribution countries. In between are six phases: requirements analysis, data mapping, prototyping and piloting, testing, acceptance and go-live, and the transition into operations and maintenance. Each phase gets its own section in this chapter, and §13.8 lays out the full timeline as a single page for the reader who wants to see the arc at a glance.</p>
+
+<p>The project is narratively specific but operationally generic. The names (Europa Asset Management, the Europa Growth Fund, the eleven distribution countries) are the fictional ones that the book has used throughout. The scale and sequence of the phases, the kinds of decisions made at each checkpoint, and the recurring challenges are drawn from real FundsXML implementation projects that the authoring community has seen in practice. A reader running a similar project should find the concrete details useful as a template to adapt rather than as a script to follow literally — every project has its own politics, its own technical debt, and its own internal opposition, and no generic walkthrough can capture all of it.</p>
+
+<p>A note on scope. This chapter treats the <em>producer</em> side of the project — Europa Asset Management produces FundsXML deliveries, and the project is about building the pipeline that produces them. The <em>consumer</em> side (what the eleven distribution countries do with the deliveries) is out of scope for this chapter, except where it intersects with the producer's work. Consumers typically run their own, independent implementation projects that look structurally similar but focus on ingestion rather than emission. Readers on the consumer side can read this chapter with minor mental translation; the phase structure is the same, and most of the decisions are analogous.</p>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+  <li>structure a FundsXML implementation project into its six standard phases and plan the duration of each;</li>
+  <li>draw up a requirements document for a producer-side project, naming the data sources, the target consumers, and the regulatory scope;</li>
+  <li>build a mapping table that connects internal system fields to FundsXML elements;</li>
+  <li>run a prototyping and piloting cycle that catches structural problems before production commitment;</li>
+  <li>design a testing plan that covers both schema validation and business-rule validation against realistic fixtures;</li>
+  <li>organise acceptance and go-live gates with the producer's stakeholders and the consumer's downstream systems;</li>
+  <li>transition a working pipeline from "project" to "operations" without losing the institutional knowledge the project accumulated.</li>
+</ul>
+
+<hr>
+
+<h2>13.2 Phase 1: Project Preparation and Requirements Analysis</h2>
+
+<h3>13.2.1 The Trigger and the Kickoff</h3>
+
+<p>Every implementation project has a trigger — a specific business event that makes "do it" more urgent than "wait and see". For Europa Asset Management, the trigger was a combination of three pressures in late 2025: the French distributor BNP Distribution Services notified Europa that it would stop accepting the legacy CSV format at the end of Q2 2026 and would require FundsXML going forward; the SFDR Level 2 technical standards mandated quarterly EET deliveries from January 2026, and the existing CSV pipeline had no clean path to carry them; and an internal audit had flagged the CSV pipeline's lack of structured validation as a control weakness after a near-miss incident in October 2025. None of the three pressures alone would have justified the project; all three together made it unavoidable.</p>
+
+<p>The kickoff meeting was held on 8 December 2025. Present were the head of Operations (the project sponsor), the head of IT (delivery accountability), a representative from the Fund Administration team (the data owners), a representative from the Compliance team (regulatory sign-off), and two external consultants engaged for schema expertise. The meeting ran for ninety minutes and produced three outputs: a one-page project charter, a list of twelve open questions that the next four weeks would need to answer, and a commitment to return on 5 January 2026 for a requirements review with a first draft of the answers.</p>
+
+<h3>13.2.2 The Requirements Document</h3>
+
+<p>Over the next three weeks, the project lead drafted the requirements document that would govern the project for the next nine months. A good FundsXML requirements document has seven sections, each shorter than a typical business requirement document because the FundsXML schema itself carries much of the structural detail that would otherwise need to be written down.</p>
+
+<p><strong>1. Scope.</strong> Which funds, which share classes, which distribution countries, which consumers, which regulatory modules. For the Europa project: the Europa Growth Fund and its three share classes, eleven distribution countries, initial consumer list of six retail distributors (the others would be added in a subsequent wave), regulatory modules EMT, EPT, EET, and TPT (but not EFT — the producer does not produce EFT).</p>
+
+<p><strong>2. Frequency and Calendar.</strong> How often a delivery is produced and for which valuation dates. Europa's decision: daily NAV deliveries to the internal fund administrator systems, monthly consolidated deliveries to external distributors, quarterly EET refreshes, quarterly TPT updates. The daily and monthly were operationally urgent; the EET and TPT were regulatory deadlines.</p>
+
+<p><strong>3. Data Sources.</strong> Which internal systems hold which parts of the data the pipeline needs. Europa's landscape had: a portfolio management system (PMS) holding positions and NAVs, a client reference database (CRD) holding fund and share-class static data, a regulatory reporting data mart (RRDM) holding SFDR classifications and PAI values, and an administrator-provided Excel workbook holding EMT template data. Each of the four sources had its own owner, its own release cadence, and its own quirks.</p>
+
+<p><strong>4. Target Consumers and Delivery Channels.</strong> Which external parties receive the deliveries, how they receive them, and what acknowledgements the producer needs. Europa's six initial distributors each had their own SFTP drop-box conventions, their own file-naming rules, and their own acknowledgement mechanisms — two used plain SFTP with a signed delivery receipt, three used SFTP with an out-of-band email confirmation, and one used an HTTPS REST API. The pipeline had to support all three.</p>
+
+<p><strong>5. Regulatory Modules.</strong> Which FinDatEx templates the pipeline must populate and to which version. Europa: EMT v4.3, EPT v2.4, EET v1.1.2, TPT v7.0 — all current as of 2026. The requirements document also named the ESMA technical standards each template implemented, so that the team had a clear regulatory anchor.</p>
+
+<p><strong>6. Non-Functional Requirements.</strong> Performance, availability, monitoring, audit, retention. Europa: deliveries must be emitted within two hours of the valuation point, availability 99.5% of business days, full audit log of every delivery retained for ten years, Monday-to-Friday business-hours monitoring with on-call escalation only for failures during the emission window.</p>
+
+<p><strong>7. Out of Scope.</strong> Explicit statements of what the project will <em>not</em> do. Europa's out-of-scope list included: no consumer-side pipeline (consumers handle their own ingestion), no changes to the underlying source systems (the PMS and CRD stay as-is; the pipeline reads from them), no EFT support (this producer does not produce EFT), no historical backfill (the pipeline starts with new deliveries only; pre-2026 data stays in the legacy CSV archive).</p>
+
+<h3>13.2.3 The Five Open Questions Every Project Answers Early</h3>
+
+<p>Beyond the written requirements, every implementation project has a short list of decisions that need to be made explicitly and early, because a wrong answer taken silently will undermine the rest of the project. Europa's five were:</p>
+
+<ol>
+  <li><strong>Build or buy?</strong> Europa decided to build. The alternative — licensing a vendor FundsXML generator — was considered but rejected on grounds of cost and long-term flexibility. A later section (§13.4) describes the technology stack they chose.</li>
+  <li><strong>Java, Python, or C#?</strong> Europa was a Java shop for its core systems but had a small Python team for data engineering. The decision: Java for the generator (integrated into the existing fund-administration platform), Python for the ETL that extracts source data and for the validation pipeline. Node.js was not considered, because no consumer piece was being built.</li>
+  <li><strong>In-house or cloud?</strong> Europa ran a private datacentre for its production systems and had no public-cloud deployment in scope. The pipeline would run in the existing on-premises infrastructure, with the option to migrate to cloud later if the organisation's overall strategy moved that way. This decision simplified the security and compliance conversation significantly.</li>
+  <li><strong>Single-team or multi-team ownership?</strong> A single cross-functional project team of four engineers plus a part-time BA and a part-time QA was chartered. Ownership would transfer to the existing Fund Operations IT team at go-live. The cross-functional structure was chosen to avoid the handoff overhead that a "development team ships, ops team operates" model would create.</li>
+  <li><strong>Greenfield or side-by-side?</strong> Europa decided to run the new FundsXML pipeline side-by-side with the legacy CSV pipeline for a transition period, with distributors gradually switching over as each one validated their own consumer. The legacy pipeline would be decommissioned once the last distributor had confirmed successful FundsXML ingestion.</li>
+</ol>
+
+<h3>13.2.4 Timeline and Budget</h3>
+
+<p>The project plan that emerged from requirements analysis had the following shape: 5 January to 31 January 2026 for requirements completion and stakeholder sign-off; 1 February to 28 February for data mapping; 1 March to 30 April for prototyping and piloting; 1 May to 31 May for testing; 1 June to 30 June for user acceptance and go-live preparation; 1 July for first production delivery; ongoing operations thereafter. The timeline included one intentional slack week in each phase, because every FundsXML project the consultants had seen had encountered unexpected delays somewhere, and the question was only <em>where</em> the slack would be consumed. The project ultimately ran two weeks longer than plan and consumed every slack week and then some.</p>
+
+<p>The budget was modest for a project of this scope: four engineers for six months full-time, plus the two consultants part-time, plus tooling and infrastructure costs. The total was comfortably under one million euros — not because FundsXML implementations are cheap, but because the existing source systems provided the hard data, and the project scope was tight enough that no upstream system remediation was required.</p>
+
+<hr>
+
+<h2>13.3 Phase 2: Mapping Existing Data to FundsXML</h2>
+
+<h3>13.3.1 Why Mapping Is the Hardest Phase</h3>
+
+<p>Mapping is the phase where the abstract schema meets the concrete internal data, and it is almost always the phase where FundsXML projects discover that the hard work is not XML — it is understanding the source data. Every field that the FundsXML delivery needs has to come from somewhere, and "somewhere" usually means a column in an internal database whose meaning has been implicit for years and that no one has written down precisely. Phase 2 is the phase where the team writes it all down.</p>
+
+<p>Europa's mapping phase ran from 1 February to 28 February 2026 and consumed roughly two engineer-months of effort. It produced three artefacts: a mapping spreadsheet (the core deliverable), a list of data gaps (fields FundsXML requires that no source system currently holds), and a list of data-quality issues (fields that exist in source but are populated inconsistently or incorrectly).</p>
+
+<h3>13.3.2 Structure of a Mapping Table</h3>
+
+<p>A mapping table has one row per FundsXML field that the pipeline needs to populate. The columns are:</p>
+
+<ul>
+  <li><strong>FundsXML element path</strong> — the XPath or dotted path from the root to the target element. For example, <code><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank">ControlData</a>/DataSupplier/LEI</code> or <code>Funds/Fund/Identifiers/LEI</code>.</li>
+  <li><strong>Source system</strong> — which internal system holds the source data. One of PMS, CRD, RRDM, or EMT-Excel for Europa's landscape.</li>
+  <li><strong>Source column or field</strong> — the specific column name or field identifier in the source system. For example, <code>CRD.LEGAL_ENTITIES.LEI_CODE</code>.</li>
+  <li><strong>Transformation rule</strong> — any conversion, lookup, or derivation needed between the source value and the target value. For example, "trim to 20 characters", "convert DD/MM/YYYY to ISO", "lookup country code from COUNTRY_ID via COUNTRY dimension".</li>
+  <li><strong>Default value</strong> — what to write if the source is null or missing. Often blank (meaning "omit the optional element"); sometimes a hard-coded literal.</li>
+  <li><strong>Notes</strong> — any peculiarities, known edge cases, or questions for a later round.</li>
+</ul>
+
+<p><strong>Table 13.1 — Excerpt from Europa Asset Management's mapping table (ControlData)</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>FundsXML path</th>
+      <th>Source system</th>
+      <th>Source column</th>
+      <th>Transformation</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>ControlData/UniqueDocumentID</code></td><td>(generated)</td><td>—</td><td>Concatenate: <code>EGF-</code> + <code>YYYYMMDD</code> + <code>-</code> + sequence number</td><td>—</td></tr>
+    <tr><td><code>ControlData/DocumentGenerated</code></td><td>(system clock)</td><td>—</td><td>Current UTC timestamp at emission</td><td>—</td></tr>
+    <tr><td><code>ControlData/Version</code></td><td>(constant)</td><td>—</td><td>Hard-coded <code>4.2.8</code></td><td><code>4.2.8</code></td></tr>
+    <tr><td><code>ControlData/ContentDate</code></td><td>PMS</td><td><code>VALUATION.VAL_DATE</code></td><td>Convert to ISO format</td><td>—</td></tr>
+    <tr><td><code>ControlData/DataSupplier/SystemCountry</code></td><td>(constant)</td><td>—</td><td>Hard-coded <code>LU</code></td><td><code>LU</code></td></tr>
+    <tr><td><code>ControlData/DataSupplier/Short</code></td><td>(constant)</td><td>—</td><td>Hard-coded <code>EAM</code></td><td><code>EAM</code></td></tr>
+    <tr><td><code>ControlData/DataSupplier/Name</code></td><td>CRD</td><td><code>COMPANIES.LEGAL_NAME</code></td><td>Where <code>ROLE = 'MANUFACTURER'</code></td><td>—</td></tr>
+    <tr><td><code>ControlData/DataSupplier/Type</code></td><td>(constant)</td><td>—</td><td>Hard-coded <code>IC</code></td><td><code>IC</code></td></tr>
+    <tr><td><code>ControlData/DataOperation</code></td><td>(computed)</td><td>—</td><td>Normal delivery: <code>INITIAL</code>; retry: <code>AMEND</code></td><td><code>INITIAL</code></td></tr>
+    <tr><td><code>ControlData/Language</code></td><td>(constant)</td><td>—</td><td>Hard-coded <code>en</code></td><td><code>en</code></td></tr>
+    <tr><td><code>Funds/Fund/Identifiers/LEI</code></td><td>CRD</td><td><code>FUNDS.LEI_CODE</code></td><td>Where <code>FUND_ID = :current</code></td><td>—</td></tr>
+    <tr><td><code>Funds/Fund/Names/OfficialName</code></td><td>CRD</td><td><code>FUNDS.OFFICIAL_NAME</code></td><td>Where <code>FUND_ID = :current</code></td><td>—</td></tr>
+    <tr><td><code>Funds/Fund/Currency</code></td><td>CRD</td><td><code>FUNDS.BASE_CURRENCY</code></td><td>ISO 4217 code</td><td>—</td></tr>
+    <tr><td><code>Funds/Fund/SingleFundFlag</code></td><td>(computed)</td><td>—</td><td><code>true</code> if no sub-funds, else <code>false</code></td><td><code>true</code></td></tr>
+    <tr><td><code>Funds/Fund/<a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank">FundDynamicData</a>/TotalAssetValues/TotalAssetValue/NavDate</code></td><td>PMS</td><td><code>NAV_HEADER.VAL_DATE</code></td><td>—</td><td>—</td></tr>
+    <tr><td><code>Funds/Fund/FundDynamicData/TotalAssetValues/TotalAssetValue/TotalAssetNature</code></td><td>(computed)</td><td>—</td><td><code>OFFICIAL</code> for final NAV; <code>ESTIMATED</code> for preliminary</td><td><code>OFFICIAL</code></td></tr>
+    <tr><td><code>Funds/Fund/FundDynamicData/TotalAssetValues/TotalAssetValue/TotalNetAssetValue/Amount</code></td><td>PMS</td><td><code>NAV_HEADER.TNAV</code></td><td><code>ccy</code> attribute from <code>NAV_HEADER.CCY</code></td><td>—</td></tr>
+  </tbody>
+</table>
+
+<p>The excerpt above shows seventeen rows. The full mapping table for the Europa Growth Fund project had approximately 450 rows covering the complete ControlData, Fund, Portfolio, and <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank">RegulatoryReportings</a> blocks. Each row was reviewed by the data owner of the relevant source system and signed off formally. The sign-off was important because the mapping became the authoritative contract between the producer pipeline and the source systems: any change to a source column's meaning or format would need to be reflected in the mapping before the pipeline could handle it.</p>
+
+<h3>13.3.3 Handling Data Gaps</h3>
+
+<p>The mapping exercise inevitably surfaces <strong>data gaps</strong>: FundsXML fields that the producer needs to populate but that no existing source system holds. Europa's project found twenty-three such gaps, ranging in severity from "trivial, add a constant" to "major, requires new upstream data feed". Three of the more interesting ones:</p>
+
+<ul>
+  <li><strong><code>Funds/Fund/<a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank">FundStaticData</a>/Custodian</code></strong> — the custodian (depositary bank) of the fund. The CRD held the custodian relationship for recent funds but not for older funds that had been migrated from a legacy system in 2018. For the Europa Growth Fund specifically the data was there; for other funds that would be onboarded later, the CRD would need to be backfilled. The decision: phase-1 launch covered only funds with complete custodian data in CRD; the backfill was logged as a follow-on task.</li>
+  <li><strong><code>RegulatoryReportings/EET/EET_PAI/*</code></strong> — the PAI values for the EET. These were held in the RRDM but with a quarterly refresh cadence, which conflicted with the monthly EET that the quarterly-only regulatory schedule didn't strictly demand. The decision: emit the most-recent PAI values in every monthly delivery, with an explicit <code>EET_PAI_AsOfDate</code> field indicating when the values were computed. Consumers who need real-time PAI values would get stale data; consumers following the standard quarterly cadence would see no difference.</li>
+  <li><strong><code>Funds/Fund/FundStaticData/FundTexts</code></strong> — the multi-language marketing and investment-objective text. These existed in the CRD but only in English; the German, French, and Italian translations were maintained in a separate Marketing-managed spreadsheet that had never been integrated with the core systems. The decision: phase-1 launch included English-only text; the multi-language build-out was scheduled for phase 2 of the project in September 2026.</li>
+</ul>
+
+<p>Data gaps are rarely blockers in themselves, but they force the project to make scoping decisions about whether to launch without the missing data, delay until the gaps are filled, or invent a workaround. Europa's approach — ship without the missing data, fill the gaps in follow-on waves — is the most common pragmatic choice.</p>
+
+<h3>13.3.4 Data-Quality Issues</h3>
+
+<p>Separately from data gaps, the mapping exercise surfaces <strong>data-quality issues</strong> in fields that <em>do</em> exist but hold questionable values. Europa found a dozen of these, two of which were operationally significant:</p>
+
+<ul>
+  <li><strong>LEI values in the CRD were missing the two-character country prefix check digits.</strong> A valid LEI is 20 characters and the last two are check digits; Europa's CRD held 18-character values because an earlier migration had truncated them. The fix was a one-off database update to recompute the check digits from the authoritative GLEIF register, followed by a CRD constraint to prevent the error from recurring.</li>
+  <li><strong>Currency codes in the PMS used internal three-letter codes that mostly matched ISO 4217 but differed for a few cases</strong> (the internal code for the Norwegian krone was <code>NOK</code>, matching ISO, but for the Czech koruna it was <code>CZK</code> — close but with historical variants in the data). The fix was a lookup table mapping internal codes to ISO codes, implemented as part of the mapping transformation layer.</li>
+</ul>
+
+<p>Both issues would have caused validation failures once the pipeline went live, and discovering them during mapping was exactly the point of doing the mapping phase thoroughly.</p>
+
+<hr>
+
+<h2>13.4 Phase 3: Prototyping and Piloting</h2>
+
+<h3>13.4.1 Why a Prototype Comes Before a Production Build</h3>
+
+<p>Once the requirements are clear and the mapping is signed off, the temptation is to start building the production pipeline directly. Europa's project did <em>not</em> do this. Instead, the team spent two months building a <strong>prototype</strong> — a throwaway implementation of the pipeline that would produce real FundsXML files from real source data, but without any of the production-grade concerns (error handling, monitoring, operational hooks, audit logging). The purpose of the prototype was to discover the problems that only become visible when code meets data.</p>
+
+<p>The prototype ran from 1 March to 30 April 2026 and consumed roughly three engineer-months. It used Python (rather than the Java target for production) because Python was faster for exploratory development; the team knew they would throw the prototype away once it had served its purpose. The prototype's output — FundsXML files for the Europa Growth Fund with real data from February and March 2026 — was the primary input to the testing phase that followed.</p>
+
+<h3>13.4.2 The Prototype Architecture</h3>
+
+<p>A prototype does not need to be architecturally pretty. Europa's prototype was a single Python script, roughly six hundred lines, that:</p>
+
+<ol>
+  <li>Connected to the PMS, CRD, and RRDM databases through direct SQL queries.</li>
+  <li>Read the EMT Excel workbook for the regulatory template data.</li>
+  <li>Applied the mapping transformations from §13.3.</li>
+  <li>Built a FundsXML document using <code>lxml</code>'s <code>ElementTree</code> API.</li>
+  <li>Validated the result against <code>FundsXML4.xsd</code> using <code>xmllint</code>.</li>
+  <li>Wrote the file to a local directory.</li>
+</ol>
+
+<p>Six hundred lines is not a lot of code, and the prototype worked end-to-end within the first two weeks. The remaining six weeks were spent discovering the <em>problems</em> — the things the mapping table did not anticipate, the quirks of the source data, the ambiguous fields where the schema allowed several interpretations and the team had to pick one. Every problem was logged, every fix went into the mapping table or into a "design decisions" document, and every fix was re-tested before the next problem was attacked.</p>
+
+<h3>13.4.3 The Problems the Prototype Surfaced</h3>
+
+<p>Europa's prototype surfaced more than thirty distinct problems during its six weeks of iteration. Most were small; a few were structural enough to change the project plan. Four are worth describing concretely:</p>
+
+<p><strong>Problem 1 — Currency mismatches between share classes.</strong> The prototype produced EMT blocks for each share class, and the EMT <code>FinancialInstrument_Currency</code> field should match the share class's own currency. For the R-CHF-ACC-HEDGED class, the team had initially written <code>EUR</code> (the fund's base currency) because that was what the first version of the mapping table said. The prototype's validation caught it on the second day: the schema does not check the consistency, but the downstream consumer expected CHF for a CHF-denominated class. The fix was a mapping-table correction: <code>EMT_FinancialInstrument_Currency</code> should come from the share class, not from the fund. Fifteen minutes of work; six weeks' worth of potential confusion if it had been found in production.</p>
+
+<p><strong>Problem 2 — FX rate sourcing for TNAV aggregation.</strong> The fund-level <code>TotalNetAssetValue</code> is the sum of the per-share-class TNAVs after conversion to the fund base currency. The prototype initially used the PMS's own FX-rate table, but the administrator had a <em>different</em> FX-rate source (a vendor feed that was updated at the valuation point), and the two rates differed by basis points. The consumer-facing TNAV had to match the administrator's official figure; the pipeline had to switch to the administrator's FX source. The switch required adding a new data feed that the original mapping had not identified.</p>
+
+<p><strong>Problem 3 — Portfolio position ordering.</strong> The prototype emitted positions in the order they came out of the PMS database, which was roughly the order of trade dates. The validator passed, but the consumer's downstream comparison tool (which diff'd each month's delivery against the previous month's to flag significant changes) flagged thousands of "positions moved" diffs, because the order had shifted. The fix was to sort positions by ISIN before emission — a trivial change, but only visible once a real consumer's downstream tool had run against the output.</p>
+
+<p><strong>Problem 4 — The CustomAttributes question.</strong> Two pieces of producer-specific data — the sequential delivery number and the source-system version that generated the file — had no natural home in the FundsXML schema. The initial mapping had left them unmapped. The prototype team, after consulting Chapter 9, added them as <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData/CustomAttributes" target="_blank"><code>CustomAttributes</code></a> entries in ControlData with a namespace-like <code>eam.delivery.*</code> prefix. The decision was recorded in the design-decisions document as a permanent project convention.</p>
+
+<h3>13.4.4 The Pilot Delivery</h3>
+
+<p>Toward the end of the prototyping phase, on 28 April 2026, the team emitted their first <strong>pilot delivery</strong>: a complete FundsXML file for the Europa Growth Fund's 31 March 2026 valuation, containing ControlData, Fund, FundStaticData, FundDynamicData, Portfolios, RegulatoryReportings (EMT, EPT, EET, TPT), <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank">AssetMasterData</a>, and <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Documents" target="_blank">Documents</a>. The file was 14 megabytes, passed schema validation, passed the Schematron rule set the team had written in parallel, and was sent through the SFTP channel to two cooperative pilot consumers: BNP Distribution Services in France and Comdirect Bank in Germany. Both consumers received the file, parsed it successfully, and reported back any issues they found.</p>
+
+<p>The pilot revealed two further problems, both on the consumer side. BNP reported that their PRIIPs KID generator expected the <code>EPT_FinancialInstrument_UmbrellaName</code> field to be populated, but the Europa Growth Fund (modelled in the book and in the prototype as a standalone fund) had none. The fix was to set the umbrella name to a placeholder <code>"Europa Asset Management Investments"</code> — the umbrella name the fund <em>would</em> have if it were modelled correctly as a sub-fund — and to treat the real migration to an umbrella structure as a follow-on task. Comdirect reported a purely cosmetic issue: their ingestion was strict about the XML declaration's <code>encoding</code> attribute being <code>UTF-8</code> exactly, and the prototype had omitted the encoding attribute entirely. The fix took ten minutes.</p>
+
+<p>Both consumer issues were absorbed before the prototype phase ended, and the delivery was re-sent on 29 April. The second pilot was accepted by both consumers without further issues. The prototype had done its job: the team now had a concrete, working example of every data flow, every transformation, every validation, and every consumer interaction. They were ready to start the production build.</p>
+
+<hr>
+
+<h2>13.5 Phase 4: Testing</h2>
+
+<h3>13.5.1 What Testing Means for a FundsXML Project</h3>
+
+<p>With the prototype retired and the production code in development, the testing phase (1 May to 31 May 2026) focused on verifying that the production implementation matched the prototype's behaviour at scale and under all the edge cases the prototype had not seen. The testing phase had three layers.</p>
+
+<p><strong>Layer 1 — Unit tests</strong> of each transformation step. Each mapping rule from §13.3 became a unit test: given a known source row, the transformation must produce a known target value. Europa's unit-test suite grew to roughly 400 tests by the end of the month, each independently runnable, each taking milliseconds, each giving a clean pass/fail that told the developer immediately when a change had broken a rule.</p>
+
+<p><strong>Layer 2 — Integration tests</strong> that run the whole pipeline end-to-end against a fixture dataset. The fixture was a snapshot of the source databases from 31 March 2026 (the valuation date the prototype had used), with deliberate modifications to exercise edge cases: missing optional fields, a share class with no portfolio positions (a theoretical case that should not happen but might), a late-arriving CORRECTION that replaces an earlier delivery, a day with no subscriptions or redemptions, a day with a single very large subscription. The integration-test suite ran roughly a dozen scenarios, each producing a FundsXML file, each validated against XSD and Schematron, each compared against a golden-output fixture.</p>
+
+<p><strong>Layer 3 — Acceptance tests with the pilot consumers.</strong> Real FundsXML files produced from real source data, sent through real delivery channels, consumed by real consumer systems. BNP, Comdirect, and two further distributors were involved in this layer. The acceptance tests ran three deliveries: a normal month-end file, a correction of a deliberately wrong earlier file, and a delete of a file that should never have been sent. All three exercised the full producer-consumer handshake and exposed any remaining issues.</p>
+
+<h3>13.5.2 The Test Fixtures</h3>
+
+<p>A good fixture is the foundation of effective testing. Europa's fixtures came from three sources:</p>
+
+<ul>
+  <li><strong>Real historical data.</strong> Four months of source-database snapshots (December 2025 through March 2026) were archived in a dedicated fixture repository and used as input to the integration tests. Real data is the best test data because it exercises the quirks and edge cases the team cannot anticipate.</li>
+  <li><strong>Synthetic edge cases.</strong> For scenarios that real data did not cover — a SPLIT corporate action, a share class with zero shares outstanding, a day with a negative net flow — the team hand-crafted fixtures by taking a real snapshot and modifying specific fields. Synthetic fixtures are the right tool for exercising error paths and edge cases that rarely occur in production.</li>
+  <li><strong>Generated samples.</strong> For structural tests that needed complete schema coverage (every optional element populated at least once), the team used the FundsXML Generator from Chapter 11 to produce comprehensive fixtures. Generated fixtures are the right tool for structural completeness but the wrong tool for business-logic correctness, because the generated values are plausible but not semantically meaningful.</li>
+</ul>
+
+<p>Europa's fixture repository held roughly seventy distinct fixtures by the end of the testing phase, organised into categories (normal, edge-case, error-case, regression). Each fixture had a short README describing its intent, so that a new engineer encountering the repository six months later could understand what each one was for.</p>
+
+<h3>13.5.3 The Bugs Found in Testing</h3>
+
+<p>Testing found twenty-two bugs that the prototype had missed, most of them small. Four are worth describing because they illustrate typical categories:</p>
+
+<p><strong>Bug 1 — Integer overflow on a share count.</strong> A test fixture with 2.1 billion shares outstanding (deliberately set higher than the PMS's normal maximum) overflowed a 32-bit signed integer in the transformation layer. The fix was to use a 64-bit type for the share-count field. The bug had been dormant in the prototype because no real data had ever approached the overflow threshold; the fixture was specifically designed to exercise it.</p>
+
+<p><strong>Bug 2 — Missing <code>RelatedDocumentIDs</code> on a generated AMEND.</strong> The pipeline produced an AMEND delivery in the correction-test scenario, but forgot to populate the <code>RelatedDocumentIDs</code> element pointing at the original delivery. The Schematron rule from Chapter 10 caught it on the next validation run. The fix was to add the back-pointer to the producer's generation logic; the test case was retained as a permanent regression fixture.</p>
+
+<p><strong>Bug 3 — Locale-dependent number formatting.</strong> The production pipeline, deployed on a Linux container configured for the German locale, emitted decimal numbers with commas as the decimal separator (<code>124,5078</code>) instead of the English ISO-standard period (<code>124.5078</code>). The bug manifested only in production configuration, not in the unit tests, which ran under the default English locale. The fix was to force the JVM locale to <code>en-GB</code> (the British English locale that uses period-as-decimal and is the closest to "ISO English" for number formatting purposes) at startup. This kind of locale dependency is a classic production-only bug.</p>
+
+<p><strong>Bug 4 — File-not-found on a concurrent run.</strong> A test scenario that triggered two pipeline invocations simultaneously revealed that both invocations were writing to the same temporary file, and one of them was corrupting the other's output. The fix was to add a per-invocation UUID to the temporary file names. The bug was uncovered by a chaos-test that deliberately triggered overlap; in production, the scheduler would normally prevent overlap, but the defensive fix removed the risk entirely.</p>
+
+<h3>13.5.4 Test-Driven Scope Control</h3>
+
+<p>An important operational discipline during testing: when a bug was found, the team first wrote a <strong>failing test fixture</strong> that reproduced the bug, then fixed the code, then verified that the test passed. The fixture was retained permanently in the regression suite. This discipline had two benefits: every bug became a permanent test case that would catch the same bug if it recurred, and the fixture repository grew organically to cover the real edge cases that mattered. By the end of testing, the fixture repository was the institutional knowledge of "things that have gone wrong with this pipeline", and it remained the most valuable testing asset through the project's go-live and into operations.</p>
+
+<hr>
+
+<h2>13.6 Phase 5: Acceptance and Go-Live</h2>
+
+<h3>13.6.1 Formal Acceptance</h3>
+
+<p>User acceptance testing (UAT) ran from 1 June to 28 June 2026, with stakeholders from Operations, Fund Administration, Compliance, and the six pilot distributors participating. The UAT process was straightforward: the pipeline produced a set of deliveries, each stakeholder reviewed the output relevant to their role, and each stakeholder signed off that the output met their expectations. Failures during UAT went back to the development team for fixing and re-testing.</p>
+
+<p>Three UAT sign-offs mattered most.</p>
+
+<p><strong>Operations sign-off</strong> confirmed that the pipeline could be operated by the existing Fund Operations IT team after go-live — that the runbook was clear, the monitoring dashboards were understandable, the alerting thresholds were appropriate, and the runbook actions for each likely failure mode were achievable by on-call staff without needing to escalate to the development team. Operations signed off on 18 June after two rounds of runbook revisions.</p>
+
+<p><strong>Compliance sign-off</strong> confirmed that the regulatory modules (EMT, EPT, EET, TPT) were populated correctly and that the audit trail was sufficient to defend the delivery chain in a regulatory inspection. Compliance signed off on 22 June.</p>
+
+<p><strong>Distributor sign-off</strong> was the most operationally important. Each of the six pilot distributors received two deliveries during UAT and confirmed that their own ingestion pipeline processed them correctly, that the resulting downstream fact sheets and regulatory documents were correct, and that they were ready to receive production deliveries. Five of the six signed off by 24 June; the sixth (one of the smaller distributors) requested a follow-up adjustment to the <code>DocumentURL</code> scheme in the Documents section and signed off on 27 June, one day before the UAT deadline.</p>
+
+<h3>13.6.2 Go-Live Strategy — Parallel Run</h3>
+
+<p>The go-live strategy was <strong>parallel run</strong>: for the month of July 2026, both the legacy CSV pipeline and the new FundsXML pipeline would emit deliveries for the same valuation dates. Each distributor would process whichever format their own systems preferred. Europa's operations team would compare the two outputs daily and investigate any discrepancies. This approach was slower and more expensive than a hard cutover, but it guaranteed that the legacy pipeline was still available as a safety net if the new pipeline failed.</p>
+
+<p>The first parallel-run delivery was emitted on 1 July 2026 at 06:47 UTC for the 30 June 2026 valuation point — the first production FundsXML delivery in Europa Asset Management's history. Both pipelines produced their outputs, both passed their respective validations, and both reached all six distributors within the operational window. Five distributors confirmed successful ingestion of the FundsXML version by 09:00 UTC; the sixth confirmed by 11:30 after a brief issue with its SFTP configuration. Day 1 was a success.</p>
+
+<h3>13.6.3 The First Month in Production</h3>
+
+<p>The first month of parallel run surfaced three operational issues. None were severe enough to trigger a rollback, but each required a follow-up.</p>
+
+<ul>
+  <li><strong>An SFTP timeout on day 3.</strong> One of the distributors' SFTP drop-boxes experienced a brief outage, and the pipeline's retry logic was more conservative than the distributor's recovery time. The pipeline had already failed the delivery and alerted when the distributor recovered. Operations re-emitted the delivery manually. The fix was to extend the retry timeout; rolled out on day 6.</li>
+  <li><strong>A locale issue on day 8.</strong> The locale bug from §13.5.3 reappeared in a slightly different form — the German locale configuration had been set correctly on the production server, but one of the regulatory modules was using a separate formatting library that picked up the system locale independently. The fix was to force the locale on that library explicitly. Rolled out on day 9.</li>
+  <li><strong>A performance issue on day 17.</strong> The month-end delivery took 45 minutes to produce, when the pipeline's design target had been 20 minutes. Investigation found that a database query against the portfolio table was doing a full table scan instead of using an index that the test environment had had but the production database did not. The fix was to add the missing index. Rolled out on day 18.</li>
+</ul>
+
+<p>By the end of July, all three issues were fixed, the parallel run had completed successfully for every daily and month-end delivery, and the decommissioning of the legacy CSV pipeline could be scheduled for 31 August 2026. Europa Asset Management had successfully transitioned to FundsXML as its authoritative fund-data format.</p>
+
+<hr>
+
+<h2>13.7 Phase 6: Operations and Maintenance</h2>
+
+<h3>13.7.1 The Day After Go-Live</h3>
+
+<p>Go-live is the end of the project, but it is the beginning of the operation. The project team that built the pipeline typically disbands within a few weeks of successful go-live, and the system passes into the care of a permanent operations team that is — by definition — less familiar with the code than the builders were. The transition from "project" to "operations" is one of the riskiest moments in a FundsXML implementation, because institutional knowledge evaporates quickly if it is not captured deliberately.</p>
+
+<p>Europa's transition plan had four elements.</p>
+
+<p><strong>A runbook</strong> documenting every production procedure: how to start and stop the pipeline, how to re-emit a failed delivery, how to investigate a validation failure, how to rotate credentials, how to roll back to the legacy pipeline in an emergency. The runbook was written during the testing phase (not after go-live, when the team would have less patience for it) and was the primary hand-off artefact to operations.</p>
+
+<p><strong>A dashboard</strong> showing the health of the pipeline at a glance: last successful delivery, last failed delivery, queue depth, average validation time, per-distributor ingestion-confirmation status. The dashboard was built in the company's existing Grafana instance (no new infrastructure) and was the first thing the on-call engineer looked at every morning.</p>
+
+<p><strong>An alerting policy</strong> defining which conditions trigger a page to on-call staff and which do not. Europa's policy: failed delivery within the emission window pages immediately; failed ingestion confirmation from a distributor pages within 30 minutes; delayed delivery (more than 30 minutes behind schedule) pages within the emission window but not outside it; validation warnings (non-blocking) are logged but do not page.</p>
+
+<p><strong>A knowledge transfer plan</strong> of sessions between the project team and the operations team, held during the last three weeks of the project. The sessions walked through the pipeline's architecture, the fixture repository, the runbook procedures, and the most likely failure modes. The goal was that by the time the project team disbanded, the operations team could handle every Tuesday-morning failure without calling the developers.</p>
+
+<h3>13.7.2 The First Six Months of Operations</h3>
+
+<p>By January 2027 — six months after go-live — Europa's FundsXML pipeline had emitted approximately 180 production deliveries (daily NAVs for the retail classes plus month-end deliveries plus ad-hoc regulatory deliveries) without a single emission that had caused downstream incident at a distributor. The operational metrics were:</p>
+
+<ul>
+  <li><strong>Availability</strong>: 99.8% of scheduled deliveries made it out within the emission window (against a 99.5% target).</li>
+  <li><strong>Validation pass rate</strong>: 100% of emitted deliveries passed both XSD and Schematron validation before emission (no bad delivery reached a distributor).</li>
+  <li><strong>Incident count</strong>: eleven operational incidents, all resolved within the on-call response SLA, none causing regulatory consequences.</li>
+  <li><strong>Schema-upgrade handling</strong>: one — FundsXML 4.2.9 was released by the FundsXML association in November 2026, and Europa's pipeline needed to be updated to match. The upgrade took two developer-weeks and was deployed without incident.</li>
+</ul>
+
+<p>The operations team had absorbed the pipeline as an ordinary part of its workload. The project team had disbanded in late August 2026 with a handful of follow-on tasks (the multi-language text build-out, the umbrella-structure migration, the data-gap backfill) that were scheduled into the normal engineering backlog rather than treated as urgent.</p>
+
+<h3>13.7.3 Schema Upgrades — Continuous Maintenance</h3>
+
+<p>FundsXML releases minor updates two or three times a year, and each release can introduce new fields, deprecate old ones, or tighten validation rules. A producer that ignores these updates will eventually emit files that consumers reject because they are built against an older schema than the consumer expects. Staying current is therefore not optional — it is a continuous maintenance task.</p>
+
+<p>Europa's schema-upgrade process, refined after the 4.2.9 upgrade, has five steps:</p>
+
+<ol>
+  <li><strong>Monitor</strong> the FundsXML release channel (the GitHub releases page, the official mailing list). New releases are typically announced four to six weeks before they become mandatory for consumers that want to use the new features.</li>
+  <li><strong>Review</strong> the changelog. Every minor release has a changelog enumerating the fields added, removed, or changed. Most fields are backwards-compatible additions that do not affect the producer's output; occasionally a release requires the producer to emit a new mandatory field.</li>
+  <li><strong>Update</strong> the pipeline's schema reference (<code>FundsXML4.xsd</code>), update any mapping-table entries affected by the change, and run the test suite against the new schema.</li>
+  <li><strong>Pilot</strong> the new version with one distributor before rolling out to all. A pilot reveals any consumer-side surprises that the test suite does not catch.</li>
+  <li><strong>Roll out</strong> to all distributors, coordinated with the consumer side where possible.</li>
+</ol>
+
+<p>The full cycle takes two to four developer-weeks of work per release, depending on the scope of the changes. A mature producer typically has this workflow documented and practised enough that it becomes an ordinary part of the engineering cadence rather than a disruptive event.</p>
+
+<h3>13.7.4 Producer-Consumer Relationship as an Ongoing Conversation</h3>
+
+<p>One operational lesson from Europa's first six months deserves to be stated explicitly: <strong>the producer-consumer relationship is not a one-time contract signed at go-live; it is an ongoing conversation.</strong></p>
+
+<p>Distributors occasionally request changes to the data they receive — a new field they need for a new regulatory disclosure, a different format for a cost figure, an additional language in the description text. Regulators occasionally update the rules that drive the templates — EMT, EPT, EET, TPT all evolve on their own release cadences. Internal data sources change, not always in ways that are visible from the pipeline's perspective. The producer's operations team has to monitor the conversation, route requests to the right responders, and occasionally push back when a requested change would be disruptive.</p>
+
+<p>Europa's approach, again refined after six months, is to hold a <strong>quarterly review meeting</strong> with each distributor relationship, in which both sides share feedback on the recent deliveries and flag any upcoming needs. The meetings are short (30 minutes per distributor), informal, and structured around three questions: "Is everything working?" / "Is anything about to change on your side?" / "Is anything about to change on our side?" The meetings replace the need for ad-hoc firefighting when a change surprises one side; they catch the surprises early and let both sides plan together.</p>
+
+<hr>
+
+<h2>13.8 The Europa Growth Fund Timeline — A Case-Study Recap</h2>
+
+<p>The project described in this chapter ran from December 2025 to August 2026 — nine months from kickoff to go-live, followed by ongoing operations. The timeline, in summary:</p>
+
+<p><strong>Table 13.2 — The Europa Asset Management FundsXML project timeline</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Phase</th>
+      <th>Dates</th>
+      <th>Duration</th>
+      <th>Key deliverables</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Phase 0</strong> — Trigger and kickoff</td><td>Oct–Dec 2025</td><td>2 months</td><td>Audit finding, distributor notice, project charter</td></tr>
+    <tr><td><strong>Phase 1</strong> — Requirements analysis</td><td>8 Dec 2025 – 31 Jan 2026</td><td>2 months</td><td>Requirements document, stakeholder sign-off</td></tr>
+    <tr><td><strong>Phase 2</strong> — Data mapping</td><td>1 Feb – 28 Feb 2026</td><td>1 month</td><td>Mapping table, data-gap list, quality-issue list</td></tr>
+    <tr><td><strong>Phase 3</strong> — Prototyping and piloting</td><td>1 Mar – 30 Apr 2026</td><td>2 months</td><td>Working prototype, two pilot deliveries accepted</td></tr>
+    <tr><td><strong>Phase 4</strong> — Testing</td><td>1 May – 31 May 2026</td><td>1 month</td><td>Unit/integration/acceptance test suites, regression fixtures</td></tr>
+    <tr><td><strong>Phase 5</strong> — UAT and go-live preparation</td><td>1 Jun – 30 Jun 2026</td><td>1 month</td><td>Stakeholder sign-offs, runbook, dashboards, alerting</td></tr>
+    <tr><td><strong>Phase 6a</strong> — Parallel run</td><td>1 Jul – 31 Jul 2026</td><td>1 month</td><td>First production deliveries, legacy comparison</td></tr>
+    <tr><td><strong>Phase 6b</strong> — Legacy decommission</td><td>31 Aug 2026</td><td>—</td><td>Legacy CSV pipeline retired</td></tr>
+    <tr><td><strong>Phase 6c</strong> — Steady-state operations</td><td>Sep 2026 onwards</td><td>Indefinite</td><td>Ongoing deliveries, schema upgrades, relationship reviews</td></tr>
+  </tbody>
+</table>
+
+<p>Several observations about the timeline are worth making.</p>
+
+<p><strong>Requirements and mapping together consumed three months</strong> — one-third of the project duration. Newcomers to FundsXML implementation projects typically underestimate these phases and overestimate the build phases; the Europa project's distribution of effort is more realistic than the typical newcomer plan.</p>
+
+<p><strong>Prototyping consumed two months</strong> — twice the one month the initial plan had allocated. The team had pre-negotiated an additional slack week per phase, and the prototyping phase consumed all of it plus a week of the testing phase. This is typical: the first phase where code meets data is almost always longer than planned.</p>
+
+<p><strong>Testing consumed the allocated month exactly.</strong> The unit, integration, and acceptance tests all fit into their slots, largely because the prototype had already surfaced the most time-consuming problems.</p>
+
+<p><strong>UAT consumed the allocated month exactly as well</strong>, with one late sign-off from the smallest distributor. The parallel run and the go-live went smoothly, though not without three operational issues in the first month that the team had to address quickly.</p>
+
+<p><strong>The post-go-live schema upgrade happened on schedule</strong> (FundsXML 4.2.9 in November 2026) and cost two developer-weeks — a small but recurring maintenance cost that was comfortably absorbed by the operations team's normal workload.</p>
+
+<p>Nine months from kickoff to production is a realistic timeframe for a first-time FundsXML implementation at a mid-sized asset manager with a clean scope, a cooperative set of distributors, and a pragmatic team. Larger organisations with more internal stakeholders, or messier source data, or more complex distribution relationships, typically take twelve to eighteen months for the same scope. The Europa project was successful partly because the scope was kept tight, the team was cross-functional from day one, and the stakeholders stayed engaged through the full timeline.</p>
+
+<hr>
+
+<h2>13.9 Common Pitfalls</h2>
+
+<ul>
+  <li><strong>Underestimating the mapping phase.</strong> Every newcomer project thinks mapping will take a week; every mature project knows it takes a month. The mapping is where the source data's quirks become visible, and those quirks are the hardest problem the project will face. Plan for a full phase on mapping, not a week.</li>
+  <li><strong>Skipping the prototype.</strong> Building the production pipeline directly, without a throwaway prototype, causes the production code to absorb every early mistake as permanent technical debt. The prototype is cheap; the production code bears the cost of its mistakes for years.</li>
+  <li><strong>Ignoring the pilot consumer.</strong> A pilot delivery to a real consumer surfaces problems that no amount of internal testing can find, because only a real consumer's downstream tools exercise the full integration. Every project should have at least one cooperative pilot consumer engaged from the prototyping phase onwards.</li>
+  <li><strong>Treating go-live as the end.</strong> Projects that celebrate go-live and then disband the team leave the operations team without institutional knowledge and the pipeline without a mechanism for ongoing maintenance. The transition from project to operations is a deliberate phase, not an afterthought.</li>
+  <li><strong>Cutting over hard instead of running in parallel.</strong> A hard cutover gives the project a romantic "all-in, no turning back" feeling, but it leaves no safety net when something goes wrong. A parallel run for at least one month is the professional standard, and the cost (running both pipelines for a few weeks) is much lower than the cost of a rollback from a failed hard cutover.</li>
+  <li><strong>Ignoring schema upgrades.</strong> FundsXML releases minor updates several times a year, and each one needs to be absorbed by the pipeline. A producer that lets the schema drift will eventually emit files that consumers reject; the maintenance cost is permanent but small if treated as part of the engineering cadence.</li>
+  <li><strong>Letting the producer-consumer relationship go stale.</strong> The relationship is an ongoing conversation, not a one-time contract. Regular check-ins (quarterly, even informally) prevent ad-hoc firefighting when one side's needs change.</li>
+  <li><strong>Building the pipeline without involving Compliance.</strong> Compliance sign-off is not optional, and late Compliance engagement typically surfaces regulatory gaps that force painful rework. Engage Compliance from the requirements phase onwards, and keep them involved through every gate.</li>
+</ul>
+
+<hr>
+
+<h2>13.10 Key Takeaways</h2>
+
+<ul>
+  <li>A FundsXML implementation project at a mid-sized asset manager typically runs <strong>nine to twelve months</strong> from kickoff to first production delivery, through six distinct phases: requirements, mapping, prototyping, testing, acceptance and go-live, and operations.</li>
+  <li><strong>Phase 1 (requirements)</strong> produces a tight scope document naming the funds, share classes, regulatory modules, delivery channels, and — explicitly — the things the project will <em>not</em> do. The out-of-scope list is as important as the in-scope list.</li>
+  <li><strong>Phase 2 (mapping)</strong> is the hardest phase. It produces a mapping table with one row per FundsXML field, naming the source system, source column, transformation, and default for each. The mapping exercise surfaces data gaps and data-quality issues that the project must address before production.</li>
+  <li><strong>Phase 3 (prototyping)</strong> builds a throwaway implementation in a fast language (Python, typically) to discover the problems that only become visible when code meets data. A pilot delivery to a cooperative real consumer at the end of the prototype phase surfaces further integration problems that internal testing alone cannot find.</li>
+  <li><strong>Phase 4 (testing)</strong> has three layers — unit tests per mapping rule, integration tests end-to-end against fixtures, acceptance tests with real consumers. Every bug found becomes a permanent regression fixture, and the fixture repository is the institutional knowledge of the pipeline's edge cases.</li>
+  <li><strong>Phase 5 (UAT and go-live)</strong> collects formal sign-offs from Operations, Compliance, and each pilot distributor, then runs the new pipeline in parallel with the legacy pipeline for at least a month before the legacy is decommissioned. Parallel run is the professional standard; hard cutover is a gamble.</li>
+  <li><strong>Phase 6 (operations)</strong> begins at go-live and continues indefinitely. It requires a runbook, a dashboard, an alerting policy, and deliberate knowledge transfer from the project team to the operations team. Schema upgrades are a recurring maintenance task (two to four developer-weeks per FundsXML minor release), and the producer-consumer relationship is an ongoing conversation that deserves regular check-ins.</li>
+  <li>The Europa Asset Management project that forms this chapter's narrative ran from December 2025 to August 2026 and is a realistic template for a first-time implementation at a mid-sized asset manager. It succeeded because the scope stayed tight, the team was cross-functional, and the stakeholders stayed engaged through the full timeline.</li>
+</ul>
+
+<p>Chapter 14 looks forward from this operational baseline to where FundsXML is headed — the current development directions of the standard, its role in an API-driven world, the influence of AI and automation, and the ways readers can contribute to the community that shapes the schema.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter12.html">&lsaquo; Chapter 12</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter14.html">Chapter 14 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+name: Build and deploy book
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Allow the deploy job to publish to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two Pages deployments at once.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Verify HTML is in sync with polish_styles.py
+        # Fails the PR if a contributor changed content but did not run the
+        # build, so committed HTML drifts from the canonical CSS / nav.
+        run: |
+          python3 polish_styles.py --check
+          python3 polish_styles.py
+          if ! git diff --quiet -- '*.html'; then
+            echo "::error::HTML out of sync. Run 'python3 polish_styles.py && bash build_complete.sh' and commit the result."
+            git --no-pager diff --stat -- '*.html'
+            exit 1
+          fi
+
+      - name: Build complete HTML, landing page and PDF
+        run: bash build_complete.sh
+
+      - name: Assemble site directory
+        run: |
+          mkdir -p _site
+          cp index.html \
+             FundsXML_Book_Complete.html \
+             FundsXML_Book.pdf \
+             FundsXML-Logo.png \
+             FundsXML_Book_TableOfContents.html \
+             TitlePage.html \
+             ManagementSummary.html \
+             Index.html \
+             _site/
+          cp Chapter*.html Appendix*.html _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

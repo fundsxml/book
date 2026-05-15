@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Appendix C — FundsXML Schema Overview</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="AppendixB.html">&lsaquo; Appendix B</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="AppendixD.html">Appendix D &rsaquo;</a></nav>
+
+<div class="chapter-meta">Part IV — Outlook and Reference · Appendix C</div>
+<h1>FundsXML Schema Overview<span class="subtitle">Structured reference for elements, types, and enumerations</span></h1>
+
+<hr>
+
+<p>This appendix is a structured reference to the FundsXML 4.2 schema (version 4.2.8 as of the time of writing). Chapters 4 through 8 introduced the same material narratively and with deliberate pedagogical simplifications; this appendix gives the authoritative structural view. Where the narrative chapters presented simplified element names or paths for teaching purposes, the tables below give the real schema names, types, cardinalities, and enumeration values.</p>
+
+<p><strong>Scope.</strong> The schema defines well over six hundred complex types. Most of those exist to model edge cases — specific corporate actions, niche asset classes, country-specific disclosures — and are rarely touched by a typical producer pipeline. This appendix covers the <strong>curated subset</strong> that every producer and consumer implementation encounters: the top-level structure, the ControlData envelope, the core Fund and FundStaticData/FundDynamicData blocks, the Portfolio and Position model, the Transactions model, the RegulatoryReportings block, the common reusable types, and the extension mechanisms. A full schema browser (the FreeXmlToolkit XSD view from Chapter 11, or an online schema viewer) should be consulted for anything beyond this subset.</p>
+
+<p><strong>Conventions.</strong></p>
+
+<ul>
+  <li><strong>Cardinality</strong> is given as <code>1..1</code> (required, exactly one), <code>0..1</code> (optional), <code>0..n</code> (any number including zero), or <code>1..n</code> (at least one).</li>
+  <li><strong>Type</strong> is the schema type name where the element references a named type; simple built-in types (<code>xs:date</code>, <code>xs:decimal</code>, <code>xs:boolean</code>, <code>xs:dateTime</code>, <code>xs:string</code>, etc.) are shown with the <code>xs:</code> prefix.</li>
+  <li><strong>⚑</strong> marks enumerated values. For short enumerations the full list is shown inline; for longer ones the list is given in §C.7.</li>
+  <li><strong>⊕</strong> marks extension points (places where <code><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData/CustomAttributes" target="_blank">CustomAttributes</a></code> or <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/CountrySpecificData" target="_blank"><code>CountrySpecificData</code></a> may be used).</li>
+  <li>All element and type names are <strong>case-sensitive</strong> exactly as written. FundsXML does not use a target namespace, so the names below appear unprefixed in instance documents.</li>
+</ul>
+
+<hr>
+
+<h2>C.1 Top-Level Structure</h2>
+
+<p>The root element is <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4" target="_blank"><code>FundsXML4</code></a>. Its children form the main content blocks of the document. <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank"><code>ControlData</code></a> is mandatory; everything else is optional, and a valid document may contain only <code>ControlData</code> together with one or more of the optional blocks appropriate to the delivery's purpose.</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>ControlData</code></td><td><code>ControlDataType</code></td><td>1..1</td><td>Envelope metadata — document ID, date, supplier, operation. See §C.2.</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds" target="_blank"><code>Funds</code></a></td><td>(inline complex)</td><td>0..1</td><td>Container for <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund" target="_blank"><code>Fund</code></a> elements. See §C.3.</td></tr>
+    <tr><td><code>AssetMgmtCompanyDynData</code></td><td><code>AssetMgmtCompanyDynDataType</code></td><td>0..1</td><td>Dynamic data of asset management companies (sales, AuM, statistics).</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank"><code>AssetMasterData</code></a></td><td><code>AssetMasterDataType</code></td><td>0..1</td><td>Reference data for instruments referenced by portfolio positions. See §C.4.4.</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Documents" target="_blank"><code>Documents</code></a></td><td><code>DocumentsType</code></td><td>0..1</td><td>References to fund-related documents (KID, prospectus, annual report). See §C.7.5.</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank"><code>RegulatoryReportings</code></a></td><td><code>RegulatoryReportingsType</code></td><td>0..1</td><td>FinDatEx templates (EMT, EPT, EET, EFT, TPT). See §C.6.</td></tr>
+    <tr><td><code>CountrySpecificData</code></td><td><code>CountrySpecificDataType</code></td><td>0..1</td><td>Country-specific extensions at the document level. ⊕</td></tr>
+    <tr><td><code>ds:Signature</code></td><td>XMLDSig</td><td>0..1</td><td>Enveloped XML Digital Signature. See Chapter 9.</td></tr>
+  </tbody>
+</table>
+
+<p>Note one detail that is occasionally surprising: <code>RegulatoryReportings</code> lives at the <strong>document root</strong>, not inside each <code>Fund</code>. A delivery that covers multiple funds with regulatory reporting data places the reporting block once at the top level, with internal references tying each report to the relevant fund.</p>
+
+<hr>
+
+<h2>C.2 ControlData Block</h2>
+
+<p><code>ControlData</code> is the envelope metadata of every FundsXML delivery. Every consumer inspects <code>ControlData</code> first to decide how to handle the incoming document: who sent it, when it was generated, what operation it represents, and which earlier delivery (if any) it relates to.</p>
+
+<h3>C.2.1 Direct Children of ControlData</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/UniqueDocumentID" target="_blank"><code>UniqueDocumentID</code></a></td><td><code>Text128Type</code></td><td>1..1</td><td>Document identifier, unique per data supplier.</td></tr>
+    <tr><td><code>DocumentGenerated</code></td><td><code>xs:dateTime</code></td><td>1..1</td><td>Timestamp at which the document was created.</td></tr>
+    <tr><td><code>Version</code></td><td>(enum)</td><td>0..1</td><td>Schema version: <code>4.0.0</code> through <code>4.2.8</code>. ⚑</td></tr>
+    <tr><td><code>ContentDate</code></td><td><code>xs:date</code></td><td>1..1</td><td>Main valuation date for the delivery.</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/DataSupplier" target="_blank"><code>DataSupplier</code></a></td><td><code>DataSupplierType</code></td><td>1..1</td><td>Organisation that produced the document. See §C.2.2.</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/DataOperation" target="_blank"><code>DataOperation</code></a></td><td>(enum)</td><td>0..1</td><td><code>INITIAL</code>, <code>AMEND</code>, or <code>DELETE</code>. ⚑</td></tr>
+    <tr><td><code>RelatedDocumentIDs</code></td><td>(inline)</td><td>0..1</td><td>Back-references to related deliveries. Required for <code>DELETE</code>.</td></tr>
+    <tr><td><code>Language</code></td><td><code>xs:language</code></td><td>0..1</td><td>Default language for text content.</td></tr>
+    <tr><td><code>ModuleUsage</code></td><td>(inline)</td><td>0..1</td><td>List of schema modules used. See §C.2.3.</td></tr>
+    <tr><td><code>CountrySpecificData</code></td><td>(inline)</td><td>0..1</td><td>Country-specific ControlData sections. ⊕</td></tr>
+    <tr><td><code>CustomAttributes</code></td><td><code>AttributesType</code></td><td>0..1</td><td>Producer-specific extension data. ⊕</td></tr>
+  </tbody>
+</table>
+
+<h3>C.2.2 DataSupplierType</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>SystemCountry</code></td><td><code>ISOCountryCodeType</code></td><td>1..1</td><td>Two-character ISO country code.</td></tr>
+    <tr><td><code>Short</code></td><td><code>Text64Type</code></td><td>1..1</td><td>Short code of supplier (unique per country).</td></tr>
+    <tr><td><code>Name</code></td><td><code>Text256Type</code></td><td>1..1</td><td>Legal name of data supplier.</td></tr>
+    <tr><td><code>Type</code></td><td><code>Text64Type</code></td><td>1..1</td><td>Type of supplier: <code>IC</code> (investment company), <code>CB</code> (central bank), <code>NB</code> (national bank), <code>Vendor</code>, etc.</td></tr>
+    <tr><td><code>Contact</code></td><td>(inline)</td><td>0..1</td><td>Optional contact block (Name, Phone, Email).</td></tr>
+  </tbody>
+</table>
+
+<p>Note that <code>DataSupplierType</code> does <strong>not</strong> contain an <code>LEI</code> field directly; the supplier is identified by the country-scoped <code>Short</code> code, with the legal name as a human-readable label.</p>
+
+<h3>C.2.3 ModuleUsage Enumeration</h3>
+
+<p><code>ControlData/ModuleUsage/Module/Name</code> allows the producer to declare which schema modules the delivery exercises, so that consumers can skip parsing blocks that are not present. Valid values are:</p>
+
+<p><code>AssetMasterData</code> · <code>AssetMgmtCompDynData</code> · <code>CountrySpecificData_AT</code> · <code>CountrySpecificData_DE</code> · <code>CountrySpecificData_DK</code> · <code>CountrySpecificData_FR</code> · <code>CountrySpecificData_LU</code> · <code>CountrySpecificData_NL</code> · <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank"><code>FundDynamicData</code></a> · <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank"><code>FundStaticData</code></a> · <code>PortfolioData</code> · <code>RegulatoryReporting_EMIR</code> · <code>RegulatoryReporting_EMT</code> · <code>RegulatoryReporting_KIID</code> · <code>RegulatoryReporting_PRIIPS</code> · <code>RegulatoryReporting_SolvencyII</code> · <code>ShareClassData</code> · <code>TransactionData</code></p>
+
+<h3>C.2.4 RelatedDocumentIDs</h3>
+
+<pre><code>RelatedDocumentIDs
+  └── RelatedDocumentID (Text128Type) — 1..n
+</code></pre>
+
+<p>A single <code>RelatedDocumentIDs</code> element contains one or more <code>RelatedDocumentID</code> children, each of which is a <code>UniqueDocumentID</code> from a previous delivery. <code>DELETE</code> operations must specify which delivery is being retracted via this element; <code>AMEND</code> operations may optionally specify which delivery they supersede.</p>
+
+<hr>
+
+<h2>C.3 Fund Block</h2>
+
+<p><code>Funds</code> is a container with exactly one child element: <code>Fund</code>, which appears once per fund described by the delivery.</p>
+
+<pre><code>Funds
+  └── Fund (FundType) — 1..n
+</code></pre>
+
+<h3>C.3.1 FundType — Direct Children</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>Identifiers</code></td><td><code>IdentifiersType</code></td><td>1..1</td><td>Fund identifiers (LEI, ISIN, etc.). See §C.7.2.</td></tr>
+    <tr><td><code>Names</code></td><td><code>NamesType</code></td><td>1..1</td><td>Fund names. See §C.3.2.</td></tr>
+    <tr><td><code>Currency</code></td><td><code>ISOCurrencyCodeType</code></td><td>1..1</td><td>Base currency (ISO 4217).</td></tr>
+    <tr><td><code>SingleFundFlag</code></td><td><code>xs:boolean</code></td><td>1..1</td><td><code>true</code> for standalone funds, <code>false</code> for umbrella structures.</td></tr>
+    <tr><td><code>DataSupplier</code></td><td><code>DataSupplierType</code></td><td>0..1</td><td>Fund-level supplier, if different from ControlData.</td></tr>
+    <tr><td><code>FundStaticData</code></td><td><code>FundStaticDataType</code></td><td>0..1</td><td>Rarely-changing fund metadata. See §C.3.3.</td></tr>
+    <tr><td><code>FundDynamicData</code></td><td><code>FundDynamicDataType</code></td><td>0..1</td><td>Valuation-date data. See §C.3.4.</td></tr>
+    <tr><td><code>SingleFund</code> <em>or</em> <code>Subfunds</code></td><td>(choice)</td><td>0..1</td><td>Choice between <code>SingleFundType</code> (standalone) and a <code>Subfunds</code> container holding one or more <code>SubfundType</code>.</td></tr>
+    <tr><td><code>CountrySpecificData</code></td><td><code>CountrySpecificFundDataType</code></td><td>0..1</td><td>Country-specific fund extensions. ⊕</td></tr>
+  </tbody>
+</table>
+
+<p>The <code>SingleFund</code> / <code>Subfunds</code> choice reflects the umbrella-structure distinction: a standalone fund uses <code>SingleFund</code> (which holds <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses" target="_blank"><code>ShareClasses</code></a> and optional <code>Segments</code>); an umbrella fund uses <code>Subfunds</code> (which holds one or more <code>Subfund</code> elements, each with its own share classes and segments).</p>
+
+<h3>C.3.2 NamesType</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>OfficialName</code></td><td><code>Text500Type</code></td><td>1..1</td><td>Legal official name.</td></tr>
+    <tr><td><code>FullName</code></td><td><code>Text500Type</code></td><td>0..1</td><td>Full name (for sub-funds within an umbrella).</td></tr>
+    <tr><td><code>MarketingName</code></td><td><code>Text500Type</code></td><td>0..1</td><td>Marketing name.</td></tr>
+    <tr><td><code>ShortName</code></td><td><code>Text100Type</code></td><td>0..1</td><td>Short name (≤ 100 characters).</td></tr>
+    <tr><td><code>PreviousName</code></td><td>(inline)</td><td>0..1</td><td>Previous name with effective date range.</td></tr>
+  </tbody>
+</table>
+
+<h3>C.3.3 FundStaticDataType — Major Children</h3>
+
+<p><code>FundStaticData</code> is large (roughly twenty direct children plus nested structures). The elements a typical producer populates are:</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>DomicileCountry</code></td><td><code>ISOCountryCodeType</code></td><td>0..1</td><td>Two-character ISO country code.</td></tr>
+    <tr><td><code>ListedLegalStructure</code> / <code>UnlistedLegalStructure</code></td><td>(choice)</td><td>0..1</td><td>Either an enumerated legal structure or free text. See §C.7.4.</td></tr>
+    <tr><td><code>InceptionDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Date the fund was launched.</td></tr>
+    <tr><td><code>StartOfFiscalYear</code></td><td><code>DayMonthType</code></td><td>0..1</td><td>First day of fiscal year (day/month pair).</td></tr>
+    <tr><td><code>EndOfFiscalYear</code></td><td><code>DayMonthType</code></td><td>0..1</td><td>Last day of fiscal year (day/month pair).</td></tr>
+    <tr><td><code>OpenClosedEnded</code></td><td>(enum)</td><td>0..1</td><td><code>OPEN</code> or <code>CLOSED</code>. ⚑</td></tr>
+    <tr><td><code>MaturityDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Planned end date (for closed-ended funds).</td></tr>
+    <tr><td><code>LiquidationDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Date the fund was closed.</td></tr>
+    <tr><td><code>Administrator</code></td><td><code>CompanyType</code></td><td>0..1</td><td>Fund administrator.</td></tr>
+    <tr><td><code>Auditor</code></td><td><code>CompanyType</code></td><td>0..1</td><td>External auditor.</td></tr>
+    <tr><td><code>Custodian</code></td><td><code>CompanyType</code></td><td>0..1</td><td>Depositary / custodian bank.</td></tr>
+    <tr><td><code>InvestmentCompany</code></td><td><code>CompanyType</code></td><td>0..1</td><td>Asset management company.</td></tr>
+    <tr><td><code>FundTexts</code></td><td>(inline)</td><td>0..1</td><td>Multi-language marketing and descriptive text.</td></tr>
+    <tr><td><code>Classifications</code></td><td><code>ClassificationsType</code></td><td>0..1</td><td>Classification schemes (BVI, SRI, etc.).</td></tr>
+    <tr><td><code>Benchmarks</code></td><td>(inline)</td><td>0..1</td><td>Benchmark static data.</td></tr>
+    <tr><td><code>FundHedgingStrategy</code></td><td><code>HedgingStrategyType</code></td><td>0..1</td><td>Hedging approach.</td></tr>
+    <tr><td><code>OngoingCosts</code></td><td>(inline)</td><td>0..1</td><td>Fee structure (management fee, performance fee, transaction costs).</td></tr>
+    <tr><td><code>SFDRProductType</code></td><td>(enum)</td><td>0..1</td><td><code>0</code>, <code>6</code>, <code>8</code>, or <code>9</code>. ⚑ See §C.7.3.</td></tr>
+    <tr><td><code>CustomAttributes</code></td><td><code>AttributesType</code></td><td>0..1</td><td>Extension data. ⊕</td></tr>
+  </tbody>
+</table>
+
+<h3>C.3.4 FundDynamicDataType</h3>
+
+<p><code>FundDynamicData</code> is surprisingly compact — it has only three direct children, each of which contains the real complexity:</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/TotalAssetValues" target="_blank"><code>TotalAssetValues</code></a></td><td>(inline)</td><td>0..1</td><td>Container for <code>TotalAssetValue</code> elements (one per NAV date / variant).</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios" target="_blank"><code>Portfolios</code></a></td><td>(inline)</td><td>0..1</td><td>Container for <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios/Portfolio" target="_blank"><code>Portfolio</code></a> elements (one per valuation date).</td></tr>
+    <tr><td><code>Benchmarks</code></td><td>(inline)</td><td>0..1</td><td>Container for <code>Benchmark</code> dynamic-data elements.</td></tr>
+  </tbody>
+</table>
+
+<h3>C.3.5 TotalAssetValueType</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>NavDate</code></td><td><code>xs:date</code></td><td>1..1</td><td>Valuation date.</td></tr>
+    <tr><td><code>TotalAssetNature</code></td><td>(enum)</td><td>1..1</td><td><code>OFFICIAL</code>, <code>ESTIMATED</code>, or <code>TECHNICAL</code>. ⚑</td></tr>
+    <tr><td><code>TotalNetAssetValue</code></td><td><code>FundAmountType</code></td><td>0..1</td><td>Total net asset value (TNAV).</td></tr>
+    <tr><td><code>TotalGrossAssetValue</code></td><td><code>FundAmountType</code></td><td>0..1</td><td>Gross asset value (closed-ended and real-estate funds).</td></tr>
+    <tr><td><code>SharesOutstanding</code></td><td><code>xs:decimal</code></td><td>0..1</td><td>Number of shares used for NAV calculation.</td></tr>
+    <tr><td><code>Ratio</code></td><td><code>PercentageType</code></td><td>0..1</td><td>Share-class weight within the fund (sums to 100 %).</td></tr>
+    <tr><td><code>OtherTotalAssetValues</code></td><td>(inline)</td><td>0..1</td><td>Additional variants (swing NAV, hold-to-maturity, etc.).</td></tr>
+  </tbody>
+</table>
+
+<h3>C.3.6 SingleFundType</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>SingleFundStaticData</code></td><td><code>SingleFundStaticDataType</code></td><td>0..1</td><td>Static data specific to the standalone fund structure.</td></tr>
+    <tr><td><code>ShareClasses</code></td><td>(inline)</td><td>0..1</td><td>Container for <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses/ShareClass" target="_blank"><code>ShareClass</code></a> elements.</td></tr>
+    <tr><td><code>Segments</code></td><td>(inline)</td><td>0..1</td><td>Container for <code>Segment</code> elements (for funds internally split by manager).</td></tr>
+  </tbody>
+</table>
+
+<h3>C.3.7 ShareClassType — Major Children</h3>
+
+<p>A share class has its own identifiers, names, currency, and a detailed set of dynamic data. The major children are:</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>Identifiers</code></td><td><code>IdentifiersType</code></td><td>1..1</td><td>Share-class identifiers (ISIN, WKN, etc.).</td></tr>
+    <tr><td><code>Names</code></td><td><code>NamesType</code></td><td>1..1</td><td>Share-class names.</td></tr>
+    <tr><td><code>Currency</code></td><td><code>ISOCurrencyCodeType</code></td><td>1..1</td><td>Share-class currency.</td></tr>
+    <tr><td><code>ShareClassType</code></td><td><code>ShareClassTypeType</code></td><td>0..1</td><td>Share-class type designation (A, B, I, etc.).</td></tr>
+    <tr><td><code>InceptionDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Date the share class was launched.</td></tr>
+    <tr><td><code>LiquidationDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Date the share class was closed.</td></tr>
+    <tr><td><code>StaticData</code></td><td>(inline)</td><td>0..1</td><td>Share-class-specific static details.</td></tr>
+    <tr><td><code>DynamicData</code></td><td>(inline)</td><td>0..1</td><td>NAV, prices, flows, earnings.</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>C.4 Portfolio Block</h2>
+
+<p>The portfolio block lives inside <code>FundDynamicData/Portfolios</code>. Each <code>Portfolio</code> element represents a snapshot of holdings at a specific valuation date.</p>
+
+<h3>C.4.1 PortfolioType</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>NavDate</code></td><td><code>xs:date</code></td><td>1..1</td><td>Valuation date for all data in this portfolio block.</td></tr>
+    <tr><td><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios/Portfolio/Positions" target="_blank"><code>Positions</code></a></td><td><code>PositionsType</code></td><td>0..1</td><td>Holdings (securities, cash, accounts, fees).</td></tr>
+    <tr><td><code>Transactions</code></td><td><code>TransactionsType</code></td><td>0..1</td><td>Transactions within the portfolio. See §C.5.</td></tr>
+    <tr><td><code>Earnings</code></td><td><code>EarningsType</code> (extended)</td><td>0..1</td><td>Earnings data (coupons, dividends, distributions).</td></tr>
+    <tr><td><code>PositionsDecomposed</code></td><td><code>PositionsDecomposedType</code></td><td>0..1</td><td>Look-through positions (underlying holdings of fund-of-fund positions).</td></tr>
+    <tr><td><code>BreakDowns</code></td><td><code>BreakDownsType</code></td><td>0..1</td><td>Aggregated breakdown statistics (by country, sector, currency).</td></tr>
+  </tbody>
+</table>
+
+<h3>C.4.2 PositionType — Major Children</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>UniqueID</code></td><td><code>xs:IDREF</code></td><td>1..1</td><td>Reference to <code>AssetMasterData/Asset/UniqueID</code>.</td></tr>
+    <tr><td><code>Identifiers</code></td><td><code>IdentifiersType</code></td><td>0..1</td><td>Duplicate identifiers for convenience (ISIN, ticker).</td></tr>
+    <tr><td><code>Currency</code></td><td><code>ISOCurrencyCodeType</code></td><td>0..1</td><td>Valuation currency of the position.</td></tr>
+    <tr><td><code>TotalValue</code></td><td><code>FundAmountType</code></td><td>1..1</td><td>Total position value (sum across all positions equals fund TNAV).</td></tr>
+    <tr><td><code>OtherTotalValues</code></td><td>(inline)</td><td>0..1</td><td>Additional valuations (e.g. hold-to-maturity).</td></tr>
+    <tr><td><code>Units</code></td><td><code>xs:decimal</code></td><td>0..1</td><td>Number of units or nominal amount.</td></tr>
+    <tr><td><code>PriceValue</code></td><td><code>AmountType</code></td><td>0..1</td><td>Unit price at valuation.</td></tr>
+    <tr><td><code>PricePercent</code></td><td><code>xs:decimal</code></td><td>0..1</td><td>Price as a percentage of nominal (for bonds).</td></tr>
+    <tr><td><code>AccruedInterest</code></td><td><code>AmountType</code></td><td>0..1</td><td>Accrued interest amount (for interest-bearing instruments).</td></tr>
+    <tr><td><code>Rates</code></td><td>(inline)</td><td>0..1</td><td>FX rates used for currency translation.</td></tr>
+    <tr><td><code>Account</code></td><td><code>AccountType</code></td><td>0..1</td><td>Cash-account details (for account positions).</td></tr>
+    <tr><td><code>Equity</code>, <code>Bond</code>, <code>Warrant</code>, ...</td><td>(inline)</td><td>0..1 each</td><td>Instrument-type-specific position details.</td></tr>
+  </tbody>
+</table>
+
+<h3>C.4.3 Position Instrument Coverage</h3>
+
+<p>A <code>Position</code> element carries instrument-type-specific data in one of several optional sub-elements. The sub-element used depends on the <code>AssetType</code> of the referenced asset in <code>AssetMasterData</code>. The most-used sub-elements are:</p>
+
+<table>
+  <thead><tr><th>Sub-element</th><th>Covers</th></tr></thead>
+  <tbody>
+    <tr><td><code>Equity</code></td><td>Equities, ordinary and preference shares.</td></tr>
+    <tr><td><code>Bond</code></td><td>Government bonds, corporate bonds, convertible bonds (basic fields).</td></tr>
+    <tr><td><code>ConvertibleBond</code></td><td>Convertible bond details (conversion dates, price, ratio).</td></tr>
+    <tr><td><code>Warrant</code></td><td>Warrants.</td></tr>
+    <tr><td><code>Option</code></td><td>Options (calls, puts, American, European).</td></tr>
+    <tr><td><code>Future</code></td><td>Futures contracts.</td></tr>
+    <tr><td><code>FXForward</code></td><td>FX forward contracts.</td></tr>
+    <tr><td><code>Swap</code></td><td>Interest-rate, currency, CDS, and total-return swaps.</td></tr>
+    <tr><td><code>Repo</code></td><td>Repo and reverse-repo contracts.</td></tr>
+    <tr><td><code>FixedTimeDeposit</code></td><td>Term deposits.</td></tr>
+    <tr><td><code>RealEstate</code></td><td>Direct real-estate holdings.</td></tr>
+    <tr><td><code>REIT</code></td><td>Real estate investment trusts.</td></tr>
+    <tr><td><code>Fund</code></td><td>Holdings of other funds (including ETFs).</td></tr>
+    <tr><td><code>PrivateEquity</code></td><td>Private-equity participations.</td></tr>
+    <tr><td><code>Certificate</code></td><td>Certificates and structured products.</td></tr>
+    <tr><td><code>Commodity</code></td><td>Commodity holdings.</td></tr>
+    <tr><td><code>Crypto</code></td><td>Cryptocurrency holdings.</td></tr>
+  </tbody>
+</table>
+
+<h3>C.4.4 AssetMasterData and AssetType</h3>
+
+<p><code>AssetMasterData/Asset</code> is the reference data block. Each asset carries a <code>UniqueID</code> (schema type <code>xs:ID</code>) that position elements reference via <code>xs:IDREF</code>.</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>UniqueID</code></td><td><code>xs:ID</code></td><td>1..1</td><td>Document-unique identifier (target of IDREF from positions).</td></tr>
+    <tr><td><code>Identifiers</code></td><td><code>IdentifiersType</code></td><td>0..1</td><td>ISIN, ticker, etc.</td></tr>
+    <tr><td><code>Currency</code></td><td><code>ISOCurrencyCodeType</code></td><td>1..1</td><td>Nominal currency of the instrument.</td></tr>
+    <tr><td><code>Country</code></td><td><code>ISOCountryCodeType</code></td><td>0..1</td><td>Country of the issuer or instrument.</td></tr>
+    <tr><td><code>Name</code></td><td><code>Text256Type</code></td><td>1..1</td><td>Human-readable name.</td></tr>
+    <tr><td><code>AssetType</code></td><td>(enum)</td><td>1..1</td><td>Two-character asset-type code. See below. ⚑</td></tr>
+    <tr><td><code>AssetDetails</code></td><td><code>AssetDetailsType</code></td><td>0..1</td><td>Type-specific details.</td></tr>
+    <tr><td><code>Ratings</code></td><td>(inline)</td><td>0..1</td><td>Credit ratings.</td></tr>
+    <tr><td><code>CountrySpecificData</code></td><td>(inline)</td><td>0..1</td><td>Country-specific asset extensions. ⊕</td></tr>
+  </tbody>
+</table>
+
+<p>The <code>AssetType</code> enumeration uses two-character codes:</p>
+
+<table>
+  <thead><tr><th>Code</th><th>Meaning</th><th>Code</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>EQ</code></td><td>Equity</td><td><code>AC</code></td><td>Account</td></tr>
+    <tr><td><code>BO</code></td><td>Bond (incl. convertibles)</td><td><code>FE</code></td><td>Fee</td></tr>
+    <tr><td><code>SC</code></td><td>Share Class (fund unit)</td><td><code>RE</code></td><td>Real Estate</td></tr>
+    <tr><td><code>WA</code></td><td>Warrant</td><td><code>RT</code></td><td>REIT</td></tr>
+    <tr><td><code>CE</code></td><td>Certificate</td><td><code>LO</code></td><td>Loan</td></tr>
+    <tr><td><code>OP</code></td><td>Option</td><td><code>RI</code></td><td>Right</td></tr>
+    <tr><td><code>FU</code></td><td>Future</td><td><code>CO</code></td><td>Commodity</td></tr>
+    <tr><td><code>FX</code></td><td>FX-Forward</td><td><code>PE</code></td><td>Private Equity</td></tr>
+    <tr><td><code>SW</code></td><td>Swap</td><td><code>CP</code></td><td>Commercial Paper</td></tr>
+    <tr><td><code>RP</code></td><td>Repo</td><td><code>IX</code></td><td>Index</td></tr>
+    <tr><td><code>FT</code></td><td>Fixed Time Deposit</td><td><code>CR</code></td><td>Crypto</td></tr>
+    <tr><td><code>CM</code></td><td>Call Money</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>C.5 Transactions</h2>
+
+<p><code>Portfolio/Transactions</code> contains a list of <code>Transaction</code> elements. Each transaction has a unique <code>TransactionID</code> (enforced by a schema-level key constraint on the container) and one of five possible kinds.</p>
+
+<h3>C.5.1 TransactionType — Major Children</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>TransactionID</code></td><td><code>Text256Type</code></td><td>1..1</td><td>Unique transaction identifier.</td></tr>
+    <tr><td><code>CancellationFlag</code></td><td><code>xs:boolean</code></td><td>0..1</td><td><code>true</code> if the transaction has been cancelled.</td></tr>
+    <tr><td><code>OriginalTransactionID</code></td><td><code>Text256Type</code></td><td>0..1</td><td>For cancellations, the ID of the original transaction.</td></tr>
+    <tr><td><code>AssetUniqueID</code></td><td><code>xs:IDREF</code></td><td>0..1</td><td>Reference to <code>AssetMasterData/Asset/UniqueID</code>.</td></tr>
+    <tr><td><code>Identifiers</code></td><td><code>IdentifiersType</code></td><td>0..1</td><td>Duplicate identifiers of the instrument.</td></tr>
+    <tr><td><code>Currency</code></td><td><code>ISOCurrencyCodeType</code></td><td>0..1</td><td>Instrument currency.</td></tr>
+    <tr><td><code>TransactionKind</code></td><td>(enum)</td><td>1..1</td><td><code>BUY</code>, <code>SELL</code>, <code>LENDING_BUY</code>, <code>LENDING_SELL</code>, or <code>CORP_ACTION</code>. ⚑</td></tr>
+    <tr><td><code>SettlementCurrency</code></td><td><code>ISOCurrencyCodeType</code></td><td>0..1</td><td>Settlement currency (may differ from instrument currency).</td></tr>
+    <tr><td><code>EntryDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Booking date.</td></tr>
+    <tr><td><code>ValutaDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Value date (effective date).</td></tr>
+    <tr><td><code>ClosingDate</code></td><td><code>xs:date</code></td><td>0..1</td><td>Trade date.</td></tr>
+    <tr><td><code>OrderTimestamp</code></td><td><code>xs:dateTime</code></td><td>0..1</td><td>Exact order time.</td></tr>
+    <tr><td><em>(numerous amount and quantity fields)</em></td><td>&nbsp;</td><td>&nbsp;</td><td>Quantity, price, gross/net values, commissions, taxes, FX rates.</td></tr>
+  </tbody>
+</table>
+
+<p>Note that the <code>TransactionKind</code> enumeration has exactly five values. The narrative in Chapter 7 used pedagogical labels (<code>SUBSCRIPTION</code>, <code>REDEMPTION</code>, etc.) that do not appear in the real schema — investor flows are modelled at the share-class level, not as portfolio transactions. The schema-accurate distinction is: <strong><code>Transaction</code> covers portfolio trading activity; investor flows are captured elsewhere in the share-class dynamic data.</strong></p>
+
+<h3>C.5.2 EarningsType</h3>
+
+<p><code>Portfolio/Earnings</code> carries coupons, dividends, and distributions resulting from portfolio positions. The block is attributed with <code>from</code> and <code>to</code> dates that bound the reporting period. The underlying <code>EarningsType</code> carries per-position earnings entries with amounts, dates, and tax treatment; the structure is too detailed for this overview — consult the schema browser if you need to populate it.</p>
+
+<hr>
+
+<h2>C.6 RegulatoryReportings and FinDatEx Templates</h2>
+
+<p><code>RegulatoryReportings</code> at the document root has exactly two children:</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>DirectReporting</code></td><td><code>DirectReportingType</code></td><td>0..1</td><td>Direct regulatory reporting (EMIR, EMT, EFT, EET, KIIDs).</td></tr>
+    <tr><td><code>IndirectReporting</code></td><td><code>IndirectReportingType</code></td><td>0..1</td><td>Indirect reporting for downstream consumers (TPT, PRIIPS/EPT).</td></tr>
+  </tbody>
+</table>
+
+<p>The terminology reflects the distinction between reports that flow directly to regulators (direct) and reports that flow through distributors or insurance-company intermediaries (indirect).</p>
+
+<h3>C.6.1 DirectReporting Children</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>EMIR</code></td><td><code>EMIRType</code></td><td>0..1</td><td>OTC derivatives reporting per Regulation (EU) 648/2012.</td></tr>
+    <tr><td><code>KIIDs</code></td><td><code>KIIDsType</code></td><td>0..1</td><td>UCITS KIID data (predecessor of PRIIPs KID).</td></tr>
+    <tr><td><code>EMT</code></td><td><code>EMTType</code></td><td>0..1</td><td>EMT v1.0 (2017).</td></tr>
+    <tr><td><code>EMT_V3</code></td><td><code>EMTType_V3</code></td><td>0..1</td><td>EMT v3.0 (2019).</td></tr>
+    <tr><td><code>EMT_V4</code></td><td><code>EMTType_V4</code></td><td>0..1</td><td>EMT v4.0 (2022).</td></tr>
+    <tr><td><code>EMT_V4_1</code></td><td><code>EMTType_V41</code></td><td>0..1</td><td>EMT v4.1 (2023).</td></tr>
+    <tr><td><code>EMT_V4_2</code></td><td><code>EMTType_V42</code></td><td>0..1</td><td>EMT v4.2 (2024).</td></tr>
+    <tr><td><code>EFTs</code></td><td><code>EFTType</code></td><td>0..1</td><td>European Feedback Template v1.0.</td></tr>
+    <tr><td><code>EET1.0</code></td><td><code>EETsType</code></td><td>0..1</td><td>EET v1.0 (2022).</td></tr>
+    <tr><td><code>EET1.1</code></td><td><code>EETsType1.1</code></td><td>0..1</td><td>EET v1.1.</td></tr>
+    <tr><td><code>EET1.1.1</code></td><td><code>EETsType1.1.1</code></td><td>0..1</td><td>EET v1.1.1.</td></tr>
+    <tr><td><code>EET1.1.2</code></td><td><code>EETsType1.1.2</code></td><td>0..1</td><td>EET v1.1.2.</td></tr>
+    <tr><td><code>EET1.1.3</code></td><td><code>EETsType1.1.3</code></td><td>0..1</td><td>EET v1.1.3.</td></tr>
+  </tbody>
+</table>
+
+<p>Each template version is a distinct element with its own type. A producer emits one of the EMT versions and one of the EET versions — typically the most recent — and consumers accept whichever versions their systems support. The multiple versions enable the gradual cross-ecosystem upgrade cycle that Chapter 13 described.</p>
+
+<h3>C.6.2 IndirectReporting Children</h3>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>TripartiteTemplateSolvencyII</code></td><td><code>TripartiteTemplateSolvencyIIType</code></td><td>0..1</td><td>TPT v4 (2018).</td></tr>
+    <tr><td><code>TripartiteTemplateSolvencyII_V5</code></td><td><code>TripartiteTemplateSolvencyIIType_V5</code></td><td>0..1</td><td>TPT v5 (2020).</td></tr>
+    <tr><td><code>TripartiteTemplateSolvencyII_V6</code></td><td><code>TripartiteTemplateSolvencyIIType_V6</code></td><td>0..1</td><td>TPT v6 (2022).</td></tr>
+    <tr><td><code>PRIIPS</code></td><td><code>PRIIPSType</code></td><td>0..1</td><td>EPT v1.0 / v1.1 (PRIIPs template).</td></tr>
+    <tr><td><code>PRIIPS_V20</code></td><td><code>PRIIPSType_V20</code></td><td>0..1</td><td>EPT v2.0 and Comfort-EPT v2.0.</td></tr>
+  </tbody>
+</table>
+
+<p>The PRIIPS element models both the EPT (European PRIIPs Template) used by distributors and the CEPT (Comfort EPT) used for review before publication. Newer EPT versions live in their own elements as they are published.</p>
+
+<h3>C.6.3 Template Coverage</h3>
+
+<p>The internal structure of each FinDatEx template — the specific fields, enumerations, and value ranges — is published by FinDatEx and embedded in FundsXML. Each template has between 60 and 180 individual fields, far too many to enumerate here. Chapter 8 introduced the purpose and high-level structure of each template; for field-level detail, consult the FinDatEx specification for the relevant template version.</p>
+
+<hr>
+
+<h2>C.7 Common Types and Enumerations</h2>
+
+<h3>C.7.1 AmountType and FundAmountType</h3>
+
+<pre><code>AmountType
+  └── Amount (xs:decimal) — 1..n
+       └── @ccy (ISOCurrencyCodeType, required) — the currency code
+</code></pre>
+
+<p><code>AmountType</code> can carry the same amount in multiple currencies (one <code>Amount</code> per currency, distinguished by the <code>ccy</code> attribute). <code>FundAmountType</code> is a variant used within fund- and portfolio-level values where the amount always includes one representation in the fund's base currency.</p>
+
+<h3>C.7.2 IdentifiersType</h3>
+
+<p>The <code>IdentifiersType</code> is used wherever a fund, share class, or instrument is identified. The major children are:</p>
+
+<table>
+  <thead><tr><th>Element</th><th>Type</th><th>Cardinality</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>ISIN</code></td><td><code>ISINType</code></td><td>0..1</td><td>12-character ISIN.</td></tr>
+    <tr><td><code>Bloomberg</code></td><td>(inline)</td><td>0..1</td><td>Bloomberg Ticker, Exchange, Market, Yellow Key.</td></tr>
+    <tr><td><code>Reuters</code></td><td>(inline)</td><td>0..1</td><td>Reuters identifier.</td></tr>
+    <tr><td><code>FIGI</code></td><td><code>Text32Type</code></td><td>0..1</td><td>Financial Instrument Global Identifier.</td></tr>
+    <tr><td><code>CFI</code></td><td><code>Text6Type</code></td><td>0..1</td><td>Classification of Financial Instruments (ISO 10962).</td></tr>
+    <tr><td><code>LEI</code></td><td><code>LEICodeType</code></td><td>0..1</td><td>Legal Entity Identifier (20 characters, ISO 17442).</td></tr>
+    <tr><td><code>WKN</code></td><td><code>Text6Type</code></td><td>0..1</td><td>German Wertpapierkennnummer.</td></tr>
+    <tr><td><code>SEDOL</code></td><td><code>Text7Type</code></td><td>0..1</td><td>UK/Irish Stock Exchange Daily Official List code.</td></tr>
+    <tr><td><code>CUSIP</code></td><td><code>Text9Type</code></td><td>0..1</td><td>North American identifier.</td></tr>
+    <tr><td><code>OtherID</code></td><td>(inline)</td><td>0..n</td><td>Container for proprietary identifiers.</td></tr>
+  </tbody>
+</table>
+
+<p>All identifier fields are optional; at least one is typically populated.</p>
+
+<h3>C.7.3 Core Enumerations</h3>
+
+<p><strong><code>DataOperation</code></strong> (in <code>ControlData/DataOperation</code>):</p>
+
+<table>
+  <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>INITIAL</code></td><td>First-time delivery of new data.</td></tr>
+    <tr><td><code>AMEND</code></td><td>Update or correction to previously delivered data.</td></tr>
+    <tr><td><code>DELETE</code></td><td>Retract a previous delivery. Requires <code>RelatedDocumentIDs</code>.</td></tr>
+  </tbody>
+</table>
+
+<p><strong><code>TotalAssetNature</code></strong> (in <code>TotalAssetValue/TotalAssetNature</code>):</p>
+
+<table>
+  <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>OFFICIAL</code></td><td>Final NAV that investors will transact against.</td></tr>
+    <tr><td><code>ESTIMATED</code></td><td>Preliminary NAV, pending finalisation.</td></tr>
+    <tr><td><code>TECHNICAL</code></td><td>Internal technical value, not for external use.</td></tr>
+  </tbody>
+</table>
+
+<p><strong><code>TransactionKind</code></strong> (in <code>Transaction/TransactionKind</code>):</p>
+
+<table>
+  <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>BUY</code></td><td>Purchase of an asset.</td></tr>
+    <tr><td><code>SELL</code></td><td>Sale of an asset.</td></tr>
+    <tr><td><code>LENDING_BUY</code></td><td>Securities-lending purchase.</td></tr>
+    <tr><td><code>LENDING_SELL</code></td><td>Securities-lending sale.</td></tr>
+    <tr><td><code>CORP_ACTION</code></td><td>Corporate-action-driven position change.</td></tr>
+  </tbody>
+</table>
+
+<p><strong><code>OpenClosedEnded</code></strong> (in <code>FundStaticData/OpenClosedEnded</code>):</p>
+
+<table>
+  <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>OPEN</code></td><td>Open-ended fund (ongoing subscription/redemption).</td></tr>
+    <tr><td><code>CLOSED</code></td><td>Closed-ended fund (fixed capital).</td></tr>
+  </tbody>
+</table>
+
+<p><strong><code>SFDRProductType</code></strong> (in <code>FundStaticData/SFDRProductType</code>):</p>
+
+<table>
+  <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>0</code></td><td>Unclassified or not applicable.</td></tr>
+    <tr><td><code>6</code></td><td>Article 6 product (no sustainability characteristics).</td></tr>
+    <tr><td><code>8</code></td><td>Article 8 product (promotes ESG characteristics).</td></tr>
+    <tr><td><code>9</code></td><td>Article 9 product (has sustainable investment objective).</td></tr>
+  </tbody>
+</table>
+
+<h3>C.7.4 Listed Legal Structure Enumeration</h3>
+
+<p><code>FundStaticData/ListedLegalStructure</code> uses these values:</p>
+
+<p><code>UCITS</code> · <code>UCITS - SICAV</code> · <code>UCITS - SICAF</code> · <code>UCITS - CONTRACTUAL TYPE</code> · <code>AIF</code> · <code>AIF - HEDGE FUND</code> · <code>AIF - PRIVATE EQUITY FUND</code> · <code>AIF - VENTURE CAPITAL FUND</code> · <code>AIF - REAL ESTATE FUND</code> · <code>AIF - REIT</code> · <code>AIF - INFRASTRUCTURE FUND</code> · <code>AIF - COMMODITY FUND</code> · <code>AIF - SOVEREIGN WEALTH FUND</code> · <code>AIF - ELTIF</code> · <code>AIF - EUVECA</code> · <code>AIF - EUSEF</code> · <code>SPV</code></p>
+
+<p>If none of these fits, use <code>UnlistedLegalStructure</code> with free text.</p>
+
+<h3>C.7.5 Documents Block</h3>
+
+<p><code>Documents/Document</code> represents references to (or embedded content of) fund-related documents. The <code>Type/ListedType</code> enumeration is:</p>
+
+<table>
+  <thead><tr><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td><code>AIFMD</code></td></tr>
+    <tr><td><code>AnnualReport</code></td></tr>
+    <tr><td><code>AuditReport</code></td></tr>
+    <tr><td><code>Factsheet</code></td></tr>
+    <tr><td><code>KID</code></td></tr>
+    <tr><td><code>Prospectus</code></td></tr>
+    <tr><td><code>PRIIPS-KID</code></td></tr>
+  </tbody>
+</table>
+
+<p>Other document types are supported via <code>Type/UnlistedType</code> (free text). Documents are typically referenced by URL; inline content is also supported but uncommon.</p>
+
+<h3>C.7.6 Reusable Text Types</h3>
+
+<p>The schema defines several <code>Text…Type</code> simple types that restrict element content by length:</p>
+
+<table>
+  <thead><tr><th>Type</th><th>Max length</th></tr></thead>
+  <tbody>
+    <tr><td><code>Text16Type</code></td><td>16 characters</td></tr>
+    <tr><td><code>Text32Type</code></td><td>32 characters</td></tr>
+    <tr><td><code>Text64Type</code></td><td>64 characters</td></tr>
+    <tr><td><code>Text100Type</code></td><td>100 characters</td></tr>
+    <tr><td><code>Text128Type</code></td><td>128 characters</td></tr>
+    <tr><td><code>Text200Type</code></td><td>200 characters</td></tr>
+    <tr><td><code>Text256Type</code></td><td>256 characters</td></tr>
+    <tr><td><code>Text500Type</code></td><td>500 characters</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>C.8 Extension Points</h2>
+
+<h3>C.8.1 CustomAttributes</h3>
+
+<p>The <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData/CustomAttributes" target="_blank"><code>CustomAttributes</code></a> element uses <code>AttributesType</code>, the standard extension mechanism for producer-specific data that does not fit into any standard element. It is permitted inside <code>ControlData</code>, <code>FundStaticData</code>, and many other places throughout the schema.</p>
+
+<pre><code>CustomAttributes (AttributesType)
+  └── Attribute — 1..n
+        ├── Name (Text256Type) — 1..1
+        ├── Type (enum T/N/D/B) — 1..1
+        └── (choice) — 1..1
+              ├── ValueText (xs:string)
+              ├── ValueNumber (xs:decimal)
+              ├── ValueDate (xs:date)
+              └── ValueBoolean (xs:boolean)
+</code></pre>
+
+<p>The <code>Type</code> indicator and the chosen <code>Value*</code> element must agree: <code>Type="T"</code> pairs with <code>ValueText</code>, <code>Type="N"</code> with <code>ValueNumber</code>, <code>Type="D"</code> with <code>ValueDate</code>, <code>Type="B"</code> with <code>ValueBoolean</code>.</p>
+
+<p>Use <code>CustomAttributes</code> sparingly. The first question before adding one should always be whether a standard element already exists; the second question should be whether the data belongs in the delivery at all. Permanent project conventions for naming the <code>Name</code> field (for example a <code>{producer}.{domain}.{fieldname}</code> scheme) prevent collisions between projects.</p>
+
+<h3>C.8.2 CountrySpecificData</h3>
+
+<p><code>CountrySpecificData</code> appears at several levels of the schema and allows country-specific extensions structured by ISO country code. The main locations are:</p>
+
+<table>
+  <thead><tr><th>Location</th><th>Type</th></tr></thead>
+  <tbody>
+    <tr><td><code>FundsXML4/CountrySpecificData</code></td><td>Root-level country extensions.</td></tr>
+    <tr><td><code>FundsXML4/ControlData/CountrySpecificData</code></td><td>Country-specific ControlData.</td></tr>
+    <tr><td><code>Funds/Fund/CountrySpecificData</code></td><td>Fund-level country extensions.</td></tr>
+    <tr><td><code>AssetMasterData/Asset/CountrySpecificData</code></td><td>Asset-level country extensions.</td></tr>
+  </tbody>
+</table>
+
+<p>Within each of these, the sub-elements are named by ISO country code (<code>AT</code>, <code>DE</code>, <code>DK</code>, <code>FR</code>, <code>LU</code>, <code>NL</code>, and others as they are added). Each country sub-element has its own type that defines what country-specific structure is permitted. Country extensions are typically used for regulatory disclosures specific to one distribution country that do not fit into the FinDatEx templates.</p>
+
+<hr>
+
+<h2>C.9 Schema Version Notes</h2>
+
+<p>This appendix documents FundsXML schema version <strong>4.2.8</strong>, the version current as of the book's writing in early 2026. The 4.2 minor-version series has been stable since 2019 and is backward-compatible within the series: a document valid against 4.2.0 is also valid against 4.2.8 unless it exercises an element that has been deprecated between the two versions. Producers upgrading between minor versions should consult the changelog published by the FundsXML association for the specific release they are moving to.</p>
+
+<p>Earlier major versions (3.x and prior) are no longer maintained; the 4.0 transition was made many years ago and most elements in the book's target population predate the transition. Anticipated 2026 releases (4.2.9 is expected in November 2026, per the ongoing release cadence) are likely to add new fields to EET and EMT as FinDatEx publishes updated templates, but the structural overview presented in this appendix is expected to remain accurate for the foreseeable future.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="AppendixB.html">&lsaquo; Appendix B</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="AppendixD.html">Appendix D &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

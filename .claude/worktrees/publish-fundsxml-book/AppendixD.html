@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Appendix D — Complete Example Files</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="AppendixC.html">&lsaquo; Appendix C</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="AppendixE.html">Appendix E &rsaquo;</a></nav>
+
+<div class="chapter-meta">Part IV &mdash; Outlook and Reference &middot; Appendix D</div>
+<h1>Complete Example Files<span class="subtitle">Complete, schema-valid FundsXML sample files for the Europa Growth Fund</span></h1>
+
+<hr>
+
+<p>This appendix contains four complete FundsXML documents for the fictional Europa Growth Fund, progressing from minimal to production-grade. Every document in this appendix has been <strong>validated against the real <code>FundsXML4.xsd</code> (version 4.2.8)</strong> using <code>xmllint --schema</code> and passes without errors. A reader can copy any of these documents into a file, place it alongside the schema, and reproduce the validation result.</p>
+
+<p>The four documents are:</p>
+
+<ul>
+  <li><strong>D.1 &mdash; Minimal Delivery.</strong> The smallest possible valid FundsXML document: <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank">ControlData</a>, one Fund with identifiers, names, currency, and a single TNAV. Start here to understand the bare structure.</li>
+  <li><strong>D.2 &mdash; Monthly NAV Delivery.</strong> A mid-sized delivery with <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank">FundStaticData</a>, a portfolio containing four positions (two equities, one bond, one cash account), and the matching <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank">AssetMasterData</a> block.</li>
+  <li><strong>D.3 &mdash; Full Production Delivery.</strong> A realistic producer output: extended FundStaticData with Custodian, Administrator, Auditor, OngoingCosts, and SFDRProductType; eight portfolio positions including an FX forward; two transactions; three share classes; two document references; and <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData/CustomAttributes" target="_blank">CustomAttributes</a> in ControlData.</li>
+  <li><strong>D.4 &mdash; AMEND Delivery.</strong> A correction delivery that references D.2 via RelatedDocumentIDs, demonstrating the AMEND data operation with a corrected TNAV.</li>
+</ul>
+
+<p><strong>What is not included.</strong> The <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank">RegulatoryReportings</a> block (EMT, EPT, EET, EFT, TPT) is omitted because each FinDatEx template contains 60&ndash;180 fields that would consume many pages without adding structural insight beyond what Chapter 8 already provides. XML Digital Signatures are omitted because they require real cryptographic keys and cannot be meaningfully reproduced from a book listing. Readers who need RegulatoryReportings or Signature examples should consult the FundsXML association&rsquo;s sample-file repository.</p>
+
+<hr>
+
+<h2>D.1 Minimal Delivery</h2>
+
+<p>The simplest valid FundsXML document: ControlData with all required fields, and a single Fund carrying only identifiers, names, currency, the SingleFundFlag, and one TotalAssetValue. This is the baseline that every more complex delivery builds upon.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+  &lt;ControlData&gt;
+    &lt;UniqueDocumentID&gt;EGF-20260331-001&lt;/UniqueDocumentID&gt;
+    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
+    &lt;Version&gt;4.2.8&lt;/Version&gt;
+    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+    &lt;DataSupplier&gt;
+      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
+      &lt;Short&gt;EAM&lt;/Short&gt;
+      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+      &lt;Type&gt;IC&lt;/Type&gt;
+    &lt;/DataSupplier&gt;
+    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+  &lt;/ControlData&gt;
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;Identifiers&gt;
+        &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+      &lt;/Identifiers&gt;
+      &lt;Names&gt;
+        &lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;
+      &lt;/Names&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy="EUR"&gt;464552848.78&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+      &lt;/FundDynamicData&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+&lt;/FundsXML4&gt;
+</code></pre>
+
+<hr>
+
+<h2>D.2 Monthly NAV Delivery</h2>
+
+<p>A delivery that a typical producer might emit at month-end: ControlData, FundStaticData with domicile, legal structure, inception date, fiscal-year boundaries, custodian, investment company, and SFDR classification; <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank">FundDynamicData</a> with a TotalAssetValue and a portfolio of four positions; and the matching AssetMasterData block. Each position uses the <code>UniqueID</code> / <code>xs:IDREF</code> mechanism to reference its asset in AssetMasterData.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+  &lt;ControlData&gt;
+    &lt;UniqueDocumentID&gt;EGF-20260331-002&lt;/UniqueDocumentID&gt;
+    &lt;DocumentGenerated&gt;2026-04-01T07:15:00Z&lt;/DocumentGenerated&gt;
+    &lt;Version&gt;4.2.8&lt;/Version&gt;
+    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+    &lt;DataSupplier&gt;
+      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
+      &lt;Short&gt;EAM&lt;/Short&gt;
+      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+      &lt;Type&gt;IC&lt;/Type&gt;
+    &lt;/DataSupplier&gt;
+    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+  &lt;/ControlData&gt;
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;Identifiers&gt;
+        &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+      &lt;/Identifiers&gt;
+      &lt;Names&gt;
+        &lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;
+        &lt;ShortName&gt;EGF&lt;/ShortName&gt;
+      &lt;/Names&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+      &lt;FundStaticData&gt;
+        &lt;DomicileCountry&gt;LU&lt;/DomicileCountry&gt;
+        &lt;ListedLegalStructure&gt;UCITS&lt;/ListedLegalStructure&gt;
+        &lt;InceptionDate&gt;2012-06-15&lt;/InceptionDate&gt;
+        &lt;StartOfFiscalYear&gt;
+          &lt;Day&gt;1&lt;/Day&gt;
+          &lt;Month&gt;1&lt;/Month&gt;
+        &lt;/StartOfFiscalYear&gt;
+        &lt;EndOfFiscalYear&gt;
+          &lt;Day&gt;31&lt;/Day&gt;
+          &lt;Month&gt;12&lt;/Month&gt;
+        &lt;/EndOfFiscalYear&gt;
+        &lt;OpenClosedEnded&gt;OPEN&lt;/OpenClosedEnded&gt;
+        &lt;Custodian&gt;
+          &lt;Identifiers&gt;
+            &lt;LEI&gt;RCNB21CWBJ8HYAFVEL56&lt;/LEI&gt;
+          &lt;/Identifiers&gt;
+          &lt;Name&gt;Banque Internationale &agrave; Luxembourg S.A.&lt;/Name&gt;
+        &lt;/Custodian&gt;
+        &lt;InvestmentCompany&gt;
+          &lt;Identifiers&gt;
+            &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+          &lt;/Identifiers&gt;
+          &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+        &lt;/InvestmentCompany&gt;
+        &lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;
+      &lt;/FundStaticData&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy="EUR"&gt;464552848.78&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+        &lt;Portfolios&gt;
+          &lt;Portfolio&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;Positions&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-EQ-001&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;
+                  &lt;ISIN&gt;DE0007164600&lt;/ISIN&gt;
+                &lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;
+                  &lt;Amount ccy="EUR"&gt;52340000.00&lt;/Amount&gt;
+                &lt;/TotalValue&gt;
+                &lt;Equity&gt;
+                  &lt;Units&gt;250000&lt;/Units&gt;
+                  &lt;Price&gt;
+                    &lt;Amount ccy="EUR"&gt;209.36&lt;/Amount&gt;
+                  &lt;/Price&gt;
+                &lt;/Equity&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-BO-001&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;
+                  &lt;ISIN&gt;DE0001102481&lt;/ISIN&gt;
+                &lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;
+                  &lt;Amount ccy="EUR"&gt;30125000.00&lt;/Amount&gt;
+                &lt;/TotalValue&gt;
+                &lt;Bond&gt;
+                  &lt;Nominal&gt;30000000&lt;/Nominal&gt;
+                  &lt;Price&gt;
+                    &lt;Amount ccy="EUR"&gt;100.4167&lt;/Amount&gt;
+                  &lt;/Price&gt;
+                &lt;/Bond&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-AC-001&lt;/UniqueID&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;
+                  &lt;Amount ccy="EUR"&gt;8750000.00&lt;/Amount&gt;
+                &lt;/TotalValue&gt;
+                &lt;Account&gt;
+                  &lt;MarketValue&gt;
+                    &lt;Amount ccy="EUR"&gt;8750000.00&lt;/Amount&gt;
+                  &lt;/MarketValue&gt;
+                &lt;/Account&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-EQ-002&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;
+                  &lt;ISIN&gt;FR0000120271&lt;/ISIN&gt;
+                &lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;
+                  &lt;Amount ccy="EUR"&gt;41875000.00&lt;/Amount&gt;
+                &lt;/TotalValue&gt;
+                &lt;Equity&gt;
+                  &lt;Units&gt;125000&lt;/Units&gt;
+                  &lt;Price&gt;
+                    &lt;Amount ccy="EUR"&gt;335.00&lt;/Amount&gt;
+                  &lt;/Price&gt;
+                &lt;/Equity&gt;
+              &lt;/Position&gt;
+            &lt;/Positions&gt;
+          &lt;/Portfolio&gt;
+        &lt;/Portfolios&gt;
+      &lt;/FundDynamicData&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+  &lt;AssetMasterData&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-EQ-001&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;
+        &lt;ISIN&gt;DE0007164600&lt;/ISIN&gt;
+      &lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;DE&lt;/Country&gt;
+      &lt;Name&gt;SAP SE&lt;/Name&gt;
+      &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-BO-001&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;
+        &lt;ISIN&gt;DE0001102481&lt;/ISIN&gt;
+      &lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;DE&lt;/Country&gt;
+      &lt;Name&gt;Bundesrepublik Deutschland 0.00% 2026-02-15&lt;/Name&gt;
+      &lt;AssetType&gt;BO&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-AC-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;LU&lt;/Country&gt;
+      &lt;Name&gt;BIL Custody Account EUR&lt;/Name&gt;
+      &lt;AssetType&gt;AC&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-EQ-002&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;
+        &lt;ISIN&gt;FR0000120271&lt;/ISIN&gt;
+      &lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;FR&lt;/Country&gt;
+      &lt;Name&gt;TotalEnergies SE&lt;/Name&gt;
+      &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+  &lt;/AssetMasterData&gt;
+&lt;/FundsXML4&gt;
+</code></pre>
+
+<hr>
+
+<h2>D.3 Full Production Delivery</h2>
+
+<p>A realistic monthly production delivery. This document exercises:</p>
+
+<ul>
+  <li><strong>ControlData</strong> with Contact details and two CustomAttributes (delivery sequence number and generator version).</li>
+  <li><strong>FundStaticData</strong> with Administrator, Auditor, Custodian, InvestmentCompany, OngoingCosts (Ongoing Charges and Transaction Costs), and SFDRProductType.</li>
+  <li><strong>FundDynamicData</strong> with a portfolio of eight positions: four equities (including one CHF-denominated position with dual-currency TotalValue), two bonds, one FX forward (CHF/EUR hedge), and one custody account.</li>
+  <li><strong>Transactions</strong> with a BUY and a SELL, each carrying the required NominalOrUnitsOrContracts.</li>
+  <li><strong>SingleFund/<a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses" target="_blank">ShareClasses</a></strong> with three share classes (I-EUR-ACC, R-EUR-DIS, R-CHF-ACC-HEDGED).</li>
+  <li><strong>AssetMasterData</strong> with eight assets matching the portfolio positions (AssetType codes EQ, BO, FX, AC).</li>
+  <li><strong><a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Documents" target="_blank">Documents</a></strong> with a Prospectus reference at fund level and a PRIIPS-KID reference at share-class level.</li>
+</ul>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+  &lt;ControlData&gt;
+    &lt;UniqueDocumentID&gt;EGF-20260331-003&lt;/UniqueDocumentID&gt;
+    &lt;DocumentGenerated&gt;2026-04-01T08:30:00Z&lt;/DocumentGenerated&gt;
+    &lt;Version&gt;4.2.8&lt;/Version&gt;
+    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+    &lt;DataSupplier&gt;
+      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
+      &lt;Short&gt;EAM&lt;/Short&gt;
+      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+      &lt;Type&gt;IC&lt;/Type&gt;
+      &lt;Contact&gt;
+        &lt;Name&gt;Fund Data Operations&lt;/Name&gt;
+        &lt;Email&gt;fundsxml@eam-lu.example.com&lt;/Email&gt;
+      &lt;/Contact&gt;
+    &lt;/DataSupplier&gt;
+    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+    &lt;CustomAttributes&gt;
+      &lt;Attribute&gt;
+        &lt;Name&gt;eam.delivery.sequenceNumber&lt;/Name&gt;
+        &lt;Type&gt;N&lt;/Type&gt;
+        &lt;ValueNumber&gt;42&lt;/ValueNumber&gt;
+      &lt;/Attribute&gt;
+      &lt;Attribute&gt;
+        &lt;Name&gt;eam.delivery.generatorVersion&lt;/Name&gt;
+        &lt;Type&gt;T&lt;/Type&gt;
+        &lt;ValueText&gt;EAM-Pipeline 2.1.0&lt;/ValueText&gt;
+      &lt;/Attribute&gt;
+    &lt;/CustomAttributes&gt;
+  &lt;/ControlData&gt;
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;Identifiers&gt;
+        &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+      &lt;/Identifiers&gt;
+      &lt;Names&gt;
+        &lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;
+        &lt;ShortName&gt;EGF&lt;/ShortName&gt;
+      &lt;/Names&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+      &lt;FundStaticData&gt;
+        &lt;DomicileCountry&gt;LU&lt;/DomicileCountry&gt;
+        &lt;ListedLegalStructure&gt;UCITS&lt;/ListedLegalStructure&gt;
+        &lt;InceptionDate&gt;2012-06-15&lt;/InceptionDate&gt;
+        &lt;StartOfFiscalYear&gt;
+          &lt;Day&gt;1&lt;/Day&gt;
+          &lt;Month&gt;1&lt;/Month&gt;
+        &lt;/StartOfFiscalYear&gt;
+        &lt;EndOfFiscalYear&gt;
+          &lt;Day&gt;31&lt;/Day&gt;
+          &lt;Month&gt;12&lt;/Month&gt;
+        &lt;/EndOfFiscalYear&gt;
+        &lt;OpenClosedEnded&gt;OPEN&lt;/OpenClosedEnded&gt;
+        &lt;Administrator&gt;
+          &lt;Identifiers&gt;
+            &lt;LEI&gt;529900HNOAA1KXQJUQ27&lt;/LEI&gt;
+          &lt;/Identifiers&gt;
+          &lt;Name&gt;European Fund Administration S.A.&lt;/Name&gt;
+        &lt;/Administrator&gt;
+        &lt;Auditor&gt;
+          &lt;Identifiers&gt;
+            &lt;LEI&gt;1RVNBN7QG3CEEKYN6T68&lt;/LEI&gt;
+          &lt;/Identifiers&gt;
+          &lt;Name&gt;PricewaterhouseCoopers Soci&eacute;t&eacute; coop&eacute;rative&lt;/Name&gt;
+        &lt;/Auditor&gt;
+        &lt;Custodian&gt;
+          &lt;Identifiers&gt;
+            &lt;LEI&gt;RCNB21CWBJ8HYAFVEL56&lt;/LEI&gt;
+          &lt;/Identifiers&gt;
+          &lt;Name&gt;Banque Internationale &agrave; Luxembourg S.A.&lt;/Name&gt;
+        &lt;/Custodian&gt;
+        &lt;InvestmentCompany&gt;
+          &lt;Identifiers&gt;
+            &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+          &lt;/Identifiers&gt;
+          &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+        &lt;/InvestmentCompany&gt;
+        &lt;OngoingCosts&gt;
+          &lt;OngoingCost&gt;
+            &lt;CostType&gt;Ongoing Charges&lt;/CostType&gt;
+            &lt;PublicationDate&gt;2025-12-31&lt;/PublicationDate&gt;
+            &lt;Percentage&gt;1.45&lt;/Percentage&gt;
+          &lt;/OngoingCost&gt;
+          &lt;OngoingCost&gt;
+            &lt;CostType&gt;Transaction Costs&lt;/CostType&gt;
+            &lt;PublicationDate&gt;2025-12-31&lt;/PublicationDate&gt;
+            &lt;Percentage&gt;0.12&lt;/Percentage&gt;
+          &lt;/OngoingCost&gt;
+        &lt;/OngoingCosts&gt;
+        &lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;
+      &lt;/FundStaticData&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy="EUR"&gt;464552848.78&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+        &lt;Portfolios&gt;
+          &lt;Portfolio&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;Positions&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-EQ-001&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;DE0007164600&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;52340000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;Equity&gt;
+                  &lt;Units&gt;250000&lt;/Units&gt;
+                  &lt;Price&gt;&lt;Amount ccy="EUR"&gt;209.36&lt;/Amount&gt;&lt;/Price&gt;
+                &lt;/Equity&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-EQ-002&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;FR0000120271&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;41875000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;Equity&gt;
+                  &lt;Units&gt;125000&lt;/Units&gt;
+                  &lt;Price&gt;&lt;Amount ccy="EUR"&gt;335.00&lt;/Amount&gt;&lt;/Price&gt;
+                &lt;/Equity&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-EQ-003&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;NL0010273215&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;89600000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;Equity&gt;
+                  &lt;Units&gt;100000&lt;/Units&gt;
+                  &lt;Price&gt;&lt;Amount ccy="EUR"&gt;896.00&lt;/Amount&gt;&lt;/Price&gt;
+                &lt;/Equity&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-EQ-004&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;CH0012221716&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;CHF&lt;/Currency&gt;
+                &lt;TotalValue&gt;
+                  &lt;Amount ccy="EUR"&gt;74250000.00&lt;/Amount&gt;
+                  &lt;Amount ccy="CHF"&gt;71280000.00&lt;/Amount&gt;
+                &lt;/TotalValue&gt;
+                &lt;Equity&gt;
+                  &lt;Units&gt;300000&lt;/Units&gt;
+                  &lt;Price&gt;&lt;Amount ccy="CHF"&gt;237.60&lt;/Amount&gt;&lt;/Price&gt;
+                &lt;/Equity&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-BO-001&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;DE0001102481&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;30125000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;Bond&gt;
+                  &lt;Nominal&gt;30000000&lt;/Nominal&gt;
+                  &lt;Price&gt;&lt;Amount ccy="EUR"&gt;100.4167&lt;/Amount&gt;&lt;/Price&gt;
+                &lt;/Bond&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-BO-002&lt;/UniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;FR0014007L00&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;50312848.78&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;Bond&gt;
+                  &lt;Nominal&gt;50000000&lt;/Nominal&gt;
+                  &lt;Price&gt;&lt;Amount ccy="EUR"&gt;100.6257&lt;/Amount&gt;&lt;/Price&gt;
+                &lt;/Bond&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-FX-001&lt;/UniqueID&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;-125000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;FXForward&gt;
+                  &lt;FxRateForEvaluation&gt;1.0416&lt;/FxRateForEvaluation&gt;
+                &lt;/FXForward&gt;
+              &lt;/Position&gt;
+              &lt;Position&gt;
+                &lt;UniqueID&gt;ASSET-AC-001&lt;/UniqueID&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TotalValue&gt;&lt;Amount ccy="EUR"&gt;126175000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
+                &lt;Account&gt;
+                  &lt;MarketValue&gt;
+                    &lt;Amount ccy="EUR"&gt;126175000.00&lt;/Amount&gt;
+                  &lt;/MarketValue&gt;
+                &lt;/Account&gt;
+              &lt;/Position&gt;
+            &lt;/Positions&gt;
+            &lt;Transactions&gt;
+              &lt;Transaction&gt;
+                &lt;TransactionID&gt;TXN-20260328-001&lt;/TransactionID&gt;
+                &lt;AssetUniqueID&gt;ASSET-EQ-003&lt;/AssetUniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;NL0010273215&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TransactionKind&gt;BUY&lt;/TransactionKind&gt;
+                &lt;ClosingDate&gt;2026-03-28&lt;/ClosingDate&gt;
+                &lt;NominalOrUnitsOrContracts&gt;10000&lt;/NominalOrUnitsOrContracts&gt;
+              &lt;/Transaction&gt;
+              &lt;Transaction&gt;
+                &lt;TransactionID&gt;TXN-20260330-001&lt;/TransactionID&gt;
+                &lt;AssetUniqueID&gt;ASSET-EQ-001&lt;/AssetUniqueID&gt;
+                &lt;Identifiers&gt;&lt;ISIN&gt;DE0007164600&lt;/ISIN&gt;&lt;/Identifiers&gt;
+                &lt;Currency&gt;EUR&lt;/Currency&gt;
+                &lt;TransactionKind&gt;SELL&lt;/TransactionKind&gt;
+                &lt;ClosingDate&gt;2026-03-30&lt;/ClosingDate&gt;
+                &lt;NominalOrUnitsOrContracts&gt;5000&lt;/NominalOrUnitsOrContracts&gt;
+              &lt;/Transaction&gt;
+            &lt;/Transactions&gt;
+          &lt;/Portfolio&gt;
+        &lt;/Portfolios&gt;
+      &lt;/FundDynamicData&gt;
+      &lt;SingleFund&gt;
+        &lt;ShareClasses&gt;
+          &lt;ShareClass&gt;
+            &lt;Identifiers&gt;&lt;ISIN&gt;LU1234567890&lt;/ISIN&gt;&lt;/Identifiers&gt;
+            &lt;Names&gt;
+              &lt;OfficialName&gt;Europa Growth Fund I EUR Acc&lt;/OfficialName&gt;
+            &lt;/Names&gt;
+            &lt;Currency&gt;EUR&lt;/Currency&gt;
+          &lt;/ShareClass&gt;
+          &lt;ShareClass&gt;
+            &lt;Identifiers&gt;&lt;ISIN&gt;LU1234567891&lt;/ISIN&gt;&lt;/Identifiers&gt;
+            &lt;Names&gt;
+              &lt;OfficialName&gt;Europa Growth Fund R EUR Dis&lt;/OfficialName&gt;
+            &lt;/Names&gt;
+            &lt;Currency&gt;EUR&lt;/Currency&gt;
+          &lt;/ShareClass&gt;
+          &lt;ShareClass&gt;
+            &lt;Identifiers&gt;&lt;ISIN&gt;LU1234567892&lt;/ISIN&gt;&lt;/Identifiers&gt;
+            &lt;Names&gt;
+              &lt;OfficialName&gt;Europa Growth Fund R CHF Acc Hedged&lt;/OfficialName&gt;
+            &lt;/Names&gt;
+            &lt;Currency&gt;CHF&lt;/Currency&gt;
+          &lt;/ShareClass&gt;
+        &lt;/ShareClasses&gt;
+      &lt;/SingleFund&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+  &lt;AssetMasterData&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-EQ-001&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;&lt;ISIN&gt;DE0007164600&lt;/ISIN&gt;&lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;DE&lt;/Country&gt;
+      &lt;Name&gt;SAP SE&lt;/Name&gt;
+      &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-EQ-002&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;&lt;ISIN&gt;FR0000120271&lt;/ISIN&gt;&lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;FR&lt;/Country&gt;
+      &lt;Name&gt;TotalEnergies SE&lt;/Name&gt;
+      &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-EQ-003&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;&lt;ISIN&gt;NL0010273215&lt;/ISIN&gt;&lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;NL&lt;/Country&gt;
+      &lt;Name&gt;ASML Holding N.V.&lt;/Name&gt;
+      &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-EQ-004&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;&lt;ISIN&gt;CH0012221716&lt;/ISIN&gt;&lt;/Identifiers&gt;
+      &lt;Currency&gt;CHF&lt;/Currency&gt;
+      &lt;Country&gt;CH&lt;/Country&gt;
+      &lt;Name&gt;ABB Ltd&lt;/Name&gt;
+      &lt;AssetType&gt;EQ&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-BO-001&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;&lt;ISIN&gt;DE0001102481&lt;/ISIN&gt;&lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;DE&lt;/Country&gt;
+      &lt;Name&gt;Bundesrepublik Deutschland 0.00% 2026-02-15&lt;/Name&gt;
+      &lt;AssetType&gt;BO&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-BO-002&lt;/UniqueID&gt;
+      &lt;Identifiers&gt;&lt;ISIN&gt;FR0014007L00&lt;/ISIN&gt;&lt;/Identifiers&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;FR&lt;/Country&gt;
+      &lt;Name&gt;R&eacute;publique Fran&ccedil;aise 0.00% 2027-02-25&lt;/Name&gt;
+      &lt;AssetType&gt;BO&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-FX-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;LU&lt;/Country&gt;
+      &lt;Name&gt;FX Forward CHF/EUR 2026-04-30&lt;/Name&gt;
+      &lt;AssetType&gt;FX&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+    &lt;Asset&gt;
+      &lt;UniqueID&gt;ASSET-AC-001&lt;/UniqueID&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;Country&gt;LU&lt;/Country&gt;
+      &lt;Name&gt;BIL Custody Account EUR&lt;/Name&gt;
+      &lt;AssetType&gt;AC&lt;/AssetType&gt;
+    &lt;/Asset&gt;
+  &lt;/AssetMasterData&gt;
+  &lt;Documents&gt;
+    &lt;Document&gt;
+      &lt;Type&gt;&lt;ListedType&gt;Prospectus&lt;/ListedType&gt;&lt;/Type&gt;
+      &lt;Language&gt;en&lt;/Language&gt;
+      &lt;Fund&gt;
+        &lt;Identifiers&gt;&lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;&lt;/Identifiers&gt;
+        &lt;Name&gt;Europa Growth Fund&lt;/Name&gt;
+      &lt;/Fund&gt;
+      &lt;Format&gt;PDF&lt;/Format&gt;
+      &lt;CreationDate&gt;2026-01-15&lt;/CreationDate&gt;
+      &lt;DocumentURL&gt;https://www.eam-lu.example.com/docs/egf-prospectus-2026.pdf&lt;/DocumentURL&gt;
+    &lt;/Document&gt;
+    &lt;Document&gt;
+      &lt;Type&gt;&lt;ListedType&gt;PRIIPS-KID&lt;/ListedType&gt;&lt;/Type&gt;
+      &lt;Language&gt;en&lt;/Language&gt;
+      &lt;ShareClasses&gt;
+        &lt;ShareClass&gt;
+          &lt;Identifiers&gt;&lt;ISIN&gt;LU1234567890&lt;/ISIN&gt;&lt;/Identifiers&gt;
+          &lt;Name&gt;Europa Growth Fund I EUR Acc&lt;/Name&gt;
+        &lt;/ShareClass&gt;
+      &lt;/ShareClasses&gt;
+      &lt;Format&gt;PDF&lt;/Format&gt;
+      &lt;CreationDate&gt;2026-02-01&lt;/CreationDate&gt;
+      &lt;DocumentURL&gt;https://www.eam-lu.example.com/docs/egf-kid-i-eur-acc-2026.pdf&lt;/DocumentURL&gt;
+    &lt;/Document&gt;
+  &lt;/Documents&gt;
+&lt;/FundsXML4&gt;
+</code></pre>
+
+<hr>
+
+<h2>D.4 AMEND Delivery</h2>
+
+<p>A correction delivery that supersedes D.2. The <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/DataOperation" target="_blank"><code>DataOperation</code></a> is set to <code>AMEND</code>, and the <code>RelatedDocumentIDs</code> element references the original document&rsquo;s <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData/UniqueDocumentID" target="_blank"><code>UniqueDocumentID</code></a>. The corrected content &mdash; a revised TNAV &mdash; replaces the earlier value. Consumers that implement the three-operation protocol from Chapter 4 will locate the original delivery by its ID and apply the correction.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+  &lt;ControlData&gt;
+    &lt;UniqueDocumentID&gt;EGF-20260331-004&lt;/UniqueDocumentID&gt;
+    &lt;DocumentGenerated&gt;2026-04-02T09:15:00Z&lt;/DocumentGenerated&gt;
+    &lt;Version&gt;4.2.8&lt;/Version&gt;
+    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
+    &lt;DataSupplier&gt;
+      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
+      &lt;Short&gt;EAM&lt;/Short&gt;
+      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
+      &lt;Type&gt;IC&lt;/Type&gt;
+    &lt;/DataSupplier&gt;
+    &lt;DataOperation&gt;AMEND&lt;/DataOperation&gt;
+    &lt;RelatedDocumentIDs&gt;
+      &lt;RelatedDocumentID&gt;EGF-20260331-002&lt;/RelatedDocumentID&gt;
+    &lt;/RelatedDocumentIDs&gt;
+    &lt;Language&gt;en&lt;/Language&gt;
+  &lt;/ControlData&gt;
+  &lt;Funds&gt;
+    &lt;Fund&gt;
+      &lt;Identifiers&gt;
+        &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
+      &lt;/Identifiers&gt;
+      &lt;Names&gt;
+        &lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;
+      &lt;/Names&gt;
+      &lt;Currency&gt;EUR&lt;/Currency&gt;
+      &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
+      &lt;FundDynamicData&gt;
+        &lt;TotalAssetValues&gt;
+          &lt;TotalAssetValue&gt;
+            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
+            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
+            &lt;TotalNetAssetValue&gt;
+              &lt;Amount ccy="EUR"&gt;464589123.45&lt;/Amount&gt;
+            &lt;/TotalNetAssetValue&gt;
+          &lt;/TotalAssetValue&gt;
+        &lt;/TotalAssetValues&gt;
+      &lt;/FundDynamicData&gt;
+    &lt;/Fund&gt;
+  &lt;/Funds&gt;
+&lt;/FundsXML4&gt;
+</code></pre>
+
+<hr>
+
+<h2>D.5 Validation Instructions</h2>
+
+<p>To validate any of the files in this appendix, place the file and the FundsXML schema (<code>FundsXML4.xsd</code>, along with its dependency <code>xmldsig-core-schema.xsd</code>) in the same directory and run:</p>
+
+<pre><code>xmllint --schema FundsXML4.xsd filename.xml --noout
+</code></pre>
+
+<p>The expected output for each file is:</p>
+
+<pre><code>filename.xml validates
+</code></pre>
+
+<p>If validation fails, check that the <code>xsi:noNamespaceSchemaLocation</code> attribute points to the correct schema file relative to the XML file&rsquo;s location, and that both schema files are present.</p>
+
+<p>The files in this appendix were validated against FundsXML schema version 4.2.8 at the time of writing. Newer schema versions may introduce additional required elements or tighten existing constraints; if a file that validated against 4.2.8 fails against a later version, consult the release changelog for the specific change that caused the failure.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="AppendixC.html">&lsaquo; Appendix C</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="AppendixE.html">Appendix E &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>

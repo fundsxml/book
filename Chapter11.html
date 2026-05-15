@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 11 — Tools and Toolchain</title>
+<link rel="icon" type="image/png" href="FundsXML-Logo.png">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #444;
+    --ink-muted: #6b7280;
+    --accent: #0b5394;
+    --accent-soft: #e3ecf6;
+    --accent-hover: #083d73;
+    --rule: #d0d7de;
+    --rule-soft: #e8ecf1;
+    --bg: #fbfbf8;
+    --paper: #ffffff;
+    --callout: #f3f6fb;
+    --row-alt: #f6f8fa;
+    --code-bg: #f4f6f9;
+    --code-ink: #22272e;
+    --tip: #1a7f4b;
+    --tip-bg: #effaf3;
+    --warn: #a85a00;
+    --warn-bg: #fff5e6;
+    --example: #5b4ab3;
+    --example-bg: #f1eefb;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md: 0 2px 8px rgba(15,23,42,0.08);
+  }
+  html[data-theme="dark"] {
+    --ink: #e6e8eb;
+    --ink-soft: #b1b6bd;
+    --ink-muted: #858a93;
+    --accent: #79b8ff;
+    --accent-soft: #17304b;
+    --accent-hover: #a8d0ff;
+    --rule: #2e333b;
+    --rule-soft: #24282f;
+    --bg: #101214;
+    --paper: #191c1f;
+    --callout: #1b2432;
+    --row-alt: #171a1e;
+    --code-bg: #161a1f;
+    --code-ink: #d9dde3;
+    --tip: #6bd494;
+    --tip-bg: #122820;
+    --warn: #e7a76b;
+    --warn-bg: #2b1f12;
+    --example: #b4a6f4;
+    --example-bg: #231d37;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  html[data-theme="dark"] img { filter: brightness(0.92) contrast(1.05); }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: "Source Serif Pro", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    max-width: 46em;
+    margin: 3em auto;
+    padding: 0 1.5em;
+    hyphens: auto;
+    hyphenate-limit-chars: 7 3 3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga", "calt";
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  h1, h2, h3, h4 {
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-top: 2em;
+    scroll-margin-top: 1.5em;
+    font-feature-settings: "kern", "liga";
+    letter-spacing: -0.005em;
+  }
+  h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-top: 0;
+    letter-spacing: -0.015em;
+  }
+  h1 .subtitle {
+    display: block;
+    font-size: 0.55em;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 0.4em;
+    letter-spacing: 0;
+  }
+  h2 {
+    font-size: 1.45em;
+    margin-top: 2.4em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.2em;
+  }
+  h3 { font-size: 1.15em; color: var(--accent); }
+  h4 { font-size: 1em; color: var(--ink-soft); }
+
+  p {
+    margin: 0.9em 0;
+    text-align: justify;
+    text-justify: inter-word;
+    orphans: 2;
+    widows: 2;
+  }
+
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 0.35em 0; }
+  li::marker { color: var(--accent); }
+
+  strong { color: var(--ink); font-weight: 600; }
+  em { color: var(--ink-soft); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.4em 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(11, 83, 148, 0.35);
+    text-underline-offset: 0.18em;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  a:hover {
+    color: var(--accent-hover);
+    text-decoration-color: var(--accent);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  html[data-theme="dark"] a { text-decoration-color: rgba(121, 184, 255, 0.4); }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.8em 0;
+    font-size: 0.92em;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-variant-numeric: tabular-nums lining-nums;
+    background: var(--paper);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  caption {
+    caption-side: bottom;
+    text-align: left;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9em;
+    font-style: italic;
+    padding: 0.6em 0.2em 0;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.6em 0.85em;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  th {
+    background: var(--callout);
+    border-bottom: 2px solid var(--accent);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  blockquote {
+    margin: 1.4em 0;
+    padding: 1em 1.2em;
+    background: var(--callout);
+    border-left: 4px solid var(--accent);
+    color: var(--ink-soft);
+    font-size: 0.95em;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 0.4em 0; }
+  blockquote p:first-child { margin-top: 0; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote.tip { background: var(--tip-bg); border-color: var(--tip); }
+  blockquote.warning { background: var(--warn-bg); border-color: var(--warn); color: var(--ink); }
+  blockquote.example { background: var(--example-bg); border-color: var(--example); }
+
+  code {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-feature-settings: "liga" 0, "calt" 0;
+    word-break: break-word;
+  }
+  pre {
+    font-family: "JetBrains Mono", "Source Code Pro", "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    line-height: 1.55;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-left: 3px solid var(--accent);
+    padding: 1em 1.2em;
+    margin: 1.4em 0;
+    overflow-x: auto;
+    hyphens: none;
+    tab-size: 2;
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--shadow-sm);
+    font-feature-settings: "liga" 0, "calt" 0;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 1em;
+    word-break: normal;
+  }
+
+  figure { margin: 1.6em 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
+  figcaption {
+    font-family: "Inter", sans-serif;
+    font-size: 0.88em;
+    color: var(--ink-soft);
+    margin-top: 0.6em;
+    font-style: italic;
+  }
+  img { max-width: 100%; height: auto; }
+
+  .chapter-meta {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.6em;
+  }
+  .lead { font-size: 1.08em; color: var(--ink-soft); font-style: italic; }
+
+  .glossary-entry { margin: 0.6em 0; }
+  .glossary-entry strong { color: var(--accent); }
+  .idx { line-height: 1.55; margin: 0.15em 0; }
+  .idx strong { color: var(--ink); }
+  .index-note { font-size: 0.9em; color: var(--ink-soft); margin-bottom: 1em; }
+
+  /* --- sticky chapter nav --- */
+  #toc-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18em;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    padding: 1em 0.8em 1.5em 0.8em;
+    font-family: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.72em;
+    line-height: 1.4;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+  #toc-nav::-webkit-scrollbar { width: 6px; }
+  #toc-nav::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  #toc-nav::-webkit-scrollbar-track { background: transparent; }
+  #toc-nav.collapsed { transform: translateX(-100%); box-shadow: none; }
+  #toc-nav .toc-title {
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.8em;
+    padding-bottom: 0.4em;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  #toc-nav ul { list-style: none; padding: 0; margin: 0; }
+  #toc-nav li { margin: 0.2em 0; }
+  #toc-nav li.toc-h1 {
+    font-weight: 700;
+    margin-top: 0.7em;
+    color: var(--accent);
+  }
+  #toc-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #toc-nav a:hover { background: var(--callout); color: var(--accent); }
+  #toc-nav a.active {
+    background: var(--callout);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  #toc-toggle {
+    position: fixed;
+    top: 0.5em;
+    left: 0.5em;
+    z-index: 1001;
+    width: 2.1em;
+    height: 2.1em;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: left 0.25s ease, transform 0.15s;
+    font-family: "Inter", sans-serif;
+  }
+  #toc-toggle:hover { transform: scale(1.05); }
+  #toc-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #toc-toggle.open { left: 18.5em; }
+
+  /* --- heading anchor links --- */
+  .heading-anchor {
+    color: var(--rule);
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0.35em;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 0.72em;
+    vertical-align: middle;
+  }
+  h1:hover .heading-anchor,
+  h2:hover .heading-anchor,
+  h3:hover .heading-anchor,
+  h4:hover .heading-anchor { opacity: 1; color: var(--accent); }
+  .heading-anchor:hover { color: var(--accent-hover); }
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* --- back-to-top button --- */
+  #top-btn {
+    position: fixed;
+    bottom: 1.5em;
+    right: 1.5em;
+    padding: 0.6em 1em;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s;
+    box-shadow: var(--shadow-md);
+    z-index: 999;
+  }
+  #top-btn.visible { opacity: 0.95; pointer-events: auto; transform: translateY(0); }
+  #top-btn:hover { opacity: 1; background: var(--accent-hover); }
+  #top-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  /* --- per-chapter navigation bar (standalone pages only; stripped from
+         the concatenated complete book by build_complete.sh) --- */
+  .chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: 2.5em 0;
+    padding: 0.9em 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .chapter-nav:first-child { margin-top: 0; }
+  .chapter-nav a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.35em 0.2em;
+    transition: color 0.15s;
+  }
+  .chapter-nav a:hover { color: var(--accent-hover); }
+  .chapter-nav .cn-toc { color: var(--ink-muted); font-weight: 500; }
+  .chapter-nav .cn-disabled { color: var(--rule); cursor: default; }
+  .chapter-nav .cn-next { text-align: right; }
+
+  /* --- theme toggle --- */
+  #theme-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 0.5em;
+    width: 2.1em;
+    height: 2.1em;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--accent);
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, background 0.15s, border-color 0.15s;
+    font-family: "Inter", -apple-system, sans-serif;
+    z-index: 1001;
+  }
+  #theme-btn:hover { transform: scale(1.05); border-color: var(--accent); }
+  #theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #theme-btn .icon-sun { display: none; }
+  #theme-btn .icon-moon { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-sun { display: inline; }
+  html[data-theme="dark"] #theme-btn .icon-moon { display: none; }
+
+  /* --- download link (pill, visible only on screen) --- */
+  .download-link {
+    display: inline-block;
+    padding: 0.55em 1.1em;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-family: "Inter", -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .download-link:hover {
+    background: var(--accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .download-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .download-link::before {
+    content: "↓";
+    display: inline-block;
+    margin-right: 0.4em;
+    font-weight: 700;
+  }
+
+  /* --- medium viewports: push body right so the sidebar doesn't
+         overlap the first characters of each line --- */
+  @media (min-width: 901px) and (max-width: 1400px) {
+    body:has(#toc-nav:not(.collapsed)) {
+      padding-left: 18em;
+    }
+  }
+
+  /* --- small screens --- */
+  @media (max-width: 900px) {
+    body { margin: 2em auto; padding: 0 1em; }
+    #toc-nav { width: 82%; max-width: 20em; }
+    #toc-toggle.open { left: calc(82% + 0.5em); }
+  }
+
+  /* --- reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* --- print --- */
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  @page :first { margin-top: 0; }
+
+  @media print {
+    html[data-theme="dark"] { /* force light theme in PDF regardless of user toggle */
+      --ink: #000; --ink-soft: #333; --ink-muted: #5a5f66;
+      --accent: #0b5394; --accent-soft: #e3ecf6; --accent-hover: #083d73;
+      --rule: #cfd4d9; --rule-soft: #e8ecf1;
+      --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
+      --code-bg: #f4f6f9; --code-ink: #22272e;
+    }
+    :root {
+      --bg: #fff; --paper: #fff;
+      --ink: #000; --ink-soft: #333;
+      --rule: #cfd4d9; --callout: #f5f7fb; --row-alt: #f7f9fc;
+    }
+    #toc-nav, #toc-toggle, #top-btn, #theme-btn, .chapter-nav,
+    .heading-anchor, .download-link { display: none !important; }
+    body {
+      font-size: 10.5pt;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #fff;
+      color: #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; page-break-after: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table, blockquote, figure { page-break-inside: avoid; }
+    pre { page-break-inside: auto; white-space: pre-wrap; word-wrap: break-word; }
+    th, tbody tr:nth-child(even), .pages, h2.part-title {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a { color: var(--accent); text-decoration: none; }
+  }
+</style>
+<script id="theme-preload">(function(){try{var t=localStorage.getItem('fundsxml-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+</head>
+<body>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter10.html">&lsaquo; Chapter 10</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter12.html">Chapter 12 &rsaquo;</a></nav>
+
+<img src="FundsXML-Logo.png" alt="FundsXML" style="height:28px;width:auto;display:block;margin:0 0 1.5em 0;">
+<div class="chapter-meta">Part III — Implementation and Practice · Chapter 11</div>
+<h1>Tools and Toolchain<span class="subtitle">The right tools for productive use</span></h1>
+
+<hr>
+
+<h2>11.1 Setting the Scene: From Command Line to Workstation</h2>
+
+<p>Chapter 10 introduced a validation discipline built on two command-line tools: <code>xmllint</code> for schema validation and a Python script with <code>lxml.isoschematron</code> for business rules. Those tools are free, widely installed, and well-suited to production pipelines where every step needs to be scripted, auditable, and deterministic. They are, however, not well-suited to the other half of FundsXML work: <em>exploring</em> a schema interactively, <em>debugging</em> a broken delivery by eye, <em>generating</em> sample files for testing, <em>transforming</em> FundsXML into fact-sheet HTML, or <em>integrating</em> FundsXML validation into the editor where a developer or fund-operations analyst already spends their day.</p>
+
+<p>This chapter surveys the tools that fill those interactive and developer-oriented gaps. It treats <strong>FreeXmlToolkit</strong> in detail as the primary desktop workstation for FundsXML work, then covers the smaller and more specialised tools around it (the Online Schema Viewer, the CSV Converter, the FundsXML Generator) and the integration paths into three mainstream IDEs (IntelliJ IDEA, Visual Studio Code, Eclipse). The chapter is deliberately pragmatic: it tells the reader what each tool is for, when to reach for it, and what its typical workflows look like, rather than providing a feature-by-feature reference manual. The tools themselves evolve faster than any book can track; the reference documentation at each tool's website is the authoritative source for the latest features.</p>
+
+<p>One honesty note on the chapter's approach. Unlike Chapter 10, where every command and every error message in the text was produced by running real software on real files, the descriptions in this chapter are grounded in the tools' published documentation and in a reading of their source code where available, but the specific menu paths, button labels, and UI behaviours are as of a point in time and may shift with newer releases. Readers who want to follow along by hand should download the current version of whichever tool they plan to use and cross-check against its own in-application help. Appendix E lists the current official download URLs.</p>
+
+<p>By the end of this chapter, you should be able to:</p>
+
+<ul>
+  <li>pick the right tool for a given FundsXML task — interactive editing, schema browsing, validation, transformation, generation, conversion — and know which tools overlap with which;</li>
+  <li>install FreeXmlToolkit, open a FundsXML document, and use its main modules;</li>
+  <li>navigate the FundsXML schema through the Online Schema Viewer without downloading anything;</li>
+  <li>convert between FundsXML and CSV or Excel for data-entry and data-review workflows;</li>
+  <li>generate sample FundsXML files from the schema for consumer testing;</li>
+  <li>configure IntelliJ IDEA, Visual Studio Code, and Eclipse to validate FundsXML files inline.</li>
+</ul>
+
+<hr>
+
+<h2>11.2 A Tour of the FundsXML Ecosystem</h2>
+
+<p>Before we look at any single tool, a short map of the landscape is useful, because the tools overlap in ways that the TOC-style listing does not make obvious. FundsXML work falls into a handful of distinct workflows, and most of the tools in the ecosystem serve one or more of them.</p>
+
+<p><strong>Workflow 1 — Reading and exploring a FundsXML file.</strong> The user has received a delivery and wants to look at it: browse its structure, verify that particular fields are populated, check whether the schema validation passes, and maybe run a few XPath queries. The primary tool is a FundsXML-aware XML editor, which for most readers means <strong>FreeXmlToolkit</strong> (for desktop use) or one of the <strong>IDE integrations</strong> (for readers who already live in IntelliJ, VS Code, or Eclipse).</p>
+
+<p><strong>Workflow 2 — Exploring the schema itself.</strong> The user wants to understand what a particular element means, what its allowed values are, and how it fits into the larger schema hierarchy. For this, the <strong>Online Schema Viewer</strong> is the quickest entry point — it runs in a browser, requires no installation, and presents the FundsXML schema as an explorable, hyperlinked structure. FreeXmlToolkit also offers schema browsing and can generate standalone HTML documentation from an XSD.</p>
+
+<p><strong>Workflow 3 — Generating test data.</strong> A consumer developer needs sample FundsXML files to test its ingestion pipeline. Hand-writing them is tedious; the <strong>FundsXML Generator</strong> (and FreeXmlToolkit's built-in sample-data generator) produces schema-valid documents with plausible values, ready to feed into a test suite.</p>
+
+<p><strong>Workflow 4 — Converting between FundsXML and other formats.</strong> A fund-operations analyst maintains portfolio data in Excel and needs to emit FundsXML; a data-quality analyst wants to pull FundsXML data into a spreadsheet for review. The <strong>FundsXML CSV Converter</strong> (and the spreadsheet conversion tools inside FreeXmlToolkit) fills this role.</p>
+
+<p><strong>Workflow 5 — Validating and signing.</strong> Schema validation, business-rule validation, and digital signatures are all available in command-line form (Chapter 10) and in GUI form (inside FreeXmlToolkit). A developer choosing between them will typically use the command-line tools for automated pipelines and the GUI tools for interactive debugging.</p>
+
+<p><strong>Table 11.1 — Tools and workflows</strong></p>
+
+<table>
+  <thead>
+    <tr><th>Workflow</th><th>Primary tool</th><th>Alternatives / overlap</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Reading and exploring</td><td>FreeXmlToolkit</td><td>IDE plugins, xmllint</td></tr>
+    <tr><td>Schema browsing</td><td>Online Schema Viewer</td><td>FreeXmlToolkit XSD module</td></tr>
+    <tr><td>Test data generation</td><td>FundsXML Generator</td><td>FreeXmlToolkit sample-data generator</td></tr>
+    <tr><td>CSV/Excel conversion</td><td>FundsXML CSV Converter</td><td>FreeXmlToolkit spreadsheet converter</td></tr>
+    <tr><td>Validation</td><td>xmllint + Schematron (Chapter 10)</td><td>FreeXmlToolkit validation module</td></tr>
+    <tr><td>Digital signatures</td><td>FreeXmlToolkit signature module</td><td>openssl / xmlsec1</td></tr>
+  </tbody>
+</table>
+
+<p>An important observation from Table 11.1: <strong>FreeXmlToolkit appears as an alternative in almost every row</strong>. This is not a coincidence — it is a deliberately all-in-one desktop workstation that covers most FundsXML workflows in a single installable application. Readers who want a single tool rather than a collection of them will find FreeXmlToolkit the natural home; readers who prefer specialised CLI tools, or who need a specific conversion that FreeXmlToolkit does not cover, will reach for the smaller dedicated tools alongside it.</p>
+
+<p>The chapter treats FreeXmlToolkit first because of its breadth, then covers the specialised tools in the order of the TOC.</p>
+
+<hr>
+
+<h2>11.3 FreeXmlToolkit — in Detail</h2>
+
+<p>FreeXmlToolkit is an open-source desktop application, built on Java 25 and JavaFX, released under the Apache 2.0 licence. It is cross-platform (Windows, macOS, Linux), distributed both as pre-built installers and as a buildable source tree on GitHub, and authored and maintained as a community project around the FundsXML standard. Despite its general-XML naming, the toolkit has been shaped over many years of FundsXML work and contains features — a schema-aware sample-data generator, a Schematron panel wired into the XML editor, a spreadsheet converter — that are specifically useful to fund-industry users even though they also apply to any XML work.</p>
+
+<p>This section covers the toolkit in five subsections: what it is structurally (11.3.1), how to install and start it (11.3.2), the main editor tabs a new user encounters (11.3.3), the workflows that matter most for FundsXML (11.3.4), and where the toolkit complements rather than replaces the command-line tools from Chapter 10 (11.3.5).</p>
+
+<h3>11.3.1 Structure of the Application</h3>
+
+<p>FreeXmlToolkit is organised around a set of <strong>tabs</strong> in a single main window. Each tab is dedicated to one of the application's modules; switching between tabs changes the primary view without losing the files the user has opened in other tabs. The principal tabs, in roughly the order a new user encounters them, are:</p>
+
+<ul>
+  <li><strong>Welcome</strong> — the landing page, with shortcuts to recent files, favourites, and a list of sample projects.</li>
+  <li><strong>XML Editor</strong> (the <em>Unified Editor</em>) — the main text editor for XML documents, with live XSD validation, XPath-driven IntelliSense, code folding, and a companion tree view that visualises the XML structure alongside the text. A <em>grid view</em> presents flat sections of an XML document as a table, which is handy for fund operations users who think about data in rows rather than in angle brackets.</li>
+  <li><strong>XSD</strong> — the schema browser and validator. Loads an XSD file and lets the user navigate its type hierarchy, see element definitions, and generate HTML documentation from the schema.</li>
+  <li><strong>XSLT Developer</strong> — an interactive XSLT 2.0/3.0 environment built on Saxon, with a live preview of the transformation output as the user edits the stylesheet.</li>
+  <li><strong>Schematron</strong> — a Schematron rule editor and runner, producing SVRL validation reports that are displayed inline with the source document.</li>
+  <li><strong>Signature</strong> — XML Digital Signature creation and verification.</li>
+  <li><strong>FOP</strong> — PDF generation from XML via Apache FOP, useful for turning FundsXML fact-sheet data into printable output.</li>
+  <li><strong>Favourites</strong> — a cross-tab list of frequently used XML, XSD, and Schematron files, with categories, descriptions, and one-click loading into whichever editor the user is currently in.</li>
+  <li><strong>Settings</strong> and <strong>Help</strong> — configuration and in-app documentation.</li>
+</ul>
+
+<p>Not every user needs every tab. A fund-operations analyst who primarily wants to read deliveries spends most of their time in the XML Editor; a schema maintainer spends most of their time in the XSD tab; a producer pipeline developer moves between the Schematron tab and the Settings tab. The tabs are designed to be usable independently, so there is no requirement to learn every module before becoming productive in any one of them.</p>
+
+<h3>11.3.2 Installation and First Run</h3>
+
+<p>Two installation paths are supported. The <strong>pre-built release</strong> is the simpler one: the releases page on GitHub (<code>https://github.com/karlkauc/FreeXmlToolkit/releases</code>) provides installers for Windows, macOS, and Linux, each packaged as a zip or OS-native installer. On Windows, the installer does not require administrator rights; on macOS, the <code>.app</code> bundle is drag-dropped into <code>/Applications</code>; on Linux, the binary is launched from the extracted directory.</p>
+
+<p>The <strong>build-from-source</strong> path is for developers who want the latest unreleased features or who want to modify the toolkit:</p>
+
+<pre><code>git clone https://github.com/karlkauc/FreeXmlToolkit.git
+cd FreeXmlToolkit
+./gradlew run
+</code></pre>
+
+<p>Gradle downloads Java 25, JavaFX 24, and all dependencies into its local cache and builds and runs the application. The first build is slow (typically a few minutes); subsequent builds are incremental and fast.</p>
+
+<p>The system requirements are modest. The toolkit runs comfortably on any machine with 4 GB of memory and a modern desktop OS, but a machine with 8 GB is more comfortable if the user plans to keep several large FundsXML files open simultaneously.</p>
+
+<p>On first run, the application opens to its Welcome tab. Opening a FundsXML file for the first time is as simple as dragging the file into the main window or using the File menu. The application detects the file's format automatically — XML, XSD, XSLT, or Schematron — and routes it to the appropriate editor tab.</p>
+
+<h3>11.3.3 The XML Editor Up Close</h3>
+
+<p>The XML Editor is the tab most readers will spend most of their time in, and it deserves a slightly more detailed walkthrough.</p>
+
+<p>A newly opened FundsXML document appears in the main text pane with syntax highlighting: element names, attribute names, attribute values, text content, and XML comments are each coloured distinctly, so that the user's eye can immediately parse the hierarchical structure without reading word by word. The right-hand side of the window shows a collapsible <strong>tree view</strong> that presents the same document as an expandable hierarchy — clicking a node in the tree view scrolls the text pane to the corresponding line, and editing the text pane updates the tree view as the user types.</p>
+
+<p>Several features that distinguish the editor from a generic text editor matter for FundsXML work:</p>
+
+<ul>
+  <li><strong>IntelliSense against the current XSD.</strong> When the editor has an associated schema (either loaded explicitly through the XSD tab, or discovered automatically through <code>xsi:noNamespaceSchemaLocation</code> or <code>xsi:schemaLocation</code>), typing inside an element offers autocomplete for the valid child elements at the cursor position. This is particularly valuable inside deeply nested blocks like <code>RegulatoryReportings/EMT</code> where the field list is long and the names are easy to mistype.</li>
+  <li><strong>Continuous validation.</strong> As the user types, the editor runs XSD validation in the background and marks invalid regions of the document with red underlines, analogous to the way a modern word processor marks spelling mistakes. Hovering over the mark shows the validation error — the same messages that <code>xmllint</code> would produce (Chapter 10), but surfaced inline without the user having to run a separate command.</li>
+  <li><strong>Schematron panel.</strong> A side panel on the right accepts a Schematron rule file and runs the rules continuously against the current document, showing SVRL-style failure messages next to the editor. This brings the Chapter-10 two-stage validation model into a single interactive view: the user sees both the XSD errors and the Schematron errors as they type, rather than discovering them on the next CI run.</li>
+  <li><strong>Grid view</strong> (the <em>flatten</em> or <em>spreadsheet</em> perspective). For document sections that are essentially tabular — a portfolio of 150 positions, an EMT block of 120 fields — the grid view displays the data as a conventional spreadsheet rather than as nested XML. Editing a cell in the grid view updates the underlying XML; adding a row adds a new element. The grid view is disabled for sections whose structure is too hierarchical to fit sensibly into rows and columns.</li>
+  <li><strong>Favourites.</strong> Any file opened in any editor tab can be saved to a user-defined favourites category. The categories persist across sessions, and favourites can be re-loaded into any other editor tab (a Schematron file saved from the Schematron tab can be loaded into the XML Editor's validation panel, for example). This is an ergonomic win for users who routinely jump between the same fifteen or twenty files.</li>
+</ul>
+
+<h3>11.3.4 FundsXML-Specific Workflows</h3>
+
+<p>Several typical FundsXML workflows are worth describing concretely, because they show how the toolkit's generic XML features combine into task-specific productivity.</p>
+
+<p><strong>Workflow A — Reviewing an incoming delivery.</strong> A fund operations analyst receives a FundsXML file from an administrator and wants to verify that the delivery is correct before passing it on. The steps are: open the file in the XML Editor, check the inline validation markers (any red underline is a reason to stop), navigate the tree view to <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/ControlData" target="_blank"><code>ControlData</code></a> to verify sender/receiver/date, navigate to <code>Funds/Fund/<a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData" target="_blank">FundDynamicData</a>/<a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/TotalAssetValues" target="_blank">TotalAssetValues</a></code> to cross-check the NAVs against the administrator's emailed summary, and finally load the producer's Schematron rule set into the side panel to catch business-rule violations. The whole check takes a few minutes; without the toolkit, the same check would involve several command-line invocations and a manual comparison.</p>
+
+<p><strong>Workflow B — Generating a test file.</strong> A developer working on a consumer pipeline needs a sample FundsXML file to test against. The Schema Generator module (reachable from the XSD tab) reads the FundsXML XSD and produces a complete, schema-valid sample document with plausible values (dates within a reasonable range, strings of the right length, enumerated values picked from each enumeration). The generated file is not production data, but it exercises every structural path the consumer's parser needs to handle, and a developer can tweak the generator settings to control depth, element counts, and optional-field inclusion. This is a faster route to a test fixture than hand-writing one.</p>
+
+<p><strong>Workflow C — Building a Schematron rule set.</strong> A producer implementing the two-stage validation from Chapter 10 needs to author, test, and refine the Schematron rule file. The Schematron tab in FreeXmlToolkit combines an editor for the rules with a live run-against-the-current-XML pane: changing a rule re-runs it immediately against the loaded document, so the rule-author can iterate at the speed of typing. Once the rules are stable, the rule file is saved to disk and handed to the command-line pipeline (using the runner from Chapter 10.6.2) for production use.</p>
+
+<p><strong>Workflow D — Transforming FundsXML into a fact sheet.</strong> A distributor consumer wants to turn FundsXML data into a human-readable fact sheet. The XSLT Developer tab loads the FundsXML file on the left and an XSLT stylesheet on the right; the bottom pane shows the live-rendered output (HTML, text, or another XML format) as the user edits the stylesheet. Saxon's XSLT 2.0 and 3.0 support lets the user express sophisticated transformations — grouping positions by sector, aggregating NAVs by share class, formatting numbers with locale-aware separators — without leaving the toolkit.</p>
+
+<h3>11.3.5 Where FreeXmlToolkit Complements the CLI Tools</h3>
+
+<p>FreeXmlToolkit and the <code>xmllint</code> + Python validation pipeline from Chapter 10 are not substitutes for each other; they are complementary tools with different audiences.</p>
+
+<p>The <strong>CLI pipeline</strong> is for production use. It runs unattended, exits with clean status codes, logs to files, and is trivially embeddable in a CI system or a nightly batch job. It is also faster: validating a 20-megabyte FundsXML file with <code>xmllint</code> takes a fraction of a second, whereas the same validation inside a JavaFX desktop application takes noticeably longer because of the UI rendering and the richer parsing setup.</p>
+
+<p>The <strong>GUI toolkit</strong> is for interactive use. It shows errors inline with the document, lets the user navigate to them with a click, and supports the iterative edit-validate-re-edit loop that debugging a broken file requires. It also covers tasks (XSLT authoring, interactive schema browsing, sample-data generation, favourite management) that a CLI pipeline is not well-suited to.</p>
+
+<p>A mature team uses both: the producer's developers and QA analysts use FreeXmlToolkit for day-to-day interactive work, the CI pipeline uses the <code>xmllint</code> + Schematron runner for automated validation before every delivery is emitted, and the same Schematron rule file is shared between the two. A rule authored inside FreeXmlToolkit runs in production inside the CI pipeline without modification, and vice versa.</p>
+
+<hr>
+
+<h2>11.4 The Online Schema Viewer</h2>
+
+<p>The Online Schema Viewer is a web-based application hosted by the FundsXML project that lets users browse the FundsXML XSD schema interactively without installing anything. It occupies a specific niche in the ecosystem: a developer who wants to answer <em>"what does this element mean and what are its children?"</em> without downloading tooling can open the viewer in a browser and have the answer within seconds.</p>
+
+<h3>11.4.1 What the Viewer Shows</h3>
+
+<p>The viewer presents the FundsXML schema as a navigable hierarchy. The entry point is usually the root element <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4" target="_blank"><code>FundsXML4</code></a>, and from there the user drills into any of its children — <code>ControlData</code>, <code>Funds</code>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/AssetMasterData" target="_blank"><code>AssetMasterData</code></a>, <code>Documents</code>, <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank"><code>RegulatoryReportings</code></a>, and the rest — by clicking on them. Each element page shows:</p>
+
+<ul>
+  <li>The element's declared type, with a link to the type's own definition page.</li>
+  <li>The element's documentation annotations, drawn from the XSD's <code>xs:annotation/xs:documentation</code> elements. For FundsXML 4.2.8, many elements carry annotations in several languages (English and German are most common), and the viewer displays whichever the user's browser locale is set to.</li>
+  <li>The element's direct children, with their own types and cardinality (<code>minOccurs</code>, <code>maxOccurs</code>).</li>
+  <li>Attribute declarations, if any.</li>
+  <li>Restrictions and facets for simple types (enumerations, length limits, pattern restrictions).</li>
+  <li>Cross-references to other elements that reference or extend the current one.</li>
+</ul>
+
+<h3>11.4.2 Typical Uses</h3>
+
+<p>The viewer is most useful for three tasks.</p>
+
+<p><strong>Looking up a specific element.</strong> A developer writing a consumer is reading a FundsXML file and encounters <code>OpenClosedEnded</code> inside <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundStaticData" target="_blank"><code>FundStaticData</code></a>. Is this a free-text field? An enumeration? What are the allowed values? Opening the viewer, searching for <code>OpenClosedEnded</code>, and reading the page takes perhaps twenty seconds and replaces several minutes of hunting through the 39,000-line raw XSD file.</p>
+
+<p><strong>Comparing two versions of the schema.</strong> When FundsXML publishes a new minor release — 4.2.3 to 4.2.4, say — the viewer can often be pointed at either version through a version selector, and the changes between the two are listed in a changelog view. A developer upgrading a producer pipeline uses this to understand which new fields need to be populated and which deprecated fields to remove.</p>
+
+<p><strong>Exploring an unfamiliar region of the schema.</strong> A developer who has worked mostly with <code>Funds</code> and <code>AssetMasterData</code> needs to implement TPT (Chapter 8.7) and has never touched the <code>RegulatoryReportings/TPT</code> subtree before. The viewer's hyperlinked navigation makes it easy to follow the type hierarchy from the top-level <code>TPT</code> element down to the holding fields, reading documentation annotations at each step.</p>
+
+<h3>11.4.3 Access and Limitations</h3>
+
+<p>The viewer is accessed through a URL published at the official FundsXML site; Appendix E lists the current address. Access is typically free and requires no login.</p>
+
+<p>Three limitations are worth knowing. First, the viewer reads the published schema, not any locally modified schema — developers working against a customised XSD need a local alternative. Second, the viewer is a <em>read-only</em> browser: it does not validate user-supplied files (for that, the user still needs <code>xmllint</code> or FreeXmlToolkit). Third, the viewer's update cadence lags slightly behind the XSD release cadence, so for very new minor versions the local <code>FundsXML4.xsd</code> file may be authoritative in cases where the two disagree.</p>
+
+<hr>
+
+<h2>11.5 FundsXML CSV Converter</h2>
+
+<p>A large population of fund-industry users maintains fund data in Excel or CSV files and needs to produce or consume FundsXML at the boundary. The <strong>FundsXML CSV Converter</strong> is the tool for that boundary. It can run in two directions: <em>CSV to FundsXML</em>, where rows in a spreadsheet are transformed into elements in an XML document, and <em>FundsXML to CSV</em>, where portions of an XML document are flattened into a table for review or editing.</p>
+
+<p>The converter is available both as a standalone utility (for users who only need the conversion and do not want the full FreeXmlToolkit installation) and as a module inside FreeXmlToolkit itself (where it integrates with the rest of the toolkit's editing and validation workflows). Both versions produce equivalent results; the choice between them is a matter of preference.</p>
+
+<h3>11.5.1 CSV to FundsXML</h3>
+
+<p>The direction from CSV to XML is the more common use case. A fund operations analyst maintains a spreadsheet with columns like <code>ISIN</code>, <code>Name</code>, <code>Currency</code>, <code>NumberOfShares</code>, <code>NAV</code>, and <code>NavDate</code>, and wants to produce a FundsXML delivery from it. The converter needs two inputs:</p>
+
+<ul>
+  <li><strong>The source CSV file</strong>, with a header row naming the columns.</li>
+  <li><strong>A mapping specification</strong> that tells the converter how each column should be placed into the FundsXML document structure. The mapping is typically a small configuration file naming the target XPath for each column, plus any transformation rules (e.g., "this column is a date, and values are in DD/MM/YYYY format — convert to ISO").</li>
+</ul>
+
+<p>Given these two inputs, the converter emits a FundsXML file that follows the XSD structure and can be fed into the Chapter-10 validation pipeline before being shipped.</p>
+
+<p>The mapping specification is where the complexity lives. For a simple flat spreadsheet producing a simple ShareClass list, the mapping is short: one row per line, each row naming a column and its target XPath. For a realistic fund structure with share classes, portfolios, and dynamic data, the mapping is more involved, because the CSV's flat rows have to be folded into the hierarchical FundsXML structure. Producers who use the converter regularly typically maintain a library of mapping files, one per data type, reused across many conversion runs.</p>
+
+<h3>11.5.2 FundsXML to CSV</h3>
+
+<p>The reverse direction is useful for data review. A data-quality analyst who received a FundsXML delivery and wants to check the portfolio section against a reference list in Excel runs the converter in the FundsXML-to-CSV direction, selects the <code>Portfolio/Positions/Position</code> elements as the source, and emits a CSV with one row per position and columns for <code>ISIN</code>, <code>Quantity</code>, <code>MarketValue</code>, and whichever other fields the analyst needs. The CSV can then be opened in Excel, compared to the reference list, and the differences reviewed.</p>
+
+<p>The converter does not round-trip perfectly. A FundsXML-to-CSV conversion typically loses information that does not fit into the flat tabular model — repeated elements with complex structure, language-tagged text fields, nested sub-elements. The tool marks these as "unmapped" in the output, so that the user is aware of the data that did not make it into the CSV.</p>
+
+<h3>11.5.3 Comparison with FreeXmlToolkit's Grid View</h3>
+
+<p>The standalone converter and the FreeXmlToolkit grid view (§11.3.3) overlap in their FundsXML-to-CSV purpose, but their strengths are different. The grid view is an in-place editor: the user loads a FundsXML file, switches to grid mode for a particular section, edits cells, and saves — the underlying XML is updated in place. The CSV converter is a <em>file-to-file transformation</em>: the input is FundsXML, the output is a separate CSV, and edits to the CSV do not flow back to the XML unless the user runs the reverse conversion. Users who need to edit in place prefer the grid view; users who need a separate output file to share with an Excel user prefer the converter.</p>
+
+<hr>
+
+<h2>11.6 FundsXML Generator</h2>
+
+<p>The <strong>FundsXML Generator</strong> is the tool that produces sample FundsXML files — valid documents with plausible content — for use as test fixtures, development aids, and demonstration material. A consumer developer implementing a new ingestion pipeline uses the generator to create a set of test files that exercise every code path the pipeline needs to handle; a producer developer uses it to create a fresh sample file after a schema upgrade to verify that the producer's downstream handlers still work.</p>
+
+<p>The generator, like the CSV converter, exists both as a standalone tool and as a feature inside FreeXmlToolkit (where it is accessible from the XSD tab's "Generate Sample" action).</p>
+
+<h3>11.6.1 What "Sample" Means</h3>
+
+<p>A sample FundsXML document is not the same as a real one. The generator aims for <strong>structural completeness</strong> — every optional element included at least once, every enumerated value exercised across the file, every reasonable cardinality covered — rather than for <em>semantic</em> completeness. The values are drawn from a library of plausible defaults: ISINs that look like ISINs (right length, right character classes), dates in a configurable range, country codes picked from a small set, text fields populated with identifiable placeholder strings, numeric fields with randomised values within sensible bounds.</p>
+
+<p>Consumers of a sample file should know that the numbers do not represent a real fund and should not be taken at face value for business-logic testing. The file is a <em>structural</em> test vehicle: its job is to exercise the consumer's parser, not to trick it into thinking it is reading a real delivery.</p>
+
+<h3>11.6.2 Controlling the Generator</h3>
+
+<p>A sample-file generator has several knobs that a developer typically needs to control:</p>
+
+<ul>
+  <li><strong>Depth</strong>: how deeply to recurse into optional substructures. Setting the depth to 1 produces a minimal file (only the required elements); setting it higher progressively includes more optional content.</li>
+  <li><strong>Array sizes</strong>: how many instances to produce for elements with <code>maxOccurs &gt; 1</code>. A portfolio with a hundred positions exercises different code paths from a portfolio with two positions; both are useful for different tests.</li>
+  <li><strong>Optional-field inclusion</strong>: whether to include every optional element or only a subset. Some consumers fail gracefully when optional elements are absent; others fail gracefully when they are present. A comprehensive test suite exercises both cases.</li>
+  <li><strong>Random-seed fixing</strong>: whether the random values are generated from a fixed seed (reproducible runs) or from system entropy (different values each time). For automated tests, a fixed seed is essential; for ad-hoc exploration, random values are fine.</li>
+  <li><strong>Target schema version</strong>: which FundsXML version to target. A consumer that supports both 4.2.3 and 4.2.8 should be tested with fixtures from both versions.</li>
+</ul>
+
+<p>Production usage of the generator typically involves a short configuration file that sets these options, plus a script that runs the generator on every CI build to produce a fresh set of fixtures that the consumer pipeline can then run against.</p>
+
+<h3>11.6.3 Relationship to Real Test Data</h3>
+
+<p>The generator is useful but not a substitute for real test data. Once a producer pipeline is running, the best regression fixtures are captured snapshots of actual deliveries — anonymised if necessary — because they exercise the quirks and edge cases that a generator does not anticipate. The mature practice is to use generator output for initial development and schema-upgrade testing, and captured real data for ongoing regression testing. Chapter 13 returns to this distinction in the context of implementation projects.</p>
+
+<hr>
+
+<h2>11.7 IDE Integration — IntelliJ, VS Code, Eclipse</h2>
+
+<p>Many FundsXML developers — both on the producer side and on the consumer side — spend most of their working day inside an integrated development environment rather than in a dedicated XML tool. For those developers, the most valuable integration is <em>inside the IDE they already use</em>, with FundsXML validation and navigation available as first-class features of the editing experience. All three major cross-platform Java and polyglot IDEs — IntelliJ IDEA, Visual Studio Code, and Eclipse — support FundsXML well through their generic XML facilities. No FundsXML-specific plugin is required in any of the three; what is required is the standard XML support plus a correctly configured schema location.</p>
+
+<h3>11.7.1 IntelliJ IDEA</h3>
+
+<p>IntelliJ IDEA's bundled XML support is comprehensive and works against any XSD out of the box. Opening a FundsXML file in IntelliJ gives the user syntax highlighting, fold markers, and navigation; enabling schema validation requires telling IntelliJ where to find <code>FundsXML4.xsd</code>.</p>
+
+<p>The simplest path is the <code>xsi:noNamespaceSchemaLocation</code> attribute on the root element, which IntelliJ respects. If the FundsXML file is stored in the same directory as <code>FundsXML4.xsd</code> (or in a directory referenced by a relative path in the attribute), IntelliJ finds the schema automatically and enables validation, autocomplete, and "go to definition" on every element. The error markers in the gutter match the <code>xmllint</code> errors from Chapter 10.</p>
+
+<p>For projects that store the schema separately from the data, IntelliJ's <strong>Settings → Languages &amp; Frameworks → Schemas and DTDs</strong> lets the user map a schema file to a pattern of XML files. Mapping <code>FundsXML4.xsd</code> to <code>*.xml</code> in a FundsXML-data directory enables full schema support without needing the <code>xsi:</code> attributes.</p>
+
+<p>IntelliJ's XPath evaluator (under the <strong>Edit → Find → Find Usages</strong> / <strong>XPath Search</strong> menu) is a useful companion for exploring a FundsXML file by query. The XSLT debugger, while not FundsXML-specific, is equally useful for developing XSLT stylesheets that transform FundsXML into other formats.</p>
+
+<h3>11.7.2 Visual Studio Code</h3>
+
+<p>Visual Studio Code does not ship with XML support by default, but the <strong>Red Hat XML extension</strong> (<code>redhat.vscode-xml</code>) is free, widely used, and provides a comparable level of functionality to IntelliJ's built-in support. Installing it from the VS Code marketplace takes under a minute; once installed, it detects <code>.xml</code> files automatically and offers schema-driven features.</p>
+
+<p>Schema association works the same way as in IntelliJ: either the <code>xsi:noNamespaceSchemaLocation</code> attribute on the root element, or a project-level configuration in VS Code's settings that maps schemas to file patterns. The Red Hat extension reads a <code>.settings/org.eclipse.wst.xml.core.prefs</code> file (inherited from Eclipse WTP conventions) and also a VS Code-native configuration, so either approach works.</p>
+
+<p>The extension provides continuous validation, auto-formatting, XPath evaluation, and XSLT 3.0 support through its bundled Saxon-HE. For a developer who lives in VS Code, it is the most capable path into FundsXML work, and the experience closely mirrors FreeXmlToolkit's XML Editor without requiring a separate desktop application to be running.</p>
+
+<h3>11.7.3 Eclipse</h3>
+
+<p>Eclipse has supported XSD-aware XML editing for many years through the <strong>Eclipse Web Tools Platform (WTP)</strong>, which is included in every Eclipse IDE for Java EE Developers and most other Eclipse packages. The WTP XML editor is mature, well-tested, and fully schema-aware.</p>
+
+<p>For FundsXML work in Eclipse, the typical configuration is to register <code>FundsXML4.xsd</code> in <strong>Preferences → XML → XML Catalog</strong>, which maps a public or system identifier to the local schema file. Once registered, any FundsXML file opened in the editor resolves its schema automatically and gets validation, autocomplete, and "open declaration" navigation.</p>
+
+<p>Eclipse's support for XSLT and Schematron comes through additional plugins (the Eclipse Marketplace has several; the names change over time, so the current recommendation is to search the marketplace for "Schematron" and "XSLT" and pick the most recently updated result). The core XML editor is what most FundsXML developers use day to day; the specialised plugins are reached for only when a specific workflow needs them.</p>
+
+<h3>11.7.4 Which IDE to Choose</h3>
+
+<p>All three IDEs provide equivalent FundsXML functionality for the core editing tasks: syntax highlighting, schema validation, autocomplete, and navigation. The choice between them is almost always determined by the surrounding toolchain rather than by any FundsXML-specific feature. A developer whose project is Java and uses Gradle or Maven will find IntelliJ or Eclipse natural; a developer whose project is polyglot (Python, Go, Rust, JavaScript, with XML at the boundary) will find VS Code lighter-weight and faster to start. None of the three has a compelling advantage for FundsXML work specifically, and a team with developers using all three can share Schematron files, XSD files, and code without friction.</p>
+
+<hr>
+
+<h2>11.8 Common Pitfalls</h2>
+
+<ul>
+  <li><strong>Using a desktop tool for a pipeline task.</strong> FreeXmlToolkit is excellent for interactive work but is not designed for unattended batch execution. A pipeline that invokes the toolkit in headless mode to validate deliveries is slower, more fragile, and harder to debug than the <code>xmllint</code> + Schematron pipeline from Chapter 10. Use the right tool for the right job.</li>
+  <li><strong>Using CLI tools for exploration.</strong> The complementary mistake: trying to understand an unfamiliar FundsXML file by running <code>xmllint --xpath</code> queries from the command line one at a time. It is possible but tedious; an interactive editor with tree view and XPath evaluation is dramatically faster for exploration tasks.</li>
+  <li><strong>Running the Online Schema Viewer on a schema version that differs from the production schema.</strong> If the producer is using a slightly modified or slightly older schema than the one the viewer shows, some element definitions differ in ways that matter. For authoritative answers about <em>your</em> schema, use FreeXmlToolkit's XSD tab or a local copy of the viewer, not the public one.</li>
+  <li><strong>Forgetting to update mapping files when the schema changes.</strong> The CSV Converter relies on mapping files that describe how to map columns to XPaths. A FundsXML minor release that adds new fields or renames existing ones will not break the converter until the next run, and even then the breakage may be silent (new fields simply not populated). Include a test step in the pipeline that re-runs the converter after every schema update and diffs the output against an expected fixture.</li>
+  <li><strong>Installing a generator with random values and forgetting to fix the seed.</strong> A consumer test suite that runs against generator output <em>without</em> a fixed seed produces a different set of test data on every run, and failures become non-reproducible. Always fix the seed for reproducible tests; randomise only for ad-hoc exploration.</li>
+  <li><strong>Treating the IDE XML validation as equivalent to CI XML validation.</strong> Different XSD validators can produce subtly different results, particularly around edge cases like default attribute values or identity-constraint handling. A file that validates in IntelliJ should still be run through <code>xmllint</code> (or whichever validator the pipeline uses) before emission, because the pipeline's validator is the authoritative one.</li>
+  <li><strong>Relying on a single tool.</strong> A team that depends entirely on FreeXmlToolkit is vulnerable to the day FreeXmlToolkit has an unresolved bug; a team that depends entirely on the Online Schema Viewer is vulnerable to network outages. Mature teams keep at least two tools available for any critical workflow, so that an outage of one does not stop work entirely.</li>
+</ul>
+
+<hr>
+
+<h2>11.9 Key Takeaways</h2>
+
+<ul>
+  <li>The FundsXML tool ecosystem serves a handful of distinct workflows — reading and exploring, schema browsing, test data generation, format conversion, validation, signing. Most of the tools in the ecosystem serve one or more of these workflows, and many of them overlap.</li>
+  <li><strong>FreeXmlToolkit</strong> is the multi-function desktop workstation that covers almost every workflow in a single application: XML editing with inline XSD and Schematron validation, schema browsing, sample-data generation, XSLT development, XML-to-PDF generation, digital signatures, and a favourites system for cross-tab file management. It is the default recommendation for interactive FundsXML work.</li>
+  <li><strong>The Online Schema Viewer</strong> is a zero-install browser-based way to look up element definitions, documentation, and type hierarchies in the FundsXML XSD. It is the fastest path to answering "what does this element mean?" without launching a desktop tool.</li>
+  <li><strong>The FundsXML CSV Converter</strong> bridges between spreadsheets and FundsXML in both directions, and is used by producers whose data sources are Excel-based and by consumers who want to review FundsXML data in a tabular form.</li>
+  <li><strong>The FundsXML Generator</strong> produces schema-valid sample files for testing and development. Its output is structurally comprehensive but not semantically real; use it for pipeline exercises, not for business-logic testing.</li>
+  <li><strong>IDE integration</strong> — IntelliJ IDEA, Visual Studio Code (with the Red Hat XML extension), and Eclipse (with WTP) — is the preferred path for developers who already live in an IDE. All three support FundsXML through generic XSD-aware XML editing once the schema is configured, and no FundsXML-specific plugin is required.</li>
+  <li>The command-line tools from Chapter 10 (<code>xmllint</code>, <code>lxml.isoschematron</code>) and the interactive tools from this chapter are complementary, not competitive. A mature team uses both: CLI for pipelines, GUI for interactive debugging and development.</li>
+</ul>
+
+<p>With the tooling landscape mapped, the next question is: <em>how does a FundsXML pipeline fit into a larger system landscape?</em> Chapter 12 treats that question. It covers typical architecture scenarios, the choice between programming languages for FundsXML work, strategies for reading and writing at scale, database and data-warehouse integration, and the scheduling and automation patterns that take a FundsXML producer from a proof-of-concept to a production pipeline.</p>
+
+
+<script>
+(function() {
+  var headings = document.querySelectorAll('h2');
+  if (headings.length === 0) return;
+  var nav = document.createElement('nav');
+  nav.id = 'toc-nav';
+  var title = document.createElement('div');
+  title.className = 'toc-title';
+  var h1 = document.querySelector('h1');
+  title.textContent = h1 ? h1.childNodes[0].textContent.trim() : 'Contents';
+  nav.appendChild(title);
+  var ul = document.createElement('ul');
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + (i + 1);
+    h.id = id;
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  nav.appendChild(ul);
+  document.body.insertBefore(nav, document.body.firstChild);
+  var btn = document.createElement('button');
+  btn.id = 'toc-toggle';
+  btn.className = 'open';
+  btn.innerHTML = '&#9776;';
+  btn.title = 'Toggle navigation';
+  btn.addEventListener('click', function() {
+    nav.classList.toggle('collapsed');
+    btn.classList.toggle('open');
+  });
+  document.body.insertBefore(btn, document.body.firstChild);
+  var links = nav.querySelectorAll('a');
+  function updateActive() {
+    var scrollPos = window.scrollY + 80;
+    var current = null;
+    headings.forEach(function(h, i) {
+      if (h.offsetTop <= scrollPos) current = i;
+    });
+    links.forEach(function(a, i) {
+      a.classList.toggle('active', i === current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, {passive: true});
+  updateActive();
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("h1, h2, h3, h4").forEach(function(el) {
+    var subtitle = el.querySelector(".subtitle");
+    var text = (subtitle && el.firstChild && el.firstChild.nodeType === 3)
+      ? el.firstChild.textContent.trim()
+      : el.textContent.trim();
+    var match = text.match(/^(\d+\.\d+(?:\.\d+)?)/);
+    var id;
+    if (match) {
+      id = "s" + match[1];
+    } else {
+      id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").substring(0, 60);
+    }
+    if (!el.id) el.id = id;
+    var a = document.createElement("a");
+    a.className = "heading-anchor";
+    a.href = "#" + el.id;
+    a.textContent = "#";
+    a.title = "Link to this section";
+    if (subtitle) {
+      el.insertBefore(a, subtitle);
+    } else {
+      el.appendChild(a);
+    }
+  });
+});
+</script>
+<button id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+<script>
+(function(){
+  var btn=document.getElementById('top-btn');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible', window.scrollY>400);
+  });
+})();
+</script>
+<nav class="chapter-nav" aria-label="Chapter navigation"><a class="cn-prev" href="Chapter10.html">&lsaquo; Chapter 10</a><a class="cn-toc" href="index.html">Contents</a><a class="cn-next" href="Chapter12.html">Chapter 12 &rsaquo;</a></nav>
+<button id="theme-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle light/dark theme"><span class="icon-moon" aria-hidden="true">☽</span><span class="icon-sun" aria-hidden="true">☀</span></button>
+<script id="theme-toggle">(function(){var b=document.getElementById('theme-btn');if(!b)return;b.addEventListener('click',function(){var isDark=document.documentElement.getAttribute('data-theme')==='dark';if(isDark){document.documentElement.removeAttribute('data-theme');try{localStorage.setItem('fundsxml-theme','light');}catch(e){}}else{document.documentElement.setAttribute('data-theme','dark');try{localStorage.setItem('fundsxml-theme','dark');}catch(e){}}});})();</script>
+</body>
+</html>
