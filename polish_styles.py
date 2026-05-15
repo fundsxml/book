@@ -947,6 +947,7 @@ TOC_CSS = """\
     box-shadow: var(--shadow-sm);
   }
   .chapter {
+    display: block;
     border: 1px solid var(--border);
     border-left: 4px solid var(--blue);
     padding: 18px 22px;

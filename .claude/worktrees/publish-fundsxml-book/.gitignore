@@ -1,9 +1,0 @@
-.playwright-mcp/
-node_modules/
-package-lock.json
-FundsXML_Book.pdf
-.DS_Store
-._.DS_Store
-**/.DS_Store
-**/._.DS_Store
-__pycache__/

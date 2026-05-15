@@ -286,14 +286,16 @@ du -h "$OUT"
 # ---------------------------------------------------------------------------
 IDX="$DIR/index.html"
 
-# Emit a linked card for a file: <stem> <fallback-label>
+# Emit a linked card for a file: <stem> <fallback-label> <page-range>
 card() {
-    local file="$1" fallback="$2"
+    local file="$1" fallback="$2" pages="$3"
     [ -f "$DIR/$file" ] || return 0
     local title
     title="$(grep -oE '<title>[^<]*</title>' "$DIR/$file" | head -1 | sed -E 's|</?title>||g')"
     [ -n "$title" ] || title="$fallback"
-    echo "    <a class=\"chapter\" href=\"${file}\">${title}</a>" >> "$IDX"
+    local badge=""
+    [ -n "$pages" ] && badge=" <span class=\"pages\">pages ${pages}</span>"
+    echo "    <a class=\"chapter\" href=\"${file}\">${title}${badge}</a>" >> "$IDX"
 }
 
 part() { echo "    <h2 class=\"part-title\">$1</h2>" >> "$IDX"; }
@@ -328,20 +330,32 @@ cat >> "$IDX" << 'IDX_MID'
 IDX_MID
 
 part "Front Matter"
-card "ManagementSummary.html" "Management Summary"
+card "ManagementSummary.html" "Management Summary" "5–6"
 part "Part I — Foundations"
-card "Chapter01.html" "Chapter 1"
-card "Chapter02.html" "Chapter 2"
-card "Chapter03.html" "Chapter 3"
+card "Chapter01.html" "Chapter 1" "7–31"
+card "Chapter02.html" "Chapter 2" "32–61"
+card "Chapter03.html" "Chapter 3" "62–81"
 part "Part II — FundsXML in Detail"
-for ch in 04 05 06 07 08 09; do card "Chapter${ch}.html" "Chapter ${ch}"; done
+card "Chapter04.html" "Chapter 4" "82–103"
+card "Chapter05.html" "Chapter 5" "104–143"
+card "Chapter06.html" "Chapter 6" "144–188"
+card "Chapter07.html" "Chapter 7" "189–218"
+card "Chapter08.html" "Chapter 8" "219–268"
+card "Chapter09.html" "Chapter 9" "269–293"
 part "Part III — Implementation and Practice"
-for ch in 10 11 12 13; do card "Chapter${ch}.html" "Chapter ${ch}"; done
+card "Chapter10.html" "Chapter 10" "294–318"
+card "Chapter11.html" "Chapter 11" "319–346"
+card "Chapter12.html" "Chapter 12" "347–378"
+card "Chapter13.html" "Chapter 13" "379–408"
 part "Part IV — Outlook and Reference"
-card "Chapter14.html" "Chapter 14"
+card "Chapter14.html" "Chapter 14" "409–426"
 part "Appendices"
-for app in A B C D E; do card "Appendix${app}.html" "Appendix ${app}"; done
-card "Index.html" "Index"
+card "AppendixA.html" "Appendix A" "427–438"
+card "AppendixB.html" "Appendix B" "439–446"
+card "AppendixC.html" "Appendix C" "447–461"
+card "AppendixD.html" "Appendix D" "462–481"
+card "AppendixE.html" "Appendix E" "482–485"
+card "Index.html" "Index" "506–515"
 
 cat >> "$IDX" << 'IDX_FOOT'
   </div>
