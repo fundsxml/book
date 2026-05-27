@@ -3,6 +3,8 @@
 *A Practical Handbook for Fund Professionals*
 Based on FundsXML Schema Version 4.2.x · 2026
 
+Part of the **[FundsXML](https://www.fundsxml.org/)** standard — the open, royalty-free European fund data standard.
+
 ---
 
 ## 📖 Read the book online
