@@ -1371,6 +1371,19 @@ CODE_BLOCK_RE = re.compile(
 )
 TOK_OPEN_RE = re.compile(r'<span class="tok-[^"]*">')
 
+# Attribute value: quotes may be literal (") or HTML-encoded (&quot; / &#34; and
+# the apostrophe forms) — the book's HTML uses both — and values can contain
+# other entities (e.g. &amp;gt;), so the encoded forms match to the next closing
+# delimiter rather than "up to the next &".
+_ATTR_VAL = (
+    r'(?:"[^"]*"'
+    r"|'[^']*'"
+    r"|&quot;.*?&quot;"
+    r"|&#34;.*?&#34;"
+    r"|&apos;.*?&apos;"
+    r"|&#39;.*?&#39;)"
+)
+
 # One construct at a time; alternatives are tried left-to-right at each '&lt;'.
 # Comment and CDATA come before the generic declaration/tag so their inner text
 # is never mis-parsed.
@@ -1380,11 +1393,13 @@ _CONSTRUCT_RE = re.compile(
     r"|(?P<pi>&lt;\?.*?\?&gt;)"
     r"|(?P<doctype>&lt;!(?!--).*?&gt;)"
     r"|(?P<tag>&lt;/?[A-Za-z_][\w:.\-]*"
-    r"(?:\s+[\w:.\-]+(?:\s*=\s*(?:\"[^\"]*\"|'[^']*'))?)*\s*/?&gt;)",
+    r"(?:\s+[\w:.\-]+(?:\s*=\s*" + _ATTR_VAL + r")?)*\s*/?&gt;)",
     re.DOTALL,
 )
 _TAG_RE = re.compile(r"^(&lt;/?)([\w:.\-]+)(.*?)(/?&gt;)$", re.DOTALL)
-_ATTR_RE = re.compile(r"([\w:.\-]+)(\s*)(=)(\s*)(\"[^\"]*\"|'[^']*')")
+_ATTR_RE = re.compile(
+    r"([\w:.\-]+)(\s*)(=)(\s*)(" + _ATTR_VAL + r")", re.DOTALL
+)
 
 _CDATA_OPEN = "&lt;![CDATA["
 _CDATA_CLOSE = "]]&gt;"
