@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -613,12 +633,12 @@
 
 <p>At its heart, a ControlData block is small. Reduced to its mandatory fields only, with generic placeholders in place of real values, it looks like this:</p>
 
-<pre><code>&lt;ControlData&gt;
-  &lt;UniqueDocumentID&gt;...&lt;/UniqueDocumentID&gt;
-  &lt;DocumentGenerated&gt;...&lt;/DocumentGenerated&gt;
-  &lt;ContentDate&gt;...&lt;/ContentDate&gt;
-  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
-&lt;/ControlData&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Four elements — that is the whole of the mandatory core. Table 4.1 summarises every ControlData field at a glance.</p>
@@ -679,8 +699,8 @@
 
 <p>An example makes the difference concrete. The Europa Growth Fund closes its books for 31 March 2026 at its Luxembourg valuation point (13:00 CET on that same day). The fund administrator's batch job runs overnight and produces the monthly FundsXML delivery at 06:47 UTC on 1 April 2026. The file is placed on the SFTP drop the moment it is finished. The correct ControlData values are:</p>
 
-<pre><code>&lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-&lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Any other combination is wrong. Setting <em>ContentDate</em> to <code>2026-04-01</code> would claim that the content describes 1 April, which is untrue. Setting <em>DocumentGenerated</em> to <code>2026-03-31T…</code> would lie about when the file came into existence.</p>
@@ -800,59 +820,59 @@
 
 <p>Day 1, the first delivery of the month-end:</p>
 
-<pre><code>&lt;ControlData&gt;
-  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001&lt;/UniqueDocumentID&gt;
-  &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
-  &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-  &lt;Language&gt;en&lt;/Language&gt;
-&lt;/ControlData&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Day 2, a late-arriving piece of data extends the previous delivery without replacing it:</p>
 
-<pre><code>&lt;ControlData&gt;
-  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b002&lt;/UniqueDocumentID&gt;
-  &lt;DocumentGenerated&gt;2026-04-02T09:12:04Z&lt;/DocumentGenerated&gt;
-  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
-  &lt;DataOperation&gt;AMEND&lt;/DataOperation&gt;
-  &lt;RelatedDocumentIDs&gt;
-    &lt;RelatedDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001&lt;/RelatedDocumentID&gt;
-  &lt;/RelatedDocumentIDs&gt;
-  &lt;Language&gt;en&lt;/Language&gt;
-&lt;/ControlData&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b002<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-02T09:12:04Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>AMEND<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RelatedDocumentIDs</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RelatedDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001<span class="tok-punct">&lt;/</span><span class="tok-tag">RelatedDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">RelatedDocumentIDs</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Day 3, an NAV that was reported incorrectly on Day 1 is corrected:</p>
 
-<pre><code>&lt;ControlData&gt;
-  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b003&lt;/UniqueDocumentID&gt;
-  &lt;DocumentGenerated&gt;2026-04-03T14:28:50Z&lt;/DocumentGenerated&gt;
-  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
-  &lt;DataOperation&gt;AMEND&lt;/DataOperation&gt;
-  &lt;RelatedDocumentIDs&gt;
-    &lt;RelatedDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b002&lt;/RelatedDocumentID&gt;
-  &lt;/RelatedDocumentIDs&gt;
-  &lt;Language&gt;en&lt;/Language&gt;
-&lt;/ControlData&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b003<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-03T14:28:50Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>AMEND<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RelatedDocumentIDs</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RelatedDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b002<span class="tok-punct">&lt;/</span><span class="tok-tag">RelatedDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">RelatedDocumentIDs</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Day 4, the producer discovers that the entire Day 1 delivery was emitted for the wrong fund and retracts it:</p>
 
-<pre><code>&lt;ControlData&gt;
-  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b004&lt;/UniqueDocumentID&gt;
-  &lt;DocumentGenerated&gt;2026-04-04T08:03:22Z&lt;/DocumentGenerated&gt;
-  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-  &lt;DataSupplier&gt;...&lt;/DataSupplier&gt;
-  &lt;DataOperation&gt;DELETE&lt;/DataOperation&gt;
-  &lt;RelatedDocumentIDs&gt;
-    &lt;RelatedDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b003&lt;/RelatedDocumentID&gt;
-  &lt;/RelatedDocumentIDs&gt;
-  &lt;Language&gt;en&lt;/Language&gt;
-&lt;/ControlData&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b004<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-04T08:03:22Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>DELETE<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RelatedDocumentIDs</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RelatedDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b003<span class="tok-punct">&lt;/</span><span class="tok-tag">RelatedDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">RelatedDocumentIDs</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Several observations deserve to be made about this small series. First, every delivery has a <em>new</em> <em>UniqueDocumentID</em> — never a reused one, even though the subject and the <em>ContentDate</em> are the same throughout. Second, every non-<em>INITIAL</em> delivery populates <em>RelatedDocumentIDs</em> to point at the immediately preceding delivery in the stream, not at the <em>INITIAL</em> from Day 1. This is the linear-chain convention that §4.7 recommends: it makes the full history reconstructable by walking the chain backwards, and it avoids the question of what a <em>RelatedDocumentID</em> should mean when it points at a delivery that has itself been superseded. Third, the <em>DataSupplier</em> block is identical across all four deliveries, because the business sender has not changed — only the operational relationship between the deliveries has.</p>
@@ -879,16 +899,16 @@
 
 <p>A point of practical importance that often surprises first-time FundsXML implementers: the schema file does <strong>not</strong> declare a <code>targetNamespace</code>. This means instance documents live in the unnamed namespace, and the root element is written without a default namespace declaration. Instead, the root element carries an <code>xsi:noNamespaceSchemaLocation</code> attribute that points directly to the schema file for the version the producer is building against:</p>
 
-<pre><code>&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:noNamespaceSchemaLocation="https://github.com/fundsxml/schema/releases/download/4.2.2/FundsXML.xsd"&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+   <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"https://github.com/fundsxml/schema/releases/download/4.2.2/FundsXML.xsd"</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Every released version of the schema is published as a GitHub release under the <code>fundsxml/schema</code> repository. The URL follows a predictable pattern — <code>https://github.com/fundsxml/schema/releases/download/{version}/FundsXML.xsd</code> — where <code>{version}</code> is the release tag (e.g. <code>4.2.2</code>). This gives every instance document a stable, publicly resolvable reference to the exact schema it was validated against, and it gives any consumer or validator a direct download path to that schema without needing a local copy.</p>
 
 <p><strong>Upgrading to a newer schema version</strong> is correspondingly straightforward: the producer updates the version number in the URL. Moving from 4.2.2 to 4.2.5, for example, requires nothing more than changing the root element to:</p>
 
-<pre><code>&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:noNamespaceSchemaLocation="https://github.com/fundsxml/schema/releases/download/4.2.5/FundsXML.xsd"&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+   <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"https://github.com/fundsxml/schema/releases/download/4.2.5/FundsXML.xsd"</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>All versions of FundsXML since 4.0.0 are designed to be backward compatible, so within the 4.x line such an upgrade is a smooth transition: a consumer built against 4.2.2 will usually accept files produced against 4.2.5, and vice versa. The backwards-compatibility discipline described in §3.3.2 ensures that <em>patch</em> releases add clarifications and non-breaking adjustments, while <em>minor</em> releases add new elements or modules but preserve compatibility for everything that was already present.</p>
@@ -901,22 +921,22 @@
 
 <p>We are now ready to assemble the first complete, schema-valid example of the book. The block below is the actual <em>ControlData</em> envelope of the Europa Growth Fund's month-end delivery for 31 March 2026 — the same delivery from which every later chapter of Part II will show a fragment. Field order follows the sequence the schema requires, not the didactic order of this chapter.</p>
 
-<pre><code>&lt;ControlData&gt;
-  &lt;UniqueDocumentID&gt;8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001&lt;/UniqueDocumentID&gt;
-  &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-  &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-  &lt;DataSupplier&gt;
-    &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-    &lt;Short&gt;EAM&lt;/Short&gt;
-    &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-    &lt;Type&gt;AssetManager&lt;/Type&gt;
-    &lt;Contact&gt;
-      &lt;Email&gt;fundsxml-support@europa-asset-management.com&lt;/Email&gt;
-    &lt;/Contact&gt;
-  &lt;/DataSupplier&gt;
-  &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-  &lt;Language&gt;en&lt;/Language&gt;
-&lt;/ControlData&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>8a1c0e76-1b7d-4f55-9d2e-11f4a0c8b001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>AssetManager<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Contact</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>fundsxml-support@europa-asset-management.com<span class="tok-punct">&lt;/</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Contact</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Reading the block field by field, every design choice from the previous sections becomes visible. The <em>UniqueDocumentID</em> is a UUID, unique across the producer's output stream for the life of the system (§4.4.1). The <em>DocumentGenerated</em> timestamp is expressed in UTC and records the moment the batch job finished writing the file; the <em>ContentDate</em> is a plain date and refers to the business reporting day, which is the last business day of March 2026 (§4.4.2). The <em>DataSupplier</em> block names the fund's asset manager rather than the fund administrator that technically produced the file, and carries the <em>SystemCountry</em> / <em>Short</em> pair that a consumer's allowlist will match against rather than the <em>Name</em> (§4.5.1). The <em>Language</em> is English, which indicates the language of the textual content inside the file — the fund's <em>marketing</em> names and descriptions may still appear in several languages, and Chapter 5 treats that case explicitly. The <em>DataOperation</em> is <em>INITIAL</em>, because this is the first month-end delivery for 31 March 2026; the next delivery in the same stream, whatever it turns out to be, will populate <em>RelatedDocumentIDs</em> to point back at this file's <em>UniqueDocumentID</em> (§4.6, §4.7).</p>

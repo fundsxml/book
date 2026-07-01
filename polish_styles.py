@@ -50,6 +50,12 @@ BASE_CSS = """\
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -74,6 +80,12 @@ BASE_CSS = """\
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -266,6 +278,12 @@ BASE_CSS = """\
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -549,6 +567,8 @@ BASE_CSS = """\
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -1335,6 +1355,102 @@ def inject_nav(html: str, name: str) -> str:
     return html
 
 
+# ---------------------------------------------------------------------------
+# XML syntax highlighting
+# ---------------------------------------------------------------------------
+# Block code is emitted as <pre><code>...</code></pre> with HTML-escaped content
+# (&lt; &gt; &amp;), no language class. We colour only XML blocks — detected by
+# the inner text starting with an escaped '<' — by wrapping tokens in
+# <span class="tok-..."> at build time. ASCII-art figures and non-XML blocks
+# (shell/output) never start with &lt; and are left untouched. The transform is
+# idempotent: previously injected token spans are unwrapped before re-tokenising,
+# so a second run reproduces byte-identical output (required by the CI gate).
+
+CODE_BLOCK_RE = re.compile(
+    r'<pre><code(?:\s+class="[^"]*")?>(.*?)</code></pre>', re.DOTALL
+)
+TOK_OPEN_RE = re.compile(r'<span class="tok-[^"]*">')
+
+# One construct at a time; alternatives are tried left-to-right at each '&lt;'.
+# Comment and CDATA come before the generic declaration/tag so their inner text
+# is never mis-parsed.
+_CONSTRUCT_RE = re.compile(
+    r"(?P<comment>&lt;!--.*?--&gt;)"
+    r"|(?P<cdata>&lt;!\[CDATA\[.*?\]\]&gt;)"
+    r"|(?P<pi>&lt;\?.*?\?&gt;)"
+    r"|(?P<doctype>&lt;!(?!--).*?&gt;)"
+    r"|(?P<tag>&lt;/?[A-Za-z_][\w:.\-]*"
+    r"(?:\s+[\w:.\-]+(?:\s*=\s*(?:\"[^\"]*\"|'[^']*'))?)*\s*/?&gt;)",
+    re.DOTALL,
+)
+_TAG_RE = re.compile(r"^(&lt;/?)([\w:.\-]+)(.*?)(/?&gt;)$", re.DOTALL)
+_ATTR_RE = re.compile(r"([\w:.\-]+)(\s*)(=)(\s*)(\"[^\"]*\"|'[^']*')")
+
+_CDATA_OPEN = "&lt;![CDATA["
+_CDATA_CLOSE = "]]&gt;"
+
+
+def _hl_attrs(mid: str) -> str:
+    def repl(m: "re.Match[str]") -> str:
+        return (
+            f'<span class="tok-attr">{m.group(1)}</span>{m.group(2)}'
+            f'<span class="tok-punct">=</span>{m.group(4)}'
+            f'<span class="tok-string">{m.group(5)}</span>'
+        )
+
+    return _ATTR_RE.sub(repl, mid)
+
+
+def _hl_tag(tag: str) -> str:
+    m = _TAG_RE.match(tag)
+    if not m:
+        return tag
+    opend, name, mid, closed = m.groups()
+    return (
+        f'<span class="tok-punct">{opend}</span>'
+        f'<span class="tok-tag">{name}</span>'
+        f"{_hl_attrs(mid)}"
+        f'<span class="tok-punct">{closed}</span>'
+    )
+
+
+def _tokenize_xml(text: str) -> str:
+    out: list[str] = []
+    pos = 0
+    for m in _CONSTRUCT_RE.finditer(text):
+        out.append(text[pos : m.start()])  # text between constructs (default ink)
+        pos = m.end()
+        kind = m.lastgroup
+        s = m.group()
+        if kind == "comment":
+            out.append(f'<span class="tok-comment">{s}</span>')
+        elif kind == "cdata":
+            inner = s[len(_CDATA_OPEN) : -len(_CDATA_CLOSE)]
+            out.append(f'<span class="tok-decl">{_CDATA_OPEN}</span>')
+            out.append(f'<span class="tok-string">{inner}</span>')
+            out.append(f'<span class="tok-decl">{_CDATA_CLOSE}</span>')
+        elif kind in ("pi", "doctype"):
+            out.append(f'<span class="tok-decl">{s}</span>')
+        else:  # tag
+            out.append(_hl_tag(s))
+    out.append(text[pos:])
+    return "".join(out)
+
+
+def highlight_code(html: str) -> str:
+    """Syntax-highlight XML inside block <pre><code> elements, idempotently."""
+
+    def repl(m: "re.Match[str]") -> str:
+        inner = m.group(1)
+        # Unwrap any tokens from a previous run so re-tokenising is deterministic.
+        inner = TOK_OPEN_RE.sub("", inner).replace("</span>", "")
+        if inner.lstrip().startswith("&lt;"):
+            inner = _tokenize_xml(inner)
+        return f"<pre><code>{inner}</code></pre>"
+
+    return CODE_BLOCK_RE.sub(repl, html)
+
+
 def rewrite(path: Path, css: str, check: bool) -> bool:
     if not path.exists():
         print(f"skip (missing): {path.name}")
@@ -1345,6 +1461,7 @@ def rewrite(path: Path, css: str, check: bool) -> bool:
     if n == 0:
         print(f"WARN no <style> block in {path.name}")
         return False
+    replaced = highlight_code(replaced)
     # Order matters for idempotency: inject_nav first, then inject_theme.
     # Both insert before </body>; theme always re-strips and re-appends after
     # the nav bar, giving a stable canonical order on every re-run.

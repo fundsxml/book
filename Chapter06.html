@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -580,25 +600,25 @@
 <p>Imagine a fund administrator's nightly batch file: twenty funds, each with a hundred and fifty positions, all serialised into a single FundsXML document. Many of those positions reference the same instruments. Siemens is held by twelve of the twenty funds; SAP by eight; Nestlé by fifteen; the short list of European blue chips appears in almost every one of them. If the full asset description of Siemens — its name, its LEI, its GICS classification, its primary listing information, its forty or so static fields — were embedded in every position that referenced it, Siemens would be described twelve times in a single file, each time with the same forty fields, each time vulnerable to a transcription or classification mismatch between copies. A producer that rewrites one copy and forgets another creates a file in which two Siemens entries disagree about what Siemens <em>is</em>, and every downstream consumer that tries to reconcile them has a data-quality problem.</p>
 <p>The solution is the one every relational database uses: describe each instrument <em>once</em>, in a central location, and have each position refer to it through an identifier. That central location is <code>&lt;AssetMasterData&gt;</code>, and it sits at the root level of the FundsXML document, outside the <code>&lt;Funds&gt;</code> container, precisely so that it can be shared between several funds in the same delivery. Each position in each fund's portfolio carries only a short pointer — a <code>UniqueID</code> — that tells the consumer where to find the full description. The file is smaller, the descriptions are consistent by construction, and the operational discipline is easier to enforce.</p>
 <p><strong>Figure 6.1 — The portfolio/master-data split</strong></p>
-<pre><code>                       &lt;FundsXML4&gt;
+<pre><code>                       <span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
                             │
           ┌─────────────────┼─────────────────┐
           │                                   │
-       &lt;Funds&gt;                         &lt;AssetMasterData&gt;
+       <span class="tok-punct">&lt;</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>                         <span class="tok-punct">&lt;</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>
           │                                   │
     ┌─────┴─────┐                        ┌────┴────┐
     │           │                        │         │
-  &lt;Fund&gt;      &lt;Fund&gt;                   &lt;Asset&gt;   &lt;Asset&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>      <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>                   <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>   <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
     │           │                        ▲         ▲
   Portfolio   Portfolio                  │         │
     │           │                        │         │
- &lt;Position&gt;──┐  │                        │         │
+ <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>──┐  │                        │         │
     │        │  │                        │         │
- &lt;Position&gt;──┼──┼──→ UniqueID reference──┘         │
+ <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>──┼──┼──→ UniqueID reference──┘         │
     │        │  │                                  │
     │        └──┼──→ UniqueID reference────────────┘
     │           │
- &lt;Position&gt;─────┼──→ UniqueID reference (shared across funds)
+ <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>─────┼──→ UniqueID reference (shared across funds)
                 │
               (etc.)
 </code></pre>
@@ -618,48 +638,48 @@
 <p>The recommended convention, which Chapter 13 will formalise as a project-level decision, is a hybrid: <strong>ISIN when the asset has one, UUID when it does not, and the choice must be deterministic across deliveries</strong>. Deterministic means that the same Siemens asset, generated by the same producer on a different day, receives the same <code>UniqueID</code>. For ISIN-bearing assets this is automatic; for UUID-generated assets it requires a UUID v5 (name-based) computed from a stable internal identifier rather than a fresh random v4 on every run. A producer that emits fresh UUIDs every day makes it impossible for consumers to reconcile the same instrument across consecutive deliveries, which is not quite a correctness problem but is a significant operational nuisance.</p>
 <h3>6.3.3 The Linkage Mechanism in Action</h3>
 <p>A concrete pair of elements makes the linkage visible. The Europa Growth Fund holds 50,000 shares of Siemens AG. In the portfolio block, inside <code>Fund/FundDynamicData/Portfolios/Portfolio/Positions</code>, the position looks like this:</p>
-<pre><code>&lt;Position&gt;
-  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;TotalPercentage&gt;1.75&lt;/TotalPercentage&gt;
-  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-  &lt;Equity&gt;
-    &lt;Units&gt;50000&lt;/Units&gt;
-    &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;162.50&lt;/Amount&gt;&lt;/Price&gt;
-    &lt;MarketValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
-    &lt;/MarketValue&gt;
-  &lt;/Equity&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>1.75<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>50000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;162.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Elsewhere in the same document, inside the root-level <code>&lt;AssetMasterData&gt;</code>, the corresponding asset entry carries the matching <code>UniqueID</code> and the full instrument description:</p>
-<pre><code>&lt;Asset&gt;
-  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
-  &lt;Identifiers&gt;
-    &lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;
-  &lt;/Identifiers&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;Country&gt;DE&lt;/Country&gt;
-  &lt;Name&gt;Siemens AG&lt;/Name&gt;
-  &lt;AssetType&gt;EQ&lt;/AssetType&gt;
-  &lt;AssetDetails&gt;
-    &lt;Equity&gt;
-      &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
-      &lt;Issuer&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;W38RGI023J3WT1HWRP32&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;Siemens Aktiengesellschaft&lt;/Name&gt;
-        &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
-        &lt;Type&gt;Non-financial corporations&lt;/Type&gt;
-      &lt;/Issuer&gt;
-      &lt;Listing&gt;A&lt;/Listing&gt;
-    &lt;/Equity&gt;
-  &lt;/AssetDetails&gt;
-&lt;/Asset&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens AG<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>EQ<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>XETR<span class="tok-punct">&lt;/</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>W38RGI023J3WT1HWRP32<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens Aktiengesellschaft<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Non-financial corporations<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>A<span class="tok-punct">&lt;/</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Four structural points about this pair are worth stating before we look at any single field. First, the position has a mandatory <code>&lt;TotalValue&gt;</code> (typed <code>FundAmountType</code>) that carries the consolidated value of the whole position in the fund's base currency. This is the one number against which the sum of all positions must reconcile to the fund's total net assets; the detail fields inside the asset-class-specific <code>&lt;Equity&gt;</code> child are there for transparency, not to replace the total. Second, the asset-class-specific child — here <code>&lt;Equity&gt;</code> — is one of a choice of twenty-one variants: <code>Equity</code>, <code>Bond</code>, <code>ShareClass</code>, <code>Warrant</code>, <code>Certificate</code>, <code>Option</code>, <code>Future</code>, <code>FXForward</code>, <code>Swap</code>, <code>Repo</code>, <code>FixedTimeDeposit</code>, <code>CallMoney</code>, <code>Account</code>, <code>Fee</code>, <code>RealEstate</code>, <code>REIT</code>, <code>Loan</code>, <code>Right</code>, <code>Commodity</code>, <code>PrivateEquity</code>, and <code>CommercialPaper</code>. Exactly one child of the choice is required at the end of every position. (The asset-master side of the linkage — <code>AssetDetails</code> — has two additional choice members, <code>Index</code> and <code>Crypto</code>, because the schema allows those instruments to be described as assets but not to be held as portfolio positions. §6.5 returns to this asymmetry.) Third, the asset side uses <code>&lt;AssetType&gt;</code> as a two-character discriminator code — <code>EQ</code> for Equity, <code>BO</code> for Bond, <code>SC</code> for fund share class, <code>FX</code> for FX forward, <code>AC</code> for account, and so on — and the asset's detailed fields live inside a separate <code>&lt;AssetDetails&gt;</code> child whose content mirrors the position-side choice by element name. Fourth, the <code>ISIN</code> lives inside <code>&lt;Identifiers&gt;</code>, not as a direct child of <code>&lt;Asset&gt;</code>; the container takes exactly the same shape as the fund-level and share-class-level <code>&lt;Identifiers&gt;</code> blocks of Chapter 5.</p>
 <p>A consumer that reads the position finds <code>DE0007236101</code> in the <code>UniqueID</code> field, jumps to the <code>&lt;AssetMasterData&gt;</code> block, finds the matching <code>&lt;Asset&gt;</code> entry, and now knows everything it needs to know about Siemens as an instrument. It does this lookup once per distinct asset per delivery, caches the results in memory, and processes the whole portfolio without ever re-parsing the asset descriptions. The cost is linear in the number of distinct instruments, not in the number of position-instrument references.</p>
@@ -1041,73 +1061,73 @@
 <p>Note what is <strong>not</strong> a child of <code>&lt;Equity&gt;</code> but lives one level up on <code>&lt;Position&gt;</code>: <code>TotalValue</code>, <code>TotalPercentage</code>, <code>Currency</code>, <code>PriceDate</code>, <code>PricingSource</code>. Those are position-level concerns and are common to every asset class. A producer that writes <code>&lt;TotalValue&gt;</code> as a sibling of <code>&lt;Units&gt;</code> inside <code>&lt;Equity&gt;</code> is wrong; the field must appear at <code>&lt;Position&gt;</code> level.</p>
 <h3>6.6.3 Equity Example: A Siemens Position</h3>
 <p>A complete pair — position and asset entry — for the Europa Growth Fund's Siemens holding on 31 March 2026.</p>
-<pre><code>&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio/Positions --&gt;
-&lt;Position&gt;
-  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;TotalPercentage&gt;1.75&lt;/TotalPercentage&gt;
-  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-  &lt;Equity&gt;
-    &lt;Units&gt;50000&lt;/Units&gt;
-    &lt;Price&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;162.50&lt;/Amount&gt;
-    &lt;/Price&gt;
-    &lt;MarketValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;
-    &lt;/MarketValue&gt;
-  &lt;/Equity&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio/Positions --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>1.75<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>50000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;162.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 
-&lt;!-- Elsewhere, inside the root AssetMasterData block --&gt;
-&lt;Asset&gt;
-  &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
-  &lt;Identifiers&gt;
-    &lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;
-    &lt;GermanWKN&gt;723610&lt;/GermanWKN&gt;
-  &lt;/Identifiers&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;Country&gt;DE&lt;/Country&gt;
-  &lt;Name&gt;Siemens AG&lt;/Name&gt;
-  &lt;AssetType&gt;EQ&lt;/AssetType&gt;
-  &lt;AssetDetails&gt;
-    &lt;Equity&gt;
-      &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
-      &lt;Issuer&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;W38RGI023J3WT1HWRP32&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;Siemens Aktiengesellschaft&lt;/Name&gt;
-        &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
-        &lt;Type&gt;Non-financial corporations&lt;/Type&gt;
-      &lt;/Issuer&gt;
-      &lt;Listing&gt;A&lt;/Listing&gt;
-      &lt;CustomMarketCapitalization&gt;
-        &lt;Name&gt;Large Cap&lt;/Name&gt;
-        &lt;Date&gt;2026-03-31&lt;/Date&gt;
-        &lt;Value&gt;145000000000&lt;/Value&gt;
-      &lt;/CustomMarketCapitalization&gt;
-      &lt;Industries&gt;
-        &lt;IndustryCode&gt;
-          &lt;Name&gt;GICS&lt;/Name&gt;
-          &lt;Date&gt;2026-03-31&lt;/Date&gt;
-          &lt;Value&gt;20106010&lt;/Value&gt;
-        &lt;/IndustryCode&gt;
-      &lt;/Industries&gt;
-    &lt;/Equity&gt;
-  &lt;/AssetDetails&gt;
-  &lt;Classifications&gt;
-    &lt;Classification&gt;
-      &lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;
-      &lt;Type&gt;Sector&lt;/Type&gt;
-      &lt;Language&gt;en&lt;/Language&gt;
-      &lt;Value level=&quot;1&quot;&gt;Industrials&lt;/Value&gt;
-      &lt;Value level=&quot;2&quot;&gt;Industrial Conglomerates&lt;/Value&gt;
-    &lt;/Classification&gt;
-  &lt;/Classifications&gt;
-&lt;/Asset&gt;
+<span class="tok-comment">&lt;!-- Elsewhere, inside the root AssetMasterData block --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">GermanWKN</span><span class="tok-punct">&gt;</span>723610<span class="tok-punct">&lt;/</span><span class="tok-tag">GermanWKN</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens AG<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>EQ<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>XETR<span class="tok-punct">&lt;/</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>W38RGI023J3WT1HWRP32<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens Aktiengesellschaft<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Non-financial corporations<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>A<span class="tok-punct">&lt;/</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">CustomMarketCapitalization</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Large Cap<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>145000000000<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">CustomMarketCapitalization</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Industries</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">IndustryCode</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>GICS<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>20106010<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">IndustryCode</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Industries</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UnlistedGroup</span><span class="tok-punct">&gt;</span>GICS<span class="tok-punct">&lt;/</span><span class="tok-tag">UnlistedGroup</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Sector<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+      &lt;Value level=&quot;1&quot;&gt;Industrials<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      &lt;Value level=&quot;2&quot;&gt;Industrial Conglomerates<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading field by field: the position's <code>&lt;UniqueID&gt;</code> is the ISIN, following the convention of §6.3.2 (and satisfying the <code>xs:ID</code> constraint because <code>DE0007236101</code> begins with a letter). The consolidated <code>&lt;TotalValue&gt;</code> is 8.125 million euros — approximately 1.75% of the fund's total net assets from Chapter 5 — and lives in the fund's base currency, flagged <code>isFundCcy="true"</code>. Inside <code>&lt;Equity&gt;</code>, the position says the fund holds 50,000 Siemens shares, last priced at 162.50 EUR at Xetra's close on 31 March 2026, with a market value equal to <code>Units × Price</code> also in euros.</p>
 <p>The asset entry confirms the instrument identity. <code>&lt;Identifiers&gt;</code> carries the ISIN and the six-character German WKN (723610, the historical code that German retail systems still use alongside the ISIN). The top-level <code>&lt;Currency&gt;</code> names the instrument's nominal currency (EUR) and <code>&lt;Country&gt;</code> names the country of issue (DE). <code>&lt;AssetType&gt;EQ&lt;/AssetType&gt;</code> signals the asset-class to consumers. Inside <code>&lt;AssetDetails&gt;/&lt;Equity&gt;</code>, the listing information — Xetra (<code>XETR</code>) as the stock market, <code>A</code> (official market) as the listing category — sits above the issuer block. The issuer block is a full <code>&lt;Issuer&gt;</code> element of schema type <code>CompanyType</code>, with Siemens AG's LEI (20 characters, ISO 17442), a mandatory name, a business country, and an ECB-sector classification of <code>Non-financial corporations</code>. A <code>&lt;CustomMarketCapitalization&gt;</code> entry places Siemens in the <code>Large Cap</code> bucket as at 31 March 2026 with a rounded-EUR figure, and an <code>&lt;Industries&gt;</code> entry carries the GICS industry code 20106010 (Industrial Conglomerates) for downstream consumers that speak that taxonomy.</p>
@@ -1268,106 +1288,106 @@
 <p><strong>Optional analytics</strong> such as yield-to-maturity, modified duration, and convexity are not first-class fields of <code>&lt;Bond&gt;</code>. A producer that wants to ship them does so either through <code>&lt;OtherPrices&gt;</code> with a descriptive type label or through <code>&lt;CustomAttributes&gt;</code> on the asset entry. Most producers do not populate them; consumers who need them compute them locally from the bond's characteristics.</p>
 <h3>6.7.3 Bond Example: A German Bund Position</h3>
 <p>A generic European bond fund holds a position in a ten-year German federal government bond: nominal value 1,000,000 EUR, coupon 2.50%, maturity 15 February 2034, clean price 98.75 at the 31 March 2026 valuation. The accrued interest since the last coupon payment on 15 February 2026 is approximately 3,150 EUR (44 days at 2.50% on 1,000,000 EUR nominal).</p>
-<pre><code>&lt;!-- Portfolio position --&gt;
-&lt;Position&gt;
-  &lt;UniqueID&gt;DE0001102614&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;990650.68&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;TotalPercentage&gt;0.99&lt;/TotalPercentage&gt;
-  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-  &lt;Bond&gt;
-    &lt;Nominal&gt;1000000&lt;/Nominal&gt;
-    &lt;Price&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;98.75&lt;/Amount&gt;
-    &lt;/Price&gt;
-    &lt;DirtyPrice&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;99.06507&lt;/Amount&gt;
-    &lt;/DirtyPrice&gt;
-    &lt;MarketValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;987500.00&lt;/Amount&gt;
-    &lt;/MarketValue&gt;
-    &lt;InterestClaimGross&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;3150.68&lt;/Amount&gt;
-    &lt;/InterestClaimGross&gt;
-    &lt;AccruedInterestDays&gt;44&lt;/AccruedInterestDays&gt;
-  &lt;/Bond&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-comment">&lt;!-- Portfolio position --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0001102614<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;990650.68<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>0.99<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Bond</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Nominal</span><span class="tok-punct">&gt;</span>1000000<span class="tok-punct">&lt;/</span><span class="tok-tag">Nominal</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;98.75<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DirtyPrice</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;99.06507<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DirtyPrice</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;987500.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">InterestClaimGross</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;3150.68<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">InterestClaimGross</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccruedInterestDays</span><span class="tok-punct">&gt;</span>44<span class="tok-punct">&lt;/</span><span class="tok-tag">AccruedInterestDays</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Bond</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 
-&lt;!-- Corresponding asset entry --&gt;
-&lt;Asset&gt;
-  &lt;UniqueID&gt;DE0001102614&lt;/UniqueID&gt;
-  &lt;Identifiers&gt;
-    &lt;ISIN&gt;DE0001102614&lt;/ISIN&gt;
-  &lt;/Identifiers&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;Country&gt;DE&lt;/Country&gt;
-  &lt;Name&gt;Bundesrepublik Deutschland 2.50% 02/2034&lt;/Name&gt;
-  &lt;AssetType&gt;BO&lt;/AssetType&gt;
-  &lt;AssetDetails&gt;
-    &lt;Bond&gt;
-      &lt;ConvertibleFlag&gt;false&lt;/ConvertibleFlag&gt;
-      &lt;Issuer&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;529900PY3MOXO1E5MD14&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;Federal Republic of Germany — Finance Agency&lt;/Name&gt;
-        &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
-        &lt;Type&gt;General government&lt;/Type&gt;
-      &lt;/Issuer&gt;
-      &lt;ListingUnit&gt;N&lt;/ListingUnit&gt;
-      &lt;IssueDate&gt;2024-02-15&lt;/IssueDate&gt;
-      &lt;MaturityDate&gt;2034-02-15&lt;/MaturityDate&gt;
-      &lt;CouponDate&gt;2027-02-15&lt;/CouponDate&gt;
-      &lt;Coupon&gt;
-        &lt;Type&gt;fix&lt;/Type&gt;
-        &lt;PaymentFrequency&gt;YEAR&lt;/PaymentFrequency&gt;
-        &lt;InterestRate&gt;2.50&lt;/InterestRate&gt;
-      &lt;/Coupon&gt;
-      &lt;RedemptionRate&gt;100.00&lt;/RedemptionRate&gt;
-      &lt;Redemption&gt;
-        &lt;Type&gt;Bullet&lt;/Type&gt;
-      &lt;/Redemption&gt;
-      &lt;InterestRate&gt;2.50&lt;/InterestRate&gt;
-      &lt;InterestsStartDate&gt;2026-02-15&lt;/InterestsStartDate&gt;
-    &lt;/Bond&gt;
-  &lt;/AssetDetails&gt;
-  &lt;Ratings&gt;
-    &lt;Rating&gt;
-      &lt;RatingCompany&gt;MOODYS&lt;/RatingCompany&gt;
-      &lt;Rating&gt;
-        &lt;Date&gt;2025-06-15&lt;/Date&gt;
-        &lt;Value&gt;Aaa&lt;/Value&gt;
-        &lt;Description&gt;Long-term issuer credit rating — stable outlook&lt;/Description&gt;
-      &lt;/Rating&gt;
-    &lt;/Rating&gt;
-    &lt;Rating&gt;
-      &lt;RatingCompany&gt;STANDARD-POORS&lt;/RatingCompany&gt;
-      &lt;Rating&gt;
-        &lt;Date&gt;2025-05-20&lt;/Date&gt;
-        &lt;Value&gt;AAA&lt;/Value&gt;
-        &lt;Description&gt;Long-term foreign currency — stable outlook&lt;/Description&gt;
-      &lt;/Rating&gt;
-    &lt;/Rating&gt;
-    &lt;Rating&gt;
-      &lt;RatingCompany&gt;FITCH&lt;/RatingCompany&gt;
-      &lt;Rating&gt;
-        &lt;Date&gt;2025-07-02&lt;/Date&gt;
-        &lt;Value&gt;AAA&lt;/Value&gt;
-        &lt;Description&gt;Long-term issuer default rating — stable outlook&lt;/Description&gt;
-      &lt;/Rating&gt;
-    &lt;/Rating&gt;
-  &lt;/Ratings&gt;
-  &lt;Classifications&gt;
-    &lt;Classification&gt;
-      &lt;ListedGroup&gt;ESMA&lt;/ListedGroup&gt;
-      &lt;Type&gt;Bond Type&lt;/Type&gt;
-      &lt;Language&gt;en&lt;/Language&gt;
-      &lt;Value&gt;Sovereign&lt;/Value&gt;
-    &lt;/Classification&gt;
-  &lt;/Classifications&gt;
-&lt;/Asset&gt;
+<span class="tok-comment">&lt;!-- Corresponding asset entry --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0001102614<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>DE0001102614<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Bundesrepublik Deutschland 2.50% 02/2034<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>BO<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Bond</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ConvertibleFlag</span><span class="tok-punct">&gt;</span>false<span class="tok-punct">&lt;/</span><span class="tok-tag">ConvertibleFlag</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>529900PY3MOXO1E5MD14<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Federal Republic of Germany — Finance Agency<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>General government<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ListingUnit</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">ListingUnit</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">IssueDate</span><span class="tok-punct">&gt;</span>2024-02-15<span class="tok-punct">&lt;/</span><span class="tok-tag">IssueDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">MaturityDate</span><span class="tok-punct">&gt;</span>2034-02-15<span class="tok-punct">&lt;/</span><span class="tok-tag">MaturityDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">CouponDate</span><span class="tok-punct">&gt;</span>2027-02-15<span class="tok-punct">&lt;/</span><span class="tok-tag">CouponDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Coupon</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>fix<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PaymentFrequency</span><span class="tok-punct">&gt;</span>YEAR<span class="tok-punct">&lt;/</span><span class="tok-tag">PaymentFrequency</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">InterestRate</span><span class="tok-punct">&gt;</span>2.50<span class="tok-punct">&lt;/</span><span class="tok-tag">InterestRate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Coupon</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">RedemptionRate</span><span class="tok-punct">&gt;</span>100.00<span class="tok-punct">&lt;/</span><span class="tok-tag">RedemptionRate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Redemption</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Bullet<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Redemption</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">InterestRate</span><span class="tok-punct">&gt;</span>2.50<span class="tok-punct">&lt;/</span><span class="tok-tag">InterestRate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">InterestsStartDate</span><span class="tok-punct">&gt;</span>2026-02-15<span class="tok-punct">&lt;/</span><span class="tok-tag">InterestsStartDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Bond</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Ratings</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">RatingCompany</span><span class="tok-punct">&gt;</span>MOODYS<span class="tok-punct">&lt;/</span><span class="tok-tag">RatingCompany</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2025-06-15<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>Aaa<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>Long-term issuer credit rating — stable outlook<span class="tok-punct">&lt;/</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">RatingCompany</span><span class="tok-punct">&gt;</span>STANDARD-POORS<span class="tok-punct">&lt;/</span><span class="tok-tag">RatingCompany</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2025-05-20<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>AAA<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>Long-term foreign currency — stable outlook<span class="tok-punct">&lt;/</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">RatingCompany</span><span class="tok-punct">&gt;</span>FITCH<span class="tok-punct">&lt;/</span><span class="tok-tag">RatingCompany</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2025-07-02<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>AAA<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>Long-term issuer default rating — stable outlook<span class="tok-punct">&lt;/</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Rating</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Ratings</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ListedGroup</span><span class="tok-punct">&gt;</span>ESMA<span class="tok-punct">&lt;/</span><span class="tok-tag">ListedGroup</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Bond Type<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>Sovereign<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading this pair: the position holds one million euros nominal of the 2.50% bund maturing 15 February 2034. The clean price is 98.75 (a small discount to par, reflecting a yield slightly above the coupon). The accrued interest of 3,150.68 EUR is the coupon income earned in the forty-four days since the 15 February 2026 payment, expressed as <code>&lt;InterestClaimGross&gt;</code> inside <code>&lt;Bond&gt;</code>. The position-level <code>&lt;TotalValue&gt;</code> is 990,650.68 EUR — the sum of <code>&lt;Bond&gt;/&lt;MarketValue&gt;</code> (987,500.00 EUR = 1,000,000 × 0.9875) and the interest claim. The <code>&lt;DirtyPrice&gt;</code> of 99.06507 is the clean price plus accrued expressed as a percentage, and consumers that prefer to read a single price number use it.</p>
 <p>The asset entry carries the mandatory <code>&lt;ConvertibleFlag&gt;false&lt;/ConvertibleFlag&gt;</code> as the first child of <code>&lt;Bond&gt;</code> — even for a vanilla government bond. The <code>&lt;Issuer&gt;</code> block names the Federal Republic's bond-issuing agency with its LEI, a business country of <code>DE</code>, and an ECB sector classification of <code>General government</code>; this is where the "sovereign" nature of the bond is encoded, not in any <code>BondType</code> enumeration. The <code>&lt;ListingUnit&gt;N&lt;/ListingUnit&gt;</code> declares that the bond trades by nominal, matching the position-level <code>&lt;Nominal&gt;</code> idiom. The <code>&lt;Coupon&gt;</code> sub-block uses the <code>&lt;PaymentFrequency&gt;YEAR&lt;/PaymentFrequency&gt;</code> code for an annual coupon, and <code>&lt;Type&gt;fix&lt;/Type&gt;</code> (lowercase, as the schema demands) for the fixed-rate nature. The <code>&lt;Redemption&gt;&lt;Type&gt;Bullet&lt;/Type&gt;&lt;/Redemption&gt;</code> declares that the bond is redeemed in a single payment at maturity, not in a sinking-fund pattern.</p>
@@ -1395,62 +1415,62 @@
 <p>The <em>lookthrough</em> concept deserves a short explanation. For certain regulatory calculations — concentration limits, ESG exposure aggregation, Solvency II capital charges — the regulator asks not "what funds does this fund hold?" but "what underlying assets does this fund ultimately hold?" Lookthrough requires the holder to obtain the underlying composition of each held fund and aggregate it into its own exposure calculation. FundsXML carries the decomposition data itself through <code>Portfolio/PositionsDecomposed</code>, a dedicated sibling of <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/FundDynamicData/Portfolios/Portfolio/Positions" target="_blank"><code>&lt;Positions&gt;</code></a> that replaces held share classes with the scaled-down positions of the underlying fund. A producer that wants to offer lookthrough data to its consumers populates <code>&lt;PositionsDecomposed&gt;</code> with the underlying positions and a <code>&lt;LookThroughLevels&gt;</code> count stating how deep the decomposition went; a consumer that needs lookthrough reads from <code>&lt;PositionsDecomposed&gt;</code> rather than from <code>&lt;Positions&gt;</code>. There is no boolean "lookthrough required" flag anywhere on the share-class instrument.</p>
 <h3>6.8.2 Fund Position Example</h3>
 <p>A small illustrative example — not from the Europa Growth Fund, because a pure equity UCITS rarely holds ETFs of its own asset class, but from a generic European multi-asset fund that parks liquidity in the <em>iShares Core MSCI Europe UCITS ETF EUR (Acc)</em> (ISIN IE00B4K48X80) while awaiting deployment.</p>
-<pre><code>&lt;!-- Portfolio position --&gt;
-&lt;Position&gt;
-  &lt;UniqueID&gt;IE00B4K48X80&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;2000250.00&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;TotalPercentage&gt;0.43&lt;/TotalPercentage&gt;
-  &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-  &lt;ShareClass&gt;
-    &lt;Shares&gt;22500&lt;/Shares&gt;
-    &lt;Price&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;88.90&lt;/Amount&gt;
-    &lt;/Price&gt;
-    &lt;PurchaseValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;1987420.00&lt;/Amount&gt;
-    &lt;/PurchaseValue&gt;
-  &lt;/ShareClass&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-comment">&lt;!-- Portfolio position --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>IE00B4K48X80<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;2000250.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>0.43<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Shares</span><span class="tok-punct">&gt;</span>22500<span class="tok-punct">&lt;/</span><span class="tok-tag">Shares</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;88.90<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PurchaseValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;1987420.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">PurchaseValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 
-&lt;!-- Asset entry --&gt;
-&lt;Asset&gt;
-  &lt;UniqueID&gt;IE00B4K48X80&lt;/UniqueID&gt;
-  &lt;Identifiers&gt;
-    &lt;ISIN&gt;IE00B4K48X80&lt;/ISIN&gt;
-  &lt;/Identifiers&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;Country&gt;IE&lt;/Country&gt;
-  &lt;Name&gt;iShares Core MSCI Europe UCITS ETF EUR (Acc)&lt;/Name&gt;
-  &lt;AssetType&gt;SC&lt;/AssetType&gt;
-  &lt;AssetDetails&gt;
-    &lt;ShareClass&gt;
-      &lt;Issuer&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;549300MS535KC2WH4Z30&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;BlackRock Asset Management Ireland Limited&lt;/Name&gt;
-        &lt;BusinessCountry&gt;IE&lt;/BusinessCountry&gt;
-        &lt;Type&gt;Non-MMF investment funds&lt;/Type&gt;
-      &lt;/Issuer&gt;
-      &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
-      &lt;Listing&gt;A&lt;/Listing&gt;
-      &lt;ListingUnit&gt;U&lt;/ListingUnit&gt;
-      &lt;IssueDate&gt;2009-09-29&lt;/IssueDate&gt;
-      &lt;ExchangeTradedFundFlag&gt;true&lt;/ExchangeTradedFundFlag&gt;
-    &lt;/ShareClass&gt;
-  &lt;/AssetDetails&gt;
-  &lt;Classifications&gt;
-    &lt;Classification&gt;
-      &lt;ListedGroup&gt;MORNINGSTAR&lt;/ListedGroup&gt;
-      &lt;Type&gt;Global Category&lt;/Type&gt;
-      &lt;Language&gt;en&lt;/Language&gt;
-      &lt;Value&gt;Europe Large-Cap Blend Equity&lt;/Value&gt;
-    &lt;/Classification&gt;
-  &lt;/Classifications&gt;
-&lt;/Asset&gt;
+<span class="tok-comment">&lt;!-- Asset entry --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>IE00B4K48X80<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>IE00B4K48X80<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>IE<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>iShares Core MSCI Europe UCITS ETF EUR (Acc)<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>SC<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300MS535KC2WH4Z30<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>BlackRock Asset Management Ireland Limited<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>IE<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Non-MMF investment funds<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>XETR<span class="tok-punct">&lt;/</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>A<span class="tok-punct">&lt;/</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ListingUnit</span><span class="tok-punct">&gt;</span>U<span class="tok-punct">&lt;/</span><span class="tok-tag">ListingUnit</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">IssueDate</span><span class="tok-punct">&gt;</span>2009-09-29<span class="tok-punct">&lt;/</span><span class="tok-tag">IssueDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ExchangeTradedFundFlag</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">ExchangeTradedFundFlag</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ListedGroup</span><span class="tok-punct">&gt;</span>MORNINGSTAR<span class="tok-punct">&lt;/</span><span class="tok-tag">ListedGroup</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Global Category<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>Europe Large-Cap Blend Equity<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Three points about this example. First, the <code>&lt;ShareClass&gt;</code> child at the position level carries <code>&lt;Shares&gt;</code> (the number of fund units held, <code>xs:decimal</code>), <code>&lt;Price&gt;</code> (the last NAV of the held share class, in its native currency), and <code>&lt;PurchaseValue&gt;</code> (the historical cost). Unlike <code>&lt;Equity&gt;</code>, the share-class inner block has no <code>&lt;MarketValue&gt;</code> field — the consolidated value of the position lives at the <code>&lt;Position&gt;/&lt;TotalValue&gt;</code> level, not inside <code>&lt;ShareClass&gt;</code>. A producer that wants to carry the held fund's own NAV-times-units figure for debugging purposes can do so in <code>&lt;OtherPrices&gt;</code>.</p>
 <p>Second, the asset entry marks the held fund as an ETF through <code>&lt;ExchangeTradedFundFlag&gt;true&lt;/ExchangeTradedFundFlag&gt;</code> inside <code>&lt;AssetDetails&gt;/&lt;ShareClass&gt;</code> — a dedicated boolean that is <em>in addition to</em> the generic <code>Listing</code> enumeration. Consumers that want to identify ETFs read the flag directly rather than parsing the MIC code or the listing status. The <code>&lt;Classifications&gt;</code> block carries the Morningstar global category — a real Morningstar label that Europe-large-cap blend ETFs actually occupy — through the idiomatic <code>&lt;ListedGroup&gt;MORNINGSTAR&lt;/ListedGroup&gt;</code> path.</p>
@@ -1562,46 +1582,46 @@
 <p><strong>Swaps</strong> (<code>AssetType=SW</code>, asset-side details in <code>AssetDetails/&lt;Swap&gt;</code> with schema type <code>SwapType</code>) are a family rather than a single type. <code>SwapType/&lt;Type&gt;</code> is an enumeration that covers <code>Currencyswap</code>, <code>Crosscurrencyswap</code>, <code>Creditdefaultswap</code>, <code>Indexswap</code>, <code>Totalreturnswap</code>, <code>Assetswap</code>, <code>Commodityswap</code>, <code>Interestrateswap</code>, <code>Inflationswap</code>, and <code>Other</code>. The rest of <code>SwapType</code> carries the shared metadata — <code>StartDate</code>, <code>MaturityDate</code>, <code>SettlementDate</code>, <code>Counterparty</code>, <code>FXRate</code>, <code>AgreedFxRate</code> — and the per-leg detail lives in a <code>&lt;Legs&gt;</code> container holding one or more <code>&lt;Leg&gt;</code> entries with their own rate, reference index, and payment-schedule fields. The position-side <code>&lt;Swap&gt;</code> sub-block carries <code>&lt;HedgeRatio&gt;</code>, <code>&lt;CurrentSpread&gt;</code> (relevant for Credit Default Swaps), <code>&lt;PresentValueOfPayments&gt;</code>, and a <code>&lt;LegValues&gt;</code> container with one entry per leg showing the current valuation of each side as <code>&lt;Type&gt;BUY&lt;/Type&gt;</code> or <code>&lt;Type&gt;SELL&lt;/Type&gt;</code> plus <code>&lt;Value&gt;</code>. For most European equity UCITS readers this chapter's treatment is enough; specialised bond and macro funds will need the detailed derivative documentation referenced in Appendix E.</p>
 <h3>6.9.4 FX Forward Example</h3>
 <p>The active CHF hedge forward of the Europa Growth Fund on 31 March 2026, as it would appear in the portfolio block and the asset master data block.</p>
-<pre><code>&lt;!-- Portfolio position --&gt;
-&lt;Position&gt;
-  &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;-142318.50&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;FXForward&gt;
-    &lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;
-    &lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;
-  &lt;/FXForward&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-comment">&lt;!-- Portfolio position --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-FXF-20260430-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;-142318.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">HedgeRatio</span><span class="tok-punct">&gt;</span>100.00<span class="tok-punct">&lt;/</span><span class="tok-tag">HedgeRatio</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">FxRateForEvaluation</span><span class="tok-punct">&gt;</span>1.0395<span class="tok-punct">&lt;/</span><span class="tok-tag">FxRateForEvaluation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 
-&lt;!-- Asset entry --&gt;
-&lt;Asset&gt;
-  &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;Name&gt;EUR/CHF Forward 30/04/2026 (main hedge roll)&lt;/Name&gt;
-  &lt;AssetType&gt;FX&lt;/AssetType&gt;
-  &lt;AssetDetails&gt;
-    &lt;FXForward&gt;
-      &lt;CurrencyBuy&gt;CHF&lt;/CurrencyBuy&gt;
-      &lt;AmountBuy&gt;59107354.41&lt;/AmountBuy&gt;
-      &lt;CurrencySell isBaseCCY=&quot;true&quot;&gt;EUR&lt;/CurrencySell&gt;
-      &lt;AmountSell&gt;56724871.39&lt;/AmountSell&gt;
-      &lt;AgreedFxRate&gt;1.0420&lt;/AgreedFxRate&gt;
-      &lt;StartDate&gt;2026-02-28&lt;/StartDate&gt;
-      &lt;MaturityDate&gt;2026-04-30&lt;/MaturityDate&gt;
-      &lt;Counterparty&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;O2RNE8IBXP4R0TD8PU41&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;Société Générale S.A.&lt;/Name&gt;
-        &lt;BusinessCountry&gt;FR&lt;/BusinessCountry&gt;
-        &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
-      &lt;/Counterparty&gt;
-      &lt;Deliverable&gt;true&lt;/Deliverable&gt;
-    &lt;/FXForward&gt;
-  &lt;/AssetDetails&gt;
-&lt;/Asset&gt;
+<span class="tok-comment">&lt;!-- Asset entry --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-FXF-20260430-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>EUR/CHF Forward 30/04/2026 (main hedge roll)<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>FX<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">CurrencyBuy</span><span class="tok-punct">&gt;</span>CHF<span class="tok-punct">&lt;/</span><span class="tok-tag">CurrencyBuy</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">AmountBuy</span><span class="tok-punct">&gt;</span>59107354.41<span class="tok-punct">&lt;/</span><span class="tok-tag">AmountBuy</span><span class="tok-punct">&gt;</span>
+      &lt;CurrencySell isBaseCCY=&quot;true&quot;&gt;EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">CurrencySell</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">AmountSell</span><span class="tok-punct">&gt;</span>56724871.39<span class="tok-punct">&lt;/</span><span class="tok-tag">AmountSell</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">AgreedFxRate</span><span class="tok-punct">&gt;</span>1.0420<span class="tok-punct">&lt;/</span><span class="tok-tag">AgreedFxRate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">StartDate</span><span class="tok-punct">&gt;</span>2026-02-28<span class="tok-punct">&lt;/</span><span class="tok-tag">StartDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">MaturityDate</span><span class="tok-punct">&gt;</span>2026-04-30<span class="tok-punct">&lt;/</span><span class="tok-tag">MaturityDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>O2RNE8IBXP4R0TD8PU41<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Société Générale S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>FR<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Deposit-taking corporations except the central bank<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Deliverable</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">Deliverable</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading field by field: the position has no <code>&lt;Currency&gt;</code> override (the forward is already expressed in the fund's EUR base) and a mandatory <code>&lt;TotalValue&gt;</code> of <em>negative</em> 142,318.50 EUR, because the EUR has strengthened slightly against the CHF since the forward was entered into on 28 February, making the agreed sell rate slightly unfavourable to the fund. The negative sign on the <code>&lt;Amount&gt;</code> value is entirely schema-valid (the underlying <code>xs:decimal</code> type accepts negative values), and it is how the schema represents an out-of-the-money derivative position. Inside <code>&lt;FXForward&gt;</code>, the <code>&lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;</code> declares that the forward fully covers its target exposure, and <code>&lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;</code> is the spot rate the producer used for today's mark-to-market.</p>
 <p>The asset entry identifies the contract as an FX forward through <code>&lt;AssetType&gt;FX&lt;/AssetType&gt;</code> and places the contract details inside <code>&lt;AssetDetails&gt;/&lt;FXForward&gt;</code>. The buy side is 59,107,354.41 CHF; the sell side is 56,724,871.39 EUR with <code>@isBaseCCY="true"</code> flagging it as the fund base currency; and the agreed forward rate is 1.0420 (close to the then-prevailing spot). <code>&lt;MaturityDate&gt;</code> is the settlement date on which the currencies will actually be exchanged (30 April 2026, one month out from the valuation point). The <code>&lt;Counterparty&gt;</code> is a full <code>CompanyType</code> block — the schema refuses anything less — with Société Générale's LEI inside <code>&lt;Identifiers&gt;</code> and the ECB sector classification identifying it as a deposit-taking corporation. The <code>&lt;Deliverable&gt;true&lt;/Deliverable&gt;</code> flag declares that this is a standard deliverable forward, not a non-deliverable forward with cash settlement.</p>
@@ -1624,43 +1644,43 @@
 <p><strong>Counterparty and concentration limits.</strong> The bank holding the cash matters operationally because concentration limits under UCITS and AIFMD are applied against the counterparty, not the currency; a fund that holds 50 million EUR at a single bank has a 50 million EUR concentration against that bank, regardless of what other banks it also uses. For a custodian-held account the counterparty is the custodian itself; for cash collateral it is whichever party holds the collateral account (often a different bank). The counterparty's LEI is the single most important field on the whole cash asset entry.</p>
 <p><strong>Position-side fields.</strong> At the position level, a cash entry ends with an <code>&lt;Account&gt;</code> child (or <code>&lt;FixedTimeDeposit&gt;</code>, <code>&lt;CallMoney&gt;</code> for the other types). The <code>&lt;Account&gt;</code> inner block is the simplest of all choice children: both its children are optional — an <code>&lt;MarketValue&gt;</code> (the current balance, in the account's currency) and an <code>&lt;Interests&gt;</code> (accrued interest not yet credited). In practice producers populate <code>&lt;MarketValue&gt;</code> because it carries the operational balance, but the schema does not insist. There is no <code>&lt;Units&gt;</code>, no <code>&lt;Shares&gt;</code>, no <code>&lt;Contracts&gt;</code> — cash has no unit count, only a balance — and the authoritative fund-currency value lives at the position's <code>&lt;TotalValue&gt;</code> as always.</p>
 <p>Example: the Europa Growth Fund's primary EUR cash position at its Luxembourg custodian on 31 March 2026.</p>
-<pre><code>&lt;!-- Portfolio position --&gt;
-&lt;Position&gt;
-  &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;TotalPercentage&gt;0.70&lt;/TotalPercentage&gt;
-  &lt;Account&gt;
-    &lt;MarketValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;
-    &lt;/MarketValue&gt;
-  &lt;/Account&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-comment">&lt;!-- Portfolio position --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-CASH-EUR-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>0.70<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 
-&lt;!-- Asset entry --&gt;
-&lt;Asset&gt;
-  &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;Country&gt;LU&lt;/Country&gt;
-  &lt;Name&gt;EUR Current Account — BGL BNP Paribas&lt;/Name&gt;
-  &lt;AssetType&gt;AC&lt;/AssetType&gt;
-  &lt;AssetDetails&gt;
-    &lt;Account&gt;
-      &lt;IndicatorCreditDebit&gt;Credit&lt;/IndicatorCreditDebit&gt;
-      &lt;InterestRateCredit&gt;0.15&lt;/InterestRateCredit&gt;
-      &lt;Counterparty&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;549300CL2K1QUOZK7T97&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;BGL BNP Paribas S.A.&lt;/Name&gt;
-        &lt;BusinessCountry&gt;LU&lt;/BusinessCountry&gt;
-        &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
-      &lt;/Counterparty&gt;
-    &lt;/Account&gt;
-  &lt;/AssetDetails&gt;
-&lt;/Asset&gt;
+<span class="tok-comment">&lt;!-- Asset entry --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-CASH-EUR-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>EUR Current Account — BGL BNP Paribas<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>AC<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">IndicatorCreditDebit</span><span class="tok-punct">&gt;</span>Credit<span class="tok-punct">&lt;/</span><span class="tok-tag">IndicatorCreditDebit</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">InterestRateCredit</span><span class="tok-punct">&gt;</span>0.15<span class="tok-punct">&lt;/</span><span class="tok-tag">InterestRateCredit</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300CL2K1QUOZK7T97<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>BGL BNP Paribas S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Deposit-taking corporations except the central bank<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading this pair: the position says the fund holds a euro current-account balance of 3.25 million euros at its Luxembourg custodian, representing 0.70% of total net assets. The <code>&lt;Account&gt;</code> inner block at the position level carries only the same balance as the position's consolidated <code>&lt;TotalValue&gt;</code> — for cash, the two are identical by construction, and the apparent redundancy is a schema artefact. The asset entry uses <code>&lt;AssetType&gt;AC&lt;/AssetType&gt;</code> to signal <em>Account</em>, places the counterparty block inside <code>&lt;AssetDetails&gt;/&lt;Account&gt;</code> as the schema requires, and populates the counterparty's LEI (the critical field for concentration-limit reporting) inside <code>&lt;Identifiers&gt;</code> following the <code>CompanyType</code> convention. An optional <code>&lt;InterestRateCredit&gt;</code> of 0.15% indicates the rate the custodian is currently paying on the credit balance.</p>
 <p>The Europa Growth Fund also holds small balances in GBP (from sterling dividend receipts on UK-listed holdings) and in CHF (for the CHF-hedge operational account). Both follow the same pattern, each as its own position with its own asset entry, both held at the same BGL BNP Paribas custodian.</p>
@@ -1695,41 +1715,41 @@
 </ul>
 <p>The completeness rule is that the sum of percentages across all <code>&lt;Value&gt;</code> entries within a single <code>&lt;BreakDown&gt;</code> should equal 100, subject to a rounding tolerance of a few basis points. A breakdown that sums to 99.95% or 100.03% is acceptable; a breakdown that sums to 92% is missing a cell and is a data-quality issue.</p>
 <p>A concrete example — a one-dimensional sector breakdown for a generic European equity fund, shortened to four cells:</p>
-<pre><code>&lt;BreakDowns&gt;
-  &lt;BreakDown&gt;
-    &lt;Dimensions&gt;
-      &lt;Dimension&gt;Sector&lt;/Dimension&gt;
-    &lt;/Dimensions&gt;
-    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
-    &lt;Values&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;
-          &lt;DimValue dim=&quot;Sector&quot;&gt;Financials&lt;/DimValue&gt;
-        &lt;/DimValues&gt;
-        &lt;Percentage&gt;22.50&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;
-          &lt;DimValue dim=&quot;Sector&quot;&gt;Industrials&lt;/DimValue&gt;
-        &lt;/DimValues&gt;
-        &lt;Percentage&gt;18.75&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;
-          &lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Discretionary&lt;/DimValue&gt;
-        &lt;/DimValues&gt;
-        &lt;Percentage&gt;15.20&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;
-          &lt;DimValue dim=&quot;Sector&quot;&gt;Healthcare&lt;/DimValue&gt;
-        &lt;/DimValues&gt;
-        &lt;Percentage&gt;14.15&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;!-- further cells elided --&gt;
-    &lt;/Values&gt;
-  &lt;/BreakDown&gt;
-&lt;/BreakDowns&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">BreakDowns</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span>Sector<span class="tok-punct">&lt;/</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>Market Value<span class="tok-punct">&lt;/</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Financials<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>22.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Industrials<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>18.75<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Discretionary<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>15.20<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+          &lt;DimValue dim=&quot;Sector&quot;&gt;Healthcare<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>14.15<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- further cells elided --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">BreakDowns</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>A producer typically emits several <code>&lt;BreakDown&gt;</code> entries inside one <code>&lt;BreakDowns&gt;</code> container — one for each dimension the fund's consumers need. The Europa Growth Fund's monthly delivery emits breakdowns by sector, country, and currency at a minimum, and its complete <code>&lt;BreakDowns&gt;</code> block in §6.12 shows all three as sibling <code>&lt;BreakDown&gt;</code> entries.</p>
 <p><strong>Two-dimensional breakdowns.</strong> The multi-dimensional design shines when a consumer needs a cross-tabulation. A <code>&lt;BreakDown&gt;</code> with two <code>&lt;Dimension&gt;</code> children (<em>Country</em> and <em>Sector</em>) has one <code>&lt;Value&gt;</code> per country-sector cell, each with two <code>&lt;DimValue&gt;</code> elements carrying the two labels. The German Financials cell, the French Industrials cell, the Swiss Healthcare cell, and so on — each appears as a separate <code>&lt;Value&gt;</code> entry with its own percentage. This flexibility is largely unused in current production pipelines because most consumers prefer simpler one-dimensional breakdowns, but it is there when the need arises.</p>
@@ -1752,361 +1772,361 @@
 <p>Before looking at the XML, a word on what the real portfolio looks like. The fund's 145 equity positions are not uniform in size; the largest ten or so positions account for thirty to forty percent of the portfolio (the manager's conviction picks), while the remaining 130-plus positions form a long tail of smaller holdings for diversification. The sample of fifteen positions shown below is drawn from the larger end of the portfolio, so that each position is meaningful in size (between five and fifteen million euros), and is distributed across sectors and countries so that the portfolio breakdowns at the end of the section are meaningful.</p>
 <p>The combined market value of the fifteen sample positions plus the three cash positions comes to approximately 130 million EUR — roughly 28% of the fund's total net assets of 464.55 million EUR. The remaining 72% lives in the 130 positions that are not shown here. The currency forwards do not add materially to the portfolio market value (their market values are in the low hundreds of thousands, positive or negative, absorbed into the hedged class's NAV).</p>
 <h3>6.12.2 The Portfolio Block</h3>
-<pre><code>&lt;Portfolio&gt;
-  &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
-  &lt;Positions&gt;
-    &lt;!-- Equity positions (fifteen representative entries) --&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;1.75&lt;/TotalPercentage&gt;
-      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-      &lt;Equity&gt;
-        &lt;Units&gt;50000&lt;/Units&gt;
-        &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;162.50&lt;/Amount&gt;&lt;/Price&gt;
-        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00&lt;/Amount&gt;&lt;/MarketValue&gt;
-      &lt;/Equity&gt;
-    &lt;/Position&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;DE0007164600&lt;/UniqueID&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8538000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;1.84&lt;/TotalPercentage&gt;
-      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-      &lt;Equity&gt;
-        &lt;Units&gt;60000&lt;/Units&gt;
-        &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;142.30&lt;/Amount&gt;&lt;/Price&gt;
-        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8538000.00&lt;/Amount&gt;&lt;/MarketValue&gt;
-      &lt;/Equity&gt;
-    &lt;/Position&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;DE0008404005&lt;/UniqueID&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;7964800.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;1.72&lt;/TotalPercentage&gt;
-      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-      &lt;Equity&gt;
-        &lt;Units&gt;32000&lt;/Units&gt;
-        &lt;Price&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;248.90&lt;/Amount&gt;&lt;/Price&gt;
-        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;7964800.00&lt;/Amount&gt;&lt;/MarketValue&gt;
-      &lt;/Equity&gt;
-    &lt;/Position&gt;
-    &lt;!-- LVMH, TotalEnergies, BNP Paribas (FR) and Nestlé, Roche, Novartis (CH)
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Positions</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- Equity positions (fifteen representative entries) --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>1.75<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>50000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;162.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8125000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007164600<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8538000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>1.84<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>60000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;142.30<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8538000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0008404005<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;7964800.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>1.72<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>32000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;248.90<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;7964800.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- LVMH, TotalEnergies, BNP Paribas (FR) and Nestlé, Roche, Novartis (CH)
          follow the same pattern; the three Swiss positions carry their prices in
          CHF and their TotalValue in EUR (isFundCcy=&quot;true&quot;) alongside a CHF-native
-         Amount for transparency --&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;CH0038863350&lt;/UniqueID&gt;
-      &lt;Currency&gt;CHF&lt;/Currency&gt;
-      &lt;TotalValue&gt;
-        &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;6017500.00&lt;/Amount&gt;
-        &lt;Amount ccy=&quot;CHF&quot;&gt;6270290.00&lt;/Amount&gt;
-      &lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;1.30&lt;/TotalPercentage&gt;
-      &lt;PriceDate&gt;2026-03-31&lt;/PriceDate&gt;
-      &lt;Equity&gt;
-        &lt;Units&gt;65000&lt;/Units&gt;
-        &lt;Price&gt;&lt;Amount ccy=&quot;CHF&quot;&gt;96.40&lt;/Amount&gt;&lt;/Price&gt;
-        &lt;MarketValue&gt;
-          &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;6017500.00&lt;/Amount&gt;
-          &lt;Amount ccy=&quot;CHF&quot;&gt;6270290.00&lt;/Amount&gt;
-        &lt;/MarketValue&gt;
-      &lt;/Equity&gt;
-    &lt;/Position&gt;
-    &lt;!-- ASML (NL), Shell, Unilever, AstraZeneca (GB), Iberdrola, Banco Santander (ES)
-         follow the pattern. Cash positions come next. --&gt;
+         Amount for transparency --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>CH0038863350<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>CHF<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+        &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;6017500.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+        &lt;Amount ccy=&quot;CHF&quot;&gt;6270290.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>1.30<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PriceDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>65000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;CHF&quot;&gt;96.40<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Price</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+          &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;6017500.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+          &lt;Amount ccy=&quot;CHF&quot;&gt;6270290.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- ASML (NL), Shell, Unilever, AstraZeneca (GB), Iberdrola, Banco Santander (ES)
+         follow the pattern. Cash positions come next. --&gt;</span>
 
-    &lt;!-- Cash accounts (one position per currency) --&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;0.70&lt;/TotalPercentage&gt;
-      &lt;Account&gt;
-        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45&lt;/Amount&gt;&lt;/MarketValue&gt;
-      &lt;/Account&gt;
-    &lt;/Position&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;EGF-CASH-GBP-001&lt;/UniqueID&gt;
-      &lt;Currency&gt;GBP&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;208541.30&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;0.04&lt;/TotalPercentage&gt;
-      &lt;Account&gt;
-        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;208541.30&lt;/Amount&gt;&lt;/MarketValue&gt;
-      &lt;/Account&gt;
-    &lt;/Position&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;EGF-CASH-CHF-001&lt;/UniqueID&gt;
-      &lt;Currency&gt;CHF&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;156217.80&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;TotalPercentage&gt;0.03&lt;/TotalPercentage&gt;
-      &lt;Account&gt;
-        &lt;MarketValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;156217.80&lt;/Amount&gt;&lt;/MarketValue&gt;
-      &lt;/Account&gt;
-    &lt;/Position&gt;
+    <span class="tok-comment">&lt;!-- Cash accounts (one position per currency) --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-CASH-EUR-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>0.70<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;3247819.45<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-CASH-GBP-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>GBP<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;208541.30<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>0.04<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;208541.30<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-CASH-CHF-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>CHF<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;156217.80<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>0.03<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalPercentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;156217.80<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 
-    &lt;!-- FX forwards implementing the CHF hedge for R-CHF-ACC-HEDGED --&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;-142318.50&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;FXForward&gt;
-        &lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;
-        &lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;
-      &lt;/FXForward&gt;
-    &lt;/Position&gt;
-    &lt;Position&gt;
-      &lt;UniqueID&gt;EGF-FXF-20260430-002&lt;/UniqueID&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;18420.75&lt;/Amount&gt;&lt;/TotalValue&gt;
-      &lt;FXForward&gt;
-        &lt;HedgeRatio&gt;100.00&lt;/HedgeRatio&gt;
-        &lt;FxRateForEvaluation&gt;1.0395&lt;/FxRateForEvaluation&gt;
-      &lt;/FXForward&gt;
-    &lt;/Position&gt;
-  &lt;/Positions&gt;
-  &lt;!-- BreakDowns follow in §6.12.4 --&gt;
-&lt;/Portfolio&gt;
+    <span class="tok-comment">&lt;!-- FX forwards implementing the CHF hedge for R-CHF-ACC-HEDGED --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-FXF-20260430-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;-142318.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">HedgeRatio</span><span class="tok-punct">&gt;</span>100.00<span class="tok-punct">&lt;/</span><span class="tok-tag">HedgeRatio</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">FxRateForEvaluation</span><span class="tok-punct">&gt;</span>1.0395<span class="tok-punct">&lt;/</span><span class="tok-tag">FxRateForEvaluation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-FXF-20260430-002<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;18420.75<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">HedgeRatio</span><span class="tok-punct">&gt;</span>100.00<span class="tok-punct">&lt;/</span><span class="tok-tag">HedgeRatio</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">FxRateForEvaluation</span><span class="tok-punct">&gt;</span>1.0395<span class="tok-punct">&lt;/</span><span class="tok-tag">FxRateForEvaluation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Positions</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- BreakDowns follow in §6.12.4 --&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <h3>6.12.3 The AssetMasterData Block (Representative Entries)</h3>
 <p>At the root level of the document, the <code>AssetMasterData</code> block carries one entry per unique position referenced above. We show three representative entries in full — a German equity, a Swiss equity, and a cash account — together with one FX forward, and list the remainder in summary form.</p>
-<pre><code>&lt;AssetMasterData&gt;
-  &lt;Asset&gt;
-    &lt;UniqueID&gt;DE0007236101&lt;/UniqueID&gt;
-    &lt;Identifiers&gt;
-      &lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;
-      &lt;GermanWKN&gt;723610&lt;/GermanWKN&gt;
-    &lt;/Identifiers&gt;
-    &lt;Currency&gt;EUR&lt;/Currency&gt;
-    &lt;Country&gt;DE&lt;/Country&gt;
-    &lt;Name&gt;Siemens AG&lt;/Name&gt;
-    &lt;AssetType&gt;EQ&lt;/AssetType&gt;
-    &lt;AssetDetails&gt;
-      &lt;Equity&gt;
-        &lt;StockMarket&gt;XETR&lt;/StockMarket&gt;
-        &lt;Issuer&gt;
-          &lt;Identifiers&gt;&lt;LEI&gt;W38RGI023J3WT1HWRP32&lt;/LEI&gt;&lt;/Identifiers&gt;
-          &lt;Name&gt;Siemens Aktiengesellschaft&lt;/Name&gt;
-          &lt;BusinessCountry&gt;DE&lt;/BusinessCountry&gt;
-          &lt;Type&gt;Non-financial corporations&lt;/Type&gt;
-        &lt;/Issuer&gt;
-        &lt;Listing&gt;A&lt;/Listing&gt;
-        &lt;CustomMarketCapitalization&gt;
-          &lt;Name&gt;Large Cap&lt;/Name&gt;
-          &lt;Date&gt;2026-03-31&lt;/Date&gt;
-          &lt;Value&gt;145000000000&lt;/Value&gt;
-        &lt;/CustomMarketCapitalization&gt;
-        &lt;Industries&gt;
-          &lt;IndustryCode&gt;
-            &lt;Name&gt;GICS&lt;/Name&gt;
-            &lt;Date&gt;2026-03-31&lt;/Date&gt;
-            &lt;Value&gt;20106010&lt;/Value&gt;
-          &lt;/IndustryCode&gt;
-        &lt;/Industries&gt;
-      &lt;/Equity&gt;
-    &lt;/AssetDetails&gt;
-    &lt;Classifications&gt;
-      &lt;Classification&gt;
-        &lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;
-        &lt;Type&gt;Sector&lt;/Type&gt;
-        &lt;Language&gt;en&lt;/Language&gt;
-        &lt;Value level=&quot;1&quot;&gt;Industrials&lt;/Value&gt;
-        &lt;Value level=&quot;2&quot;&gt;Industrial Conglomerates&lt;/Value&gt;
-      &lt;/Classification&gt;
-    &lt;/Classifications&gt;
-  &lt;/Asset&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">GermanWKN</span><span class="tok-punct">&gt;</span>723610<span class="tok-punct">&lt;/</span><span class="tok-tag">GermanWKN</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens AG<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>EQ<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>XETR<span class="tok-punct">&lt;/</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>W38RGI023J3WT1HWRP32<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens Aktiengesellschaft<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Non-financial corporations<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>A<span class="tok-punct">&lt;/</span><span class="tok-tag">Listing</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">CustomMarketCapitalization</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Large Cap<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>145000000000<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">CustomMarketCapitalization</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Industries</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IndustryCode</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>GICS<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">Date</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>20106010<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">IndustryCode</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Industries</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">UnlistedGroup</span><span class="tok-punct">&gt;</span>GICS<span class="tok-punct">&lt;/</span><span class="tok-tag">UnlistedGroup</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Sector<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+        &lt;Value level=&quot;1&quot;&gt;Industrials<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        &lt;Value level=&quot;2&quot;&gt;Industrial Conglomerates<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 
-  &lt;Asset&gt;
-    &lt;UniqueID&gt;CH0038863350&lt;/UniqueID&gt;
-    &lt;Identifiers&gt;
-      &lt;ISIN&gt;CH0038863350&lt;/ISIN&gt;
-      &lt;SwissValorenCode&gt;3886335&lt;/SwissValorenCode&gt;
-    &lt;/Identifiers&gt;
-    &lt;Currency&gt;CHF&lt;/Currency&gt;
-    &lt;Country&gt;CH&lt;/Country&gt;
-    &lt;Name&gt;Nestlé S.A.&lt;/Name&gt;
-    &lt;AssetType&gt;EQ&lt;/AssetType&gt;
-    &lt;AssetDetails&gt;
-      &lt;Equity&gt;
-        &lt;StockMarket&gt;XVTX&lt;/StockMarket&gt;
-        &lt;Issuer&gt;
-          &lt;Identifiers&gt;&lt;LEI&gt;549300DLLUD0PKVWST52&lt;/LEI&gt;&lt;/Identifiers&gt;
-          &lt;Name&gt;Nestlé S.A.&lt;/Name&gt;
-          &lt;BusinessCountry&gt;CH&lt;/BusinessCountry&gt;
-        &lt;/Issuer&gt;
-      &lt;/Equity&gt;
-    &lt;/AssetDetails&gt;
-    &lt;Classifications&gt;
-      &lt;Classification&gt;
-        &lt;UnlistedGroup&gt;GICS&lt;/UnlistedGroup&gt;
-        &lt;Type&gt;Sector&lt;/Type&gt;
-        &lt;Language&gt;en&lt;/Language&gt;
-        &lt;Value&gt;Consumer Staples&lt;/Value&gt;
-      &lt;/Classification&gt;
-    &lt;/Classifications&gt;
-  &lt;/Asset&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>CH0038863350<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>CH0038863350<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SwissValorenCode</span><span class="tok-punct">&gt;</span>3886335<span class="tok-punct">&lt;/</span><span class="tok-tag">SwissValorenCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>CHF<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>CH<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Nestlé S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>EQ<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>XVTX<span class="tok-punct">&lt;/</span><span class="tok-tag">StockMarket</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300DLLUD0PKVWST52<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Nestlé S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>CH<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Issuer</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Equity</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">UnlistedGroup</span><span class="tok-punct">&gt;</span>GICS<span class="tok-punct">&lt;/</span><span class="tok-tag">UnlistedGroup</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Sector<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>Consumer Staples<span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Classification</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Classifications</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 
-  &lt;Asset&gt;
-    &lt;UniqueID&gt;EGF-CASH-EUR-001&lt;/UniqueID&gt;
-    &lt;Currency&gt;EUR&lt;/Currency&gt;
-    &lt;Country&gt;LU&lt;/Country&gt;
-    &lt;Name&gt;EUR Current Account — BGL BNP Paribas&lt;/Name&gt;
-    &lt;AssetType&gt;AC&lt;/AssetType&gt;
-    &lt;AssetDetails&gt;
-      &lt;Account&gt;
-        &lt;IndicatorCreditDebit&gt;Credit&lt;/IndicatorCreditDebit&gt;
-        &lt;InterestRateCredit&gt;0.15&lt;/InterestRateCredit&gt;
-        &lt;Counterparty&gt;
-          &lt;Identifiers&gt;&lt;LEI&gt;549300CL2K1QUOZK7T97&lt;/LEI&gt;&lt;/Identifiers&gt;
-          &lt;Name&gt;BGL BNP Paribas S.A.&lt;/Name&gt;
-          &lt;BusinessCountry&gt;LU&lt;/BusinessCountry&gt;
-          &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
-        &lt;/Counterparty&gt;
-      &lt;/Account&gt;
-    &lt;/AssetDetails&gt;
-  &lt;/Asset&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-CASH-EUR-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>EUR Current Account — BGL BNP Paribas<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>AC<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">IndicatorCreditDebit</span><span class="tok-punct">&gt;</span>Credit<span class="tok-punct">&lt;/</span><span class="tok-tag">IndicatorCreditDebit</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">InterestRateCredit</span><span class="tok-punct">&gt;</span>0.15<span class="tok-punct">&lt;/</span><span class="tok-tag">InterestRateCredit</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300CL2K1QUOZK7T97<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>BGL BNP Paribas S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Deposit-taking corporations except the central bank<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Account</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
 
-  &lt;!-- Remaining equity asset entries (summary): --&gt;
-  &lt;!-- SAP SE (DE0007164600, LEI 529900D6BF99LW9F3487, IT, DE, XETR)             --&gt;
-  &lt;!-- Allianz SE (DE0008404005, LEI 529900K9B0N5BT694847, Insurance, DE, XETR)  --&gt;
-  &lt;!-- LVMH (FR0000121014, LEI 96950065LBWY0APQIM86, Cons. Discr., FR, XPAR)     --&gt;
-  &lt;!-- TotalEnergies (FR0000120271, LEI 529900S21EQ1BO4ESM68, Energy, FR, XPAR)  --&gt;
-  &lt;!-- BNP Paribas (FR0000131104, LEI R0MUWSFPU8MPRO8K5P83, Financials, FR, XPAR)--&gt;
-  &lt;!-- Roche (CH0012032048, LEI 549300D3OHVV27GBHI46, Healthcare, CH, XVTX)      --&gt;
-  &lt;!-- Novartis (CH0012005267, LEI 549300D9YI2R72XBBM14, Healthcare, CH, XVTX)   --&gt;
-  &lt;!-- ASML (NL0010273215, LEI 724500Y6DUVHQD6OXN27, IT, NL, XAMS)               --&gt;
-  &lt;!-- Shell (GB00BP6MXD84, LEI 21380068P1DRHMJ8KU70, Energy, GB, XLON)          --&gt;
-  &lt;!-- Unilever (GB00B10RZP78, LEI 549300MKFYEKVRWML317, Cons. Staples, GB, XLON)--&gt;
-  &lt;!-- Iberdrola (ES0144580Y14, LEI K2RJR3UR2UQIYOV1YS65, Utilities, ES, XMAD)   --&gt;
-  &lt;!-- Santander (ES0113900J37, LEI 5493006QMFDDMYWIAM13, Financials, ES, XMAD)  --&gt;
-  &lt;!-- AstraZeneca (GB0009895292, LEI 213800ZCSBQL7LI8DI47, Healthcare, GB, XLON)--&gt;
+  <span class="tok-comment">&lt;!-- Remaining equity asset entries (summary): --&gt;</span>
+  <span class="tok-comment">&lt;!-- SAP SE (DE0007164600, LEI 529900D6BF99LW9F3487, IT, DE, XETR)             --&gt;</span>
+  <span class="tok-comment">&lt;!-- Allianz SE (DE0008404005, LEI 529900K9B0N5BT694847, Insurance, DE, XETR)  --&gt;</span>
+  <span class="tok-comment">&lt;!-- LVMH (FR0000121014, LEI 96950065LBWY0APQIM86, Cons. Discr., FR, XPAR)     --&gt;</span>
+  <span class="tok-comment">&lt;!-- TotalEnergies (FR0000120271, LEI 529900S21EQ1BO4ESM68, Energy, FR, XPAR)  --&gt;</span>
+  <span class="tok-comment">&lt;!-- BNP Paribas (FR0000131104, LEI R0MUWSFPU8MPRO8K5P83, Financials, FR, XPAR)--&gt;</span>
+  <span class="tok-comment">&lt;!-- Roche (CH0012032048, LEI 549300D3OHVV27GBHI46, Healthcare, CH, XVTX)      --&gt;</span>
+  <span class="tok-comment">&lt;!-- Novartis (CH0012005267, LEI 549300D9YI2R72XBBM14, Healthcare, CH, XVTX)   --&gt;</span>
+  <span class="tok-comment">&lt;!-- ASML (NL0010273215, LEI 724500Y6DUVHQD6OXN27, IT, NL, XAMS)               --&gt;</span>
+  <span class="tok-comment">&lt;!-- Shell (GB00BP6MXD84, LEI 21380068P1DRHMJ8KU70, Energy, GB, XLON)          --&gt;</span>
+  <span class="tok-comment">&lt;!-- Unilever (GB00B10RZP78, LEI 549300MKFYEKVRWML317, Cons. Staples, GB, XLON)--&gt;</span>
+  <span class="tok-comment">&lt;!-- Iberdrola (ES0144580Y14, LEI K2RJR3UR2UQIYOV1YS65, Utilities, ES, XMAD)   --&gt;</span>
+  <span class="tok-comment">&lt;!-- Santander (ES0113900J37, LEI 5493006QMFDDMYWIAM13, Financials, ES, XMAD)  --&gt;</span>
+  <span class="tok-comment">&lt;!-- AstraZeneca (GB0009895292, LEI 213800ZCSBQL7LI8DI47, Healthcare, GB, XLON)--&gt;</span>
 
-  &lt;!-- Cash asset entries (summary): --&gt;
-  &lt;!-- EGF-CASH-GBP-001 (AC, GBP, custodian BGL BNP Paribas LEI 549300CL2K1QUOZK7T97) --&gt;
-  &lt;!-- EGF-CASH-CHF-001 (AC, CHF, custodian BGL BNP Paribas LEI 549300CL2K1QUOZK7T97) --&gt;
+  <span class="tok-comment">&lt;!-- Cash asset entries (summary): --&gt;</span>
+  <span class="tok-comment">&lt;!-- EGF-CASH-GBP-001 (AC, GBP, custodian BGL BNP Paribas LEI 549300CL2K1QUOZK7T97) --&gt;</span>
+  <span class="tok-comment">&lt;!-- EGF-CASH-CHF-001 (AC, CHF, custodian BGL BNP Paribas LEI 549300CL2K1QUOZK7T97) --&gt;</span>
 
-  &lt;!-- FX Forward asset entries --&gt;
-  &lt;Asset&gt;
-    &lt;UniqueID&gt;EGF-FXF-20260430-001&lt;/UniqueID&gt;
-    &lt;Currency&gt;EUR&lt;/Currency&gt;
-    &lt;Name&gt;EUR/CHF Forward 30/04/2026 (main hedge roll)&lt;/Name&gt;
-    &lt;AssetType&gt;FX&lt;/AssetType&gt;
-    &lt;AssetDetails&gt;
-      &lt;FXForward&gt;
-        &lt;CurrencyBuy&gt;CHF&lt;/CurrencyBuy&gt;
-        &lt;AmountBuy&gt;59107354.41&lt;/AmountBuy&gt;
-        &lt;CurrencySell isBaseCCY=&quot;true&quot;&gt;EUR&lt;/CurrencySell&gt;
-        &lt;AmountSell&gt;56724871.39&lt;/AmountSell&gt;
-        &lt;AgreedFxRate&gt;1.0420&lt;/AgreedFxRate&gt;
-        &lt;StartDate&gt;2026-02-28&lt;/StartDate&gt;
-        &lt;MaturityDate&gt;2026-04-30&lt;/MaturityDate&gt;
-        &lt;Counterparty&gt;
-          &lt;Identifiers&gt;&lt;LEI&gt;O2RNE8IBXP4R0TD8PU41&lt;/LEI&gt;&lt;/Identifiers&gt;
-          &lt;Name&gt;Société Générale S.A.&lt;/Name&gt;
-          &lt;BusinessCountry&gt;FR&lt;/BusinessCountry&gt;
-          &lt;Type&gt;Deposit-taking corporations except the central bank&lt;/Type&gt;
-        &lt;/Counterparty&gt;
-        &lt;Deliverable&gt;true&lt;/Deliverable&gt;
-      &lt;/FXForward&gt;
-    &lt;/AssetDetails&gt;
-  &lt;/Asset&gt;
-  &lt;!-- Second FX forward (EGF-FXF-20260430-002) is structurally identical with
+  <span class="tok-comment">&lt;!-- FX Forward asset entries --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>EGF-FXF-20260430-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>EUR/CHF Forward 30/04/2026 (main hedge roll)<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>FX<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">CurrencyBuy</span><span class="tok-punct">&gt;</span>CHF<span class="tok-punct">&lt;/</span><span class="tok-tag">CurrencyBuy</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">AmountBuy</span><span class="tok-punct">&gt;</span>59107354.41<span class="tok-punct">&lt;/</span><span class="tok-tag">AmountBuy</span><span class="tok-punct">&gt;</span>
+        &lt;CurrencySell isBaseCCY=&quot;true&quot;&gt;EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">CurrencySell</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">AmountSell</span><span class="tok-punct">&gt;</span>56724871.39<span class="tok-punct">&lt;/</span><span class="tok-tag">AmountSell</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">AgreedFxRate</span><span class="tok-punct">&gt;</span>1.0420<span class="tok-punct">&lt;/</span><span class="tok-tag">AgreedFxRate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">StartDate</span><span class="tok-punct">&gt;</span>2026-02-28<span class="tok-punct">&lt;/</span><span class="tok-tag">StartDate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MaturityDate</span><span class="tok-punct">&gt;</span>2026-04-30<span class="tok-punct">&lt;/</span><span class="tok-tag">MaturityDate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>O2RNE8IBXP4R0TD8PU41<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Société Générale S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>FR<span class="tok-punct">&lt;/</span><span class="tok-tag">BusinessCountry</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>Deposit-taking corporations except the central bank<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Counterparty</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Deliverable</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">Deliverable</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FXForward</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetDetails</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- Second FX forward (EGF-FXF-20260430-002) is structurally identical with
        AmountBuy=2918000.00, AmountSell=2800000.00, AgreedFxRate=1.0421,
-       StartDate=2026-03-15, same MaturityDate and counterparty. --&gt;
-&lt;/AssetMasterData&gt;
+       StartDate=2026-03-15, same MaturityDate and counterparty. --&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The elided entries follow the same pattern as the fully-shown ones; each equity entry carries its <code>&lt;Identifiers&gt;</code> block with the ISIN (and where present the GermanWKN or SwissValorenCode), its <code>&lt;Currency&gt;</code>, its <code>&lt;Country&gt;</code>, its <code>&lt;Name&gt;</code>, its <code>AssetType=EQ</code>, and an <code>&lt;AssetDetails&gt;/&lt;Equity&gt;</code> block with the stock market MIC, the issuer's LEI inside a <code>CompanyType</code> block, the listing status, and an optional <code>&lt;CustomMarketCapitalization&gt;</code> size bucket; each cash entry carries its counterparty in <code>&lt;AssetDetails&gt;/&lt;Account&gt;</code>; the second FX forward is structurally identical to the first with different amounts and rates. Appendix D prints the full block with every entry populated.</p>
 <h3>6.12.4 Portfolio Breakdowns for the Sample</h3>
 <p>Computed from the fifteen equity positions shown above (scaled to 100% of the equity portion, excluding cash and forwards), three breakdowns are representative. They sit inside the same <code>&lt;Portfolio&gt;</code> element as the positions, as a sibling of <code>&lt;Positions&gt;</code> rather than at the root.</p>
-<pre><code>&lt;BreakDowns&gt;
-  &lt;BreakDown&gt;
-    &lt;Dimensions&gt;&lt;Dimension&gt;Sector&lt;/Dimension&gt;&lt;/Dimensions&gt;
-    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
-    &lt;Values&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Healthcare&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;17.50&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Financials&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;17.20&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Industrials&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;14.40&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Technology&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;14.30&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Staples&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;11.90&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Discretionary&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;9.80&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Energy&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;8.90&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Sector&quot;&gt;Utilities&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;6.00&lt;/Percentage&gt;
-      &lt;/Value&gt;
-    &lt;/Values&gt;
-  &lt;/BreakDown&gt;
-  &lt;BreakDown&gt;
-    &lt;Dimensions&gt;&lt;Dimension&gt;Country&lt;/Dimension&gt;&lt;/Dimensions&gt;
-    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
-    &lt;Values&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;GB&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;24.70&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;FR&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;20.20&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;DE&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;19.90&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;CH&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;13.40&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;ES&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;12.00&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Country&quot;&gt;NL&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;9.80&lt;/Percentage&gt;
-      &lt;/Value&gt;
-    &lt;/Values&gt;
-  &lt;/BreakDown&gt;
-  &lt;BreakDown&gt;
-    &lt;Dimensions&gt;&lt;Dimension&gt;Currency&lt;/Dimension&gt;&lt;/Dimensions&gt;
-    &lt;CalculationMethod&gt;Market Value&lt;/CalculationMethod&gt;
-    &lt;Values&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Currency&quot;&gt;EUR&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;61.90&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Currency&quot;&gt;GBP&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;24.70&lt;/Percentage&gt;
-      &lt;/Value&gt;
-      &lt;Value&gt;
-        &lt;DimValues&gt;&lt;DimValue dim=&quot;Currency&quot;&gt;CHF&lt;/DimValue&gt;&lt;/DimValues&gt;
-        &lt;Percentage&gt;13.40&lt;/Percentage&gt;
-      &lt;/Value&gt;
-    &lt;/Values&gt;
-  &lt;/BreakDown&gt;
-&lt;/BreakDowns&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">BreakDowns</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span>Sector<span class="tok-punct">&lt;/</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>Market Value<span class="tok-punct">&lt;/</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Healthcare<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>17.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Financials<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>17.20<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Industrials<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>14.40<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Technology<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>14.30<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Staples<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>11.90<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Consumer Discretionary<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>9.80<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Energy<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>8.90<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Sector&quot;&gt;Utilities<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>6.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span>Country<span class="tok-punct">&lt;/</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>Market Value<span class="tok-punct">&lt;/</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Country&quot;&gt;GB<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>24.70<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Country&quot;&gt;FR<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>20.20<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Country&quot;&gt;DE<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>19.90<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Country&quot;&gt;CH<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>13.40<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Country&quot;&gt;ES<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>12.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Country&quot;&gt;NL<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>9.80<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span>Currency<span class="tok-punct">&lt;/</span><span class="tok-tag">Dimension</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Dimensions</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>Market Value<span class="tok-punct">&lt;/</span><span class="tok-tag">CalculationMethod</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Currency&quot;&gt;EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>61.90<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Currency&quot;&gt;GBP<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>24.70<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>&lt;DimValue dim=&quot;Currency&quot;&gt;CHF<span class="tok-punct">&lt;/</span><span class="tok-tag">DimValue</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DimValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>13.40<span class="tok-punct">&lt;/</span><span class="tok-tag">Percentage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Value</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Values</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">BreakDown</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">BreakDowns</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The breakdowns above are computed from the fifteen-position sample. The breakdowns for the full 150-position portfolio in Appendix D are somewhat different: the UK weighting, in particular, is far less pronounced in the real portfolio (our sample overweights UK blue chips for illustrative purposes), and the sector distribution is more evenly spread across Financials, Industrials, Consumer, and Healthcare without the healthcare dominance that our sample shows. Note also that the country breakdown uses ISO 3166-1 alpha-2 codes (<code>DE</code>, <code>FR</code>, <code>CH</code>, <code>GB</code>, <code>ES</code>, <code>NL</code>) as <code>DimValue</code> labels — a producer convention that keeps the breakdown language-independent; a factsheet engine that wants to render "Germany" rather than "DE" applies its own localised mapping at display time. The <em>structural</em> lesson is the same either way: a breakdown is a cell-by-cell summary of the portfolio along one or more dimensions, and consumers read it directly rather than re-computing from positions.</p>
 <h3>6.12.5 A Three-Pass Reading</h3>

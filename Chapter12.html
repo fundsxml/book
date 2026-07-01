@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -636,43 +656,43 @@
 <p>The task is deliberately simple. A production pipeline does much more — multi-file handling, error recovery, logging, validation, and so on — but the minimal task shows how the language and its XML library feel. Readers picking a language for a new project should run each example, mentally scale it up to production, and pick the one that fits their existing stack most comfortably.</p>
 <h3>12.3.1 The Common Test File</h3>
 <p>All four examples read the same FundsXML file — a minimal but schema-valid document containing one fund with a LEI, a name, a currency, and a total net asset value.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre><code><span class="tok-decl">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 &lt;FundsXML4 xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
            xsi:noNamespaceSchemaLocation=&quot;FundsXML4.xsd&quot;&gt;
-  &lt;ControlData&gt;
-    &lt;UniqueDocumentID&gt;EGF-20260331-LANG-001&lt;/UniqueDocumentID&gt;
-    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-    &lt;Version&gt;4.2.8&lt;/Version&gt;
-    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-    &lt;DataSupplier&gt;
-      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-      &lt;Short&gt;EAM&lt;/Short&gt;
-      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-      &lt;Type&gt;IC&lt;/Type&gt;
-    &lt;/DataSupplier&gt;
-    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-    &lt;Language&gt;en&lt;/Language&gt;
-  &lt;/ControlData&gt;
-  &lt;Funds&gt;
-    &lt;Fund&gt;
-      &lt;Identifiers&gt;&lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;&lt;/Identifiers&gt;
-      &lt;Names&gt;&lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;&lt;/Names&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
-      &lt;FundDynamicData&gt;
-        &lt;TotalAssetValues&gt;
-          &lt;TotalAssetValue&gt;
-            &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
-            &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
-            &lt;TotalNetAssetValue&gt;
-              &lt;Amount ccy=&quot;EUR&quot;&gt;464552848.78&lt;/Amount&gt;
-            &lt;/TotalNetAssetValue&gt;
-          &lt;/TotalAssetValue&gt;
-        &lt;/TotalAssetValues&gt;
-      &lt;/FundDynamicData&gt;
-    &lt;/Fund&gt;
-  &lt;/Funds&gt;
-&lt;/FundsXML4&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>EGF-20260331-LANG-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>4.2.8<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>IC<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300ABCDEFGHIJ1234<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">OfficialName</span><span class="tok-punct">&gt;</span>Europa Growth Fund<span class="tok-punct">&lt;/</span><span class="tok-tag">OfficialName</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SingleFundFlag</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">SingleFundFlag</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetValue</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetNature</span><span class="tok-punct">&gt;</span>OFFICIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetNature</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">TotalNetAssetValue</span><span class="tok-punct">&gt;</span>
+              &lt;Amount ccy=&quot;EUR&quot;&gt;464552848.78<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalNetAssetValue</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetValue</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>This file validates against <code>FundsXML4.xsd</code> with the <code>xmllint</code> command from Chapter 10. The four language examples below all produce the same output:</p>
 <pre><code>Europa Growth Fund
@@ -978,7 +998,7 @@ readFund(path);
 <h3>12.3.7 XSLT — A Different Kind of Transformation</h3>
 <p>The four languages compared above are all <em>imperative</em>: the programme tells the computer, step by step, how to open the file, walk the tree, and extract the values. XSLT (Extensible Stylesheet Language Transformations) works the other way round: a stylesheet declares <em>patterns</em> that match elements in the input tree, and the XSLT processor walks the tree and applies whichever pattern matches at each node. The result is a new document — HTML, CSV, plain text, or another XML shape. XSLT is a W3C standard, ships with virtually every XML toolkit, and is the natural tool when the task is "transform a FundsXML document into another format" rather than "embed XML reading into a larger application". Appendix B §B.3 provides a quick reference for the language itself; this section shows two runnable examples.</p>
 <p><strong>Example 1 — HTML fact sheet.</strong> The task: produce a one-page HTML summary of the Europa Growth Fund from the standard FundsXML delivery file.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre><code><span class="tok-decl">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.0&quot;&gt;
   &lt;xsl:output method=&quot;html&quot; indent=&quot;yes&quot; encoding=&quot;UTF-8&quot;/&gt;
 
@@ -987,49 +1007,49 @@ readFund(path);
     &lt;xsl:variable name=&quot;nav&quot;
       select=&quot;$fund/FundDynamicData/TotalAssetValues/TotalAssetValue
               /TotalNetAssetValue/Amount&quot;/&gt;
-    &lt;html&gt;
-      &lt;head&gt;&lt;title&gt;&lt;xsl:value-of select=&quot;$fund/Names/OfficialName&quot;/&gt;&lt;/title&gt;&lt;/head&gt;
-      &lt;body&gt;
-        &lt;h1&gt;&lt;xsl:value-of select=&quot;$fund/Names/OfficialName&quot;/&gt;&lt;/h1&gt;
+    <span class="tok-punct">&lt;</span><span class="tok-tag">html</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">head</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">title</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of select=&quot;$fund/Names/OfficialName&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">title</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">head</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">body</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">h1</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of select=&quot;$fund/Names/OfficialName&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">h1</span><span class="tok-punct">&gt;</span>
         &lt;table border=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
-          &lt;tr&gt;&lt;td&gt;LEI&lt;/td&gt;
-              &lt;td&gt;&lt;xsl:value-of select=&quot;$fund/Identifiers/LEI&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
-          &lt;tr&gt;&lt;td&gt;Currency&lt;/td&gt;
-              &lt;td&gt;&lt;xsl:value-of select=&quot;$fund/Currency&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
-          &lt;tr&gt;&lt;td&gt;NAV&lt;/td&gt;
-              &lt;td&gt;&lt;xsl:value-of select=&quot;$nav&quot;/&gt;
-                  &lt;xsl:text&gt; &lt;/xsl:text&gt;
-                  &lt;xsl:value-of select=&quot;$nav/@ccy&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
-          &lt;tr&gt;&lt;td&gt;NAV Date&lt;/td&gt;
-              &lt;td&gt;&lt;xsl:value-of select=&quot;$fund/FundDynamicData
-                    /TotalAssetValues/TotalAssetValue/NavDate&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
-          &lt;tr&gt;&lt;td&gt;Content Date&lt;/td&gt;
-              &lt;td&gt;&lt;xsl:value-of
-                    select=&quot;/FundsXML4/ControlData/ContentDate&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;
-        &lt;/table&gt;
-      &lt;/body&gt;
-    &lt;/html&gt;
-  &lt;/xsl:template&gt;
-&lt;/xsl:stylesheet&gt;
+          <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>LEI<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of select=&quot;$fund/Identifiers/LEI&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>Currency<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of select=&quot;$fund/Currency&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>NAV<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of select=&quot;$nav&quot;/&gt;
+                  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span> <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
+                  &lt;xsl:value-of select=&quot;$nav/@ccy&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>NAV Date<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of select=&quot;$fund/FundDynamicData
+                    /TotalAssetValues/TotalAssetValue/NavDate&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>Content Date<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>&lt;xsl:value-of
+                    select=&quot;/FundsXML4/ControlData/ContentDate&quot;/&gt;<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">table</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">body</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">html</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:stylesheet</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Run with <code>xsltproc factsheet.xsl egf-sample.xml &gt; factsheet.html</code> (or with Saxon: <code>java -jar saxon-he.jar -s:egf-sample.xml -xsl:factsheet.xsl -o:factsheet.html</code>). The output is a self-contained HTML page:</p>
-<pre><code>&lt;html&gt;
-  &lt;head&gt;&lt;title&gt;Europa Growth Fund&lt;/title&gt;&lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Europa Growth Fund&lt;/h1&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">html</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">head</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">title</span><span class="tok-punct">&gt;</span>Europa Growth Fund<span class="tok-punct">&lt;/</span><span class="tok-tag">title</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">head</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">body</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">h1</span><span class="tok-punct">&gt;</span>Europa Growth Fund<span class="tok-punct">&lt;/</span><span class="tok-tag">h1</span><span class="tok-punct">&gt;</span>
     &lt;table border=&quot;1&quot; cellpadding=&quot;4&quot;&gt;
-      &lt;tr&gt;&lt;td&gt;LEI&lt;/td&gt;&lt;td&gt;529900T8BM49AURSDO55&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;Currency&lt;/td&gt;&lt;td&gt;EUR&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;NAV&lt;/td&gt;&lt;td&gt;248537281.44 EUR&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;NAV Date&lt;/td&gt;&lt;td&gt;2026-03-31&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;Content Date&lt;/td&gt;&lt;td&gt;2026-03-31&lt;/td&gt;&lt;/tr&gt;
-    &lt;/table&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
+      <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>LEI<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>Currency<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>NAV<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>248537281.44 EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>NAV Date<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>Content Date<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">table</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">body</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">html</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The entire logic is in a single <code>&lt;xsl:template match="/"&gt;</code> that fires at the document root and emits HTML by pulling values from the FundsXML tree via XPath expressions. The same XPath paths that appeared in the Java and Python examples reappear here — <code>$fund/Identifiers/LEI</code>, <code>$fund/Names/OfficialName</code>, the deep path down to <code>TotalNetAssetValue/Amount</code> — but the surrounding plumbing is radically shorter because XSLT's output model handles the HTML serialisation directly.</p>
 <p><strong>Example 2 — CSV of portfolio positions.</strong> The task: export the fund's assets as a CSV file with one row per position, suitable for loading into a spreadsheet or a downstream ETL pipeline. The stylesheet uses an <code>xsl:key</code> to join the <code>AssetMasterData/Asset</code> entries (which carry the ISIN and name) with the <code>Position</code> entries in the portfolio (which carry the market value).</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<pre><code><span class="tok-decl">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.0&quot;&gt;
   &lt;xsl:output method=&quot;text&quot; encoding=&quot;UTF-8&quot;/&gt;
   &lt;xsl:strip-space elements=&quot;*&quot;/&gt;
@@ -1037,20 +1057,20 @@ readFund(path);
   &lt;xsl:key name=&quot;pos&quot; match=&quot;//Position/*&quot; use=&quot;UniqueID&quot;/&gt;
 
   &lt;xsl:template match=&quot;/&quot;&gt;
-    &lt;xsl:text&gt;ISIN,Name,Currency,MarketValue&amp;#10;&lt;/xsl:text&gt;
+    <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>ISIN,Name,Currency,MarketValue&amp;#10;<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
     &lt;xsl:for-each select=&quot;/FundsXML4/AssetMasterData/Asset&quot;&gt;
       &lt;xsl:variable name=&quot;pos&quot; select=&quot;key('pos', UniqueID)&quot;/&gt;
       &lt;xsl:value-of select=&quot;Identifiers/ISIN&quot;/&gt;
-      &lt;xsl:text&gt;,&lt;/xsl:text&gt;
+      <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>,<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
       &lt;xsl:value-of select=&quot;AssetName&quot;/&gt;
-      &lt;xsl:text&gt;,&lt;/xsl:text&gt;
+      <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>,<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
       &lt;xsl:value-of select=&quot;$pos/TotalValue/Amount/@ccy&quot;/&gt;
-      &lt;xsl:text&gt;,&lt;/xsl:text&gt;
+      <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>,<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
       &lt;xsl:value-of select=&quot;$pos/TotalValue/Amount&quot;/&gt;
-      &lt;xsl:text&gt;&amp;#10;&lt;/xsl:text&gt;
-    &lt;/xsl:for-each&gt;
-  &lt;/xsl:template&gt;
-&lt;/xsl:stylesheet&gt;
+      <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>&amp;#10;<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:for-each</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:stylesheet</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Run with <code>xsltproc positions.xsl egf-sample.xml &gt; positions.csv</code>. Sample output:</p>
 <pre><code>ISIN,Name,Currency,MarketValue
@@ -1145,47 +1165,47 @@ CH0038863350,Nestle S.A.,CHF,6017500.00
 <h2>12.5 Database Integration</h2>
 <p>FundsXML is a transport format, not a storage format. Every production pipeline that consumes FundsXML eventually writes the data somewhere — into a database, a data lake, a warehouse, or occasionally a filesystem archive — and the choice of target storage is one of the most consequential architectural decisions in the pipeline.</p>
 <p>Three broad strategies exist, and they correspond to three different database paradigms. To make them concrete, all three examples in this section work from the same FundsXML fragment — a minimal extract of the Europa Growth Fund's month-end delivery with three portfolio positions:</p>
-<pre><code>&lt;Funds&gt;
-  &lt;Fund&gt;
-    &lt;Identifiers&gt;&lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;&lt;/Identifiers&gt;
-    &lt;Names&gt;&lt;OfficialName&gt;Europa Growth Fund&lt;/OfficialName&gt;&lt;/Names&gt;
-    &lt;Currency&gt;EUR&lt;/Currency&gt;
-    &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
-    &lt;FundDynamicData&gt;
-      &lt;TotalAssetValues&gt;
-        &lt;TotalAssetValue&gt;
-          &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
-          &lt;TotalAssetNature&gt;OFFICIAL&lt;/TotalAssetNature&gt;
-          &lt;TotalNetAssetValue&gt;
-            &lt;Amount ccy="EUR"&gt;464552848.78&lt;/Amount&gt;
-          &lt;/TotalNetAssetValue&gt;
-        &lt;/TotalAssetValue&gt;
-      &lt;/TotalAssetValues&gt;
-      &lt;PortfolioData&gt;
-        &lt;Portfolio&gt;
-          &lt;Position&gt;
-            &lt;Identifiers&gt;&lt;ISIN&gt;DE0007236101&lt;/ISIN&gt;&lt;/Identifiers&gt;
-            &lt;Name&gt;Siemens AG&lt;/Name&gt;
-            &lt;Quantity&gt;42500&lt;/Quantity&gt;
-            &lt;MarketValue ccy="EUR"&gt;7203750.00&lt;/MarketValue&gt;
-          &lt;/Position&gt;
-          &lt;Position&gt;
-            &lt;Identifiers&gt;&lt;ISIN&gt;FR0000121014&lt;/ISIN&gt;&lt;/Identifiers&gt;
-            &lt;Name&gt;LVMH Mo&euml;t Hennessy&lt;/Name&gt;
-            &lt;Quantity&gt;8200&lt;/Quantity&gt;
-            &lt;MarketValue ccy="EUR"&gt;5576000.00&lt;/MarketValue&gt;
-          &lt;/Position&gt;
-          &lt;Position&gt;
-            &lt;Identifiers&gt;&lt;ISIN&gt;CH0038863350&lt;/ISIN&gt;&lt;/Identifiers&gt;
-            &lt;Name&gt;Nestl&eacute; S.A.&lt;/Name&gt;
-            &lt;Quantity&gt;61000&lt;/Quantity&gt;
-            &lt;MarketValue ccy="EUR"&gt;5795000.00&lt;/MarketValue&gt;
-          &lt;/Position&gt;
-        &lt;/Portfolio&gt;
-      &lt;/PortfolioData&gt;
-    &lt;/FundDynamicData&gt;
-  &lt;/Fund&gt;
-&lt;/Funds&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300ABCDEFGHIJ1234<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">OfficialName</span><span class="tok-punct">&gt;</span>Europa Growth Fund<span class="tok-punct">&lt;/</span><span class="tok-tag">OfficialName</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SingleFundFlag</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">SingleFundFlag</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetValue</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetNature</span><span class="tok-punct">&gt;</span>OFFICIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetNature</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">TotalNetAssetValue</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Amount</span> <span class="tok-attr">ccy</span><span class="tok-punct">=</span><span class="tok-string">"EUR"</span><span class="tok-punct">&gt;</span>464552848.78<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalNetAssetValue</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>DE0007236101<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Siemens AG<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Quantity</span><span class="tok-punct">&gt;</span>42500<span class="tok-punct">&lt;/</span><span class="tok-tag">Quantity</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span> <span class="tok-attr">ccy</span><span class="tok-punct">=</span><span class="tok-string">"EUR"</span><span class="tok-punct">&gt;</span>7203750.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>FR0000121014<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>LVMH Mo&euml;t Hennessy<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Quantity</span><span class="tok-punct">&gt;</span>8200<span class="tok-punct">&lt;/</span><span class="tok-tag">Quantity</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span> <span class="tok-attr">ccy</span><span class="tok-punct">=</span><span class="tok-string">"EUR"</span><span class="tok-punct">&gt;</span>5576000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>CH0038863350<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Nestl&eacute; S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Quantity</span><span class="tok-punct">&gt;</span>61000<span class="tok-punct">&lt;/</span><span class="tok-tag">Quantity</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValue</span> <span class="tok-attr">ccy</span><span class="tok-punct">=</span><span class="tok-string">"EUR"</span><span class="tok-punct">&gt;</span>5795000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValue</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <h3>12.5.1 Relational Shredding</h3>
 <p>The classic approach is to <strong>shred</strong> the FundsXML document into rows and columns in a relational database. A <code>Fund</code> element becomes a row in the <code>funds</code> table; each <code>ShareClass</code> becomes a row in the <code>share_classes</code> table linked to the fund by foreign key; each portfolio position becomes a row in the <code>positions</code> table linked to the fund and to an asset master record; each <code>SingleFundFlow</code> (or its real-schema equivalent) becomes a row in the <code>transactions</code> table. The shredding is one-directional: once the file has been decomposed, it lives as rows, and the original XML is either archived or discarded.</p>

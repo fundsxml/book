@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -791,54 +811,54 @@
 
 <p>We close the architectural tour with the first real FundsXML fragment of the book. The listing below is a <em>skeleton</em>: it contains the element names and the hierarchy, but no values, no attributes beyond the namespace declaration, and no data beyond what is needed to show how the pieces fit together. No FundsXML validator would accept it, and no system would consume it. Its purpose is orientation, not execution.</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"FundsXML4.xsd"</span><span class="tok-punct">&gt;</span>
 
-  &lt;ControlData&gt;
-    &lt;!-- document id, reporting date, sender, receiver, operation --&gt;
-  &lt;/ControlData&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- document id, reporting date, sender, receiver, operation --&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
 
-  &lt;Funds&gt;
-    &lt;Fund&gt;
-      &lt;FundStaticData&gt;
-        &lt;!-- names, identifiers, domicile, share classes (static) --&gt;
-      &lt;/FundStaticData&gt;
-      &lt;FundDynamicData&gt;
-        &lt;TotalAssetValues&gt;
-          &lt;!-- NAVs and total net assets per share class --&gt;
-        &lt;/TotalAssetValues&gt;
-        &lt;Portfolios&gt;
-          &lt;Portfolio&gt;
-            &lt;Positions&gt;
-              &lt;Position&gt;
-                &lt;!-- references AssetMasterData by UniqueID --&gt;
-              &lt;/Position&gt;
-            &lt;/Positions&gt;
-          &lt;/Portfolio&gt;
-        &lt;/Portfolios&gt;
-        &lt;SingleFundFlows&gt;
-          &lt;!-- transactions: subscriptions, redemptions, distributions --&gt;
-        &lt;/SingleFundFlows&gt;
-      &lt;/FundDynamicData&gt;
-    &lt;/Fund&gt;
-  &lt;/Funds&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FundStaticData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-comment">&lt;!-- names, identifiers, domicile, share classes (static) --&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FundStaticData</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>
+          <span class="tok-comment">&lt;!-- NAVs and total net assets per share class --&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolios</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Positions</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+                <span class="tok-comment">&lt;!-- references AssetMasterData by UniqueID --&gt;</span>
+              <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">Positions</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolios</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">SingleFundFlows</span><span class="tok-punct">&gt;</span>
+          <span class="tok-comment">&lt;!-- transactions: subscriptions, redemptions, distributions --&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">SingleFundFlows</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
 
-  &lt;AssetMasterData&gt;
-    &lt;Asset&gt;
-      &lt;!-- one entry per distinct instrument, addressed by UniqueID --&gt;
-    &lt;/Asset&gt;
-  &lt;/AssetMasterData&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- one entry per distinct instrument, addressed by UniqueID --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Asset</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>
 
-  &lt;Documents&gt;
-    &lt;!-- factsheets, prospectuses, KIDs, signed attachments --&gt;
-  &lt;/Documents&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Documents</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- factsheets, prospectuses, KIDs, signed attachments --&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Documents</span><span class="tok-punct">&gt;</span>
 
-  &lt;RegulatoryReportings&gt;
-    &lt;!-- EMT / EPT / EET / EFT / TPT modules --&gt;
-  &lt;/RegulatoryReportings&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- EMT / EPT / EET / EFT / TPT modules --&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>
 
-&lt;/FundsXML4&gt;
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Even though the listing carries no real data, every design principle from §3.4 is visible in it. Principle 1 — the separation of static and dynamic data — appears as the pairing of <em>FundStaticData</em> and <em>FundDynamicData</em> inside the Fund element. Principle 2 — linkage by UniqueID — is the reason <em>Positions</em> holds only references and not instrument details, while the full instrument descriptions live once, in <em>AssetMasterData</em>, at the root level. Principle 3 — extensibility — is not printed above (we have left <code>CustomAttributes</code> out of the skeleton deliberately), but every major structural element in the real schema admits it. Principle 4 — multi-language support — is invisible in a skeleton without values, but the name and description fields inside <em>FundStaticData</em> will accept per-language variants when we fill them in. And principle 5 — modular regulatory carriers — is the reason <em>RegulatoryReportings</em> sits as its own top-level area alongside, rather than inside, the fund data it complements.</p>

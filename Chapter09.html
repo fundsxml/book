@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -635,83 +655,83 @@
 
 <p>The complete FundsXML document below carries two entries in its <code>Documents</code> section: the PRIIPs KID for the R-EUR-ACC share class, and the fund's annual report for the 2025 financial year. Both entries use <code>DocumentURL</code> for the content. The full document validates against the current FundsXML 4.2.8 schema with <code>xmllint --noout --schema FundsXML4.xsd</code>.</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
-  &lt;ControlData&gt;
-    &lt;UniqueDocumentID&gt;EGF-20260331-DOC-001&lt;/UniqueDocumentID&gt;
-    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-    &lt;Version&gt;4.2.8&lt;/Version&gt;
-    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-    &lt;DataSupplier&gt;
-      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-      &lt;Short&gt;EAM&lt;/Short&gt;
-      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-      &lt;Type&gt;IC&lt;/Type&gt;
-    &lt;/DataSupplier&gt;
-    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-    &lt;Language&gt;en&lt;/Language&gt;
-  &lt;/ControlData&gt;
-  &lt;Documents&gt;
-    &lt;Document&gt;
-      &lt;Type&gt;
-        &lt;ListedType&gt;PRIIPS-KID&lt;/ListedType&gt;
-      &lt;/Type&gt;
-      &lt;Version&gt;2026-03-31&lt;/Version&gt;
-      &lt;Language&gt;en&lt;/Language&gt;
-      &lt;TranslationsAvailable&gt;true&lt;/TranslationsAvailable&gt;
-      &lt;PublicationCountries&gt;
-        &lt;Country&gt;LU&lt;/Country&gt;
-        &lt;Country&gt;DE&lt;/Country&gt;
-        &lt;Country&gt;FR&lt;/Country&gt;
-      &lt;/PublicationCountries&gt;
-      &lt;ShareClasses&gt;
-        &lt;ShareClass&gt;
-          &lt;Identifiers&gt;
-            &lt;ISIN&gt;LU2100000011&lt;/ISIN&gt;
-          &lt;/Identifiers&gt;
-          &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
-          &lt;Currency&gt;EUR&lt;/Currency&gt;
-        &lt;/ShareClass&gt;
-      &lt;/ShareClasses&gt;
-      &lt;Name&gt;Europa Growth Fund R EUR ACC — PRIIPs KID (English)&lt;/Name&gt;
-      &lt;FileName&gt;EGF_R_EUR_ACC_KID_en_20260331.pdf&lt;/FileName&gt;
-      &lt;ForPublicUsage&gt;true&lt;/ForPublicUsage&gt;
-      &lt;Format&gt;PDF&lt;/Format&gt;
-      &lt;Signature&gt;Digital&lt;/Signature&gt;
-      &lt;CreationDate&gt;2026-03-31&lt;/CreationDate&gt;
-      &lt;ExpirationDate&gt;2027-03-31&lt;/ExpirationDate&gt;
-      &lt;DataSupplier&gt;
-        &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-        &lt;Short&gt;EAM&lt;/Short&gt;
-        &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-        &lt;Type&gt;IC&lt;/Type&gt;
-      &lt;/DataSupplier&gt;
-      &lt;DocumentURL&gt;https://docs.europa-asset-management.com/kids/LU2100000011_en_20260331.pdf&lt;/DocumentURL&gt;
-    &lt;/Document&gt;
-    &lt;Document&gt;
-      &lt;Type&gt;
-        &lt;ListedType&gt;AnnualReport&lt;/ListedType&gt;
-      &lt;/Type&gt;
-      &lt;Version&gt;2025&lt;/Version&gt;
-      &lt;Language&gt;en&lt;/Language&gt;
-      &lt;Fund&gt;
-        &lt;Identifiers&gt;
-          &lt;LEI&gt;549300ABCDEFGHIJ1234&lt;/LEI&gt;
-        &lt;/Identifiers&gt;
-        &lt;Name&gt;Europa Growth Fund&lt;/Name&gt;
-        &lt;Currency&gt;EUR&lt;/Currency&gt;
-      &lt;/Fund&gt;
-      &lt;Name&gt;Europa Growth Fund — Annual Report 2025&lt;/Name&gt;
-      &lt;FileName&gt;EGF_AnnualReport_2025.pdf&lt;/FileName&gt;
-      &lt;ForPublicUsage&gt;true&lt;/ForPublicUsage&gt;
-      &lt;Format&gt;PDF&lt;/Format&gt;
-      &lt;Signature&gt;Digital&lt;/Signature&gt;
-      &lt;CreationDate&gt;2026-03-15&lt;/CreationDate&gt;
-      &lt;DocumentURL&gt;https://docs.europa-asset-management.com/annual/EGF_2025.pdf&lt;/DocumentURL&gt;
-    &lt;/Document&gt;
-  &lt;/Documents&gt;
-&lt;/FundsXML4&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"FundsXML4.xsd"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>EGF-20260331-DOC-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>4.2.8<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>IC<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Documents</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Document</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ListedType</span><span class="tok-punct">&gt;</span>PRIIPS-KID<span class="tok-punct">&lt;/</span><span class="tok-tag">ListedType</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TranslationsAvailable</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">TranslationsAvailable</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PublicationCountries</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>DE<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>FR<span class="tok-punct">&lt;/</span><span class="tok-tag">Country</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">PublicationCountries</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ShareClasses</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>LU2100000011<span class="tok-punct">&lt;/</span><span class="tok-tag">ISIN</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ShareClasses</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC — PRIIPs KID (English)<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FileName</span><span class="tok-punct">&gt;</span>EGF_R_EUR_ACC_KID_en_20260331.pdf<span class="tok-punct">&lt;/</span><span class="tok-tag">FileName</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ForPublicUsage</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">ForPublicUsage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Format</span><span class="tok-punct">&gt;</span>PDF<span class="tok-punct">&lt;/</span><span class="tok-tag">Format</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Signature</span><span class="tok-punct">&gt;</span>Digital<span class="tok-punct">&lt;/</span><span class="tok-tag">Signature</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">CreationDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">CreationDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ExpirationDate</span><span class="tok-punct">&gt;</span>2027-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ExpirationDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>IC<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentURL</span><span class="tok-punct">&gt;</span>https://docs.europa-asset-management.com/kids/LU2100000011_en_20260331.pdf<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentURL</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Document</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Document</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ListedType</span><span class="tok-punct">&gt;</span>AnnualReport<span class="tok-punct">&lt;/</span><span class="tok-tag">ListedType</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>2025<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>549300ABCDEFGHIJ1234<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund — Annual Report 2025<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FileName</span><span class="tok-punct">&gt;</span>EGF_AnnualReport_2025.pdf<span class="tok-punct">&lt;/</span><span class="tok-tag">FileName</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ForPublicUsage</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">ForPublicUsage</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Format</span><span class="tok-punct">&gt;</span>PDF<span class="tok-punct">&lt;/</span><span class="tok-tag">Format</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Signature</span><span class="tok-punct">&gt;</span>Digital<span class="tok-punct">&lt;/</span><span class="tok-tag">Signature</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">CreationDate</span><span class="tok-punct">&gt;</span>2026-03-15<span class="tok-punct">&lt;/</span><span class="tok-tag">CreationDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentURL</span><span class="tok-punct">&gt;</span>https://docs.europa-asset-management.com/annual/EGF_2025.pdf<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentURL</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Document</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Documents</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Reading the block in two passes.</p>
@@ -762,52 +782,52 @@
 
 <p>The listing below is a FundsXML document with a minimal <code>ControlData</code> block and an enveloped <code>ds:Signature</code> at the root. The signature structure is complete and schema-valid: it has a <code>SignedInfo</code> with canonicalisation, signature, and digest methods, a single <code>Reference</code> to the document root (<code>URI=""</code> means the whole document), the transforms that strip the signature itself from the signed content, and a <code>SignatureValue</code> block. The <code>SignatureValue</code> in this example is a placeholder — a real signature value is produced by running an actual signing key over the canonicalised content, not by hand-writing a base64 string. Consumers that validate signatures <em>cryptographically</em> (as opposed to just <em>schematically</em>) will reject the placeholder; consumers that only care about schema validation (as we do in this chapter) will accept it.</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
-  &lt;ControlData&gt;
-    &lt;UniqueDocumentID&gt;EGF-20260331-SIG-001&lt;/UniqueDocumentID&gt;
-    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-    &lt;Version&gt;4.2.8&lt;/Version&gt;
-    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-    &lt;DataSupplier&gt;
-      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-      &lt;Short&gt;EAM&lt;/Short&gt;
-      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-      &lt;Type&gt;IC&lt;/Type&gt;
-    &lt;/DataSupplier&gt;
-    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-    &lt;Language&gt;en&lt;/Language&gt;
-  &lt;/ControlData&gt;
-  &lt;ds:Signature Id="EGF-DocumentSignature"&gt;
-    &lt;ds:SignedInfo&gt;
-      &lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
-      &lt;ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/&gt;
-      &lt;ds:Reference URI=""&gt;
-        &lt;ds:Transforms&gt;
-          &lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;
-          &lt;ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;
-        &lt;/ds:Transforms&gt;
-        &lt;ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/&gt;
-        &lt;ds:DigestValue&gt;9Fxs0VvC6QyzGx2rSc0oYQ3fwBp9tEjU5aKQUAJJSWM=&lt;/ds:DigestValue&gt;
-      &lt;/ds:Reference&gt;
-    &lt;/ds:SignedInfo&gt;
-    &lt;ds:SignatureValue&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="tok-attr">xmlns:ds</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2000/09/xmldsig#"</span>
+           <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"FundsXML4.xsd"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>EGF-20260331-SIG-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>4.2.8<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>IC<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ds:Signature</span> <span class="tok-attr">Id</span><span class="tok-punct">=</span><span class="tok-string">"EGF-DocumentSignature"</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ds:SignedInfo</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ds:CanonicalizationMethod</span> <span class="tok-attr">Algorithm</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/TR/2001/REC-xml-c14n-20010315"</span><span class="tok-punct">/&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ds:SignatureMethod</span> <span class="tok-attr">Algorithm</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"</span><span class="tok-punct">/&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ds:Reference</span> <span class="tok-attr">URI</span><span class="tok-punct">=</span><span class="tok-string">""</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ds:Transforms</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ds:Transform</span> <span class="tok-attr">Algorithm</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2000/09/xmldsig#enveloped-signature"</span><span class="tok-punct">/&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ds:Transform</span> <span class="tok-attr">Algorithm</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/TR/2001/REC-xml-c14n-20010315"</span><span class="tok-punct">/&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:Transforms</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ds:DigestMethod</span> <span class="tok-attr">Algorithm</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/04/xmlenc#sha256"</span><span class="tok-punct">/&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ds:DigestValue</span><span class="tok-punct">&gt;</span>9Fxs0VvC6QyzGx2rSc0oYQ3fwBp9tEjU5aKQUAJJSWM=<span class="tok-punct">&lt;/</span><span class="tok-tag">ds:DigestValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:Reference</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:SignedInfo</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ds:SignatureValue</span><span class="tok-punct">&gt;</span>
       Krl3V4o9E8mQy5q3FqJdqXmOr4qYvHhj3HwNpfqX7l+yXYQeJqmJ4t6VvZa0MwvFH+
       uk1OJmI7mYn3Wx2PcNpRaVFqEGxCDzYbLdmCqN6mTgVrJLmhd3QoJzTkYvNbXeZBqF
       LJK6y9V3ZX2mPvnRJU6C8XhQwdmFjW4Vx9M5P1XyJcHL3FtV1pnKZBXsh8fQKL2rL4
       PcZMnL5x3WfHpOYh2mN+tvQJkRBk1xC3D6oCqmYwHbKvO9pF8yA7jKL3vYQ5nNq3Yx
       fR2zHLnVqKbPjWcMpI3y0nM2oNpE4L3+kMwZg7HVQKrDzLJ0YJ9tPrX5wVpJ7hKy8Q
       ==
-    &lt;/ds:SignatureValue&gt;
-    &lt;ds:KeyInfo&gt;
-      &lt;ds:X509Data&gt;
-        &lt;ds:X509SubjectName&gt;CN=Europa Asset Management S.A., O=Europa Asset Management, C=LU&lt;/ds:X509SubjectName&gt;
-      &lt;/ds:X509Data&gt;
-    &lt;/ds:KeyInfo&gt;
-  &lt;/ds:Signature&gt;
-&lt;/FundsXML4&gt;
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:SignatureValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ds:KeyInfo</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ds:X509Data</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ds:X509SubjectName</span><span class="tok-punct">&gt;</span>CN=Europa Asset Management S.A., O=Europa Asset Management, C=LU<span class="tok-punct">&lt;/</span><span class="tok-tag">ds:X509SubjectName</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:X509Data</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:KeyInfo</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ds:Signature</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Reading the signature block in three passes.</p>
@@ -854,46 +874,46 @@
 
 <p>The listing below is a minimal FundsXML document whose <code>ControlData</code> block ends with a <code>CustomAttributes</code> element containing four entries: a text attribute identifying the producer's pipeline version, a numeric attribute naming the delivery's serial number within the month, a date attribute recording when the first-cut version of the delivery was produced, and a Boolean flag indicating whether the delivery is a replacement for an earlier one. The full document validates against the current schema.</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
-  &lt;ControlData&gt;
-    &lt;UniqueDocumentID&gt;EGF-20260331-CA-001&lt;/UniqueDocumentID&gt;
-    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-    &lt;Version&gt;4.2.8&lt;/Version&gt;
-    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-    &lt;DataSupplier&gt;
-      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-      &lt;Short&gt;EAM&lt;/Short&gt;
-      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-      &lt;Type&gt;IC&lt;/Type&gt;
-    &lt;/DataSupplier&gt;
-    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-    &lt;Language&gt;en&lt;/Language&gt;
-    &lt;CustomAttributes&gt;
-      &lt;Attribute&gt;
-        &lt;Name&gt;eam.pipeline.generator&lt;/Name&gt;
-        &lt;Type&gt;T&lt;/Type&gt;
-        &lt;ValueText&gt;egf-batch v7.3.1&lt;/ValueText&gt;
-      &lt;/Attribute&gt;
-      &lt;Attribute&gt;
-        &lt;Name&gt;eam.delivery.serial&lt;/Name&gt;
-        &lt;Type&gt;N&lt;/Type&gt;
-        &lt;ValueNumber&gt;472&lt;/ValueNumber&gt;
-      &lt;/Attribute&gt;
-      &lt;Attribute&gt;
-        &lt;Name&gt;eam.delivery.firstCutSent&lt;/Name&gt;
-        &lt;Type&gt;D&lt;/Type&gt;
-        &lt;ValueDate&gt;2026-04-01&lt;/ValueDate&gt;
-      &lt;/Attribute&gt;
-      &lt;Attribute&gt;
-        &lt;Name&gt;eam.amend.isReplacement&lt;/Name&gt;
-        &lt;Type&gt;B&lt;/Type&gt;
-        &lt;ValueBoolean&gt;false&lt;/ValueBoolean&gt;
-      &lt;/Attribute&gt;
-    &lt;/CustomAttributes&gt;
-  &lt;/ControlData&gt;
-&lt;/FundsXML4&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"FundsXML4.xsd"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>EGF-20260331-CA-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>4.2.8<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>IC<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CustomAttributes</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>eam.pipeline.generator<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>T<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ValueText</span><span class="tok-punct">&gt;</span>egf-batch v7.3.1<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueText</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>eam.delivery.serial<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ValueNumber</span><span class="tok-punct">&gt;</span>472<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueNumber</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>eam.delivery.firstCutSent<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>D<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-04-01<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>eam.amend.isReplacement<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ValueBoolean</span><span class="tok-punct">&gt;</span>false<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueBoolean</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Attribute</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">CustomAttributes</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>The four attributes above have no meaning to any generic FundsXML consumer, and that is the point. A consumer that recognises the <code>eam.*</code> prefix — presumably because it has an integration contract with Europa Asset Management S.A. — reads the values and uses them for whatever purpose the contract defines. A consumer that does not recognise the prefix ignores the attributes entirely, parses the rest of the FundsXML document normally, and continues. No conformance is broken.</p>
@@ -934,41 +954,41 @@
 
 <p>The listing below shows a FundsXML document with <code>CountrySpecificData</code> populated in both places. The <code>ControlData</code> block carries an Austrian control-layer extension naming the OeKB fund data portal as the target registry, with two free-form information elements. The root-level <code>CountrySpecificData</code> carries a Luxembourg content extension with a fictional CSSF registration number and registration date for the fund. Both branches validate against the current schema.</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
-  &lt;ControlData&gt;
-    &lt;UniqueDocumentID&gt;EGF-20260331-CS-001&lt;/UniqueDocumentID&gt;
-    &lt;DocumentGenerated&gt;2026-04-01T06:47:13Z&lt;/DocumentGenerated&gt;
-    &lt;Version&gt;4.2.8&lt;/Version&gt;
-    &lt;ContentDate&gt;2026-03-31&lt;/ContentDate&gt;
-    &lt;DataSupplier&gt;
-      &lt;SystemCountry&gt;LU&lt;/SystemCountry&gt;
-      &lt;Short&gt;EAM&lt;/Short&gt;
-      &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-      &lt;Type&gt;IC&lt;/Type&gt;
-    &lt;/DataSupplier&gt;
-    &lt;DataOperation&gt;INITIAL&lt;/DataOperation&gt;
-    &lt;Language&gt;en&lt;/Language&gt;
-    &lt;CountrySpecificData&gt;
-      &lt;AT&gt;
-        &lt;FundDataPortalContent&gt;OeKB Stammdatenblatt&lt;/FundDataPortalContent&gt;
-        &lt;FundDataPortalInfos&gt;
-          &lt;Info type="source"&gt;EAM-Luxembourg delivery gateway&lt;/Info&gt;
-          &lt;Info type="note"&gt;Monthly month-end reporting&lt;/Info&gt;
-        &lt;/FundDataPortalInfos&gt;
-      &lt;/AT&gt;
-    &lt;/CountrySpecificData&gt;
-  &lt;/ControlData&gt;
-  &lt;CountrySpecificData&gt;
-    &lt;LU&gt;
-      &lt;CSSFRegistration&gt;
-        &lt;RegistrationNumber&gt;O00001234&lt;/RegistrationNumber&gt;
-        &lt;RegistrationDate&gt;2012-01-15&lt;/RegistrationDate&gt;
-      &lt;/CSSFRegistration&gt;
-    &lt;/LU&gt;
-  &lt;/CountrySpecificData&gt;
-&lt;/FundsXML4&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"FundsXML4.xsd"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>EGF-20260331-CS-001<span class="tok-punct">&lt;/</span><span class="tok-tag">UniqueDocumentID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>2026-04-01T06:47:13Z<span class="tok-punct">&lt;/</span><span class="tok-tag">DocumentGenerated</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>4.2.8<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ContentDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>LU<span class="tok-punct">&lt;/</span><span class="tok-tag">SystemCountry</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>EAM<span class="tok-punct">&lt;/</span><span class="tok-tag">Short</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>IC<span class="tok-punct">&lt;/</span><span class="tok-tag">Type</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSupplier</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>INITIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DataOperation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>en<span class="tok-punct">&lt;/</span><span class="tok-tag">Language</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CountrySpecificData</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">AT</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">FundDataPortalContent</span><span class="tok-punct">&gt;</span>OeKB Stammdatenblatt<span class="tok-punct">&lt;/</span><span class="tok-tag">FundDataPortalContent</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">FundDataPortalInfos</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Info</span> <span class="tok-attr">type</span><span class="tok-punct">=</span><span class="tok-string">"source"</span><span class="tok-punct">&gt;</span>EAM-Luxembourg delivery gateway<span class="tok-punct">&lt;/</span><span class="tok-tag">Info</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Info</span> <span class="tok-attr">type</span><span class="tok-punct">=</span><span class="tok-string">"note"</span><span class="tok-punct">&gt;</span>Monthly month-end reporting<span class="tok-punct">&lt;/</span><span class="tok-tag">Info</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">FundDataPortalInfos</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">AT</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">CountrySpecificData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">CountrySpecificData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">LU</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">CSSFRegistration</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">RegistrationNumber</span><span class="tok-punct">&gt;</span>O00001234<span class="tok-punct">&lt;/</span><span class="tok-tag">RegistrationNumber</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">RegistrationDate</span><span class="tok-punct">&gt;</span>2012-01-15<span class="tok-punct">&lt;/</span><span class="tok-tag">RegistrationDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">CSSFRegistration</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">LU</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">CountrySpecificData</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Reading the two country-specific regions, the Austrian section inside <code>ControlData</code> is structurally typed: <code>FundDataPortalContent</code> is a defined element from <code>CountrySpecificControlDataATType</code> in the schema, and <code>FundDataPortalInfos/Info</code> has a defined complex type with a required <code>type</code> attribute. Every field in the Austrian block is checked against the schema during validation. The Luxembourg section at the root, by contrast, is declared as <code>xs:anyType</code> in the local schema, so the producer is free to invent element names like <code>CSSFRegistration</code> and <code>RegistrationNumber</code> — the schema accepts them without structural checking, and a consumer that understands the Luxembourg content conventions can parse them out. The document as a whole validates; the difference between the two country branches is in how much <em>structural</em> validation each branch imposes on its content.</p>
@@ -981,11 +1001,11 @@
 
 <p><strong>Figure 9.1 — The complete root structure of a FundsXML 4.2.8 document</strong></p>
 
-<pre><code>                          &lt;FundsXML4&gt;
+<pre><code>                          <span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
                                │
    ┌──────────────┬────────────┼────────────┬──────────────────┐
    │              │            │            │                  │
-&lt;ControlData&gt; &lt;Funds&gt;  &lt;AssetMgmtCompany &lt;AssetMaster    &lt;Documents&gt;
+<span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span> <span class="tok-punct">&lt;</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>  &lt;AssetMgmtCompany &lt;AssetMaster    <span class="tok-punct">&lt;</span><span class="tok-tag">Documents</span><span class="tok-punct">&gt;</span>
  (required)  (optional)   DynData&gt;         Data&gt;        (optional)
                          (optional)     (optional)          Ch. 9
    Ch. 4        Ch. 5                       Ch. 6
@@ -1000,7 +1020,7 @@
 
          ┌─────────────────────────┬───────────────────────┐
          │                         │                       │
-  &lt;RegulatoryReportings&gt;   &lt;CountrySpecificData&gt;      &lt;ds:Signature&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>   <span class="tok-punct">&lt;</span><span class="tok-tag">CountrySpecificData</span><span class="tok-punct">&gt;</span>      <span class="tok-punct">&lt;</span><span class="tok-tag">ds:Signature</span><span class="tok-punct">&gt;</span>
      (optional)                (optional)              (optional)
         Ch. 8                      Ch. 9                  Ch. 9
 </code></pre>

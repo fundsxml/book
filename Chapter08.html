@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -580,43 +600,43 @@
 <h3>8.2.1 The Structural Location</h3>
 <p><code>&lt;RegulatoryReportings&gt;</code> is a root-level element of a FundsXML document, a sibling of <code>&lt;Funds&gt;</code> and <code>&lt;AssetMasterData&gt;</code>. It does <em>not</em> live inside <code>&lt;FundDynamicData&gt;</code> alongside <code>TotalAssetValues</code>, <code>Portfolios</code>, and <code>SingleFundFlows</code>. The choice of position is deliberate: regulatory modules have their own release cadence, their own semantics, and their own consumer audiences, and coupling them tightly to the valuation-point-driven dynamic data would be the wrong design. A fund may emit a fresh EMT every month without changing its NAV, and a fund may publish a new daily NAV without changing its EMT. The two are decoupled, and the schema expresses the decoupling by placing them in separate branches of the document.</p>
 <p>Inside <code>&lt;RegulatoryReportings&gt;</code> the schema immediately splits into two parallel branches — <code>DirectReporting</code> and <code>IndirectReporting</code> — and the five FinDatEx templates are distributed between them:</p>
-<pre><code>&lt;FundsXML4&gt;
-  &lt;ControlData&gt;...&lt;/ControlData&gt;                &lt;!-- Chapter 4 --&gt;
-  &lt;Funds&gt;
-    &lt;Fund&gt;
-      &lt;FundStaticData&gt;...&lt;/FundStaticData&gt;       &lt;!-- Chapter 5 --&gt;
-      &lt;FundDynamicData&gt;
-        &lt;TotalAssetValues&gt;...&lt;/TotalAssetValues&gt; &lt;!-- Chapter 5 --&gt;
-        &lt;Portfolios&gt;...&lt;/Portfolios&gt;             &lt;!-- Chapter 6 --&gt;
-        &lt;SingleFundFlows&gt;...&lt;/SingleFundFlows&gt;   &lt;!-- Chapter 7 --&gt;
-      &lt;/FundDynamicData&gt;
-    &lt;/Fund&gt;
-  &lt;/Funds&gt;
-  &lt;AssetMasterData&gt;...&lt;/AssetMasterData&gt;         &lt;!-- Chapter 6 --&gt;
-  &lt;RegulatoryReportings&gt;                         &lt;!-- this chapter --&gt;
-    &lt;DirectReporting&gt;
-      &lt;EMT_V4_2&gt;...&lt;/EMT_V4_2&gt;                   &lt;!-- MiFID II --&gt;
-      &lt;EFTs&gt;...&lt;/EFTs&gt;                           &lt;!-- product governance --&gt;
-      &lt;EET1.1.3&gt;...&lt;/EET1.1.3&gt;                   &lt;!-- SFDR --&gt;
-    &lt;/DirectReporting&gt;
-    &lt;IndirectReporting&gt;
-      &lt;TripartiteTemplateSolvencyII_V6&gt;...
-      &lt;/TripartiteTemplateSolvencyII_V6&gt;         &lt;!-- Solvency II --&gt;
-      &lt;PRIIPS_V20&gt;...&lt;/PRIIPS_V20&gt;               &lt;!-- PRIIPs KID --&gt;
-    &lt;/IndirectReporting&gt;
-  &lt;/RegulatoryReportings&gt;
-&lt;/FundsXML4&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">ControlData</span><span class="tok-punct">&gt;</span>                <span class="tok-comment">&lt;!-- Chapter 4 --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FundStaticData</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">FundStaticData</span><span class="tok-punct">&gt;</span>       <span class="tok-comment">&lt;!-- Chapter 5 --&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalAssetValues</span><span class="tok-punct">&gt;</span> <span class="tok-comment">&lt;!-- Chapter 5 --&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolios</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolios</span><span class="tok-punct">&gt;</span>             <span class="tok-comment">&lt;!-- Chapter 6 --&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">SingleFundFlows</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">SingleFundFlows</span><span class="tok-punct">&gt;</span>   <span class="tok-comment">&lt;!-- Chapter 7 --&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Funds</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetMasterData</span><span class="tok-punct">&gt;</span>         <span class="tok-comment">&lt;!-- Chapter 6 --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>                         <span class="tok-comment">&lt;!-- this chapter --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DirectReporting</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>                   <span class="tok-comment">&lt;!-- MiFID II --&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">EFTs</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">EFTs</span><span class="tok-punct">&gt;</span>                           <span class="tok-comment">&lt;!-- product governance --&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>                   <span class="tok-comment">&lt;!-- SFDR --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DirectReporting</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">IndirectReporting</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TripartiteTemplateSolvencyII_V6</span><span class="tok-punct">&gt;</span>...
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">TripartiteTemplateSolvencyII_V6</span><span class="tok-punct">&gt;</span>         <span class="tok-comment">&lt;!-- Solvency II --&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>               <span class="tok-comment">&lt;!-- PRIIPs KID --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">IndirectReporting</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p><strong>Figure 8.1 — The RegulatoryReportings block</strong></p>
-<pre><code>                  &lt;RegulatoryReportings&gt;
+<pre><code>                  <span class="tok-punct">&lt;</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>
                             │
                ┌────────────┴────────────┐
                │                         │
-       &lt;DirectReporting&gt;         &lt;IndirectReporting&gt;
+       <span class="tok-punct">&lt;</span><span class="tok-tag">DirectReporting</span><span class="tok-punct">&gt;</span>         <span class="tok-punct">&lt;</span><span class="tok-tag">IndirectReporting</span><span class="tok-punct">&gt;</span>
                │                         │
        ┌───────┼───────┐          ┌──────┴──────┐
        │       │       │          │             │
-   &lt;EMT_V4_2&gt; &lt;EFTs&gt; &lt;EET1.1.3&gt;   &lt;TPT_V6&gt;  &lt;PRIIPS_V20&gt;
+   <span class="tok-punct">&lt;</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span> <span class="tok-punct">&lt;</span><span class="tok-tag">EFTs</span><span class="tok-punct">&gt;</span> <span class="tok-punct">&lt;</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>   <span class="tok-punct">&lt;</span><span class="tok-tag">TPT_V6</span><span class="tok-punct">&gt;</span>  <span class="tok-punct">&lt;</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>
        │       │       │          │             │
     MiFID II  EFT    SFDR      Solvency II    PRIIPs
     costs &amp;  (rare)  ESG       lookthrough     KID
@@ -672,50 +692,50 @@
 <li><code>&lt;CostsAndChargesExPost&gt;</code> — the realised cost disclosure (optional, populated only when the <code>DataReportingExPost</code> flag in <code>DataSetInformation</code> is set to <code>Y</code>).</li>
 </ol>
 <p>A minimal skeleton of one <code>&lt;FinancialInstrument&gt;</code> block looks like this:</p>
-<pre><code>&lt;EMT_V4_2&gt;
-  &lt;FinancialInstrument&gt;
-    &lt;DataSetInformation&gt;
-      &lt;Version&gt;V4&lt;/Version&gt;
-      &lt;ProducerName&gt;Europa Asset Management S.A.&lt;/ProducerName&gt;
-      &lt;ProducerLEI&gt;529900T8BM49AURSDO55&lt;/ProducerLEI&gt;
-      &lt;ProducerEmail&gt;emt@europa-am.lu&lt;/ProducerEmail&gt;
-      &lt;FileGenerationDateTime&gt;2026-03-31T18:00:00Z&lt;/FileGenerationDateTime&gt;
-      &lt;DataReportingTargetMarket&gt;Y&lt;/DataReportingTargetMarket&gt;
-      &lt;DataReportingExAnte&gt;Y&lt;/DataReportingExAnte&gt;
-      &lt;DataReportingExPost&gt;N&lt;/DataReportingExPost&gt;
-    &lt;/DataSetInformation&gt;
-    &lt;GeneralInformation&gt;
-      &lt;!-- product identification — see §8.3.3 --&gt;
-    &lt;/GeneralInformation&gt;
-    &lt;TargetMarket&gt;
-      &lt;!-- five MiFID II dimensions — see §8.3.4 --&gt;
-    &lt;/TargetMarket&gt;
-    &lt;CostsAndChargesExAnte&gt;
-      &lt;!-- cost structure — see §8.3.5 --&gt;
-    &lt;/CostsAndChargesExAnte&gt;
-    &lt;!-- CostsAndChargesExPost is optional --&gt;
-  &lt;/FinancialInstrument&gt;
-&lt;/EMT_V4_2&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V4<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ProducerName</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">ProducerName</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ProducerLEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">ProducerLEI</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ProducerEmail</span><span class="tok-punct">&gt;</span>emt@europa-am.lu<span class="tok-punct">&lt;/</span><span class="tok-tag">ProducerEmail</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FileGenerationDateTime</span><span class="tok-punct">&gt;</span>2026-03-31T18:00:00Z<span class="tok-punct">&lt;/</span><span class="tok-tag">FileGenerationDateTime</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingTargetMarket</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingTargetMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingExAnte</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingExAnte</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingExPost</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingExPost</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- product identification — see §8.3.3 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TargetMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- five MiFID II dimensions — see §8.3.4 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">TargetMarket</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CostsAndChargesExAnte</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- cost structure — see §8.3.5 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">CostsAndChargesExAnte</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- CostsAndChargesExPost is optional --&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>A few structural points are worth noting. The <code>&lt;Version&gt;</code> element inside <code>&lt;DataSetInformation&gt;</code> uses the FinDatEx internal version string (<code>V4</code>, <code>V4S1</code>, <code>V4S2</code> for EMT version 4 with semantic sub-variants), not the FundsXML element name <code>EMT_V4_2</code>. The two are related but serve different purposes: the element name identifies the XSD schema used, and the <code>&lt;Version&gt;</code> string identifies the FinDatEx specification being implemented. The three <code>DataReporting*</code> flags are a producer's declaration of completeness — they tell the consumer which of the three data sections (target market, ex-ante costs, ex-post costs) have been populated in this particular delivery.</p>
 <h3>8.3.3 General Information Fields</h3>
 <p>The <code>&lt;GeneralInformation&gt;</code> section carries the identification fields and the manufacturer information. Most of the mandatory content is a rearrangement of what the fund already has in <code>&lt;FundStaticData&gt;</code> (Chapter 5), but with FinDatEx-specific formatting conventions that are worth calling out.</p>
-<pre><code>&lt;GeneralInformation&gt;
-  &lt;Code&gt;LU2031234567&lt;/Code&gt;
-  &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-  &lt;InstrumentName&gt;Europa Growth Fund R EUR ACC&lt;/InstrumentName&gt;
-  &lt;InstrumentCurrency&gt;EUR&lt;/InstrumentCurrency&gt;
-  &lt;InstrumentPerformanceFee&gt;N&lt;/InstrumentPerformanceFee&gt;
-  &lt;InstrumentDistributionCash&gt;N&lt;/InstrumentDistributionCash&gt;
-  &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-  &lt;ProductType&gt;U&lt;/ProductType&gt;
-  &lt;ManufacturerName&gt;Europa Asset Management S.A.&lt;/ManufacturerName&gt;
-  &lt;ManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/ManufacturerLEI&gt;
-  &lt;LeveragedOrContingentLiability&gt;N&lt;/LeveragedOrContingentLiability&gt;
-  &lt;Fund&gt;
-    &lt;FundShareClassWithoutRetrocession&gt;N&lt;/FundShareClassWithoutRetrocession&gt;
-  &lt;/Fund&gt;
-&lt;/GeneralInformation&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">GeneralInformation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentCurrency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentPerformanceFee</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentPerformanceFee</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentDistributionCash</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentDistributionCash</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ProductType</span><span class="tok-punct">&gt;</span>U<span class="tok-punct">&lt;/</span><span class="tok-tag">ProductType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerName</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerName</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerLEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerLEI</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">LeveragedOrContingentLiability</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">LeveragedOrContingentLiability</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">FundShareClassWithoutRetrocession</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">FundShareClassWithoutRetrocession</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralInformation</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The <code>&lt;Code&gt;</code> plus <code>&lt;CodificationSystem&gt;</code> pair replaces a single ISIN field: the code is the actual identifier value, and the codification system is an integer enumeration telling the consumer what kind of code was used. <code>1</code> means ISO 6166 ISIN, <code>2</code> CUSIP, <code>3</code> SEDOL, <code>4</code> WKN, <code>5</code> Bloomberg Ticker, <code>8</code> FIGI, and so on, up to <code>99</code> for a producer-attributed internal code. The priority rule in the FinDatEx specification is: use ISIN when available, otherwise fall back to the codification in order of preference. For a European UCITS like the Europa Growth Fund, ISIN is always available.</p>
 <p><code>&lt;ProductType&gt;</code> uses a single-letter enumeration. <code>U</code> is UCITS, <code>N</code> is Non-UCITS (AIF), <code>S</code> is Structured Security, <code>SF</code> is Structured Fund, <code>LM</code> is UCITS Money Market Fund, <code>NM</code> is Non-UCITS Money Market Fund, <code>ETC</code> is Exchange Traded Commodity, <code>B</code> is Bond. The Europa Growth Fund is <code>U</code>.</p>
@@ -725,44 +745,44 @@
 <h3>8.3.4 Target Market Fields</h3>
 <p>MiFID II defines the target market along five dimensions, and the FundsXML <code>&lt;TargetMarket&gt;</code> element maps each dimension to one nested child element with yes/no/neutral flags inside it. The five dimensions are <code>&lt;InvestorType&gt;</code>, <code>&lt;KnowledgeAndExperience&gt;</code>, <code>&lt;AbilityToBearLosses&gt;</code>, <code>&lt;RiskTolerance&gt;</code>, and <code>&lt;ClientObjectives&gt;</code>, plus a <code>&lt;DistributionStrategy&gt;</code> child that captures the MiFID II distribution strategy matrix.</p>
 <p>For the Europa Growth Fund R-EUR-ACC, the block looks like this:</p>
-<pre><code>&lt;TargetMarket&gt;
-  &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-  &lt;InvestorType&gt;
-    &lt;Retail&gt;Y&lt;/Retail&gt;
-    &lt;Professional&gt;Y&lt;/Professional&gt;
-    &lt;EligibleCounterparty&gt;Y&lt;/EligibleCounterparty&gt;
-  &lt;/InvestorType&gt;
-  &lt;KnowledgeAndExperience&gt;
-    &lt;BasicInvestor&gt;Y&lt;/BasicInvestor&gt;
-    &lt;InformedInvestor&gt;Y&lt;/InformedInvestor&gt;
-    &lt;AdvancedInvestor&gt;Y&lt;/AdvancedInvestor&gt;
-  &lt;/KnowledgeAndExperience&gt;
-  &lt;AbilityToBearLosses&gt;
-    &lt;CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;N&lt;/CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;
-    &lt;CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;Y&lt;/CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;
-    &lt;CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;N&lt;/CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;
-  &lt;/AbilityToBearLosses&gt;
-  &lt;RiskTolerance&gt;
-    &lt;PRIIPSMethodology&gt;4&lt;/PRIIPSMethodology&gt;
-  &lt;/RiskTolerance&gt;
-  &lt;ClientObjectives&gt;
-    &lt;ReturnProfile&gt;
-      &lt;ClientLookingForPreservation&gt;N&lt;/ClientLookingForPreservation&gt;
-      &lt;ClientLookingForCapitalGrowth&gt;Y&lt;/ClientLookingForCapitalGrowth&gt;
-      &lt;ClientLookingForIncome&gt;N&lt;/ClientLookingForIncome&gt;
-    &lt;/ReturnProfile&gt;
-    &lt;MinimumRecommendedHoldingPeriod&gt;
-      &lt;Years&gt;5&lt;/Years&gt;
-    &lt;/MinimumRecommendedHoldingPeriod&gt;
-    &lt;IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;Y&lt;/IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;
-  &lt;/ClientObjectives&gt;
-  &lt;DistributionStrategy&gt;
-    &lt;ExecutionOnly&gt;B&lt;/ExecutionOnly&gt;
-    &lt;ExecutionWithCheckOrNonAdvisedServices&gt;B&lt;/ExecutionWithCheckOrNonAdvisedServices&gt;
-    &lt;InvestmentAdvice&gt;B&lt;/InvestmentAdvice&gt;
-    &lt;PortfolioManagement&gt;B&lt;/PortfolioManagement&gt;
-  &lt;/DistributionStrategy&gt;
-&lt;/TargetMarket&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">TargetMarket</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InvestorType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Retail</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">Retail</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Professional</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">Professional</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EligibleCounterparty</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">EligibleCounterparty</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">InvestorType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">KnowledgeAndExperience</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">BasicInvestor</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">BasicInvestor</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">InformedInvestor</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">InformedInvestor</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AdvancedInvestor</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">AdvancedInvestor</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">KnowledgeAndExperience</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AbilityToBearLosses</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CompatibleWithClientsWhoCanNotBearCapitalLoss</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">CompatibleWithClientsWhoCanNotBearCapitalLoss</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CompatibleWithClientsWhoDoNotNeedCapitalGuarantee</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">CompatibleWithClientsWhoDoNotNeedCapitalGuarantee</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CompatibleWithClientsWhoCanBearLossBeyondCapital</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">CompatibleWithClientsWhoCanBearLossBeyondCapital</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">AbilityToBearLosses</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RiskTolerance</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PRIIPSMethodology</span><span class="tok-punct">&gt;</span>4<span class="tok-punct">&lt;/</span><span class="tok-tag">PRIIPSMethodology</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">RiskTolerance</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ClientObjectives</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnProfile</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ClientLookingForPreservation</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">ClientLookingForPreservation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ClientLookingForCapitalGrowth</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">ClientLookingForCapitalGrowth</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ClientLookingForIncome</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">ClientLookingForIncome</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnProfile</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MinimumRecommendedHoldingPeriod</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Years</span><span class="tok-punct">&gt;</span>5<span class="tok-punct">&lt;/</span><span class="tok-tag">Years</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MinimumRecommendedHoldingPeriod</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">IntendedCompatibleWithClientsHavingSustainabilityPreferences</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">IntendedCompatibleWithClientsHavingSustainabilityPreferences</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ClientObjectives</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DistributionStrategy</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ExecutionOnly</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">ExecutionOnly</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ExecutionWithCheckOrNonAdvisedServices</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">ExecutionWithCheckOrNonAdvisedServices</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">InvestmentAdvice</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">InvestmentAdvice</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManagement</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManagement</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">DistributionStrategy</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">TargetMarket</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The values above reflect a UCITS equity fund that is appropriate for a broad range of retail and professional investors and is distributed through all four MiFID II distribution modes. A few notes on the enumerations:</p>
 <ul>
@@ -830,17 +850,17 @@
 </ul>
 <p>All of these fields are decimals expressed as proportions of NAV in annualised terms: <code>0.0175</code> means 1.75% per year. A <code>&lt;CostsReferenceDate&gt;</code> element closes the block, recording the reference date of the cost figures (which may or may not coincide with the general reference date).</p>
 <p>For the Europa Growth Fund R-EUR-ACC class, the forward-looking cost block looks like this:</p>
-<pre><code>&lt;CostsAndChargesExAnte&gt;
-  &lt;Fund&gt;
-    &lt;GrossMaxEntryCostNonAcquired&gt;0.0500&lt;/GrossMaxEntryCostNonAcquired&gt;
-    &lt;MaxExitCost&gt;0.0000&lt;/MaxExitCost&gt;
-    &lt;OngoingCosts&gt;0.0175&lt;/OngoingCosts&gt;
-    &lt;ManagementFee&gt;0.0150&lt;/ManagementFee&gt;
-    &lt;TransactionCosts&gt;0.0012&lt;/TransactionCosts&gt;
-    &lt;IncidentalCosts&gt;0.0000&lt;/IncidentalCosts&gt;
-  &lt;/Fund&gt;
-  &lt;CostsReferenceDate&gt;2026-03-31&lt;/CostsReferenceDate&gt;
-&lt;/CostsAndChargesExAnte&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">CostsAndChargesExAnte</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">GrossMaxEntryCostNonAcquired</span><span class="tok-punct">&gt;</span>0.0500<span class="tok-punct">&lt;/</span><span class="tok-tag">GrossMaxEntryCostNonAcquired</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MaxExitCost</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">MaxExitCost</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">OngoingCosts</span><span class="tok-punct">&gt;</span>0.0175<span class="tok-punct">&lt;/</span><span class="tok-tag">OngoingCosts</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ManagementFee</span><span class="tok-punct">&gt;</span>0.0150<span class="tok-punct">&lt;/</span><span class="tok-tag">ManagementFee</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionCosts</span><span class="tok-punct">&gt;</span>0.0012<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionCosts</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">IncidentalCosts</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">IncidentalCosts</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">CostsReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">CostsReferenceDate</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">CostsAndChargesExAnte</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading the block: the share class allows a maximum entry load of 5% (the contractual cap in the prospectus), although actual distributor agreements typically waive or reduce this figure. The exit cost is zero. The ongoing cost is 1.75% per year, of which 1.50% is the management fee and the remaining 0.25% covers administration, depositary, and other ongoing costs. The transaction cost estimate is 0.12% per year, computed according to the FinDatEx methodology from the fund's realised trading activity over the preceding period. The incidental cost is zero because the fund charges no performance fee. The total of 1.87% (ongoing + transaction + incidental, excluding the prospectus-cap entry load) is the headline annual cost figure that a consumer would show to a retail investor.</p>
 <p>The <code>&lt;CostsAndChargesExPost&gt;</code> block, populated only when the <code>&lt;DataReportingExPost&gt;</code> flag is set to <code>Y</code>, carries the realised costs for a past reference period. Its structure mirrors the ex-ante block but with slightly different field names (<code>EntryCostAcquired</code>, <code>OngoingCosts</code>, <code>ManagementFee</code>, <code>TransactionCosts</code>, <code>IncidentalCosts</code>) and records actually incurred rather than contractually possible charges. A producer that publishes ex-post figures typically does so on an annual basis rather than monthly, because the computations depend on a full reporting period's trading data.</p>
@@ -848,20 +868,20 @@
 <p>An even more important relationship concerns EPT, which we will treat in §8.4.4. EPT (inside <code>&lt;PRIIPS_V20&gt;</code>) also carries cost fields, but with a PRIIPs-specific breakdown and with horizon-dependent values computed at one year and at the recommended holding period. The EMT figures above are annual percentages; the EPT figures express the same underlying cost structure over the RHP, and the arithmetic of amortising one-off costs over five years versus one year produces different aggregated numbers. The two representations are both authoritative, and consumers must use the one that matches their disclosure horizon.</p>
 <h3>8.3.6 EMT in Context — Multiple Share Classes</h3>
 <p>The <code>&lt;EMT_V4_2&gt;</code> element contains a sequence of <code>&lt;FinancialInstrument&gt;</code> children, so a fund with multiple share classes emits one block per class under the same EMT wrapper:</p>
-<pre><code>&lt;EMT_V4_2&gt;
-  &lt;FinancialInstrument&gt;
-    &lt;!-- R-EUR-ACC: ISIN LU2031234567 --&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- R-EUR-ACC: ISIN LU2031234567 --&gt;</span>
     ...
-  &lt;/FinancialInstrument&gt;
-  &lt;FinancialInstrument&gt;
-    &lt;!-- R-CHF-ACC-HEDGED: ISIN LU2031234641 --&gt;
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- R-CHF-ACC-HEDGED: ISIN LU2031234641 --&gt;</span>
     ...
-  &lt;/FinancialInstrument&gt;
-  &lt;FinancialInstrument&gt;
-    &lt;!-- I-EUR-DIST: ISIN LU2031234724 --&gt;
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- I-EUR-DIST: ISIN LU2031234724 --&gt;</span>
     ...
-  &lt;/FinancialInstrument&gt;
-&lt;/EMT_V4_2&gt;
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>A consumer iterates the <code>&lt;FinancialInstrument&gt;</code> children and matches each one to its corresponding share class by <code>&lt;Code&gt;</code>. Nothing in the schema prevents mixing share classes from different funds inside a single <code>&lt;EMT_V4_2&gt;</code> element (the element is a flat list), but operational practice is to keep one EMT block per fund per delivery for clarity. Where a single delivery covers many funds — typical for large multi-manager platforms — the <code>RegulatoryReportings/DirectReporting/EMT_V4_2</code> branch can contain one <code>&lt;FinancialInstrument&gt;</code> per share class across all funds, and consumers split them at processing time by the <code>&lt;Code&gt;</code> field.</p>
 <p>The complete EMT example for the Europa Growth Fund R-EUR-ACC class — combining the <code>DataSetInformation</code>, <code>GeneralInformation</code>, <code>TargetMarket</code>, and <code>CostsAndChargesExAnte</code> sections from §§8.3.2–8.3.5 — appears in full in §8.9 alongside the other templates.</p>
@@ -891,48 +911,48 @@
 <li><code>&lt;Narratives&gt;</code> — the standardised free-text fields that appear on the KID.</li>
 </ol>
 <p>A skeleton:</p>
-<pre><code>&lt;PRIIPS_V20&gt;
-  &lt;EPTV2&gt;
-    &lt;DataSetInformation&gt;
-      &lt;Version&gt;V21&lt;/Version&gt;
-      &lt;!-- four Data_Reporting* flags --&gt;
-    &lt;/DataSetInformation&gt;
-    &lt;GeneralPortfolioInformation&gt;
-      &lt;!-- product identification — see §8.4.3 --&gt;
-    &lt;/GeneralPortfolioInformation&gt;
-    &lt;RiskAssessment&gt;
-      &lt;!-- SRI, MRM, CRM — see §8.4.4 --&gt;
-    &lt;/RiskAssessment&gt;
-    &lt;PerformanceScenario&gt;
-      &lt;!-- four scenarios — see §8.4.5 --&gt;
-    &lt;/PerformanceScenario&gt;
-    &lt;Costs&gt;
-      &lt;!-- cost structure — see §8.4.6 --&gt;
-    &lt;/Costs&gt;
-    &lt;Narratives&gt;
-      &lt;!-- KID free-text fields --&gt;
-    &lt;/Narratives&gt;
-  &lt;/EPTV2&gt;
-&lt;/PRIIPS_V20&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EPTV2</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V21<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- four Data_Reporting* flags --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralPortfolioInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- product identification — see §8.4.3 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralPortfolioInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RiskAssessment</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- SRI, MRM, CRM — see §8.4.4 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">RiskAssessment</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PerformanceScenario</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- four scenarios — see §8.4.5 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">PerformanceScenario</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Costs</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- cost structure — see §8.4.6 --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Costs</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Narratives</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- KID free-text fields --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Narratives</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">EPTV2</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The <code>&lt;Version&gt;</code> element inside <code>&lt;DataSetInformation&gt;</code> takes the single value <code>V21</code>, reflecting EPT version 2.1 — the FinDatEx EPT revision that accompanies the PRIIPs technical standards currently in force. As with EMT, the element name (<code>PRIIPS_V20</code>) and the <code>&lt;Version&gt;</code> string (<code>V21</code>) refer to two different things: the former is the FundsXML-side XSD version, the latter is the FinDatEx-side template version.</p>
 <p>One important schema quirk: the <code>DataSetInformation</code> block inside <code>&lt;EPTV2&gt;</code> uses yes/no fields of type <code>YesNoType</code>, which in this corner of the schema takes the string values <code>YES</code> and <code>NO</code> in full — not the single-letter <code>Y</code> and <code>N</code> used by EMT's <code>EMTYesNoType</code>. A producer who mechanically copies <code>Y</code>/<code>N</code> from one template to the other will hit a validation error. The fragments in this section use the correct <code>YES</code>/<code>NO</code> spelling.</p>
 <h3>8.4.3 General Portfolio Information</h3>
 <p>The <code>&lt;GeneralPortfolioInformation&gt;</code> block is the EPT equivalent of EMT's <code>&lt;GeneralInformation&gt;</code>: it identifies the product (manufacturer, LEI, group, the ISIN or internal code, the product name, currency, reference date, PRIIPs category, autocallable flag). For the Europa Growth Fund R-EUR-ACC class:</p>
-<pre><code>&lt;GeneralPortfolioInformation&gt;
-  &lt;PortfolioManufacturerName&gt;Europa Asset Management S.A.&lt;/PortfolioManufacturerName&gt;
-  &lt;PortfolioManufacturerGroupName&gt;Europa Financial Group&lt;/PortfolioManufacturerGroupName&gt;
-  &lt;PortfolioManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/PortfolioManufacturerLEI&gt;
-  &lt;PortfolioID&gt;
-    &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-    &lt;Code&gt;LU2031234567&lt;/Code&gt;
-  &lt;/PortfolioID&gt;
-  &lt;PortfolioName&gt;Europa Growth Fund R EUR ACC&lt;/PortfolioName&gt;
-  &lt;PortfolioCurrency&gt;EUR&lt;/PortfolioCurrency&gt;
-  &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-  &lt;PortfolioPRIIPSCategory&gt;2&lt;/PortfolioPRIIPSCategory&gt;
-  &lt;IsAnAutocallableProduct&gt;NO&lt;/IsAnAutocallableProduct&gt;
-&lt;/GeneralPortfolioInformation&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">GeneralPortfolioInformation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManufacturerName</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManufacturerName</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManufacturerGroupName</span><span class="tok-punct">&gt;</span>Europa Financial Group<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManufacturerGroupName</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManufacturerLEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManufacturerLEI</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioName</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioName</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioCurrency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioPRIIPSCategory</span><span class="tok-punct">&gt;</span>2<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioPRIIPSCategory</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">IsAnAutocallableProduct</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">IsAnAutocallableProduct</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralPortfolioInformation</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The <code>&lt;PortfolioPRIIPSCategory&gt;</code> field is a small integer on the closed enumeration 1 to 4, corresponding to the four PRIIPs product categories:</p>
 <ul>
@@ -944,17 +964,17 @@
 <p>The category choice drives much of the downstream scenario calculation, because the four categories use different methodologies for the performance scenario section. Most equity, bond, and balanced UCITS are Category 2; Category 3 is the natural home for structured funds.</p>
 <h3>8.4.4 Risk Assessment — SRI, MRM, and CRM</h3>
 <p>The <code>&lt;RiskAssessment&gt;</code> block carries the PRIIPs risk indicators and a handful of related fields. For the Europa Growth Fund:</p>
-<pre><code>&lt;RiskAssessment&gt;
-  &lt;ValuationFrequency&gt;252&lt;/ValuationFrequency&gt;
-  &lt;IS_Flexible&gt;NO&lt;/IS_Flexible&gt;
-  &lt;Existing_Credit_Risk&gt;NO&lt;/Existing_Credit_Risk&gt;
-  &lt;SRI&gt;4&lt;/SRI&gt;
-  &lt;IsSRIAdjusted&gt;NO&lt;/IsSRIAdjusted&gt;
-  &lt;MRM&gt;4&lt;/MRM&gt;
-  &lt;Recommended_Holding_Period&gt;5&lt;/Recommended_Holding_Period&gt;
-  &lt;HasAContractualMaturityDate&gt;NO&lt;/HasAContractualMaturityDate&gt;
-  &lt;Liquidity_Risk&gt;L&lt;/Liquidity_Risk&gt;
-&lt;/RiskAssessment&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">RiskAssessment</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ValuationFrequency</span><span class="tok-punct">&gt;</span>252<span class="tok-punct">&lt;/</span><span class="tok-tag">ValuationFrequency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">IS_Flexible</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">IS_Flexible</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Existing_Credit_Risk</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">Existing_Credit_Risk</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SRI</span><span class="tok-punct">&gt;</span>4<span class="tok-punct">&lt;/</span><span class="tok-tag">SRI</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">IsSRIAdjusted</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">IsSRIAdjusted</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">MRM</span><span class="tok-punct">&gt;</span>4<span class="tok-punct">&lt;/</span><span class="tok-tag">MRM</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Recommended_Holding_Period</span><span class="tok-punct">&gt;</span>5<span class="tok-punct">&lt;/</span><span class="tok-tag">Recommended_Holding_Period</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">HasAContractualMaturityDate</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">HasAContractualMaturityDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Liquidity_Risk</span><span class="tok-punct">&gt;</span>L<span class="tok-punct">&lt;/</span><span class="tok-tag">Liquidity_Risk</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">RiskAssessment</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p><code>&lt;ValuationFrequency&gt;</code> is the number of valuation days per year. The Europa Growth Fund values daily, so the value is 252 (business days). The field takes an enumeration — 1 (annual), 2 (biannual), 4 (quarterly), 12 (monthly), 24 (bimonthly), 52 (weekly), 104 (biweekly), 252 (daily) — and the producer chooses the one that matches the actual valuation cadence.</p>
 <p><code>&lt;IS_Flexible&gt;</code> marks whether the fund is a flexible fund under the PRIIPs Annex II clause 14. A flexible fund changes its asset-allocation profile over time and must disclose a historical VEV alongside a reference-allocation VEV. The Europa Growth Fund is a straight equity fund with a stable mandate and is therefore <code>NO</code>.</p>
@@ -968,21 +988,21 @@
 <h3>8.4.5 Performance Scenarios</h3>
 <p>The <code>&lt;PerformanceScenario&gt;</code> block carries the four PRIIPs performance scenarios — <strong>stress, unfavourable, moderate, favourable</strong> — that appear on the KID. Each scenario is expressed as an annualised return (a decimal, e.g. <code>0.0540</code> for 5.40% per year) at the recommended holding period; the optional <code>&lt;OneYear&gt;</code> and <code>&lt;HalfRHP&gt;</code> children carry the shorter-horizon values.</p>
 <p>For the Europa Growth Fund:</p>
-<pre><code>&lt;PerformanceScenario&gt;
-  &lt;ReturnUnfavorable&gt;
-    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.0120&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-  &lt;/ReturnUnfavorable&gt;
-  &lt;ReturnModerate&gt;
-    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.0540&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-  &lt;/ReturnModerate&gt;
-  &lt;ReturnFavorable&gt;
-    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.1080&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-  &lt;/ReturnFavorable&gt;
-  &lt;ReturnStress&gt;
-    &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.2750&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-  &lt;/ReturnStress&gt;
-  &lt;PortfolioPastPerformanceDisclosureRequired&gt;YES&lt;/PortfolioPastPerformanceDisclosureRequired&gt;
-&lt;/PerformanceScenario&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">PerformanceScenario</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnUnfavorable</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>-0.0120<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnUnfavorable</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnModerate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>0.0540<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnModerate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnFavorable</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>0.1080<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnFavorable</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnStress</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>-0.2750<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnStress</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioPastPerformanceDisclosureRequired</span><span class="tok-punct">&gt;</span>YES<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioPastPerformanceDisclosureRequired</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">PerformanceScenario</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The child element name <code>&lt;RHPOrFirstCallDateOrFirstCallDate&gt;</code> is awkward — it is a schema artefact reflecting the fact that the same field is used for fixed-RHP products (where it carries the RHP value) and for autocallable products (where it carries the value at the first call date). For a straight UCITS, the interpretation is always "at RHP".</p>
 <p><strong>The four values in turn</strong>. A moderate annual return of +5.40% per year over the five-year RHP represents the median of the historical-return distribution — the honest central estimate of what an investor might expect. The unfavourable scenario at −1.20% per year represents the 10th percentile of the distribution: a plausible but pessimistic outcome. The favourable scenario at +10.80% per year is the 90th percentile. The stress scenario at −27.50% per year is the extreme tail, derived from the worst historical episodes in the measurement window; this scenario is deliberately much worse than the unfavourable one to illustrate that equity investments can suffer severe drawdowns.</p>
@@ -990,23 +1010,23 @@
 <p><code>&lt;PortfolioPastPerformanceDisclosureRequired&gt;</code> is <code>YES</code> for any fund that meets the PRIIPs Annex VIII conditions (a UCITS with at least one year of history), requiring the KID to link to the past performance document. For the Europa Growth Fund, which has been operating for several years, the flag is <code>YES</code>.</p>
 <h3>8.4.6 Costs in the PRIIPs Format</h3>
 <p>The <code>&lt;Costs&gt;</code> block decomposes the PRIIPs cost structure into three sub-blocks: <code>&lt;OneOff&gt;</code>, <code>&lt;Ongoing&gt;</code>, and <code>&lt;Incidental&gt;</code>. Each sub-block carries the cost components in the PRIIPs-specific breakdown:</p>
-<pre><code>&lt;Costs&gt;
-  &lt;OneOff&gt;
-    &lt;EntryCost&gt;0.0500&lt;/EntryCost&gt;
-    &lt;EntryCostsAcquired&gt;0.0000&lt;/EntryCostsAcquired&gt;
-    &lt;ExitCostAtRHP&gt;0.0000&lt;/ExitCostAtRHP&gt;
-    &lt;SlidingExitCostIndicator&gt;NO&lt;/SlidingExitCostIndicator&gt;
-  &lt;/OneOff&gt;
-  &lt;Ongoing&gt;
-    &lt;OtherCost&gt;0.0025&lt;/OtherCost&gt;
-    &lt;ManagementCosts&gt;0.0150&lt;/ManagementCosts&gt;
-    &lt;Transaction&gt;0.0012&lt;/Transaction&gt;
-  &lt;/Ongoing&gt;
-  &lt;Incidental&gt;
-    &lt;ExistringIncidentalCostsPortfolio&gt;NO&lt;/ExistringIncidentalCostsPortfolio&gt;
-    &lt;ExistingIncidentalCostsPortfolio&gt;NO&lt;/ExistingIncidentalCostsPortfolio&gt;
-  &lt;/Incidental&gt;
-&lt;/Costs&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Costs</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">OneOff</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCost</span><span class="tok-punct">&gt;</span>0.0500<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCost</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCostsAcquired</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCostsAcquired</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ExitCostAtRHP</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">ExitCostAtRHP</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SlidingExitCostIndicator</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">SlidingExitCostIndicator</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">OneOff</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Ongoing</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">OtherCost</span><span class="tok-punct">&gt;</span>0.0025<span class="tok-punct">&lt;/</span><span class="tok-tag">OtherCost</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ManagementCosts</span><span class="tok-punct">&gt;</span>0.0150<span class="tok-punct">&lt;/</span><span class="tok-tag">ManagementCosts</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Transaction</span><span class="tok-punct">&gt;</span>0.0012<span class="tok-punct">&lt;/</span><span class="tok-tag">Transaction</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Ongoing</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Incidental</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ExistringIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">ExistringIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ExistingIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">ExistingIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Incidental</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Costs</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>A few points that the naive reader should be warned about. The <code>&lt;Transaction&gt;</code> field inside <code>&lt;Ongoing&gt;</code> carries the portfolio transaction costs — the same concept as EMT's <code>&lt;TransactionCosts&gt;</code> but at the same decimal-percent scale. The <code>&lt;ManagementCosts&gt;</code> field carries the management fee plus other administrative and operational running costs, which is a <em>superset</em> of the <code>&lt;ManagementFee&gt;</code> field in EMT's <code>&lt;CostsAndChargesExAnte&gt;/&lt;Fund&gt;</code>. A producer filling both templates must take care that the EPT's <code>&lt;ManagementCosts&gt;</code> is at least as large as the EMT's <code>&lt;ManagementFee&gt;</code>, and the difference, if any, reflects non-management administrative running costs that PRIIPs bundles into the management bucket but MiFID II breaks out separately.</p>
 <p>The two similarly named children of <code>&lt;Incidental&gt;</code> — <code>&lt;ExistringIncidentalCostsPortfolio&gt;</code> and <code>&lt;ExistingIncidentalCostsPortfolio&gt;</code> — are not a typo in this book: they are two separate elements in the schema, and both are mandatory. The FinDatEx specification uses them to distinguish two types of incidental cost indicator, and the nearly identical spelling reflects a historical quirk of the template's field naming. A producer must populate both, and, in the absence of performance fees or carried interest, both are <code>NO</code>.</p>
@@ -1042,52 +1062,52 @@
 </ol>
 <p>Groups 6 and 7 are by far the largest by field count, because they carry the structured numerical data that SFDR Level 2 mandates. The mandatory minimum is a surprisingly small subset of the full template — most of the numerical PAI and Taxonomy fields are optional, conditional on the fund's SFDR article and its PAI-consideration flag. An Article 6 fund that does not consider PAIs can produce a valid EET with only a handful of fields populated; an Article 8 fund with full PAI consideration and a Taxonomy disclosure is where the file grows to its full size.</p>
 <p>The minimal mandatory structure of one <code>&lt;EET1.1.3&gt;</code> entry is surprisingly compact:</p>
-<pre><code>&lt;EET1.1.3&gt;
-  &lt;EET1.1.3&gt;
-    &lt;DataSetInformation&gt;
-      &lt;DataSetInformation&gt;
-        &lt;Version&gt;V1.1.3&lt;/Version&gt;
-        &lt;Producer&gt;
-          &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-          &lt;LEI&gt;529900T8BM49AURSDO55&lt;/LEI&gt;
-          &lt;Email&gt;eet@europa-am.lu&lt;/Email&gt;
-        &lt;/Producer&gt;
-        &lt;FileGeneration&gt;2026-03-31T18:30:00Z&lt;/FileGeneration&gt;
-        &lt;DataReporting&gt;
-          &lt;SFDRPreContractual&gt;Y&lt;/SFDRPreContractual&gt;
-          &lt;SFDRPeriodic&gt;Y&lt;/SFDRPeriodic&gt;
-          &lt;SFDREntityLevel&gt;Y&lt;/SFDREntityLevel&gt;
-          &lt;MiFID&gt;Y&lt;/MiFID&gt;
-          &lt;IDD&gt;Y&lt;/IDD&gt;
-        &lt;/DataReporting&gt;
-      &lt;/DataSetInformation&gt;
-      &lt;ManufacturerInformation&gt;
-        &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-        &lt;CodeType&gt;L&lt;/CodeType&gt;
-        &lt;Code&gt;529900T8BM49AURSDO55&lt;/Code&gt;
-        &lt;Email&gt;esg@europa-am.lu&lt;/Email&gt;
-        &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-      &lt;/ManufacturerInformation&gt;
-      &lt;ManufacturerWebsiteInformationStewardshipAndEngagement&gt;https://www.europa-am.lu/sustainability&lt;/ManufacturerWebsiteInformationStewardshipAndEngagement&gt;
-    &lt;/DataSetInformation&gt;
-    &lt;GeneralFinancialInstrumentInformation&gt;
-      &lt;IdentifyingData&gt;LU2031234567&lt;/IdentifyingData&gt;
-      &lt;TypeOfIdentification&gt;1&lt;/TypeOfIdentification&gt;
-      &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
-      &lt;Currency&gt;EUR&lt;/Currency&gt;
-    &lt;/GeneralFinancialInstrumentInformation&gt;
-    &lt;MainCriterias&gt;
-      &lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;
-      &lt;ConsidersPrincipleAdverseImpact&gt;Y&lt;/ConsidersPrincipleAdverseImpact&gt;
-    &lt;/MainCriterias&gt;
-    &lt;MiFIDIDDTargetMarket&gt;
-      &lt;EndClientSustainabilityPreferences_Considered&gt;Y&lt;/EndClientSustainabilityPreferences_Considered&gt;
-    &lt;/MiFIDIDDTargetMarket&gt;
-    &lt;ScreeningCriteria&gt;
-      &lt;ExistingNegativeScreeningStrategy&gt;Y&lt;/ExistingNegativeScreeningStrategy&gt;
-    &lt;/ScreeningCriteria&gt;
-  &lt;/EET1.1.3&gt;
-&lt;/EET1.1.3&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V1.1.3<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Producer</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>eet@europa-am.lu<span class="tok-punct">&lt;/</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Producer</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">FileGeneration</span><span class="tok-punct">&gt;</span>2026-03-31T18:30:00Z<span class="tok-punct">&lt;/</span><span class="tok-tag">FileGeneration</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DataReporting</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">SFDRPreContractual</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDRPreContractual</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">SFDRPeriodic</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDRPeriodic</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">SFDREntityLevel</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDREntityLevel</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">MiFID</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">MiFID</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IDD</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">IDD</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DataReporting</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">CodeType</span><span class="tok-punct">&gt;</span>L<span class="tok-punct">&lt;/</span><span class="tok-tag">CodeType</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>esg@europa-am.lu<span class="tok-punct">&lt;/</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerWebsiteInformationStewardshipAndEngagement</span><span class="tok-punct">&gt;</span>https://www.europa-am.lu/sustainability<span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerWebsiteInformationStewardshipAndEngagement</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralFinancialInstrumentInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">IdentifyingData</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">IdentifyingData</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TypeOfIdentification</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">TypeOfIdentification</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralFinancialInstrumentInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MainCriterias</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SFDRProductType</span><span class="tok-punct">&gt;</span>8<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDRProductType</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ConsidersPrincipleAdverseImpact</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">ConsidersPrincipleAdverseImpact</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MainCriterias</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MiFIDIDDTargetMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">EndClientSustainabilityPreferences_Considered</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">EndClientSustainabilityPreferences_Considered</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">MiFIDIDDTargetMarket</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ScreeningCriteria</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ExistingNegativeScreeningStrategy</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">ExistingNegativeScreeningStrategy</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ScreeningCriteria</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Note the two features that are easy to stumble over. First, the double nesting of the version element name: the outer <code>&lt;EET1.1.3&gt;</code> is the wrapper, and each inner <code>&lt;EET1.1.3&gt;</code> is a single report entry. A file with several share classes emits several inner entries inside one outer wrapper. Second, the double nesting of <code>&lt;DataSetInformation&gt;</code> inside <code>&lt;DataSetInformation&gt;</code> — the outer is a section wrapper, the inner is the metadata block, and a <code>&lt;ManufacturerInformation&gt;</code> sibling of the inner <code>&lt;DataSetInformation&gt;</code> completes the outer section. The EET schema is, in this respect, more awkward than either EMT or EPT, and a producer building the block by hand benefits from keeping a validated template file as a copy source.</p>
 <p>The <code>&lt;DataReporting&gt;</code> flags inside the inner <code>&lt;DataSetInformation&gt;</code> declare which regulatory contexts the EET instance supports. An <code>SFDRPreContractual=Y</code> value means the file is suitable to populate the SFDR pre-contractual disclosure; <code>SFDRPeriodic=Y</code> means it supports the annual periodic disclosure; <code>MiFID=Y</code> and <code>IDD=Y</code> mean the file carries the data needed for the MiFID II / IDD sustainability preferences assessment. The Europa Growth Fund supports all five regulatory uses.</p>
@@ -1150,44 +1170,44 @@
 </ol>
 <p>The mandatory minimum is small. A distributor that observed no target-market deviations during the reporting period can emit a valid EFT with only the three mandatory sections populated and no deviation reports — effectively a "nil return" that communicates "we distributed the product, we reviewed the target market alignment, we observed no issues".</p>
 <p>A complete minimal EFT entry:</p>
-<pre><code>&lt;EFTs&gt;
-  &lt;EFT&gt;
-    &lt;DataSetInformation&gt;
-      &lt;ReportInformationAndScope&gt;
-        &lt;Version&gt;V1&lt;/Version&gt;
-        &lt;FileGeneration&gt;2026-04-05T08:00:00Z&lt;/FileGeneration&gt;
-        &lt;PeriodStartData&gt;2026-01-01&lt;/PeriodStartData&gt;
-        &lt;PeriodEndData&gt;2026-03-31&lt;/PeriodEndData&gt;
-        &lt;ReferenceTargetMarket&gt;B&lt;/ReferenceTargetMarket&gt;
-      &lt;/ReportInformationAndScope&gt;
-      &lt;SubmitterEntityInformation&gt;
-        &lt;Name&gt;Nordbank Privatkunden AG&lt;/Name&gt;
-        &lt;Identifier&gt;5299001NORDBANK00001&lt;/Identifier&gt;
-        &lt;IdentifierType&gt;L&lt;/IdentifierType&gt;
-        &lt;PositionInTheDistributionChain&gt;D&lt;/PositionInTheDistributionChain&gt;
-      &lt;/SubmitterEntityInformation&gt;
-      &lt;ManufacturerEntityInformation&gt;
-        &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-        &lt;Identifier&gt;529900T8BM49AURSDO55&lt;/Identifier&gt;
-        &lt;IdentifierType&gt;L&lt;/IdentifierType&gt;
-      &lt;/ManufacturerEntityInformation&gt;
-    &lt;/DataSetInformation&gt;
-    &lt;GeneralFinancialInstrumentInformation&gt;
-      &lt;IdentifyingData&gt;LU2031234567&lt;/IdentifyingData&gt;
-      &lt;TypeOfIdentification&gt;1&lt;/TypeOfIdentification&gt;
-      &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
-      &lt;TotalNumberOfTransactions&gt;1243&lt;/TotalNumberOfTransactions&gt;
-    &lt;/GeneralFinancialInstrumentInformation&gt;
-    &lt;DeviationReportManufacturerTargetMarketPerspective&gt;
-      &lt;Sales_OTM_NTM&gt;
-        &lt;RetailInvestorTypeAndSelfService&gt;0&lt;/RetailInvestorTypeAndSelfService&gt;
-        &lt;RetailInvestorTypeAndExecutionWithSuitabilityTest&gt;0&lt;/RetailInvestorTypeAndExecutionWithSuitabilityTest&gt;
-        &lt;KnowledgeAndExperienceAndSelfService&gt;2&lt;/KnowledgeAndExperienceAndSelfService&gt;
-        &lt;KnowledgeAndExperienceAndWithSuitabilityTest&gt;0&lt;/KnowledgeAndExperienceAndWithSuitabilityTest&gt;
-      &lt;/Sales_OTM_NTM&gt;
-    &lt;/DeviationReportManufacturerTargetMarketPerspective&gt;
-  &lt;/EFT&gt;
-&lt;/EFTs&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">EFTs</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EFT</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ReportInformationAndScope</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V1<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">FileGeneration</span><span class="tok-punct">&gt;</span>2026-04-05T08:00:00Z<span class="tok-punct">&lt;/</span><span class="tok-tag">FileGeneration</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PeriodStartData</span><span class="tok-punct">&gt;</span>2026-01-01<span class="tok-punct">&lt;/</span><span class="tok-tag">PeriodStartData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PeriodEndData</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PeriodEndData</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ReferenceTargetMarket</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">ReferenceTargetMarket</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ReportInformationAndScope</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">SubmitterEntityInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Nordbank Privatkunden AG<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifier</span><span class="tok-punct">&gt;</span>5299001NORDBANK00001<span class="tok-punct">&lt;/</span><span class="tok-tag">Identifier</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">IdentifierType</span><span class="tok-punct">&gt;</span>L<span class="tok-punct">&lt;/</span><span class="tok-tag">IdentifierType</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PositionInTheDistributionChain</span><span class="tok-punct">&gt;</span>D<span class="tok-punct">&lt;/</span><span class="tok-tag">PositionInTheDistributionChain</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">SubmitterEntityInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerEntityInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifier</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">Identifier</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">IdentifierType</span><span class="tok-punct">&gt;</span>L<span class="tok-punct">&lt;/</span><span class="tok-tag">IdentifierType</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerEntityInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralFinancialInstrumentInformation</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">IdentifyingData</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">IdentifyingData</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TypeOfIdentification</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">TypeOfIdentification</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">TotalNumberOfTransactions</span><span class="tok-punct">&gt;</span>1243<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalNumberOfTransactions</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralFinancialInstrumentInformation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DeviationReportManufacturerTargetMarketPerspective</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Sales_OTM_NTM</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">RetailInvestorTypeAndSelfService</span><span class="tok-punct">&gt;</span>0<span class="tok-punct">&lt;/</span><span class="tok-tag">RetailInvestorTypeAndSelfService</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">RetailInvestorTypeAndExecutionWithSuitabilityTest</span><span class="tok-punct">&gt;</span>0<span class="tok-punct">&lt;/</span><span class="tok-tag">RetailInvestorTypeAndExecutionWithSuitabilityTest</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">KnowledgeAndExperienceAndSelfService</span><span class="tok-punct">&gt;</span>2<span class="tok-punct">&lt;/</span><span class="tok-tag">KnowledgeAndExperienceAndSelfService</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">KnowledgeAndExperienceAndWithSuitabilityTest</span><span class="tok-punct">&gt;</span>0<span class="tok-punct">&lt;/</span><span class="tok-tag">KnowledgeAndExperienceAndWithSuitabilityTest</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Sales_OTM_NTM</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DeviationReportManufacturerTargetMarketPerspective</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">EFT</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">EFTs</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading the block: a hypothetical distributor (Nordbank Privatkunden AG) reports on the Q1 2026 period. The reference target market is <code>B</code> (Both) — the distributor checked deviations against both the manufacturer's target market and its own refined distributor target market. The distributor processed 1,243 transactions in the R-EUR-ACC share class during the period. The deviation report shows that all 1,243 transactions were aligned on the Retail Investor Type dimension (0 deviations) but that 2 transactions were identified as deviations on the Knowledge and Experience dimension under self-service execution — presumably, two clients with "Basic" knowledge level bought the fund via the bank's online execution-only channel despite the product's target market being Informed / Advanced. The distributor is required to disclose this, and the manufacturer will read it during the annual product governance review.</p>
 <p>This feedback, once processed by Europa Asset Management S.A., becomes one of the inputs to the fund's annual product governance review. If several distributors were reporting consistent misalignment on one of the target market dimensions, the manufacturer would be expected to investigate — perhaps the product's risk characteristics have drifted, or the target market definition was drawn too narrowly for the actual investor base.</p>
@@ -1218,26 +1238,26 @@
 </ul>
 <p>Each position inside <code>&lt;Positions&gt;</code> is itself a complex block with mandatory sub-fields including <code>InstrumentCIC</code> (the four-character CIC code classifying the instrument type and country), <code>InstrumentCode</code> (the ISIN or alternative identifier), <code>InstrumentName</code>, <code>Valuation</code> (with six mandatory monetary sub-fields in quotation currency and portfolio currency plus market-exposure figures), and <code>AdditionalInformation</code> (a structured block of optional QRT-specific sub-fields).</p>
 <p>A position for a single equity holding — SAP SE — looks like this:</p>
-<pre><code>&lt;Position&gt;
-  &lt;InstrumentCIC&gt;DE31&lt;/InstrumentCIC&gt;
-  &lt;InstrumentCode&gt;
-    &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-    &lt;Code&gt;DE0007164600&lt;/Code&gt;
-  &lt;/InstrumentCode&gt;
-  &lt;InstrumentName&gt;SAP SE&lt;/InstrumentName&gt;
-  &lt;Valuation&gt;
-    &lt;QuotationCurrency&gt;EUR&lt;/QuotationCurrency&gt;
-    &lt;MarketValueQC&gt;7450000.00&lt;/MarketValueQC&gt;
-    &lt;CleanValueQC&gt;7450000.00&lt;/CleanValueQC&gt;
-    &lt;MarketValuePC&gt;7450000.00&lt;/MarketValuePC&gt;
-    &lt;CleanValuePC&gt;7450000.00&lt;/CleanValuePC&gt;
-    &lt;PositionWeight&gt;0.0300&lt;/PositionWeight&gt;
-    &lt;MarketExposureQC&gt;7450000.00&lt;/MarketExposureQC&gt;
-    &lt;MarketExposurePC&gt;7450000.00&lt;/MarketExposurePC&gt;
-    &lt;MarketExposureWeight&gt;0.0300&lt;/MarketExposureWeight&gt;
-  &lt;/Valuation&gt;
-  &lt;AdditionalInformation/&gt;
-&lt;/Position&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentCIC</span><span class="tok-punct">&gt;</span>DE31<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentCIC</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>DE0007164600<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentCode</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>SAP SE<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Valuation</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">QuotationCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">QuotationCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValueQC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValueQC</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CleanValueQC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">CleanValueQC</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValuePC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValuePC</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">CleanValuePC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">CleanValuePC</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PositionWeight</span><span class="tok-punct">&gt;</span>0.0300<span class="tok-punct">&lt;/</span><span class="tok-tag">PositionWeight</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketExposureQC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketExposureQC</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketExposurePC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketExposurePC</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">MarketExposureWeight</span><span class="tok-punct">&gt;</span>0.0300<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketExposureWeight</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Valuation</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AdditionalInformation</span><span class="tok-punct">/&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>The six mandatory monetary fields — <code>MarketValueQC</code>, <code>CleanValueQC</code>, <code>MarketValuePC</code>, <code>CleanValuePC</code>, <code>MarketExposureQC</code>, <code>MarketExposurePC</code> — carry the position's market value and market exposure in both quotation currency (QC, the currency the instrument is quoted in) and portfolio currency (PC, the fund's base currency). For an equity holding in a single-currency fund, the QC and PC values are identical, and the clean values equal the market values (there is no accrued interest on equity). For a foreign-currency equity or for a bond with accrued coupon, the QC and PC values differ and the clean and market values differ respectively. The <code>PositionWeight</code> expresses the share of the fund's net assets that the position represents, as a decimal (<code>0.0300</code> = 3% of NAV).</p>
 <p>The four-character <strong>CIC (Complementary Identification Code)</strong> is an EIOPA-defined classification standardised in the Solvency II regulation. Its format is <code>CC</code> (ISO country code) followed by two digits, where the first digit identifies the asset category (1 = government bond, 2 = corporate bond, 3 = listed equity, 4 = unlisted equity, and so on) and the second digit refines it. <code>DE31</code> means "listed equity in Germany, asset sub-category 1"; <code>FR31</code> would be the French equivalent, <code>CH31</code> the Swiss equivalent. The CIC is the single most important classification field in TPT, because the Solvency II SCR calculation uses it as the primary key for applying the standard-formula shock factors — 39% for EEA listed equities, 49% for non-EEA listed equities, different percentages for different bond categories.</p>
@@ -1269,273 +1289,273 @@
 <p>The integrative close of the chapter. A <code>&lt;RegulatoryReportings&gt;</code> block containing four of the five templates — EMT, EFT-free, EET, TPT, and PRIIPs — for the 31 March 2026 delivery of the Europa Growth Fund R-EUR-ACC share class.</p>
 <p><strong>EFT is absent</strong>, because this delivery flows from the manufacturer to distributors rather than in the reverse direction. The absence is structural and correct, and the block below reflects it. The four modules that <em>are</em> present — <code>EMT_V4_2</code>, <code>EET1.1.3</code>, <code>TripartiteTemplateSolvencyII_V6</code>, and <code>PRIIPS_V20</code> — have been introduced in the preceding sections; here we see them side by side in one container. Because the embedding uses the two branches <code>DirectReporting</code> and <code>IndirectReporting</code>, the templates appear in their respective branches rather than as flat siblings.</p>
 <p>The abbreviated block is:</p>
-<pre><code>&lt;RegulatoryReportings&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>
 
-  &lt;DirectReporting&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DirectReporting</span><span class="tok-punct">&gt;</span>
 
-    &lt;!-- EMT: MiFID II costs and target market --&gt;
-    &lt;EMT_V4_2&gt;
-      &lt;FinancialInstrument&gt;
-        &lt;DataSetInformation&gt;
-          &lt;Version&gt;V4&lt;/Version&gt;
-          &lt;ProducerName&gt;Europa Asset Management S.A.&lt;/ProducerName&gt;
-          &lt;ProducerLEI&gt;529900T8BM49AURSDO55&lt;/ProducerLEI&gt;
-          &lt;ProducerEmail&gt;emt@europa-am.lu&lt;/ProducerEmail&gt;
-          &lt;FileGenerationDateTime&gt;2026-03-31T18:00:00Z&lt;/FileGenerationDateTime&gt;
-          &lt;DataReportingTargetMarket&gt;Y&lt;/DataReportingTargetMarket&gt;
-          &lt;DataReportingExAnte&gt;Y&lt;/DataReportingExAnte&gt;
-          &lt;DataReportingExPost&gt;N&lt;/DataReportingExPost&gt;
-        &lt;/DataSetInformation&gt;
-        &lt;GeneralInformation&gt;
-          &lt;Code&gt;LU2031234567&lt;/Code&gt;
-          &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-          &lt;InstrumentName&gt;Europa Growth Fund R EUR ACC&lt;/InstrumentName&gt;
-          &lt;InstrumentCurrency&gt;EUR&lt;/InstrumentCurrency&gt;
-          &lt;InstrumentPerformanceFee&gt;N&lt;/InstrumentPerformanceFee&gt;
-          &lt;InstrumentDistributionCash&gt;N&lt;/InstrumentDistributionCash&gt;
-          &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-          &lt;ProductType&gt;U&lt;/ProductType&gt;
-          &lt;ManufacturerName&gt;Europa Asset Management S.A.&lt;/ManufacturerName&gt;
-          &lt;ManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/ManufacturerLEI&gt;
-          &lt;LeveragedOrContingentLiability&gt;N&lt;/LeveragedOrContingentLiability&gt;
-          &lt;Fund&gt;
-            &lt;FundShareClassWithoutRetrocession&gt;N&lt;/FundShareClassWithoutRetrocession&gt;
-          &lt;/Fund&gt;
-        &lt;/GeneralInformation&gt;
-        &lt;TargetMarket&gt;
-          &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-          &lt;InvestorType&gt;
-            &lt;Retail&gt;Y&lt;/Retail&gt;
-            &lt;Professional&gt;Y&lt;/Professional&gt;
-            &lt;EligibleCounterparty&gt;Y&lt;/EligibleCounterparty&gt;
-          &lt;/InvestorType&gt;
-          &lt;KnowledgeAndExperience&gt;
-            &lt;BasicInvestor&gt;Y&lt;/BasicInvestor&gt;
-            &lt;InformedInvestor&gt;Y&lt;/InformedInvestor&gt;
-            &lt;AdvancedInvestor&gt;Y&lt;/AdvancedInvestor&gt;
-          &lt;/KnowledgeAndExperience&gt;
-          &lt;AbilityToBearLosses&gt;
-            &lt;CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;N&lt;/CompatibleWithClientsWhoCanNotBearCapitalLoss&gt;
-            &lt;CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;Y&lt;/CompatibleWithClientsWhoDoNotNeedCapitalGuarantee&gt;
-            &lt;CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;N&lt;/CompatibleWithClientsWhoCanBearLossBeyondCapital&gt;
-          &lt;/AbilityToBearLosses&gt;
-          &lt;RiskTolerance&gt;
-            &lt;PRIIPSMethodology&gt;4&lt;/PRIIPSMethodology&gt;
-          &lt;/RiskTolerance&gt;
-          &lt;ClientObjectives&gt;
-            &lt;ReturnProfile&gt;
-              &lt;ClientLookingForPreservation&gt;N&lt;/ClientLookingForPreservation&gt;
-              &lt;ClientLookingForCapitalGrowth&gt;Y&lt;/ClientLookingForCapitalGrowth&gt;
-              &lt;ClientLookingForIncome&gt;N&lt;/ClientLookingForIncome&gt;
-            &lt;/ReturnProfile&gt;
-            &lt;MinimumRecommendedHoldingPeriod&gt;
-              &lt;Years&gt;5&lt;/Years&gt;
-            &lt;/MinimumRecommendedHoldingPeriod&gt;
-            &lt;IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;Y&lt;/IntendedCompatibleWithClientsHavingSustainabilityPreferences&gt;
-          &lt;/ClientObjectives&gt;
-          &lt;DistributionStrategy&gt;
-            &lt;ExecutionOnly&gt;B&lt;/ExecutionOnly&gt;
-            &lt;ExecutionWithCheckOrNonAdvisedServices&gt;B&lt;/ExecutionWithCheckOrNonAdvisedServices&gt;
-            &lt;InvestmentAdvice&gt;B&lt;/InvestmentAdvice&gt;
-            &lt;PortfolioManagement&gt;B&lt;/PortfolioManagement&gt;
-          &lt;/DistributionStrategy&gt;
-        &lt;/TargetMarket&gt;
-        &lt;CostsAndChargesExAnte&gt;
-          &lt;Fund&gt;
-            &lt;GrossMaxEntryCostNonAcquired&gt;0.0500&lt;/GrossMaxEntryCostNonAcquired&gt;
-            &lt;MaxExitCost&gt;0.0000&lt;/MaxExitCost&gt;
-            &lt;OngoingCosts&gt;0.0175&lt;/OngoingCosts&gt;
-            &lt;ManagementFee&gt;0.0150&lt;/ManagementFee&gt;
-            &lt;TransactionCosts&gt;0.0012&lt;/TransactionCosts&gt;
-            &lt;IncidentalCosts&gt;0.0000&lt;/IncidentalCosts&gt;
-          &lt;/Fund&gt;
-          &lt;CostsReferenceDate&gt;2026-03-31&lt;/CostsReferenceDate&gt;
-        &lt;/CostsAndChargesExAnte&gt;
-      &lt;/FinancialInstrument&gt;
-    &lt;/EMT_V4_2&gt;
+    <span class="tok-comment">&lt;!-- EMT: MiFID II costs and target market --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V4<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ProducerName</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">ProducerName</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ProducerLEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">ProducerLEI</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ProducerEmail</span><span class="tok-punct">&gt;</span>emt@europa-am.lu<span class="tok-punct">&lt;/</span><span class="tok-tag">ProducerEmail</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">FileGenerationDateTime</span><span class="tok-punct">&gt;</span>2026-03-31T18:00:00Z<span class="tok-punct">&lt;/</span><span class="tok-tag">FileGenerationDateTime</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingTargetMarket</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingTargetMarket</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingExAnte</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingExAnte</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingExPost</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingExPost</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentCurrency</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentPerformanceFee</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentPerformanceFee</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentDistributionCash</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentDistributionCash</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ProductType</span><span class="tok-punct">&gt;</span>U<span class="tok-punct">&lt;/</span><span class="tok-tag">ProductType</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerName</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerName</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerLEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerLEI</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">LeveragedOrContingentLiability</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">LeveragedOrContingentLiability</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">FundShareClassWithoutRetrocession</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">FundShareClassWithoutRetrocession</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TargetMarket</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">InvestorType</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Retail</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">Retail</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Professional</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">Professional</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">EligibleCounterparty</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">EligibleCounterparty</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">InvestorType</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">KnowledgeAndExperience</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">BasicInvestor</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">BasicInvestor</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">InformedInvestor</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">InformedInvestor</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">AdvancedInvestor</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">AdvancedInvestor</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">KnowledgeAndExperience</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">AbilityToBearLosses</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">CompatibleWithClientsWhoCanNotBearCapitalLoss</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">CompatibleWithClientsWhoCanNotBearCapitalLoss</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">CompatibleWithClientsWhoDoNotNeedCapitalGuarantee</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">CompatibleWithClientsWhoDoNotNeedCapitalGuarantee</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">CompatibleWithClientsWhoCanBearLossBeyondCapital</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">CompatibleWithClientsWhoCanBearLossBeyondCapital</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">AbilityToBearLosses</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">RiskTolerance</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">PRIIPSMethodology</span><span class="tok-punct">&gt;</span>4<span class="tok-punct">&lt;/</span><span class="tok-tag">PRIIPSMethodology</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">RiskTolerance</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ClientObjectives</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnProfile</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">ClientLookingForPreservation</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">ClientLookingForPreservation</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">ClientLookingForCapitalGrowth</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">ClientLookingForCapitalGrowth</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">ClientLookingForIncome</span><span class="tok-punct">&gt;</span>N<span class="tok-punct">&lt;/</span><span class="tok-tag">ClientLookingForIncome</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnProfile</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">MinimumRecommendedHoldingPeriod</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">Years</span><span class="tok-punct">&gt;</span>5<span class="tok-punct">&lt;/</span><span class="tok-tag">Years</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">MinimumRecommendedHoldingPeriod</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">IntendedCompatibleWithClientsHavingSustainabilityPreferences</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">IntendedCompatibleWithClientsHavingSustainabilityPreferences</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">ClientObjectives</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DistributionStrategy</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ExecutionOnly</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">ExecutionOnly</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ExecutionWithCheckOrNonAdvisedServices</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">ExecutionWithCheckOrNonAdvisedServices</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">InvestmentAdvice</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">InvestmentAdvice</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManagement</span><span class="tok-punct">&gt;</span>B<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManagement</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">DistributionStrategy</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">TargetMarket</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">CostsAndChargesExAnte</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">GrossMaxEntryCostNonAcquired</span><span class="tok-punct">&gt;</span>0.0500<span class="tok-punct">&lt;/</span><span class="tok-tag">GrossMaxEntryCostNonAcquired</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">MaxExitCost</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">MaxExitCost</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">OngoingCosts</span><span class="tok-punct">&gt;</span>0.0175<span class="tok-punct">&lt;/</span><span class="tok-tag">OngoingCosts</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ManagementFee</span><span class="tok-punct">&gt;</span>0.0150<span class="tok-punct">&lt;/</span><span class="tok-tag">ManagementFee</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionCosts</span><span class="tok-punct">&gt;</span>0.0012<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionCosts</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">IncidentalCosts</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">IncidentalCosts</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">CostsReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">CostsReferenceDate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">CostsAndChargesExAnte</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">FinancialInstrument</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">EMT_V4_2</span><span class="tok-punct">&gt;</span>
 
-    &lt;!-- EFT: absent — this delivery flows from manufacturer to distributor,
-         not distributor to manufacturer, so there is no feedback content. --&gt;
+    <span class="tok-comment">&lt;!-- EFT: absent — this delivery flows from manufacturer to distributor,
+         not distributor to manufacturer, so there is no feedback content. --&gt;</span>
 
-    &lt;!-- EET: SFDR and sustainability data (mandatory minimum only) --&gt;
-    &lt;EET1.1.3&gt;
-      &lt;EET1.1.3&gt;
-        &lt;DataSetInformation&gt;
-          &lt;DataSetInformation&gt;
-            &lt;Version&gt;V1.1.3&lt;/Version&gt;
-            &lt;Producer&gt;
-              &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-              &lt;LEI&gt;529900T8BM49AURSDO55&lt;/LEI&gt;
-              &lt;Email&gt;eet@europa-am.lu&lt;/Email&gt;
-            &lt;/Producer&gt;
-            &lt;FileGeneration&gt;2026-03-31T18:30:00Z&lt;/FileGeneration&gt;
-            &lt;DataReporting&gt;
-              &lt;SFDRPreContractual&gt;Y&lt;/SFDRPreContractual&gt;
-              &lt;SFDRPeriodic&gt;Y&lt;/SFDRPeriodic&gt;
-              &lt;SFDREntityLevel&gt;Y&lt;/SFDREntityLevel&gt;
-              &lt;MiFID&gt;Y&lt;/MiFID&gt;
-              &lt;IDD&gt;Y&lt;/IDD&gt;
-            &lt;/DataReporting&gt;
-          &lt;/DataSetInformation&gt;
-          &lt;ManufacturerInformation&gt;
-            &lt;Name&gt;Europa Asset Management S.A.&lt;/Name&gt;
-            &lt;CodeType&gt;L&lt;/CodeType&gt;
-            &lt;Code&gt;529900T8BM49AURSDO55&lt;/Code&gt;
-            &lt;Email&gt;esg@europa-am.lu&lt;/Email&gt;
-            &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-          &lt;/ManufacturerInformation&gt;
-          &lt;ManufacturerWebsiteInformationStewardshipAndEngagement&gt;https://www.europa-am.lu/sustainability&lt;/ManufacturerWebsiteInformationStewardshipAndEngagement&gt;
-        &lt;/DataSetInformation&gt;
-        &lt;GeneralFinancialInstrumentInformation&gt;
-          &lt;IdentifyingData&gt;LU2031234567&lt;/IdentifyingData&gt;
-          &lt;TypeOfIdentification&gt;1&lt;/TypeOfIdentification&gt;
-          &lt;Name&gt;Europa Growth Fund R EUR ACC&lt;/Name&gt;
-          &lt;Currency&gt;EUR&lt;/Currency&gt;
-        &lt;/GeneralFinancialInstrumentInformation&gt;
-        &lt;MainCriterias&gt;
-          &lt;SFDRProductType&gt;8&lt;/SFDRProductType&gt;
-          &lt;ConsidersPrincipleAdverseImpact&gt;Y&lt;/ConsidersPrincipleAdverseImpact&gt;
-        &lt;/MainCriterias&gt;
-        &lt;MiFIDIDDTargetMarket&gt;
-          &lt;EndClientSustainabilityPreferences_Considered&gt;Y&lt;/EndClientSustainabilityPreferences_Considered&gt;
-        &lt;/MiFIDIDDTargetMarket&gt;
-        &lt;ScreeningCriteria&gt;
-          &lt;ExistingNegativeScreeningStrategy&gt;Y&lt;/ExistingNegativeScreeningStrategy&gt;
-        &lt;/ScreeningCriteria&gt;
-        &lt;!-- Additional Article 8 sections (TaxonomyAlignedInvestments,
+    <span class="tok-comment">&lt;!-- EET: SFDR and sustainability data (mandatory minimum only) --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V1.1.3<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Producer</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">LEI</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>eet@europa-am.lu<span class="tok-punct">&lt;/</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">Producer</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">FileGeneration</span><span class="tok-punct">&gt;</span>2026-03-31T18:30:00Z<span class="tok-punct">&lt;/</span><span class="tok-tag">FileGeneration</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">DataReporting</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">SFDRPreContractual</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDRPreContractual</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">SFDRPeriodic</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDRPeriodic</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">SFDREntityLevel</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDREntityLevel</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">MiFID</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">MiFID</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">IDD</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">IDD</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">DataReporting</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerInformation</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">CodeType</span><span class="tok-punct">&gt;</span>L<span class="tok-punct">&lt;/</span><span class="tok-tag">CodeType</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>esg@europa-am.lu<span class="tok-punct">&lt;/</span><span class="tok-tag">Email</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ManufacturerWebsiteInformationStewardshipAndEngagement</span><span class="tok-punct">&gt;</span>https://www.europa-am.lu/sustainability<span class="tok-punct">&lt;/</span><span class="tok-tag">ManufacturerWebsiteInformationStewardshipAndEngagement</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralFinancialInstrumentInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IdentifyingData</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">IdentifyingData</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">TypeOfIdentification</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">TypeOfIdentification</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">Name</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralFinancialInstrumentInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MainCriterias</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">SFDRProductType</span><span class="tok-punct">&gt;</span>8<span class="tok-punct">&lt;/</span><span class="tok-tag">SFDRProductType</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ConsidersPrincipleAdverseImpact</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">ConsidersPrincipleAdverseImpact</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">MainCriterias</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">MiFIDIDDTargetMarket</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">EndClientSustainabilityPreferences_Considered</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">EndClientSustainabilityPreferences_Considered</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">MiFIDIDDTargetMarket</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ScreeningCriteria</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ExistingNegativeScreeningStrategy</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">ExistingNegativeScreeningStrategy</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">ScreeningCriteria</span><span class="tok-punct">&gt;</span>
+        <span class="tok-comment">&lt;!-- Additional Article 8 sections (TaxonomyAlignedInvestments,
              PrincipalAdverseIndicators, etc.) are elided here and carried
-             in full in Appendix D. --&gt;
-      &lt;/EET1.1.3&gt;
-    &lt;/EET1.1.3&gt;
+             in full in Appendix D. --&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">EET1.1.3</span><span class="tok-punct">&gt;</span>
 
-  &lt;/DirectReporting&gt;
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">DirectReporting</span><span class="tok-punct">&gt;</span>
 
-  &lt;IndirectReporting&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">IndirectReporting</span><span class="tok-punct">&gt;</span>
 
-    &lt;!-- TPT: Solvency II lookthrough (abbreviated to one representative position) --&gt;
-    &lt;TripartiteTemplateSolvencyII_V6&gt;
-      &lt;Portfolio&gt;
-        &lt;TPTVersion&gt;V6.0&lt;/TPTVersion&gt;
-        &lt;PortfolioID&gt;
-          &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-          &lt;Code&gt;LU2031234567&lt;/Code&gt;
-        &lt;/PortfolioID&gt;
-        &lt;PortfolioName&gt;Europa Growth Fund R EUR ACC&lt;/PortfolioName&gt;
-        &lt;PortfolioCurrency&gt;EUR&lt;/PortfolioCurrency&gt;
-        &lt;TotalNetAssets&gt;248500000.00&lt;/TotalNetAssets&gt;
-        &lt;ValuationDate&gt;2026-03-31&lt;/ValuationDate&gt;
-        &lt;ReportingDate&gt;2026-03-31&lt;/ReportingDate&gt;
-        &lt;CompleteSCRDelivery&gt;Y&lt;/CompleteSCRDelivery&gt;
-        &lt;Positions&gt;
-          &lt;Position&gt;
-            &lt;InstrumentCIC&gt;DE31&lt;/InstrumentCIC&gt;
-            &lt;InstrumentCode&gt;
-              &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-              &lt;Code&gt;DE0007164600&lt;/Code&gt;
-            &lt;/InstrumentCode&gt;
-            &lt;InstrumentName&gt;SAP SE&lt;/InstrumentName&gt;
-            &lt;Valuation&gt;
-              &lt;QuotationCurrency&gt;EUR&lt;/QuotationCurrency&gt;
-              &lt;MarketValueQC&gt;7450000.00&lt;/MarketValueQC&gt;
-              &lt;CleanValueQC&gt;7450000.00&lt;/CleanValueQC&gt;
-              &lt;MarketValuePC&gt;7450000.00&lt;/MarketValuePC&gt;
-              &lt;CleanValuePC&gt;7450000.00&lt;/CleanValuePC&gt;
-              &lt;PositionWeight&gt;0.0300&lt;/PositionWeight&gt;
-              &lt;MarketExposureQC&gt;7450000.00&lt;/MarketExposureQC&gt;
-              &lt;MarketExposurePC&gt;7450000.00&lt;/MarketExposurePC&gt;
-              &lt;MarketExposureWeight&gt;0.0300&lt;/MarketExposureWeight&gt;
-            &lt;/Valuation&gt;
-            &lt;AdditionalInformation/&gt;
-          &lt;/Position&gt;
-          &lt;!-- Remaining 154 positions elided; full lookthrough in Appendix D. --&gt;
-        &lt;/Positions&gt;
-      &lt;/Portfolio&gt;
-    &lt;/TripartiteTemplateSolvencyII_V6&gt;
+    <span class="tok-comment">&lt;!-- TPT: Solvency II lookthrough (abbreviated to one representative position) --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TripartiteTemplateSolvencyII_V6</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TPTVersion</span><span class="tok-punct">&gt;</span>V6.0<span class="tok-punct">&lt;/</span><span class="tok-tag">TPTVersion</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioID</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioID</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioName</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioName</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioCurrency</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">TotalNetAssets</span><span class="tok-punct">&gt;</span>248500000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">TotalNetAssets</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ValuationDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ValuationDate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">ReportingDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ReportingDate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">CompleteSCRDelivery</span><span class="tok-punct">&gt;</span>Y<span class="tok-punct">&lt;/</span><span class="tok-tag">CompleteSCRDelivery</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Positions</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentCIC</span><span class="tok-punct">&gt;</span>DE31<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentCIC</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentCode</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>DE0007164600<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentCode</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>SAP SE<span class="tok-punct">&lt;/</span><span class="tok-tag">InstrumentName</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Valuation</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">QuotationCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">QuotationCurrency</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValueQC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValueQC</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">CleanValueQC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">CleanValueQC</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">MarketValuePC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketValuePC</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">CleanValuePC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">CleanValuePC</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">PositionWeight</span><span class="tok-punct">&gt;</span>0.0300<span class="tok-punct">&lt;/</span><span class="tok-tag">PositionWeight</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">MarketExposureQC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketExposureQC</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">MarketExposurePC</span><span class="tok-punct">&gt;</span>7450000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketExposurePC</span><span class="tok-punct">&gt;</span>
+              <span class="tok-punct">&lt;</span><span class="tok-tag">MarketExposureWeight</span><span class="tok-punct">&gt;</span>0.0300<span class="tok-punct">&lt;/</span><span class="tok-tag">MarketExposureWeight</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;/</span><span class="tok-tag">Valuation</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">AdditionalInformation</span><span class="tok-punct">/&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Position</span><span class="tok-punct">&gt;</span>
+          <span class="tok-comment">&lt;!-- Remaining 154 positions elided; full lookthrough in Appendix D. --&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Positions</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">TripartiteTemplateSolvencyII_V6</span><span class="tok-punct">&gt;</span>
 
-    &lt;!-- EPT (inside PRIIPS_V20): KID-input data for the PRIIPs disclosure --&gt;
-    &lt;PRIIPS_V20&gt;
-      &lt;EPTV2&gt;
-        &lt;DataSetInformation&gt;
-          &lt;Version&gt;V21&lt;/Version&gt;
-          &lt;Data_ReportingNarratives&gt;YES&lt;/Data_ReportingNarratives&gt;
-          &lt;DataReportingCosts&gt;YES&lt;/DataReportingCosts&gt;
-          &lt;DataReportingAdditionalRequirementsGermanMOPs&gt;NO&lt;/DataReportingAdditionalRequirementsGermanMOPs&gt;
-          &lt;AdditionalInformationStructuredProductsRIY&gt;NO&lt;/AdditionalInformationStructuredProductsRIY&gt;
-        &lt;/DataSetInformation&gt;
-        &lt;GeneralPortfolioInformation&gt;
-          &lt;PortfolioManufacturerName&gt;Europa Asset Management S.A.&lt;/PortfolioManufacturerName&gt;
-          &lt;PortfolioManufacturerGroupName&gt;Europa Financial Group&lt;/PortfolioManufacturerGroupName&gt;
-          &lt;PortfolioManufacturerLEI&gt;529900T8BM49AURSDO55&lt;/PortfolioManufacturerLEI&gt;
-          &lt;PortfolioID&gt;
-            &lt;CodificationSystem&gt;1&lt;/CodificationSystem&gt;
-            &lt;Code&gt;LU2031234567&lt;/Code&gt;
-          &lt;/PortfolioID&gt;
-          &lt;PortfolioName&gt;Europa Growth Fund R EUR ACC&lt;/PortfolioName&gt;
-          &lt;PortfolioCurrency&gt;EUR&lt;/PortfolioCurrency&gt;
-          &lt;GeneralReferenceDate&gt;2026-03-31&lt;/GeneralReferenceDate&gt;
-          &lt;PortfolioPRIIPSCategory&gt;2&lt;/PortfolioPRIIPSCategory&gt;
-          &lt;IsAnAutocallableProduct&gt;NO&lt;/IsAnAutocallableProduct&gt;
-        &lt;/GeneralPortfolioInformation&gt;
-        &lt;RiskAssessment&gt;
-          &lt;ValuationFrequency&gt;252&lt;/ValuationFrequency&gt;
-          &lt;IS_Flexible&gt;NO&lt;/IS_Flexible&gt;
-          &lt;Existing_Credit_Risk&gt;NO&lt;/Existing_Credit_Risk&gt;
-          &lt;SRI&gt;4&lt;/SRI&gt;
-          &lt;IsSRIAdjusted&gt;NO&lt;/IsSRIAdjusted&gt;
-          &lt;MRM&gt;4&lt;/MRM&gt;
-          &lt;Recommended_Holding_Period&gt;5&lt;/Recommended_Holding_Period&gt;
-          &lt;HasAContractualMaturityDate&gt;NO&lt;/HasAContractualMaturityDate&gt;
-          &lt;Liquidity_Risk&gt;L&lt;/Liquidity_Risk&gt;
-        &lt;/RiskAssessment&gt;
-        &lt;PerformanceScenario&gt;
-          &lt;ReturnUnfavorable&gt;
-            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.0120&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-          &lt;/ReturnUnfavorable&gt;
-          &lt;ReturnModerate&gt;
-            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.0540&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-          &lt;/ReturnModerate&gt;
-          &lt;ReturnFavorable&gt;
-            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;0.1080&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-          &lt;/ReturnFavorable&gt;
-          &lt;ReturnStress&gt;
-            &lt;RHPOrFirstCallDateOrFirstCallDate&gt;-0.2750&lt;/RHPOrFirstCallDateOrFirstCallDate&gt;
-          &lt;/ReturnStress&gt;
-          &lt;PortfolioPastPerformanceDisclosureRequired&gt;YES&lt;/PortfolioPastPerformanceDisclosureRequired&gt;
-        &lt;/PerformanceScenario&gt;
-        &lt;Costs&gt;
-          &lt;OneOff&gt;
-            &lt;EntryCost&gt;0.0500&lt;/EntryCost&gt;
-            &lt;EntryCostsAcquired&gt;0.0000&lt;/EntryCostsAcquired&gt;
-            &lt;ExitCostAtRHP&gt;0.0000&lt;/ExitCostAtRHP&gt;
-            &lt;SlidingExitCostIndicator&gt;NO&lt;/SlidingExitCostIndicator&gt;
-          &lt;/OneOff&gt;
-          &lt;Ongoing&gt;
-            &lt;OtherCost&gt;0.0025&lt;/OtherCost&gt;
-            &lt;ManagementCosts&gt;0.0150&lt;/ManagementCosts&gt;
-            &lt;Transaction&gt;0.0012&lt;/Transaction&gt;
-          &lt;/Ongoing&gt;
-          &lt;Incidental&gt;
-            &lt;ExistringIncidentalCostsPortfolio&gt;NO&lt;/ExistringIncidentalCostsPortfolio&gt;
-            &lt;ExistingIncidentalCostsPortfolio&gt;NO&lt;/ExistingIncidentalCostsPortfolio&gt;
-          &lt;/Incidental&gt;
-        &lt;/Costs&gt;
-        &lt;Narratives&gt;
-          &lt;ComprehensionAlert&gt;NO&lt;/ComprehensionAlert&gt;
-          &lt;IntendedTargetMarketRetailInvestor&gt;Retail investors with basic or informed knowledge of equity funds, willing to accept market risk, seeking long-term capital growth over at least five years.&lt;/IntendedTargetMarketRetailInvestor&gt;
-          &lt;InvestmentObjective&gt;The fund aims to achieve long-term capital growth by investing primarily in European large-cap equities that meet the manager's sustainability criteria.&lt;/InvestmentObjective&gt;
-          &lt;OtherMaterialyRelevantRiskNarrative&gt;No other materially relevant risks beyond market and sustainability risk.&lt;/OtherMaterialyRelevantRiskNarrative&gt;
-          &lt;TypeUnderlyingInvestmentOption&gt;UCITS SICAV&lt;/TypeUnderlyingInvestmentOption&gt;
-          &lt;CapitalGuarantee&gt;NO&lt;/CapitalGuarantee&gt;
-          &lt;OneOffCostPortfolioExitCostDescription&gt;No exit cost is charged at redemption.&lt;/OneOffCostPortfolioExitCostDescription&gt;
-          &lt;OngoingCostsPortfolioManagementCostsDescription&gt;Ongoing management and operating costs deducted from fund NAV.&lt;/OngoingCostsPortfolioManagementCostsDescription&gt;
-          &lt;DoCostsDependOnInvestedAmount&gt;NO&lt;/DoCostsDependOnInvestedAmount&gt;
-        &lt;/Narratives&gt;
-      &lt;/EPTV2&gt;
-    &lt;/PRIIPS_V20&gt;
+    <span class="tok-comment">&lt;!-- EPT (inside PRIIPS_V20): KID-input data for the PRIIPs disclosure --&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">EPTV2</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>V21<span class="tok-punct">&lt;/</span><span class="tok-tag">Version</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Data_ReportingNarratives</span><span class="tok-punct">&gt;</span>YES<span class="tok-punct">&lt;/</span><span class="tok-tag">Data_ReportingNarratives</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingCosts</span><span class="tok-punct">&gt;</span>YES<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingCosts</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DataReportingAdditionalRequirementsGermanMOPs</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">DataReportingAdditionalRequirementsGermanMOPs</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">AdditionalInformationStructuredProductsRIY</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">AdditionalInformationStructuredProductsRIY</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">DataSetInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralPortfolioInformation</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManufacturerName</span><span class="tok-punct">&gt;</span>Europa Asset Management S.A.<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManufacturerName</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManufacturerGroupName</span><span class="tok-punct">&gt;</span>Europa Financial Group<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManufacturerGroupName</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioManufacturerLEI</span><span class="tok-punct">&gt;</span>529900T8BM49AURSDO55<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioManufacturerLEI</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioID</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>1<span class="tok-punct">&lt;/</span><span class="tok-tag">CodificationSystem</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>LU2031234567<span class="tok-punct">&lt;/</span><span class="tok-tag">Code</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioID</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioName</span><span class="tok-punct">&gt;</span>Europa Growth Fund R EUR ACC<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioName</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioCurrency</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralReferenceDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioPRIIPSCategory</span><span class="tok-punct">&gt;</span>2<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioPRIIPSCategory</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IsAnAutocallableProduct</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">IsAnAutocallableProduct</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">GeneralPortfolioInformation</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">RiskAssessment</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ValuationFrequency</span><span class="tok-punct">&gt;</span>252<span class="tok-punct">&lt;/</span><span class="tok-tag">ValuationFrequency</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IS_Flexible</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">IS_Flexible</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Existing_Credit_Risk</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">Existing_Credit_Risk</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">SRI</span><span class="tok-punct">&gt;</span>4<span class="tok-punct">&lt;/</span><span class="tok-tag">SRI</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IsSRIAdjusted</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">IsSRIAdjusted</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">MRM</span><span class="tok-punct">&gt;</span>4<span class="tok-punct">&lt;/</span><span class="tok-tag">MRM</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Recommended_Holding_Period</span><span class="tok-punct">&gt;</span>5<span class="tok-punct">&lt;/</span><span class="tok-tag">Recommended_Holding_Period</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">HasAContractualMaturityDate</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">HasAContractualMaturityDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Liquidity_Risk</span><span class="tok-punct">&gt;</span>L<span class="tok-punct">&lt;/</span><span class="tok-tag">Liquidity_Risk</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">RiskAssessment</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">PerformanceScenario</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnUnfavorable</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>-0.0120<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnUnfavorable</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnModerate</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>0.0540<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnModerate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnFavorable</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>0.1080<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnFavorable</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ReturnStress</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>-0.2750<span class="tok-punct">&lt;/</span><span class="tok-tag">RHPOrFirstCallDateOrFirstCallDate</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">ReturnStress</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">PortfolioPastPerformanceDisclosureRequired</span><span class="tok-punct">&gt;</span>YES<span class="tok-punct">&lt;/</span><span class="tok-tag">PortfolioPastPerformanceDisclosureRequired</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">PerformanceScenario</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Costs</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">OneOff</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCost</span><span class="tok-punct">&gt;</span>0.0500<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCost</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCostsAcquired</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCostsAcquired</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ExitCostAtRHP</span><span class="tok-punct">&gt;</span>0.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">ExitCostAtRHP</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">SlidingExitCostIndicator</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">SlidingExitCostIndicator</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">OneOff</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Ongoing</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">OtherCost</span><span class="tok-punct">&gt;</span>0.0025<span class="tok-punct">&lt;/</span><span class="tok-tag">OtherCost</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ManagementCosts</span><span class="tok-punct">&gt;</span>0.0150<span class="tok-punct">&lt;/</span><span class="tok-tag">ManagementCosts</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">Transaction</span><span class="tok-punct">&gt;</span>0.0012<span class="tok-punct">&lt;/</span><span class="tok-tag">Transaction</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Ongoing</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Incidental</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ExistringIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">ExistringIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>
+            <span class="tok-punct">&lt;</span><span class="tok-tag">ExistingIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">ExistingIncidentalCostsPortfolio</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;/</span><span class="tok-tag">Incidental</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Costs</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Narratives</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">ComprehensionAlert</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">ComprehensionAlert</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">IntendedTargetMarketRetailInvestor</span><span class="tok-punct">&gt;</span>Retail investors with basic or informed knowledge of equity funds, willing to accept market risk, seeking long-term capital growth over at least five years.<span class="tok-punct">&lt;/</span><span class="tok-tag">IntendedTargetMarketRetailInvestor</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">InvestmentObjective</span><span class="tok-punct">&gt;</span>The fund aims to achieve long-term capital growth by investing primarily in European large-cap equities that meet the manager's sustainability criteria.<span class="tok-punct">&lt;/</span><span class="tok-tag">InvestmentObjective</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">OtherMaterialyRelevantRiskNarrative</span><span class="tok-punct">&gt;</span>No other materially relevant risks beyond market and sustainability risk.<span class="tok-punct">&lt;/</span><span class="tok-tag">OtherMaterialyRelevantRiskNarrative</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">TypeUnderlyingInvestmentOption</span><span class="tok-punct">&gt;</span>UCITS SICAV<span class="tok-punct">&lt;/</span><span class="tok-tag">TypeUnderlyingInvestmentOption</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">CapitalGuarantee</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">CapitalGuarantee</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">OneOffCostPortfolioExitCostDescription</span><span class="tok-punct">&gt;</span>No exit cost is charged at redemption.<span class="tok-punct">&lt;/</span><span class="tok-tag">OneOffCostPortfolioExitCostDescription</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">OngoingCostsPortfolioManagementCostsDescription</span><span class="tok-punct">&gt;</span>Ongoing management and operating costs deducted from fund NAV.<span class="tok-punct">&lt;/</span><span class="tok-tag">OngoingCostsPortfolioManagementCostsDescription</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">DoCostsDependOnInvestedAmount</span><span class="tok-punct">&gt;</span>NO<span class="tok-punct">&lt;/</span><span class="tok-tag">DoCostsDependOnInvestedAmount</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Narratives</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">EPTV2</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">PRIIPS_V20</span><span class="tok-punct">&gt;</span>
 
-  &lt;/IndirectReporting&gt;
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">IndirectReporting</span><span class="tok-punct">&gt;</span>
 
-&lt;/RegulatoryReportings&gt;
+<span class="tok-punct">&lt;/</span><span class="tok-tag">RegulatoryReportings</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>A three-pass reading of the block closes the example.</p>
 <p><strong>First pass — presence and absence</strong>. Four templates are present: EMT (MiFID II, under <code>DirectReporting</code>), EET (SFDR, also under <code>DirectReporting</code>), TPT (Solvency II, under <code>IndirectReporting</code>), and EPT inside <code>PRIIPS_V20</code> (PRIIPs, also under <code>IndirectReporting</code>). One template — EFT — is absent, and the absence is both visible (marked by a comment) and deliberate. A consumer who expects EFT in this delivery is confused about the delivery's direction; a consumer who correctly identifies the delivery as manufacturer-to-distributor accepts the absence as normal. The two-branch structure (<code>DirectReporting</code> versus <code>IndirectReporting</code>) is itself a structural feature that is worth highlighting: every FundsXML <code>RegulatoryReportings</code> block either places templates into these branches or is empty.</p>

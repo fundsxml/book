@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -584,43 +604,43 @@
 <h2>7.2 Where Transactions Live in the Schema</h2>
 <p>Before we look at any transaction in detail, the structural question: <em>where, inside a FundsXML document, do transactions live?</em> The answer is surprising to a newcomer and is the single most important thing to internalise before reading the per-type sections.</p>
 <p><strong>Transactions are not centralised.</strong> There is no single fund-level container for investor flows, distributions, and income events. Each event type lives in its own dedicated container, and each container is attached to a different parent element. The three containers are:</p>
-<pre><code>&lt;Fund&gt;
-  &lt;Identifiers&gt;...&lt;/Identifiers&gt;
-  &lt;Names&gt;...&lt;/Names&gt;
-  &lt;Currency&gt;EUR&lt;/Currency&gt;
-  &lt;SingleFundFlag&gt;true&lt;/SingleFundFlag&gt;
-  &lt;FundDynamicData&gt;
-    &lt;Portfolios&gt;
-      &lt;Portfolio&gt;
-        &lt;NavDate&gt;2026-03-31&lt;/NavDate&gt;
-        &lt;!-- (1) Income received from portfolio holdings --&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SingleFundFlag</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">SingleFundFlag</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolios</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">NavDate</span><span class="tok-punct">&gt;</span>
+        <span class="tok-comment">&lt;!-- (1) Income received from portfolio holdings --&gt;</span>
         &lt;Earnings from=&quot;2026-03-01&quot; to=&quot;2026-03-31&quot;&gt;
-          &lt;Earning&gt;...&lt;/Earning&gt;
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
           ...
-        &lt;/Earnings&gt;
-      &lt;/Portfolio&gt;
-    &lt;/Portfolios&gt;
-  &lt;/FundDynamicData&gt;
-  &lt;SingleFund&gt;
-    &lt;ShareClasses&gt;
-      &lt;ShareClass&gt;
-        &lt;Identifiers&gt;...&lt;/Identifiers&gt;
-        &lt;Names&gt;...&lt;/Names&gt;
-        &lt;Currency&gt;EUR&lt;/Currency&gt;
-        &lt;!-- (2) Subscriptions and redemptions on this share class --&gt;
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Earnings</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolio</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Portfolios</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">FundDynamicData</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SingleFund</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ShareClasses</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Identifiers</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Names</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">Currency</span><span class="tok-punct">&gt;</span>
+        <span class="tok-comment">&lt;!-- (2) Subscriptions and redemptions on this share class --&gt;</span>
         &lt;Flows from=&quot;2026-03-01&quot; to=&quot;2026-03-31&quot;&gt;
-          &lt;Flow&gt;...&lt;/Flow&gt;
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
           ...
-        &lt;/Flows&gt;
-        &lt;!-- (3) Distributions paid by this share class to its investors --&gt;
-        &lt;Distributions&gt;
-          &lt;Distribution&gt;...&lt;/Distribution&gt;
-        &lt;/Distributions&gt;
-      &lt;/ShareClass&gt;
-      &lt;!-- more share classes, each with their own Flows and Distributions --&gt;
-    &lt;/ShareClasses&gt;
-  &lt;/SingleFund&gt;
-&lt;/Fund&gt;
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Flows</span><span class="tok-punct">&gt;</span>
+        <span class="tok-comment">&lt;!-- (3) Distributions paid by this share class to its investors --&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">Distributions</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">Distribution</span><span class="tok-punct">&gt;</span>...<span class="tok-punct">&lt;/</span><span class="tok-tag">Distribution</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">Distributions</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">ShareClass</span><span class="tok-punct">&gt;</span>
+      <span class="tok-comment">&lt;!-- more share classes, each with their own Flows and Distributions --&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">ShareClasses</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">SingleFund</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Fund</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Three structural points matter for the rest of the chapter.</p>
 <p><strong>First, investor flows and distributions are share-class-specific.</strong> A subscription into the R-EUR-ACC class of the Europa Growth Fund goes into the <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses/ShareClass/Flows" target="_blank"><code>&lt;Flows&gt;</code></a> container of that specific share class, not into a fund-level flow list. A fund with three share classes has three <code>&lt;Flows&gt;</code> blocks, each carrying the flows of its own class. Likewise for <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses/ShareClass/Distributions" target="_blank"><code>&lt;Distributions&gt;</code></a>: the distributing I-EUR-DIST class has its own <code>&lt;Distributions&gt;</code> block that the two accumulating classes do not share.</p>
@@ -824,21 +844,21 @@
 <p><strong>A note on what the schema does not model.</strong> FundsXML 4.2.8 does not carry the NAV that was actually applied to the subscription as an element on the <code>&lt;Flow&gt;</code>. The NAV is looked up indirectly by the consumer: the consumer reads the <code>&lt;AccountingDate&gt;</code> from the flow, then reads the NAV for that date from the share class's <code>&lt;Prices&gt;/&lt;Price&gt;</code> history (Chapter 5 §5.12.2). This decoupling is deliberate — the NAV history lives in one place, the transactions in another — and it keeps both halves small and composable. Similarly, entry loads, gross-versus-net breakdowns, and order-execution variants are <strong>not</strong> schema fields on <code>&lt;Flow&gt;</code>. §7.9 revisits why and explains what producers do when they need to carry them.</p>
 <h3>7.4.3 Subscription Example: A Retail Investor Subscribes to R-EUR-ACC</h3>
 <p>A complete XML example for a realistic subscription transaction. On Monday 16 March 2026 a retail investor subscribes 10,000 EUR to the R-EUR-ACC class of the Europa Growth Fund. The order is placed at 11:30 CET, comfortably before the 13:00 cut-off, so it is settled at the Monday evening NAV of 16 March 2026 — let us say 123.9504 EUR, representing a mid-March level between the February month-end and the 31 March figure of 124.5078 we saw in Chapter 5. The investor receives <code>10000 / 123.9504 = 80.6852</code> units. The <code>&lt;Flow&gt;</code> entry lives inside <code>&lt;ShareClass&gt;/&lt;Flows&gt;</code> for the R-EUR-ACC class (ISIN <code>LU2100000011</code>).</p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000011]/Flows --&gt;
-&lt;Flow&gt;
-  &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-  &lt;TransactionID&gt;EGF-TX-20260316-0024&lt;/TransactionID&gt;
-  &lt;TradeDate&gt;2026-03-16&lt;/TradeDate&gt;
-  &lt;AccountingDate&gt;2026-03-16&lt;/AccountingDate&gt;
-  &lt;SettlementDate&gt;2026-03-18&lt;/SettlementDate&gt;
-  &lt;ValueDate&gt;2026-03-16&lt;/ValueDate&gt;
-  &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-  &lt;Units&gt;80.6852&lt;/Units&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;10000.00&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;Channel&gt;Retail&lt;/Channel&gt;
-&lt;/Flow&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000011]/Flows --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260316-0024<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-18<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>80.6852<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;10000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading field by field: the <code>&lt;ActionCode&gt;C&lt;/ActionCode&gt;</code> marks the entry as a new (create) record — the schema demands it, and every fresh transaction in a delivery carries <code>C</code>. The <code>&lt;TransactionID&gt;</code> is the producer's unique key. The four date fields reflect forward pricing: same-day trade and accounting (Monday pre-cut-off), T+2 settlement on Wednesday, and an explicit <code>&lt;ValueDate&gt;</code> for completeness. The <strong>mandatory</strong> <code>&lt;TransactionType&gt;SUB&lt;/TransactionType&gt;</code> identifies the direction. <code>&lt;Units&gt;</code> is positive — the schema convention, regardless of direction — and carries the 80.6852 units the investor receives. The mandatory <code>&lt;TotalValue&gt;</code> carries the 10,000 EUR amount, flagged as being in the fund's base currency. The optional <code>&lt;Channel&gt;Retail&lt;/Channel&gt;</code> annotates the customer segment.</p>
 <p>Two observations are worth making. First, note what is <em>not</em> in the listing: no <code>FlowType</code>, no <code>ShareClassISIN</code> (the class is identified by the parent element), no <code>Amount</code>, no <code>GrossAmount</code>, no <code>NetAmount</code>, no <code>EntryLoad</code>, no <code>NavUsed</code>, no <code>OrderExecutionType</code>. All of those would be schema-invalid as direct children of <code>&lt;Flow&gt;</code>. Second, the consistency check <code>10000.00 / NavUsed = Units</code> still applies in spirit, but the consumer has to look up the NAV from a different container: it reads the NAV for <code>AccountingDate=2026-03-16</code> from <code>ShareClass/Prices/Price</code> and then verifies that <code>Units × NavPrice ≈ TotalValue</code>. The two halves of the check are in two different places, and that is by design.</p>
@@ -869,21 +889,21 @@
 <p>FundsXML has no dedicated fields for gates or suspensions either. Partial executions are modelled as separate <code>&lt;Flow&gt;</code> records — a redemption for the executed units today, a second redemption for the remaining units tomorrow, both tied together by a common <code>&lt;TransactionID&gt;</code> prefix or by referring to each other through <code>&lt;OriginalTransactionID&gt;</code> in the same spirit as the cancellation mechanism of §7.3. The Europa Growth Fund has never activated a gate, and the example block in §7.10 will not show one.</p>
 <h3>7.5.4 Redemption Example</h3>
 <p>An institutional redemption from the I-EUR-DIST class: on 20 March 2026 a pension fund submits an order to redeem 15,000 units. At the Friday evening NAV of that day — 107.8421 EUR, a mid-March value — the redemption is worth approximately 1.62 million EUR. No swing (the amount is well below the 2% threshold). Settlement T+2 puts the cash payment on 24 March. The <code>&lt;Flow&gt;</code> entry lives inside <code>&lt;ShareClass&gt;/&lt;Flows&gt;</code> for the I-EUR-DIST class (ISIN <code>LU2100000037</code>).</p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037]/Flows --&gt;
-&lt;Flow&gt;
-  &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-  &lt;TransactionID&gt;EGF-TX-20260320-0011&lt;/TransactionID&gt;
-  &lt;TradeDate&gt;2026-03-20&lt;/TradeDate&gt;
-  &lt;AccountingDate&gt;2026-03-20&lt;/AccountingDate&gt;
-  &lt;SettlementDate&gt;2026-03-24&lt;/SettlementDate&gt;
-  &lt;ValueDate&gt;2026-03-20&lt;/ValueDate&gt;
-  &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-  &lt;Units&gt;15000.0000&lt;/Units&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;1617631.50&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;Channel&gt;Institutional&lt;/Channel&gt;
-&lt;/Flow&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037]/Flows --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260320-0011<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>15000.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;1617631.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Institutional<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading field by field, focusing on the differences from §7.4.3: the single mandatory change is <code>&lt;TransactionType&gt;RED&lt;/TransactionType&gt;</code> — that one field is the entire difference between a subscription and a redemption at the schema level. <code>&lt;Units&gt;</code> is <strong>positive</strong> (15000.0000), following the schema's explicit convention, even though the economic direction is outflow. The <code>&lt;Channel&gt;Institutional&lt;/Channel&gt;</code> annotates the customer segment differently from the retail subscription of §7.4.3. Everything else — the four date fields, the <code>&lt;ActionCode&gt;</code>, the <code>&lt;TotalValue&gt;</code> — follows the same pattern as the subscription example, which is the whole point: subscriptions and redemptions are the same schema shape distinguished by a single enum value.</p>
 <hr>
@@ -914,40 +934,40 @@
 <h3>7.6.3 Switch Example</h3>
 <p>A small intra-fund switch: on 12 March 2026 an investor moves a 50,000 EUR stake from the R-EUR-ACC class to the I-EUR-DIST class. The amount is in reality below the institutional minimum of 1,000,000 EUR and the switch would be rejected by a well-configured order-management system, but for the purpose of illustrating the structure we let it through. The source NAV is 123.7021 EUR (a 12 March value for R-EUR-ACC), the target NAV is 107.7413 EUR (the same day for I-EUR-DIST). The investor gives up <code>50000 / 123.7021 = 404.2156</code> units of R-EUR-ACC and receives <code>50000 / 107.7413 = 464.0882</code> units of I-EUR-DIST.</p>
 <p><strong>Leg 1 — source redemption, inside the R-EUR-ACC class's <code>&lt;Flows&gt;</code>:</strong></p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000011]/Flows --&gt;
-&lt;Flow&gt;
-  &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-  &lt;TransactionID&gt;EGF-SW-20260312-0007-SRC&lt;/TransactionID&gt;
-  &lt;TradeDate&gt;2026-03-12&lt;/TradeDate&gt;
-  &lt;AccountingDate&gt;2026-03-12&lt;/AccountingDate&gt;
-  &lt;SettlementDate&gt;2026-03-16&lt;/SettlementDate&gt;
-  &lt;ValueDate&gt;2026-03-12&lt;/ValueDate&gt;
-  &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-  &lt;TransactionSubtype&gt;switch — source leg; paired with EGF-SW-20260312-0007-TGT on LU2100000037&lt;/TransactionSubtype&gt;
-  &lt;Units&gt;404.2156&lt;/Units&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;Channel&gt;Intra-fund switch&lt;/Channel&gt;
-&lt;/Flow&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000011]/Flows --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-SW-20260312-0007-SRC<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>switch — source leg; paired with EGF-SW-20260312-0007-TGT on LU2100000037<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>404.2156<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Intra-fund switch<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p><strong>Leg 2 — target subscription, inside the I-EUR-DIST class's <code>&lt;Flows&gt;</code>:</strong></p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037]/Flows --&gt;
-&lt;Flow&gt;
-  &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-  &lt;TransactionID&gt;EGF-SW-20260312-0007-TGT&lt;/TransactionID&gt;
-  &lt;TradeDate&gt;2026-03-12&lt;/TradeDate&gt;
-  &lt;AccountingDate&gt;2026-03-12&lt;/AccountingDate&gt;
-  &lt;SettlementDate&gt;2026-03-16&lt;/SettlementDate&gt;
-  &lt;ValueDate&gt;2026-03-12&lt;/ValueDate&gt;
-  &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-  &lt;TransactionSubtype&gt;switch — target leg; paired with EGF-SW-20260312-0007-SRC on LU2100000011&lt;/TransactionSubtype&gt;
-  &lt;Units&gt;464.0882&lt;/Units&gt;
-  &lt;TotalValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00&lt;/Amount&gt;
-  &lt;/TotalValue&gt;
-  &lt;Channel&gt;Intra-fund switch&lt;/Channel&gt;
-&lt;/Flow&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037]/Flows --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-SW-20260312-0007-TGT<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>switch — target leg; paired with EGF-SW-20260312-0007-SRC on LU2100000011<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>464.0882<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Intra-fund switch<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Four points are worth noting about this pair.</p>
 <p>First, the two legs live in <strong>different parent elements</strong> — one inside the R-EUR-ACC <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/Funds/Fund/SingleFund/ShareClasses/ShareClass" target="_blank"><code>&lt;ShareClass&gt;</code></a>, one inside the I-EUR-DIST <code>&lt;ShareClass&gt;</code>. They are not siblings. A consumer that scans <code>&lt;Flow&gt;</code> entries in document order and looks for pairs has to walk across share classes.</p>
@@ -989,33 +1009,33 @@
 <h3>7.7.5 The Europa Growth Fund's Situation and a Hypothetical Example</h3>
 <p>Honest disclosure to the reader: <strong>the 31 March 2026 delivery of the Europa Growth Fund contains no distribution events</strong>. The reason is straightforward: the I-EUR-DIST class pays its annual distribution in mid-May, with an announcement date in early May, an ex-date around 15 May, a record date around 17 May, and a payment date around 27 May. The March delivery sees none of this. The complete example in §7.10 will respect this fact and will not contain a distribution entry, rather than fabricating one for pedagogical convenience.</p>
 <p>For the purpose of illustrating the <em>structure</em>, however, this subsection shows the hypothetical May distribution as it would appear in the May 2026 delivery of the fund. The assumed values are: announcement date 5 May, record date 17 May, ex-date 15 May, payment date 27 May, gross per share 3.80 EUR, net per share 3.50 EUR (after 7.9% withholding at the fund level), shares outstanding 2,350,000 at record.</p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037]/Distributions --&gt;
-&lt;Distribution&gt;
-  &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-  &lt;DividendStatus&gt;OFFICIAL&lt;/DividendStatus&gt;
-  &lt;AnnouncementDate&gt;2026-05-05&lt;/AnnouncementDate&gt;
-  &lt;RecordDate&gt;2026-05-17&lt;/RecordDate&gt;
-  &lt;ExDate&gt;2026-05-15&lt;/ExDate&gt;
-  &lt;PaymentDate&gt;2026-05-27&lt;/PaymentDate&gt;
-  &lt;PaymentCurrency&gt;EUR&lt;/PaymentCurrency&gt;
-  &lt;GrossDividendAmount&gt;
-    &lt;Total&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8930000.00&lt;/Amount&gt;
-    &lt;/Total&gt;
-    &lt;PerShare&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;3.80&lt;/Amount&gt;
-    &lt;/PerShare&gt;
-  &lt;/GrossDividendAmount&gt;
-  &lt;NetDividendAmount&gt;
-    &lt;Total&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8225000.00&lt;/Amount&gt;
-    &lt;/Total&gt;
-    &lt;PerShare&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;3.50&lt;/Amount&gt;
-    &lt;/PerShare&gt;
-  &lt;/NetDividendAmount&gt;
-  &lt;DistributionFlag&gt;true&lt;/DistributionFlag&gt;
-&lt;/Distribution&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037]/Distributions --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Distribution</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DividendStatus</span><span class="tok-punct">&gt;</span>OFFICIAL<span class="tok-punct">&lt;/</span><span class="tok-tag">DividendStatus</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AnnouncementDate</span><span class="tok-punct">&gt;</span>2026-05-05<span class="tok-punct">&lt;/</span><span class="tok-tag">AnnouncementDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">RecordDate</span><span class="tok-punct">&gt;</span>2026-05-17<span class="tok-punct">&lt;/</span><span class="tok-tag">RecordDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ExDate</span><span class="tok-punct">&gt;</span>2026-05-15<span class="tok-punct">&lt;/</span><span class="tok-tag">ExDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PaymentDate</span><span class="tok-punct">&gt;</span>2026-05-27<span class="tok-punct">&lt;/</span><span class="tok-tag">PaymentDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PaymentCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">PaymentCurrency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">GrossDividendAmount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Total</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8930000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Total</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PerShare</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;3.80<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">PerShare</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">GrossDividendAmount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">NetDividendAmount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Total</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8225000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Total</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PerShare</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isShareClassCcy=&quot;true&quot;&gt;3.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">PerShare</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">NetDividendAmount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">DistributionFlag</span><span class="tok-punct">&gt;</span>true<span class="tok-punct">&lt;/</span><span class="tok-tag">DistributionFlag</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Distribution</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading field by field: <code>&lt;ActionCode&gt;C&lt;/ActionCode&gt;</code> marks the entry as a create record. <code>&lt;DividendStatus&gt;OFFICIAL&lt;/DividendStatus&gt;</code> signals that the distribution amount has been formally resolved by the board. The four dates — <code>AnnouncementDate</code>, <code>RecordDate</code>, <code>ExDate</code>, <code>PaymentDate</code> — are listed in schema order (not in operational order). <code>&lt;PaymentCurrency&gt;EUR&lt;/PaymentCurrency&gt;</code> matches the I-EUR-DIST class's currency. The two mandatory amount blocks, <code>&lt;GrossDividendAmount&gt;</code> and <code>&lt;NetDividendAmount&gt;</code>, each carry the total payout and the per-share figure; the net is smaller because of a 7.9% fund-level withholding. <code>&lt;DistributionFlag&gt;true&lt;/DistributionFlag&gt;</code> is an optional boolean that explicitly confirms the distribution will actually be distributed (as opposed to reinvested as an accrual).</p>
 <p>One important corollary that the schema models indirectly: the NAV of the I-EUR-DIST class <em>drops</em> on the ex-date of 15 May 2026 by approximately 3.80 EUR per unit. If the NAV on 14 May was, say, 111.20 EUR, the NAV on 15 May would be approximately 107.40 EUR (111.20 minus 3.80), ignoring any other market movement between the two valuation points. The NAV time series carried in <code>ShareClass/Prices/Price</code> (Chapter 5 §5.12.2) shows this as a discrete downward jump — exactly the sawtooth pattern that distinguishes distributing classes from their accumulating counterparts, as §5.10.1 explained. The drop is not a loss; it is the mechanical consequence of moving accumulated income from "inside the NAV" to "inside the investors' cash accounts".</p>
@@ -1061,39 +1081,39 @@
 <p>The common-layer <code>&lt;EntryValue&gt;</code> typically carries the net amount — the amount that actually arrived in the fund's ledger. A producer that wants to reconcile cash balances reads <code>EntryValue</code>; a producer that wants the gross figure reads <code>Dividend/DividendGrossValue</code>. The two are both populated, intentionally, and the consumer picks whichever is appropriate.</p>
 <h3>7.8.5 Income Example: A BNP Paribas Interim Dividend</h3>
 <p>An example of an income event drawn from the actual portfolio of the Europa Growth Fund. BNP Paribas (ISIN <code>FR0000131104</code>, 110,000 shares in the portfolio per Chapter 6) pays an interim dividend in Q1, with an ex-date of 20 March 2026 and a payment date of 24 March 2026. The interim amount is 1.50 EUR per share. The gross cash flow to the fund is <code>110,000 × 1.50 = 165,000.00 EUR</code>. France applies a 25% withholding tax on dividends paid to foreign recipients under the France-Luxembourg tax treaty, so the fund receives <code>165,000.00 × 0.75 = 123,750.00 EUR</code> net.</p>
-<pre><code>&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio/Earnings --&gt;
-&lt;Earning&gt;
-  &lt;EarningID&gt;EGF-EARN-20260320-0012&lt;/EarningID&gt;
-  &lt;AssetUniqueID&gt;FR0000131104&lt;/AssetUniqueID&gt;
-  &lt;EarningKind&gt;Dividend&lt;/EarningKind&gt;
-  &lt;ClosingDate&gt;2026-03-20&lt;/ClosingDate&gt;
-  &lt;EntryDate&gt;2026-03-24&lt;/EntryDate&gt;
-  &lt;ValutaDate&gt;2026-03-24&lt;/ValutaDate&gt;
-  &lt;EntryCurrency&gt;EUR&lt;/EntryCurrency&gt;
-  &lt;IncomeCurrency&gt;EUR&lt;/IncomeCurrency&gt;
-  &lt;EntryValue&gt;
-    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00&lt;/Amount&gt;
-  &lt;/EntryValue&gt;
-  &lt;NominalValueOrUnits&gt;110000&lt;/NominalValueOrUnits&gt;
-  &lt;PostingText&gt;BNP Paribas Q1 interim dividend, net of 25% French withholding tax&lt;/PostingText&gt;
-  &lt;Dividend&gt;
-    &lt;DividendPerUnitValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;1.50&lt;/Amount&gt;
-    &lt;/DividendPerUnitValue&gt;
-    &lt;DividendGrossValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;165000.00&lt;/Amount&gt;
-    &lt;/DividendGrossValue&gt;
-    &lt;DividendNetValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00&lt;/Amount&gt;
-    &lt;/DividendNetValue&gt;
-    &lt;WithholdingTaxValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot;&gt;41250.00&lt;/Amount&gt;
-    &lt;/WithholdingTaxValue&gt;
-    &lt;ExDay&gt;2026-03-20&lt;/ExDay&gt;
-    &lt;PayDay&gt;2026-03-24&lt;/PayDay&gt;
-    &lt;WithholdingTaxQuota&gt;25.00&lt;/WithholdingTaxQuota&gt;
-  &lt;/Dividend&gt;
-&lt;/Earning&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio/Earnings --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>EGF-EARN-20260320-0012<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>FR0000131104<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>Dividend<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+    &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>110000<span class="tok-punct">&lt;/</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>BNP Paribas Q1 interim dividend, net of 25% French withholding tax<span class="tok-punct">&lt;/</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;1.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;165000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot;&gt;41250.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>25.00<span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <p>Reading field by field: the <code>&lt;EarningID&gt;</code> is the producer's unique key for the earning. The <code>&lt;AssetUniqueID&gt;</code> is the back-pointer to the asset entry in <code>AssetMasterData</code> (Chapter 6) through an <code>xs:IDREF</code> — the consumer sees <code>FR0000131104</code> and knows immediately that the event concerns the BNP Paribas position. <code>&lt;EarningKind&gt;Dividend&lt;/EarningKind&gt;</code> selects the <code>&lt;Dividend&gt;</code> sub-block at the bottom.</p>
 <p>The three date fields on the common layer — <code>&lt;ClosingDate&gt;</code>, <code>&lt;EntryDate&gt;</code>, <code>&lt;ValutaDate&gt;</code> — tell different parts of the story. <code>ClosingDate=2026-03-20</code> is the dividend's ex-date, the day the claim arose. <code>EntryDate=2026-03-24</code> is the day the cash was booked into the fund's ledger (four days later, once the payment actually arrived). <code>ValutaDate=2026-03-24</code> is the day the amount was effective on the cash account for interest-accrual purposes. For a simple dividend received into a current account, <code>EntryDate</code> and <code>ValutaDate</code> are usually the same day.</p>
@@ -1144,271 +1164,271 @@
 <p>The events are grouped by container below, not by chronological order across the whole delivery, because the schema nesting demands it. Within each container, entries are listed by date. The complete listing in its fully-populated form has been validated against <code>FundsXML4.xsd</code> as an end-to-end document with a matching AssetMasterData block carrying the three dividend-paying assets.</p>
 <h3>7.10.2 The R-EUR-ACC Flows Block</h3>
 <p>The six <code>&lt;Flow&gt;</code> entries inside the R-EUR-ACC share class's <code>&lt;Flows&gt;</code> container. Three subscriptions, two ordinary redemptions, and the source leg of the switch.</p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000011] --&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000011] --&gt;</span>
 &lt;Flows from=&quot;2026-03-01&quot; to=&quot;2026-03-31&quot;&gt;
-  &lt;!-- Subscriptions --&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260303-0001&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-03&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-03&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-05&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-03&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;202.1578&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;25000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260316-0024&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-16&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-16&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-18&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-16&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;80.6852&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;10000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260323-0032&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-23&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-23&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-25&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-23&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;402.4811&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;!-- Redemptions --&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260306-0004&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-06&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-06&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-10&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-06&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-    &lt;Units&gt;68.7247&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8500.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260313-0017&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-13&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-13&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-17&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-13&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-    &lt;Units&gt;258.4821&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;32000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;!-- Switch, source leg (paired with EGF-SW-20260312-0007-TGT in the I-EUR-DIST class) --&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-SW-20260312-0007-SRC&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-12&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-12&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-16&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-12&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-    &lt;TransactionSubtype&gt;switch — source leg; paired with EGF-SW-20260312-0007-TGT on LU2100000037&lt;/TransactionSubtype&gt;
-    &lt;Units&gt;404.2156&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Intra-fund switch&lt;/Channel&gt;
-  &lt;/Flow&gt;
-&lt;/Flows&gt;
+  <span class="tok-comment">&lt;!-- Subscriptions --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260303-0001<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-03<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-03<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-05<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-03<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>202.1578<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;25000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260316-0024<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-18<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>80.6852<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;10000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260323-0032<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-23<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-23<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-25<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-23<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>402.4811<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- Redemptions --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260306-0004<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-06<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-06<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-10<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-06<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>68.7247<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;8500.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260313-0017<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-13<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-13<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-17<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-13<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>258.4821<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;32000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- Switch, source leg (paired with EGF-SW-20260312-0007-TGT in the I-EUR-DIST class) --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-SW-20260312-0007-SRC<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>switch — source leg; paired with EGF-SW-20260312-0007-TGT on LU2100000037<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>404.2156<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Intra-fund switch<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flows</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <h3>7.10.3 The R-CHF-ACC-HEDGED Flows Block</h3>
 <p>Three <code>&lt;Flow&gt;</code> entries inside the R-CHF-ACC-HEDGED share class's <code>&lt;Flows&gt;</code> container. Two subscriptions and one redemption, all in Swiss francs. The <code>&lt;TotalValue&gt;</code> carries <em>two</em> <code>&lt;Amount&gt;</code> children in each entry — one in CHF flagged <code>isShareClassCcy="true"</code>, one in EUR flagged <code>isFundCcy="true"</code> — so that consumers reading either currency see a consistent figure.</p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000029] --&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000029] --&gt;</span>
 &lt;Flows from=&quot;2026-03-01&quot; to=&quot;2026-03-31&quot;&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260305-0003&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-05&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-05&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-09&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-05&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;125.8812&lt;/Units&gt;
-    &lt;TotalValue&gt;
-      &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;15000.00&lt;/Amount&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;14410.75&lt;/Amount&gt;
-    &lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260326-0038&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-26&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-26&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-30&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-26&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;335.6181&lt;/Units&gt;
-    &lt;TotalValue&gt;
-      &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;40000.00&lt;/Amount&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;38428.00&lt;/Amount&gt;
-    &lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260319-0022&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-19&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-19&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-23&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-19&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-    &lt;Units&gt;180.4108&lt;/Units&gt;
-    &lt;TotalValue&gt;
-      &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;21500.00&lt;/Amount&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;20654.68&lt;/Amount&gt;
-    &lt;/TotalValue&gt;
-    &lt;Channel&gt;Retail&lt;/Channel&gt;
-  &lt;/Flow&gt;
-&lt;/Flows&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260305-0003<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-05<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-05<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-09<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-05<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>125.8812<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;15000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;14410.75<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260326-0038<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-26<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-26<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-30<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-26<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>335.6181<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;40000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;38428.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260319-0022<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-19<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-19<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-23<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-19<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>180.4108<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;CHF&quot; isShareClassCcy=&quot;true&quot;&gt;21500.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;20654.68<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Retail<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flows</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <h3>7.10.4 The I-EUR-DIST Flows Block</h3>
 <p>Four <code>&lt;Flow&gt;</code> entries inside the I-EUR-DIST share class's <code>&lt;Flows&gt;</code> container. Two institutional subscriptions, one institutional redemption, and the target leg of the switch.</p>
-<pre><code>&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037] --&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/SingleFund/ShareClasses/ShareClass[ISIN=LU2100000037] --&gt;</span>
 &lt;Flows from=&quot;2026-03-01&quot; to=&quot;2026-03-31&quot;&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260309-0005&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-09&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-09&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-11&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-09&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;23202.5830&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;2500000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Institutional&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260330-0043&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-30&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-30&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-04-01&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-30&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;Units&gt;46151.2845&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;5000000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Institutional&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-TX-20260320-0011&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-20&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-20&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-24&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-20&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;RED&lt;/TransactionType&gt;
-    &lt;Units&gt;15000.0000&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;1617631.50&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Institutional&lt;/Channel&gt;
-  &lt;/Flow&gt;
-  &lt;!-- Switch, target leg (paired with EGF-SW-20260312-0007-SRC in the R-EUR-ACC class) --&gt;
-  &lt;Flow&gt;
-    &lt;ActionCode&gt;C&lt;/ActionCode&gt;
-    &lt;TransactionID&gt;EGF-SW-20260312-0007-TGT&lt;/TransactionID&gt;
-    &lt;TradeDate&gt;2026-03-12&lt;/TradeDate&gt;
-    &lt;AccountingDate&gt;2026-03-12&lt;/AccountingDate&gt;
-    &lt;SettlementDate&gt;2026-03-16&lt;/SettlementDate&gt;
-    &lt;ValueDate&gt;2026-03-12&lt;/ValueDate&gt;
-    &lt;TransactionType&gt;SUB&lt;/TransactionType&gt;
-    &lt;TransactionSubtype&gt;switch — target leg; paired with EGF-SW-20260312-0007-SRC on LU2100000011&lt;/TransactionSubtype&gt;
-    &lt;Units&gt;464.0882&lt;/Units&gt;
-    &lt;TotalValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00&lt;/Amount&gt;&lt;/TotalValue&gt;
-    &lt;Channel&gt;Intra-fund switch&lt;/Channel&gt;
-  &lt;/Flow&gt;
-&lt;/Flows&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260309-0005<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-09<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-09<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-11<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-09<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>23202.5830<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;2500000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Institutional<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260330-0043<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-30<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-30<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-04-01<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-30<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>46151.2845<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;5000000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Institutional<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-TX-20260320-0011<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>RED<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>15000.0000<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;1617631.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Institutional<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- Switch, target leg (paired with EGF-SW-20260312-0007-SRC in the R-EUR-ACC class) --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>C<span class="tok-punct">&lt;/</span><span class="tok-tag">ActionCode</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>EGF-SW-20260312-0007-TGT<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">TradeDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">AccountingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>2026-03-16<span class="tok-punct">&lt;/</span><span class="tok-tag">SettlementDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>2026-03-12<span class="tok-punct">&lt;/</span><span class="tok-tag">ValueDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>SUB<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionType</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>switch — target leg; paired with EGF-SW-20260312-0007-SRC on LU2100000011<span class="tok-punct">&lt;/</span><span class="tok-tag">TransactionSubtype</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>464.0882<span class="tok-punct">&lt;/</span><span class="tok-tag">Units</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;50000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">TotalValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>Intra-fund switch<span class="tok-punct">&lt;/</span><span class="tok-tag">Channel</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Flow</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Flows</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <h3>7.10.5 The Fund-Level Portfolio Earnings Block</h3>
 <p>Three <code>&lt;Earning&gt;</code> entries inside the fund-level <code>&lt;Portfolio&gt;/&lt;Earnings&gt;</code> container. These are the Q1 2026 dividend receipts from three European portfolio holdings, distinguished by source country through the different withholding-tax regimes. The German entry uses <code>WithholdingTaxQuota=26.375</code> (Germany's standard withholding rate), the French entry uses <code>25.00</code> (the France-Luxembourg tax-treaty rate), and the British entry uses <code>0.00</code> (the United Kingdom does not withhold tax on dividends paid to non-resident shareholders).</p>
-<pre><code>&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio --&gt;
+<pre><code><span class="tok-comment">&lt;!-- Inside Fund/FundDynamicData/Portfolios/Portfolio --&gt;</span>
 &lt;Earnings from=&quot;2026-03-01&quot; to=&quot;2026-03-31&quot;&gt;
-  &lt;Earning&gt;
-    &lt;EarningID&gt;EGF-EARN-20260311-0008&lt;/EarningID&gt;
-    &lt;AssetUniqueID&gt;DE0008404005&lt;/AssetUniqueID&gt;
-    &lt;EarningKind&gt;Dividend&lt;/EarningKind&gt;
-    &lt;ClosingDate&gt;2026-03-11&lt;/ClosingDate&gt;
-    &lt;EntryDate&gt;2026-03-13&lt;/EntryDate&gt;
-    &lt;ValutaDate&gt;2026-03-13&lt;/ValutaDate&gt;
-    &lt;EntryCurrency&gt;EUR&lt;/EntryCurrency&gt;
-    &lt;IncomeCurrency&gt;EUR&lt;/IncomeCurrency&gt;
-    &lt;EntryValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;362830.00&lt;/Amount&gt;
-    &lt;/EntryValue&gt;
-    &lt;NominalValueOrUnits&gt;32000&lt;/NominalValueOrUnits&gt;
-    &lt;PostingText&gt;Allianz SE 2026 annual dividend, net of 26.375% German withholding tax&lt;/PostingText&gt;
-    &lt;Dividend&gt;
-      &lt;DividendPerUnitValue&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;15.40&lt;/Amount&gt;&lt;/DividendPerUnitValue&gt;
-      &lt;DividendGrossValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;492800.00&lt;/Amount&gt;&lt;/DividendGrossValue&gt;
-      &lt;DividendNetValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;362830.00&lt;/Amount&gt;&lt;/DividendNetValue&gt;
-      &lt;WithholdingTaxValue&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;129970.00&lt;/Amount&gt;&lt;/WithholdingTaxValue&gt;
-      &lt;ExDay&gt;2026-03-11&lt;/ExDay&gt;
-      &lt;PayDay&gt;2026-03-13&lt;/PayDay&gt;
-      &lt;WithholdingTaxQuota&gt;26.375&lt;/WithholdingTaxQuota&gt;
-    &lt;/Dividend&gt;
-  &lt;/Earning&gt;
-  &lt;Earning&gt;
-    &lt;EarningID&gt;EGF-EARN-20260320-0012&lt;/EarningID&gt;
-    &lt;AssetUniqueID&gt;FR0000131104&lt;/AssetUniqueID&gt;
-    &lt;EarningKind&gt;Dividend&lt;/EarningKind&gt;
-    &lt;ClosingDate&gt;2026-03-20&lt;/ClosingDate&gt;
-    &lt;EntryDate&gt;2026-03-24&lt;/EntryDate&gt;
-    &lt;ValutaDate&gt;2026-03-24&lt;/ValutaDate&gt;
-    &lt;EntryCurrency&gt;EUR&lt;/EntryCurrency&gt;
-    &lt;IncomeCurrency&gt;EUR&lt;/IncomeCurrency&gt;
-    &lt;EntryValue&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00&lt;/Amount&gt;
-    &lt;/EntryValue&gt;
-    &lt;NominalValueOrUnits&gt;110000&lt;/NominalValueOrUnits&gt;
-    &lt;PostingText&gt;BNP Paribas Q1 interim dividend, net of 25% French withholding tax&lt;/PostingText&gt;
-    &lt;Dividend&gt;
-      &lt;DividendPerUnitValue&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;1.50&lt;/Amount&gt;&lt;/DividendPerUnitValue&gt;
-      &lt;DividendGrossValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;165000.00&lt;/Amount&gt;&lt;/DividendGrossValue&gt;
-      &lt;DividendNetValue&gt;&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00&lt;/Amount&gt;&lt;/DividendNetValue&gt;
-      &lt;WithholdingTaxValue&gt;&lt;Amount ccy=&quot;EUR&quot;&gt;41250.00&lt;/Amount&gt;&lt;/WithholdingTaxValue&gt;
-      &lt;ExDay&gt;2026-03-20&lt;/ExDay&gt;
-      &lt;PayDay&gt;2026-03-24&lt;/PayDay&gt;
-      &lt;WithholdingTaxQuota&gt;25.00&lt;/WithholdingTaxQuota&gt;
-    &lt;/Dividend&gt;
-  &lt;/Earning&gt;
-  &lt;Earning&gt;
-    &lt;EarningID&gt;EGF-EARN-20260327-0015&lt;/EarningID&gt;
-    &lt;AssetUniqueID&gt;GB0009895292&lt;/AssetUniqueID&gt;
-    &lt;EarningKind&gt;Dividend&lt;/EarningKind&gt;
-    &lt;ClosingDate&gt;2026-03-27&lt;/ClosingDate&gt;
-    &lt;EntryDate&gt;2026-03-31&lt;/EntryDate&gt;
-    &lt;ValutaDate&gt;2026-03-31&lt;/ValutaDate&gt;
-    &lt;EntryCurrency&gt;GBP&lt;/EntryCurrency&gt;
-    &lt;IncomeCurrency&gt;GBP&lt;/IncomeCurrency&gt;
-    &lt;EntryValue&gt;
-      &lt;Amount ccy=&quot;GBP&quot;&gt;69000.00&lt;/Amount&gt;
-      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;81742.50&lt;/Amount&gt;
-    &lt;/EntryValue&gt;
-    &lt;NominalValueOrUnits&gt;75000&lt;/NominalValueOrUnits&gt;
-    &lt;PostingText&gt;AstraZeneca interim dividend, no UK withholding tax on non-resident dividends&lt;/PostingText&gt;
-    &lt;Dividend&gt;
-      &lt;DividendPerUnitValue&gt;&lt;Amount ccy=&quot;GBP&quot;&gt;0.92&lt;/Amount&gt;&lt;/DividendPerUnitValue&gt;
-      &lt;DividendGrossValue&gt;&lt;Amount ccy=&quot;GBP&quot;&gt;69000.00&lt;/Amount&gt;&lt;/DividendGrossValue&gt;
-      &lt;DividendNetValue&gt;&lt;Amount ccy=&quot;GBP&quot;&gt;69000.00&lt;/Amount&gt;&lt;/DividendNetValue&gt;
-      &lt;WithholdingTaxValue&gt;&lt;Amount ccy=&quot;GBP&quot;&gt;0.00&lt;/Amount&gt;&lt;/WithholdingTaxValue&gt;
-      &lt;ExDay&gt;2026-03-27&lt;/ExDay&gt;
-      &lt;PayDay&gt;2026-03-31&lt;/PayDay&gt;
-      &lt;WithholdingTaxQuota&gt;0.00&lt;/WithholdingTaxQuota&gt;
-    &lt;/Dividend&gt;
-  &lt;/Earning&gt;
-&lt;/Earnings&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>EGF-EARN-20260311-0008<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>DE0008404005<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>Dividend<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>2026-03-11<span class="tok-punct">&lt;/</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>2026-03-13<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>2026-03-13<span class="tok-punct">&lt;/</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;362830.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>32000<span class="tok-punct">&lt;/</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>Allianz SE 2026 annual dividend, net of 26.375% German withholding tax<span class="tok-punct">&lt;/</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;15.40<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;492800.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;362830.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;129970.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>2026-03-11<span class="tok-punct">&lt;/</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>2026-03-13<span class="tok-punct">&lt;/</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>26.375<span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>EGF-EARN-20260320-0012<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>FR0000131104<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>Dividend<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>EUR<span class="tok-punct">&lt;/</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>110000<span class="tok-punct">&lt;/</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>BNP Paribas Q1 interim dividend, net of 25% French withholding tax<span class="tok-punct">&lt;/</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;1.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;165000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;123750.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;EUR&quot;&gt;41250.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>2026-03-20<span class="tok-punct">&lt;/</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>2026-03-24<span class="tok-punct">&lt;/</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>25.00<span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>EGF-EARN-20260327-0015<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>GB0009895292<span class="tok-punct">&lt;/</span><span class="tok-tag">AssetUniqueID</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>Dividend<span class="tok-punct">&lt;/</span><span class="tok-tag">EarningKind</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>2026-03-27<span class="tok-punct">&lt;/</span><span class="tok-tag">ClosingDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">ValutaDate</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>GBP<span class="tok-punct">&lt;/</span><span class="tok-tag">EntryCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>GBP<span class="tok-punct">&lt;/</span><span class="tok-tag">IncomeCurrency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;GBP&quot;&gt;69000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+      &lt;Amount ccy=&quot;EUR&quot; isFundCcy=&quot;true&quot;&gt;81742.50<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">EntryValue</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>75000<span class="tok-punct">&lt;/</span><span class="tok-tag">NominalValueOrUnits</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>AstraZeneca interim dividend, no UK withholding tax on non-resident dividends<span class="tok-punct">&lt;/</span><span class="tok-tag">PostingText</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;GBP&quot;&gt;0.92<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendPerUnitValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;GBP&quot;&gt;69000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendGrossValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;GBP&quot;&gt;69000.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">DividendNetValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>&lt;Amount ccy=&quot;GBP&quot;&gt;0.00<span class="tok-punct">&lt;/</span><span class="tok-tag">Amount</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxValue</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>2026-03-27<span class="tok-punct">&lt;/</span><span class="tok-tag">ExDay</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>2026-03-31<span class="tok-punct">&lt;/</span><span class="tok-tag">PayDay</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>0.00<span class="tok-punct">&lt;/</span><span class="tok-tag">WithholdingTaxQuota</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">Dividend</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">Earning</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">Earnings</span><span class="tok-punct">&gt;</span>
 </code></pre>
 <h3>7.10.6 A Three-Pass Reading</h3>
 <p>The four blocks are best understood in three passes, one per conceptual group.</p>

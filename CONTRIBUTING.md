@@ -27,6 +27,14 @@ When you change content you must:
 CI runs `python3 polish_styles.py --check` on every pull request; if the
 committed HTML is not in sync with `polish_styles.py`, the check fails.
 
+`polish_styles.py` also syntax-highlights XML examples: any block
+`<pre><code>` whose content is XML is wrapped in coloured `<span class="tok-…">`
+tokens automatically when you run the build. Write code blocks as plain
+`<pre><code>…</code></pre>` with the XML HTML-escaped (`&lt;`, `&gt;`) — do not
+add the token spans or a language class by hand; the build adds and refreshes
+them idempotently. Non-XML blocks (shell output, ASCII-art figures) are left
+untouched.
+
 ## Editorial conventions
 
 These keep the book consistent — please match them:

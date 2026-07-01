@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -571,12 +591,12 @@
 
 <p>A well-formed XML document has three parts: an optional XML declaration, an optional prolog (comments, processing instructions, doctype), and exactly one root element.</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!-- optional comment --&gt;
-&lt;FundsXML4 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="FundsXML4.xsd"&gt;
-  &lt;!-- content --&gt;
-&lt;/FundsXML4&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-comment">&lt;!-- optional comment --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">FundsXML4</span> <span class="tok-attr">xmlns:xsi</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/2001/XMLSchema-instance"</span>
+           <span class="tok-attr">xsi:noNamespaceSchemaLocation</span><span class="tok-punct">=</span><span class="tok-string">"FundsXML4.xsd"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- content --&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">FundsXML4</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>The XML declaration is optional but strongly recommended. <code>version</code> must be <code>"1.0"</code> for FundsXML. <code>encoding</code> should be <code>"UTF-8"</code> unless you have a specific reason to pick another encoding. A third optional attribute, <code>standalone="yes"</code>, declares that the document has no external dependencies; FundsXML does not set it.</p>
@@ -616,13 +636,13 @@
 
 <p><strong>CDATA sections</strong> are an alternative for blocks of text containing many special characters. Everything between <code>&lt;![CDATA[</code> and <code>]]&gt;</code> is treated literally, with no entity processing. Useful for embedded HTML, code samples, or regular expressions.</p>
 
-<pre><code>&lt;Description&gt;&lt;![CDATA[Returns &gt; 5% if A &lt; B &amp;&amp; C]]&gt;&lt;/Description&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span><span class="tok-decl">&lt;![CDATA[</span><span class="tok-string">Returns &gt; 5% if A &lt; B &amp;&amp; C</span><span class="tok-decl">]]&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">Description</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <h3>B.1.4 Comments and Processing Instructions</h3>
 
-<pre><code>&lt;!-- a comment, cannot contain -- or end with - --&gt;
-&lt;?xml-stylesheet type="text/xsl" href="style.xsl"?&gt;
+<pre><code><span class="tok-comment">&lt;!-- a comment, cannot contain -- or end with - --&gt;</span>
+<span class="tok-decl">&lt;?xml-stylesheet type="text/xsl" href="style.xsl"?&gt;</span>
 </code></pre>
 
 <p>Comments may appear anywhere in the document except inside a tag. Processing instructions are of the form <code>&lt;?target data?&gt;</code>; the only one FundsXML practitioners usually encounter is <code>xml-stylesheet</code>, which tells a browser to apply an XSLT transformation when rendering.</p>
@@ -848,26 +868,26 @@
 
 <h3>B.3.1 Stylesheet Skeleton</h3>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:stylesheet</span> <span class="tok-attr">version</span><span class="tok-punct">=</span><span class="tok-string">"1.0"</span>
+                <span class="tok-attr">xmlns:xsl</span><span class="tok-punct">=</span><span class="tok-string">"http://www.w3.org/1999/XSL/Transform"</span><span class="tok-punct">&gt;</span>
 
-  &lt;xsl:output method="html" indent="yes" encoding="UTF-8"/&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:output</span> <span class="tok-attr">method</span><span class="tok-punct">=</span><span class="tok-string">"html"</span> <span class="tok-attr">indent</span><span class="tok-punct">=</span><span class="tok-string">"yes"</span> <span class="tok-attr">encoding</span><span class="tok-punct">=</span><span class="tok-string">"UTF-8"</span><span class="tok-punct">/&gt;</span>
 
-  &lt;xsl:template match="/"&gt;
-    &lt;!-- transformation logic --&gt;
-  &lt;/xsl:template&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:template</span> <span class="tok-attr">match</span><span class="tok-punct">=</span><span class="tok-string">"/"</span><span class="tok-punct">&gt;</span>
+    <span class="tok-comment">&lt;!-- transformation logic --&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
 
-&lt;/xsl:stylesheet&gt;
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:stylesheet</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Change <code>version="1.0"</code> to <code>version="2.0"</code> to use XSLT 2.0 features (which require an XSLT 2.0 processor such as Saxon). The <code>xsl:output</code> element controls serialisation: <code>method</code> is <code>"xml"</code>, <code>"html"</code>, or <code>"text"</code>; <code>indent="yes"</code> produces human-readable output; <code>encoding</code> sets the output encoding.</p>
 
 <h3>B.3.2 Template Matching</h3>
 
-<pre><code>&lt;xsl:template match="pattern"&gt;
-  &lt;!-- body --&gt;
-&lt;/xsl:template&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:template</span> <span class="tok-attr">match</span><span class="tok-punct">=</span><span class="tok-string">"pattern"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-comment">&lt;!-- body --&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <table>
@@ -886,9 +906,9 @@
 
 <p>Invocation is either by applying templates (let XSLT dispatch based on <code>match</code>) or by calling a named template explicitly:</p>
 
-<pre><code>&lt;xsl:apply-templates/&gt;                    &lt;!-- apply to all children --&gt;
-&lt;xsl:apply-templates select="Funds/Fund"/&gt; &lt;!-- apply to specific nodes --&gt;
-&lt;xsl:call-template name="fund-summary"/&gt;   &lt;!-- call a named template --&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:apply-templates</span><span class="tok-punct">/&gt;</span>                    <span class="tok-comment">&lt;!-- apply to all children --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:apply-templates</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Funds/Fund"</span><span class="tok-punct">/&gt;</span> <span class="tok-comment">&lt;!-- apply to specific nodes --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:call-template</span> <span class="tok-attr">name</span><span class="tok-punct">=</span><span class="tok-string">"fund-summary"</span><span class="tok-punct">/&gt;</span>   <span class="tok-comment">&lt;!-- call a named template --&gt;</span>
 </code></pre>
 
 <h3>B.3.3 Selecting and Copying Values</h3>
@@ -907,43 +927,43 @@
 
 <p><strong>Iteration:</strong></p>
 
-<pre><code>&lt;xsl:for-each select="//Fund"&gt;
-  &lt;li&gt;&lt;xsl:value-of select="Names/OfficialName"/&gt;&lt;/li&gt;
-&lt;/xsl:for-each&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:for-each</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"//Fund"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">li</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Names/OfficialName"</span><span class="tok-punct">/&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">li</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:for-each</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p><strong>Simple condition:</strong></p>
 
-<pre><code>&lt;xsl:if test="Currency='EUR'"&gt;
-  &lt;p&gt;This is a euro-denominated fund.&lt;/p&gt;
-&lt;/xsl:if&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:if</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"Currency='EUR'"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">p</span><span class="tok-punct">&gt;</span>This is a euro-denominated fund.<span class="tok-punct">&lt;/</span><span class="tok-tag">p</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:if</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p><strong>Multi-branch condition:</strong></p>
 
-<pre><code>&lt;xsl:choose&gt;
-  &lt;xsl:when test="SingleFundFlag='true'"&gt;Standalone fund&lt;/xsl:when&gt;
-  &lt;xsl:when test="SingleFundFlag='false'"&gt;Sub-fund of an umbrella&lt;/xsl:when&gt;
-  &lt;xsl:otherwise&gt;Unknown structure&lt;/xsl:otherwise&gt;
-&lt;/xsl:choose&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:choose</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:when</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"SingleFundFlag='true'"</span><span class="tok-punct">&gt;</span>Standalone fund<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:when</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:when</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"SingleFundFlag='false'"</span><span class="tok-punct">&gt;</span>Sub-fund of an umbrella<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:when</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:otherwise</span><span class="tok-punct">&gt;</span>Unknown structure<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:otherwise</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:choose</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>Sorting inside an iteration:</p>
 
-<pre><code>&lt;xsl:for-each select="//Fund"&gt;
-  &lt;xsl:sort select="Names/OfficialName" order="ascending"/&gt;
-  &lt;li&gt;&lt;xsl:value-of select="Names/OfficialName"/&gt;&lt;/li&gt;
-&lt;/xsl:for-each&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:for-each</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"//Fund"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:sort</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Names/OfficialName"</span> <span class="tok-attr">order</span><span class="tok-punct">=</span><span class="tok-string">"ascending"</span><span class="tok-punct">/&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">li</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Names/OfficialName"</span><span class="tok-punct">/&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">li</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:for-each</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <h3>B.3.5 Variables and Parameters</h3>
 
-<pre><code>&lt;xsl:variable name="fund-lei" select="'549300ABCDEFGHIJ1234'"/&gt;
-&lt;xsl:variable name="fund-count" select="count(//Fund)"/&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:variable</span> <span class="tok-attr">name</span><span class="tok-punct">=</span><span class="tok-string">"fund-lei"</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"'549300ABCDEFGHIJ1234'"</span><span class="tok-punct">/&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:variable</span> <span class="tok-attr">name</span><span class="tok-punct">=</span><span class="tok-string">"fund-count"</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"count(//Fund)"</span><span class="tok-punct">/&gt;</span>
 
-&lt;xsl:param name="report-date" select="'2026-03-31'"/&gt;
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:param</span> <span class="tok-attr">name</span><span class="tok-punct">=</span><span class="tok-string">"report-date"</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"'2026-03-31'"</span><span class="tok-punct">/&gt;</span>
 
-&lt;xsl:value-of select="$fund-lei"/&gt;
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"$fund-lei"</span><span class="tok-punct">/&gt;</span>
 </code></pre>
 
 <p>Variables are bound once and cannot be reassigned. Parameters behave like variables but can be passed into templates via <code>&lt;xsl:with-param name="..." select="..."/&gt;</code>.</p>
@@ -952,51 +972,51 @@
 
 <p><strong>Recipe 1 — Extract fund NAVs to an HTML table.</strong></p>
 
-<pre><code>&lt;xsl:template match="/"&gt;
-  &lt;html&gt;&lt;body&gt;
-    &lt;h1&gt;Fund NAV Summary&lt;/h1&gt;
-    &lt;table border="1"&gt;
-      &lt;tr&gt;&lt;th&gt;Fund&lt;/th&gt;&lt;th&gt;LEI&lt;/th&gt;&lt;th&gt;NAV&lt;/th&gt;&lt;th&gt;Currency&lt;/th&gt;&lt;/tr&gt;
-      &lt;xsl:for-each select="//Fund"&gt;
-        &lt;tr&gt;
-          &lt;td&gt;&lt;xsl:value-of select="Names/OfficialName"/&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;xsl:value-of select="Identifiers/LEI"/&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;xsl:value-of select=
-            "FundDynamicData/TotalAssetValues/TotalAssetValue
-             /TotalNetAssetValue/Amount"/&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;xsl:value-of select="Currency"/&gt;&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/xsl:for-each&gt;
-    &lt;/table&gt;
-  &lt;/body&gt;&lt;/html&gt;
-&lt;/xsl:template&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:template</span> <span class="tok-attr">match</span><span class="tok-punct">=</span><span class="tok-string">"/"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">html</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">body</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">h1</span><span class="tok-punct">&gt;</span>Fund NAV Summary<span class="tok-punct">&lt;/</span><span class="tok-tag">h1</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">table</span> <span class="tok-attr">border</span><span class="tok-punct">=</span><span class="tok-string">"1"</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span>Fund<span class="tok-punct">&lt;/</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span>LEI<span class="tok-punct">&lt;/</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span>NAV<span class="tok-punct">&lt;/</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span>Currency<span class="tok-punct">&lt;/</span><span class="tok-tag">th</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:for-each</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"//Fund"</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Names/OfficialName"</span><span class="tok-punct">/&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Identifiers/LEI"</span><span class="tok-punct">/&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span>
+            <span class="tok-string">"FundDynamicData/TotalAssetValues/TotalAssetValue
+             /TotalNetAssetValue/Amount"</span><span class="tok-punct">/&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+          <span class="tok-punct">&lt;</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Currency"</span><span class="tok-punct">/&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">td</span><span class="tok-punct">&gt;</span>
+        <span class="tok-punct">&lt;/</span><span class="tok-tag">tr</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:for-each</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">table</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">body</span><span class="tok-punct">&gt;</span><span class="tok-punct">&lt;/</span><span class="tok-tag">html</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p><strong>Recipe 2 — Identity transform with one exception (strip <a href="https://fundsxml.github.io/index.html?xpath=/FundsXML4/RegulatoryReportings" target="_blank"><code>RegulatoryReportings</code></a>).</strong></p>
 
-<pre><code>&lt;!-- copy everything by default --&gt;
-&lt;xsl:template match="@*|node()"&gt;
-  &lt;xsl:copy&gt;
-    &lt;xsl:apply-templates select="@*|node()"/&gt;
-  &lt;/xsl:copy&gt;
-&lt;/xsl:template&gt;
+<pre><code><span class="tok-comment">&lt;!-- copy everything by default --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:template</span> <span class="tok-attr">match</span><span class="tok-punct">=</span><span class="tok-string">"@*|node()"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:copy</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:apply-templates</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"@*|node()"</span><span class="tok-punct">/&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:copy</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
 
-&lt;!-- but drop RegulatoryReportings blocks --&gt;
-&lt;xsl:template match="RegulatoryReportings"/&gt;
+<span class="tok-comment">&lt;!-- but drop RegulatoryReportings blocks --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">xsl:template</span> <span class="tok-attr">match</span><span class="tok-punct">=</span><span class="tok-string">"RegulatoryReportings"</span><span class="tok-punct">/&gt;</span>
 </code></pre>
 
 <p>This is the standard pattern for a surgical transformation: a general identity template plus a small number of overriding templates that handle the specific cases you want to change.</p>
 
 <p><strong>Recipe 3 — Sum all position values in a portfolio.</strong></p>
 
-<pre><code>&lt;xsl:template match="Portfolio"&gt;
-  &lt;p&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">xsl:template</span> <span class="tok-attr">match</span><span class="tok-punct">=</span><span class="tok-string">"Portfolio"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">p</span><span class="tok-punct">&gt;</span>
     Portfolio total:
-    &lt;xsl:value-of select="sum(Positions/Position/TotalValue/Amount)"/&gt;
-    &lt;xsl:text&gt; &lt;/xsl:text&gt;
-    &lt;xsl:value-of select="Positions/Position[1]/TotalValue/Amount/@ccy"/&gt;
-  &lt;/p&gt;
-&lt;/xsl:template&gt;
+    <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"sum(Positions/Position/TotalValue/Amount)"</span><span class="tok-punct">/&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span> <span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:text</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">xsl:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Positions/Position[1]/TotalValue/Amount/@ccy"</span><span class="tok-punct">/&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">p</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">xsl:template</span><span class="tok-punct">&gt;</span>
 </code></pre>
 
 <p>The <code>&lt;xsl:text&gt; &lt;/xsl:text&gt;</code> is an explicit single space — whitespace in the stylesheet source is not preserved unless wrapped in <code>xsl:text</code>, so forcing a space this way is the reliable idiom.</p>

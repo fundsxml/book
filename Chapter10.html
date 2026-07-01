@@ -20,6 +20,12 @@
     --row-alt: #f6f8fa;
     --code-bg: #f4f6f9;
     --code-ink: #22272e;
+    --tok-tag: #0b5394;
+    --tok-attr: #1a7f4b;
+    --tok-string: #a8410a;
+    --tok-comment: #6b7280;
+    --tok-decl: #7048c4;
+    --tok-punct: #6b7684;
     --tip: #1a7f4b;
     --tip-bg: #effaf3;
     --warn: #a85a00;
@@ -44,6 +50,12 @@
     --row-alt: #171a1e;
     --code-bg: #161a1f;
     --code-ink: #d9dde3;
+    --tok-tag: #7cb7f5;
+    --tok-attr: #7fd0a3;
+    --tok-string: #e0966a;
+    --tok-comment: #8a919c;
+    --tok-decl: #c3aef2;
+    --tok-punct: #9aa2ad;
     --tip: #6bd494;
     --tip-bg: #122820;
     --warn: #e7a76b;
@@ -236,6 +248,12 @@
     font-size: 1em;
     word-break: normal;
   }
+  pre .tok-tag { color: var(--tok-tag); }
+  pre .tok-attr { color: var(--tok-attr); }
+  pre .tok-string { color: var(--tok-string); }
+  pre .tok-comment { color: var(--tok-comment); font-style: italic; }
+  pre .tok-decl { color: var(--tok-decl); }
+  pre .tok-punct { color: var(--tok-punct); }
 
   figure { margin: 1.6em 0; text-align: center; }
   figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: var(--shadow-sm); }
@@ -519,6 +537,8 @@
       --rule: #cfd4d9; --rule-soft: #e8ecf1;
       --bg: #fff; --paper: #fff; --callout: #f5f7fb; --row-alt: #f7f9fc;
       --code-bg: #f4f6f9; --code-ink: #22272e;
+      --tok-tag: #0b5394; --tok-attr: #1a7f4b; --tok-string: #a8410a;
+      --tok-comment: #6b7280; --tok-decl: #7048c4; --tok-punct: #6b7684;
     }
     :root {
       --bg: #fff; --paper: #fff;
@@ -1011,13 +1031,13 @@ exit 1</code></pre>
 
 <p>A single rule looks like this:</p>
 
-<pre><code>&lt;sch:rule context="ControlData"&gt;
-  &lt;sch:assert test="DataOperation != 'DELETE' or RelatedDocumentIDs"&gt;
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">sch:rule</span> <span class="tok-attr">context</span><span class="tok-punct">=</span><span class="tok-string">"ControlData"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">sch:assert</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"DataOperation != 'DELETE' or RelatedDocumentIDs"</span><span class="tok-punct">&gt;</span>
     A DELETE operation must name the delivery being retracted in
-    RelatedDocumentIDs. Delivery &lt;sch:value-of select="UniqueDocumentID"/&gt;
+    RelatedDocumentIDs. Delivery <span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"UniqueDocumentID"</span><span class="tok-punct">/&gt;</span>
     violates this rule.
-  &lt;/sch:assert&gt;
-&lt;/sch:rule&gt;</code></pre>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:assert</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">sch:rule</span><span class="tok-punct">&gt;</span></code></pre>
 
 <p>The <code>context="ControlData"</code> attribute tells Schematron: "for every <code>ControlData</code> element anywhere in the document, run the assertions inside this rule." The <code>test</code> attribute of <code>&lt;sch:assert&gt;</code> is an XPath expression that must evaluate to <code>true</code> for the assertion to pass. If the expression evaluates to <code>false</code>, Schematron reports the contained text as a failure message, substituting any <code>&lt;sch:value-of&gt;</code> elements with the corresponding XPath values from the document.</p>
 
@@ -1073,11 +1093,11 @@ sys.exit(1)</code></pre>
 
 <p>Java's most widely used Schematron library is <strong>ph-schematron</strong> by Philip Helger, the same library that powers Schematron validation in the European e-invoicing (EN 16931) ecosystem. It provides a pure-Java implementation that compiles and executes Schematron rules without an external XSLT processor, producing SVRL output through a clean API. The library is available as a Maven dependency:</p>
 
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;com.helger.schematron&lt;/groupId&gt;
-    &lt;artifactId&gt;ph-schematron-pure&lt;/artifactId&gt;
-    &lt;version&gt;8.0.2&lt;/version&gt;&lt;!-- check for latest release --&gt;
-&lt;/dependency&gt;</code></pre>
+<pre><code><span class="tok-punct">&lt;</span><span class="tok-tag">dependency</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">groupId</span><span class="tok-punct">&gt;</span>com.helger.schematron<span class="tok-punct">&lt;/</span><span class="tok-tag">groupId</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">artifactId</span><span class="tok-punct">&gt;</span>ph-schematron-pure<span class="tok-punct">&lt;/</span><span class="tok-tag">artifactId</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">version</span><span class="tok-punct">&gt;</span>8.0.2<span class="tok-punct">&lt;/</span><span class="tok-tag">version</span><span class="tok-punct">&gt;</span><span class="tok-comment">&lt;!-- check for latest release --&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">dependency</span><span class="tok-punct">&gt;</span></code></pre>
 
 <p>A minimal runner:</p>
 
@@ -1313,44 +1333,44 @@ exit 1</code></pre>
 
 <p>The complete rule file:</p>
 
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron"&gt;
-  &lt;sch:title&gt;Europa Growth Fund — FundsXML business rules&lt;/sch:title&gt;
+<pre><code><span class="tok-decl">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">sch:schema</span> <span class="tok-attr">xmlns:sch</span><span class="tok-punct">=</span><span class="tok-string">"http://purl.oclc.org/dsdl/schematron"</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">sch:title</span><span class="tok-punct">&gt;</span>Europa Growth Fund — FundsXML business rules<span class="tok-punct">&lt;/</span><span class="tok-tag">sch:title</span><span class="tok-punct">&gt;</span>
 
-  &lt;sch:pattern id="delivery-semantics"&gt;
-    &lt;sch:title&gt;ControlData semantic rules&lt;/sch:title&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">sch:pattern</span> <span class="tok-attr">id</span><span class="tok-punct">=</span><span class="tok-string">"delivery-semantics"</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">sch:title</span><span class="tok-punct">&gt;</span>ControlData semantic rules<span class="tok-punct">&lt;/</span><span class="tok-tag">sch:title</span><span class="tok-punct">&gt;</span>
 
-    &lt;sch:rule context="ControlData"&gt;
-      &lt;sch:assert test="DataOperation != 'DELETE' or RelatedDocumentIDs"&gt;
+    <span class="tok-punct">&lt;</span><span class="tok-tag">sch:rule</span> <span class="tok-attr">context</span><span class="tok-punct">=</span><span class="tok-string">"ControlData"</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">sch:assert</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"DataOperation != 'DELETE' or RelatedDocumentIDs"</span><span class="tok-punct">&gt;</span>
         A DELETE operation must name the delivery being retracted in RelatedDocumentIDs.
-        Delivery &lt;sch:value-of select="UniqueDocumentID"/&gt; violates this rule.
-      &lt;/sch:assert&gt;
-      &lt;sch:assert test="DataOperation != 'AMEND' or RelatedDocumentIDs"&gt;
+        Delivery <span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"UniqueDocumentID"</span><span class="tok-punct">/&gt;</span> violates this rule.
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:assert</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">sch:assert</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"DataOperation != 'AMEND' or RelatedDocumentIDs"</span><span class="tok-punct">&gt;</span>
         An AMEND operation should reference the delivery it amends through RelatedDocumentIDs.
-        Delivery &lt;sch:value-of select="UniqueDocumentID"/&gt; violates this rule.
-      &lt;/sch:assert&gt;
-      &lt;sch:assert test="number(substring(DocumentGenerated, 1, 4)) &amp;gt;= number(substring(ContentDate, 1, 4))"&gt;
-        DocumentGenerated (&lt;sch:value-of select="DocumentGenerated"/&gt;)
-        cannot be in an earlier year than ContentDate (&lt;sch:value-of select="ContentDate"/&gt;).
-      &lt;/sch:assert&gt;
-    &lt;/sch:rule&gt;
-  &lt;/sch:pattern&gt;
+        Delivery <span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"UniqueDocumentID"</span><span class="tok-punct">/&gt;</span> violates this rule.
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:assert</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">sch:assert</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"number(substring(DocumentGenerated, 1, 4)) &amp;gt;= number(substring(ContentDate, 1, 4))"</span><span class="tok-punct">&gt;</span>
+        DocumentGenerated (<span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"DocumentGenerated"</span><span class="tok-punct">/&gt;</span>)
+        cannot be in an earlier year than ContentDate (<span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"ContentDate"</span><span class="tok-punct">/&gt;</span>).
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:assert</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:rule</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:pattern</span><span class="tok-punct">&gt;</span>
 
-  &lt;sch:pattern id="producer-identity"&gt;
-    &lt;sch:title&gt;Producer identity rules&lt;/sch:title&gt;
+  <span class="tok-punct">&lt;</span><span class="tok-tag">sch:pattern</span> <span class="tok-attr">id</span><span class="tok-punct">=</span><span class="tok-string">"producer-identity"</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">sch:title</span><span class="tok-punct">&gt;</span>Producer identity rules<span class="tok-punct">&lt;/</span><span class="tok-tag">sch:title</span><span class="tok-punct">&gt;</span>
 
-    &lt;sch:rule context="DataSupplier"&gt;
-      &lt;sch:assert test="string-length(Short) &amp;gt;= 2"&gt;
-        DataSupplier/Short must be at least 2 characters; found "&lt;sch:value-of select="Short"/&gt;".
-      &lt;/sch:assert&gt;
-      &lt;sch:assert test="contains(' AT DE CH LU FR IT ES NL BE PT SE DK NO FI GB IE ', concat(' ', SystemCountry, ' '))"&gt;
-        DataSupplier/SystemCountry "&lt;sch:value-of select="SystemCountry"/&gt;"
+    <span class="tok-punct">&lt;</span><span class="tok-tag">sch:rule</span> <span class="tok-attr">context</span><span class="tok-punct">=</span><span class="tok-string">"DataSupplier"</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">sch:assert</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"string-length(Short) &amp;gt;= 2"</span><span class="tok-punct">&gt;</span>
+        DataSupplier/Short must be at least 2 characters; found "<span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"Short"</span><span class="tok-punct">/&gt;</span>".
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:assert</span><span class="tok-punct">&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">sch:assert</span> <span class="tok-attr">test</span><span class="tok-punct">=</span><span class="tok-string">"contains(' AT DE CH LU FR IT ES NL BE PT SE DK NO FI GB IE ', concat(' ', SystemCountry, ' '))"</span><span class="tok-punct">&gt;</span>
+        DataSupplier/SystemCountry "<span class="tok-punct">&lt;</span><span class="tok-tag">sch:value-of</span> <span class="tok-attr">select</span><span class="tok-punct">=</span><span class="tok-string">"SystemCountry"</span><span class="tok-punct">/&gt;</span>"
         is outside the set of countries supported by this producer.
-      &lt;/sch:assert&gt;
-    &lt;/sch:rule&gt;
-  &lt;/sch:pattern&gt;
+      <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:assert</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:rule</span><span class="tok-punct">&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">sch:pattern</span><span class="tok-punct">&gt;</span>
 
-&lt;/sch:schema&gt;</code></pre>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">sch:schema</span><span class="tok-punct">&gt;</span></code></pre>
 
 <h3>10.8.1 Reading the Rules One by One</h3>
 
